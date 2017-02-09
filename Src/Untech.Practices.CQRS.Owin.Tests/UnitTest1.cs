@@ -41,6 +41,9 @@ namespace Untech.Practices.CQRS.Owin.Tests
 
 				Route("/{bookId}/preview")
 					.UseQuery<DummyQuery, int>();
+
+				Route("/{bookId}/publish")
+					.UseCommand<DummyCommand, int>(HttpVerbs.Post);
 			}
 		}
 
@@ -67,75 +70,66 @@ namespace Untech.Practices.CQRS.Owin.Tests
 		{
 			public Admin()
 			{
-				Use("/users", new AdminUsers());
-				Use("/groups", new AdminUsers());
-				Use("/roles", new AdminUsers());
+				UseAdminUsers();
+				UseAdminGroups();
+				UseAdminRoles();
 			}
-		}
-
-		public class AdminUsers:RouteTable
-		{
-			public AdminUsers()
+		
+			private void UseAdminUsers()
 			{
-				Route("")
+				Route("/users")
 					.UseQuery<DummyQuery, int>()
 					.UseCommand<DummyCommand, int>(HttpVerbs.Post);
 
-				Route("/{userId}")
+				Route("/users/{userId}")
 					.UseQuery<DummyQuery, int>()
 					.UseCommand<DummyCommand, int>(HttpVerbs.Put)
 					.UseCommand<DummyCommand, int>(HttpVerbs.Delete);
 
-				Route("/{userId}/lock")
+				Route("/users/{userId}/lock")
 					.UseCommand<DummyCommand, int>(HttpVerbs.Post);
 
-				Route("/{userId}/unlock")
+				Route("/users/{userId}/unlock")
 					.UseCommand<DummyCommand, int>(HttpVerbs.Post);
 			}
-		}
 
-		public class AdminGroups: RouteTable
-		{
-			public AdminGroups()
+			private void UseAdminGroups()
 			{
-				Route("")
+				Route("/groups")
 					.UseQuery<DummyQuery, int>()
 					.UseCommand<DummyCommand, int>(HttpVerbs.Post);
 
-				Route("/{groupId}")
+				Route("/groups/{groupId}")
 					.UseQuery<DummyQuery, int>()
 					.UseCommand<DummyCommand, int>(HttpVerbs.Put)
 					.UseCommand<DummyCommand, int>(HttpVerbs.Delete);
 
-				Route("/{groupid}/members")
+				Route("/groups/{groupid}/members")
 					.UseQuery<DummyQuery, int>()
 					.UseCommand<DummyCommand, int>(HttpVerbs.Post);
 
-				Route("/{groupid}/members/{memberId}")
+				Route("/groups/{groupid}/members/{memberId}")
 					.UseQuery<DummyQuery, int>()
 					.UseCommand<DummyCommand, int>(HttpVerbs.Put)
 					.UseCommand<DummyCommand, int>(HttpVerbs.Delete);
 			}
-		}
 
-		public class AdminRoles: RouteTable
-		{
-			public AdminRoles()
+			private void UseAdminRoles()
 			{
-				Route("")
+				Route("/roles")
 					.UseQuery<DummyQuery, int>()
 					.UseCommand<DummyCommand, int>(HttpVerbs.Post);
 
-				Route("/{roleId}")
+				Route("/roles/{roleId}")
 					.UseQuery<DummyQuery, int>()
 					.UseCommand<DummyCommand, int>(HttpVerbs.Put)
 					.UseCommand<DummyCommand, int>(HttpVerbs.Delete);
 
-				Route("/{roleId}/users")
+				Route("/roles/{roleId}/users")
 					.UseQuery<DummyQuery, int>()
 					.UseCommand<DummyCommand, int>(HttpVerbs.Post);
 
-				Route("/{roleId}/user/{userId}")
+				Route("/roles/{roleId}/user/{userId}")
 					.UseQuery<DummyQuery, int>()
 					.UseCommand<DummyCommand, int>(HttpVerbs.Put)
 					.UseCommand<DummyCommand, int>(HttpVerbs.Delete);
