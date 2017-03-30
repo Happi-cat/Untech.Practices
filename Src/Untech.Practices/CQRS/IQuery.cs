@@ -1,4 +1,4 @@
-﻿namespace Untech.Practices.CQRS.Requests
+﻿namespace Untech.Practices.CQRS
 {
 	/// <summary>
 	/// Used as a marker for queries.

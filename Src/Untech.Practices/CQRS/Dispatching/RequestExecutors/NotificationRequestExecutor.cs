@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Untech.Practices.CQRS.Handlers;
-using Untech.Practices.CQRS.Requests;
 
 namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 {
@@ -18,7 +17,7 @@ namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 		public object Handle(object args)
 		{
 			var handlers = _resolver.ResolveHandlers<INotificationHandler<TIn>>();
-			var input = (TIn) args;
+			var input = (TIn)args;
 			foreach (var handler in handlers)
 			{
 				handler.Publish(input);
@@ -30,7 +29,7 @@ namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 		public Task HandleAsync(object args)
 		{
 			var handlers = _resolver.ResolveHandlers<INotificationAsyncHandler<TIn>>();
-			var input = (TIn) args;
+			var input = (TIn)args;
 			var tasks = handlers
 				.Select(n => n.PublishAsync(input))
 				.ToArray();

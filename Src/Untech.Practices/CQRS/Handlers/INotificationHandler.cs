@@ -1,6 +1,4 @@
-﻿using Untech.Practices.CQRS.Requests;
-
-namespace Untech.Practices.CQRS.Handlers
+﻿namespace Untech.Practices.CQRS.Handlers
 {
 	/// <summary>
 	/// Defines a handler for a notification.

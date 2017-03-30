@@ -2,16 +2,26 @@ using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using Untech.Practices.CQRS.Dispatching.RequestExecutors;
-using Untech.Practices.CQRS.Requests;
 
 namespace Untech.Practices.CQRS.Dispatching
 {
+	/// <summary>
+	/// Represents class that implements <see cref="IDispatcher"/> interface 
+	/// and dispatches incoming CQRS request to appropriate handlers.
+	/// </summary>
 	public sealed class Dispatcher : IDispatcher
 	{
 		private readonly IHandlersResolver _handlersResolver;
 		private readonly IQueuedDispatcher _queuedDispatcher;
 		private readonly ConcurrentDictionary<Type, IRequestExecutor> _executors;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Dispatcher"/>.
+		/// </summary>
+		/// <param name="handlersResolver">The resolver of CQRS handlers.</param>
+		/// <param name="queuedDispatcher">Dispatcher that enqueues CQRS requests. 
+		///    <see cref="NoQueuedDispatcher"/> will be used when null is passed.</param>
+		/// <exception cref="ArgumentNullException"><paramref name="handlersResolver"/> is null.</exception>
 		public Dispatcher(IHandlersResolver handlersResolver, IQueuedDispatcher queuedDispatcher = null)
 		{
 			Guard.CheckNotNull(nameof(handlersResolver), handlersResolver);
@@ -24,6 +34,7 @@ namespace Untech.Practices.CQRS.Dispatching
 			_queuedDispatcher.Init(this);
 		}
 
+		/// <inheritdoc />
 		public TResponse Fetch<TResponse>(IQuery<TResponse> query)
 		{
 			Guard.CheckNotNull(nameof(query), query);
@@ -33,6 +44,7 @@ namespace Untech.Practices.CQRS.Dispatching
 				.Handle(query);
 		}
 
+		/// <inheritdoc />
 		public Task<TResponse> FetchAsync<TResponse>(IQuery<TResponse> query)
 		{
 			Guard.CheckNotNull(nameof(query), query);
@@ -42,6 +54,7 @@ namespace Untech.Practices.CQRS.Dispatching
 				.HandleAsync(query);
 		}
 
+		/// <inheritdoc />
 		public TResponse Process<TResponse>(ICommand<TResponse> command)
 		{
 			Guard.CheckNotNull(nameof(command), command);
@@ -51,6 +64,7 @@ namespace Untech.Practices.CQRS.Dispatching
 				.Handle(command);
 		}
 
+		/// <inheritdoc />
 		public Task<TResponse> ProcessAsync<TResponse>(ICommand<TResponse> command)
 		{
 			Guard.CheckNotNull(nameof(command), command);
@@ -60,6 +74,7 @@ namespace Untech.Practices.CQRS.Dispatching
 				.HandleAsync(command);
 		}
 
+		/// <inheritdoc />
 		public void Publish(INotification notification)
 		{
 			Guard.CheckNotNull(nameof(notification), notification);
@@ -69,6 +84,7 @@ namespace Untech.Practices.CQRS.Dispatching
 				.Handle(notification);
 		}
 
+		/// <inheritdoc />
 		public Task PublishAsync(INotification notification)
 		{
 			Guard.CheckNotNull(nameof(notification), notification);
@@ -78,46 +94,49 @@ namespace Untech.Practices.CQRS.Dispatching
 				.HandleAsync(notification);
 		}
 
+		/// <inheritdoc />
 		public void Enqueue<TResponse>(ICommand<TResponse> command, QueueOptions options)
 		{
 			Guard.CheckNotNull(nameof(command), command);
 
-			_queuedDispatcher.Enqueue(command, options ?? QueueOptions.Default);
+			_queuedDispatcher.Enqueue(command, options ?? QueueOptions.CreateDefault());
 		}
 
+		/// <inheritdoc />
 		public void Enqueue(INotification notification, QueueOptions options)
 		{
 			Guard.CheckNotNull(nameof(notification), notification);
 
-			_queuedDispatcher.Enqueue(notification, options ?? QueueOptions.Default);
+			_queuedDispatcher.Enqueue(notification, options ?? QueueOptions.CreateDefault());
 		}
 
 		#region [Private Methods]
 
-		private object MakeExecutor<TResponse>(Type genericExecutorType, Type requestType)
-		{
-			var executorType = genericExecutorType.MakeGenericType(requestType, typeof(TResponse));
-			return Activator.CreateInstance(executorType, new object[] { _handlersResolver }, null);
-		}
-		private object MakeExecutor(Type genericExecutorType, Type requestType)
-		{
-			var executorType = genericExecutorType.MakeGenericType(requestType);
-			return Activator.CreateInstance(executorType, new object[] { _handlersResolver }, null);
-		}
-
 		private IRequestExecutor MakeFetch<TResponse>(Type type)
 		{
-			return (IRequestExecutor)MakeExecutor<TResponse>(typeof(QueryRequestExecutor<,>), type);
+			return (IRequestExecutor)MakeExecutor(typeof(QueryRequestExecutor<,>), type, typeof(TResponse));
 		}
 
 		private IRequestExecutor MakeProcess<TResponse>(Type type)
 		{
-			return (IRequestExecutor)MakeExecutor<TResponse>(typeof(CommandRequestExecutor<,>), type);
+			return (IRequestExecutor)MakeExecutor(typeof(CommandRequestExecutor<,>), type, typeof(TResponse));
 		}
 
 		private IRequestExecutor MakePublish(Type type)
 		{
-			return (IRequestExecutor) MakeExecutor(typeof(NotificationRequestExecutor<>), type);
+			return (IRequestExecutor)MakeExecutor(typeof(NotificationRequestExecutor<>), type);
+		}
+
+		private object MakeExecutor(Type genericExecutorType, Type requestType, Type responseType)
+		{
+			var executorType = genericExecutorType.MakeGenericType(requestType, responseType);
+			return Activator.CreateInstance(executorType, new object[] { _handlersResolver }, null);
+		}
+
+		private object MakeExecutor(Type genericExecutorType, Type requestType)
+		{
+			var executorType = genericExecutorType.MakeGenericType(requestType);
+			return Activator.CreateInstance(executorType, new object[] { _handlersResolver }, null);
 		}
 
 		#endregion

@@ -1,14 +1,13 @@
 ﻿using System.Threading.Tasks;
-using Untech.Practices.CQRS.Requests;
 
 namespace Untech.Practices.CQRS.Handlers
 {
 	/// <summary>
-	/// Defines an async handler for a query.
+	/// Defines an asynchronous handler for a query.
 	/// </summary>
 	/// <typeparam name="TIn">The type of query to be handled.</typeparam>
 	/// <typeparam name="TOut">The type of result from the handler.</typeparam>
-	public interface IQueryAsyncHandler<in TIn, TOut> 
+	public interface IQueryAsyncHandler<in TIn, TOut>
 		where TIn : IQuery<TOut>
 	{
 		/// <summary>

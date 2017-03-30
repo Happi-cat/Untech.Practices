@@ -16,6 +16,5 @@
 		{
 			return new NotSpecification<T>(left);
 		}
-
 	}
 }

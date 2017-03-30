@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Microsoft.Owin;
 using Untech.Practices.CQRS.Dispatching;
 using Untech.Practices.CQRS.Owin.RequestMappers;
-using Untech.Practices.CQRS.Requests;
 
 namespace Untech.Practices.CQRS.Owin.RequestExecutors
 {

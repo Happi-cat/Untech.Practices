@@ -1,6 +1,4 @@
-﻿using Untech.Practices.CQRS.Requests;
-
-namespace Untech.Practices.CQRS.Handlers
+﻿namespace Untech.Practices.CQRS.Handlers
 {
 	/// <summary>
 	/// Represents base command handler without a response.
@@ -9,7 +7,7 @@ namespace Untech.Practices.CQRS.Handlers
 	public abstract class CommandHandler<TIn> : ICommandHandler<TIn, Unit>
 		where TIn : ICommand<Unit>
 	{
-		public Unit Handle(TIn command)
+		public Unit Process(TIn command)
 		{
 			HandleCore(command);
 

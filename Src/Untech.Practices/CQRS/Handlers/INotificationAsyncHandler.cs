@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Untech.Practices.CQRS.Requests;
 
 namespace Untech.Practices.CQRS.Handlers
 {

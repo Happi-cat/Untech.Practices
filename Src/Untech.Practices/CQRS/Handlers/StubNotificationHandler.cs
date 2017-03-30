@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Untech.Practices.CQRS.Requests;
 
 namespace Untech.Practices.CQRS.Handlers
 {
@@ -8,11 +7,21 @@ namespace Untech.Practices.CQRS.Handlers
 	/// </summary>
 	/// <typeparam name="TIn">The type of notification to be handled.</typeparam>
 	public sealed class StubNotificationHandler<TIn> :
-		INotificationHandler<TIn>, INotificationAsyncHandler<TIn> 
+		INotificationHandler<TIn>, INotificationAsyncHandler<TIn>
 		where TIn : INotification
 	{
-		public void Publish(TIn command) { }
+		/// <summary>
+		/// Publishes notification.
+		/// </summary>
+		/// <param name="notification">Notification to be handled.</param>
+		public void Publish(TIn notification)
+		{
+		}
 
-		public Task PublishAsync(TIn command) => Task.CompletedTask;
+		/// <summary>
+		/// Publishes notification asynchronously.
+		/// </summary>
+		/// <param name="notification">Notification to be handled.</param>
+		public Task PublishAsync(TIn notification) => Task.CompletedTask;
 	}
 }

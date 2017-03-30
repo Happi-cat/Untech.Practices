@@ -21,7 +21,7 @@ namespace Untech.Practices.CQRS.Owin.RequestMappers
 
 
 
-	class DefaultRequestMapper<T> : IRequestMapper<T>
+	internal class DefaultRequestMapper<T> : IRequestMapper<T>
 	{
 		public T Map(IOwinRequest request)
 		{

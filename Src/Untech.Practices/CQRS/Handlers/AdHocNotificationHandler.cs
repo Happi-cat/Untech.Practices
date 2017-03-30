@@ -1,5 +1,4 @@
 ﻿using System;
-using Untech.Practices.CQRS.Requests;
 
 namespace Untech.Practices.CQRS.Handlers
 {
@@ -7,14 +6,14 @@ namespace Untech.Practices.CQRS.Handlers
 	/// Represents adapter for <see cref="Action{TIn}"/>.
 	/// </summary>
 	/// <typeparam name="TIn">The type of command to be handled.</typeparam>
-	public sealed class AdHocNotificationHandler<TIn> : INotificationHandler<TIn> 
+	public sealed class AdHocNotificationHandler<TIn> : INotificationHandler<TIn>
 		where TIn : INotification
 	{
 		private readonly Action<TIn> _func;
 
 		public AdHocNotificationHandler(Action<TIn> func)
 		{
-			Guard.CheckNotNull("func", func);
+			Guard.CheckNotNull(nameof(func), func);
 
 			_func = func;
 		}

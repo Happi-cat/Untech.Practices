@@ -6,6 +6,7 @@ namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 	internal class HandlersResolverWrapper : IHandlersResolver
 	{
 		private readonly IHandlersResolver _inner;
+
 		public HandlersResolverWrapper(IHandlersResolver inner)
 		{
 			_inner = inner;

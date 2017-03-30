@@ -1,7 +1,5 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Untech.Practices.CQRS.Owin.Routing;
-using Untech.Practices.CQRS.Requests;
 
 namespace Untech.Practices.CQRS.Owin.Tests
 {
@@ -15,7 +13,7 @@ namespace Untech.Practices.CQRS.Owin.Tests
 	}
 
 	public class DummyQuery : IQuery<int> { }
-	public class DummyCommand: ICommand<int> { }
+	public class DummyCommand : ICommand<int> { }
 
 	public class RoutesExample : RouteTable
 	{
@@ -74,7 +72,7 @@ namespace Untech.Practices.CQRS.Owin.Tests
 				UseAdminGroups();
 				UseAdminRoles();
 			}
-		
+
 			private void UseAdminUsers()
 			{
 				Route("/users")

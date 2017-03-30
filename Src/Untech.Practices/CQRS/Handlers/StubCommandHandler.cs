@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Untech.Practices.CQRS.Requests;
 
 namespace Untech.Practices.CQRS.Handlers
 {
@@ -12,8 +11,8 @@ namespace Untech.Practices.CQRS.Handlers
 		ICommandHandler<TIn, TOut>, ICommandAsyncHandler<TIn, TOut>
 		where TIn : ICommand<TOut>
 	{
-		public TOut Handle(TIn command) => default(TOut);
+		public TOut Process(TIn command) => default(TOut);
 
-		public Task<TOut> HandleAsync(TIn command) => Task.FromResult(default(TOut));
+		public Task<TOut> ProcessAsync(TIn command) => Task.FromResult(default(TOut));
 	}
 }

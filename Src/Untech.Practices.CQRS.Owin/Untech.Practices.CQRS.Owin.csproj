@@ -75,7 +75,6 @@
     <Compile Include="RequestExecutors\QueryRequestExecutor.cs" />
     <Compile Include="Routing\RouteBuilderExtensions.cs" />
     <Compile Include="Routing\RouteTable.cs" />
-    <Compile Include="Test.cs" />
     <Compile Include="UriPattern.cs" />
   </ItemGroup>
   <ItemGroup>

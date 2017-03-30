@@ -3,12 +3,11 @@ using System.Threading.Tasks;
 using Microsoft.Owin;
 using Untech.Practices.CQRS.Dispatching;
 using Untech.Practices.CQRS.Owin.RequestMappers;
-using Untech.Practices.CQRS.Requests;
 
 namespace Untech.Practices.CQRS.Owin.RequestExecutors
 {
 	internal class NotificationRequestExecutor<TIn> : IRequestExecutor
-		where TIn: INotification
+		where TIn : INotification
 	{
 		public NotificationRequestExecutor(IRequestMapper<TIn> mapper)
 		{

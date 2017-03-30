@@ -87,7 +87,5 @@ namespace Untech.Practices.CQRS.Owin.Routing
 		}
 
 		#endregion
-
-		
 	}
 }

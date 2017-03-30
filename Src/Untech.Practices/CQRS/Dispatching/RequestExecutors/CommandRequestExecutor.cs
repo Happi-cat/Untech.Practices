@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Untech.Practices.CQRS.Handlers;
-using Untech.Practices.CQRS.Requests;
 
 namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 {
@@ -17,13 +16,13 @@ namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 		public object Handle(object args)
 		{
 			var handler = _resolver.ResolveHandler<ICommandHandler<TIn, TOut>>();
-			return handler.Handle((TIn) args);
+			return handler.Process((TIn) args);
 		}
 
 		public Task HandleAsync(object args)
 		{
 			var handler = _resolver.ResolveHandler<ICommandAsyncHandler<TIn, TOut>>();
-			return handler.HandleAsync((TIn) args);
+			return handler.ProcessAsync((TIn) args);
 		}
 	}
 }

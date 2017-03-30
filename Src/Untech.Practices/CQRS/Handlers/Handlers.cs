@@ -1,5 +1,4 @@
 ﻿using System;
-using Untech.Practices.CQRS.Requests;
 
 namespace Untech.Practices.CQRS.Handlers
 {
@@ -12,7 +11,7 @@ namespace Untech.Practices.CQRS.Handlers
 		/// <typeparam name="TOut">The type of result from the handler.</typeparam>
 		/// <returns></returns>
 		public static IQueryHandler<TIn, TOut> Query<TIn, TOut>()
-			   where TIn : IQuery<TOut>
+			where TIn : IQuery<TOut>
 		{
 			return new StubQueryHandler<TIn, TOut>();
 		}
@@ -24,7 +23,7 @@ namespace Untech.Practices.CQRS.Handlers
 		/// <typeparam name="TOut">The type of result from the handler.</typeparam>
 		/// <param name="func"></param>
 		/// <returns></returns>
-		public static IQueryHandler<TIn, TOut> Query<TIn, TOut>(Func<TIn, TOut> func) 
+		public static IQueryHandler<TIn, TOut> Query<TIn, TOut>(Func<TIn, TOut> func)
 			where TIn : IQuery<TOut>
 		{
 			return new AdHocQueryHandler<TIn, TOut>(func);
@@ -49,7 +48,7 @@ namespace Untech.Practices.CQRS.Handlers
 		/// <typeparam name="TOut">The type of result from the handler.</typeparam>
 		/// <param name="func"></param>
 		/// <returns></returns>
-		public static ICommandHandler<TIn, TOut> Command<TIn, TOut>(Func<TIn, TOut> func) 
+		public static ICommandHandler<TIn, TOut> Command<TIn, TOut>(Func<TIn, TOut> func)
 			where TIn : ICommand<TOut>
 		{
 			return new AdHocCommandHandler<TIn, TOut>(func);

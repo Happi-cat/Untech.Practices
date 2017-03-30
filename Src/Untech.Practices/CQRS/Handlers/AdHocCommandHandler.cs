@@ -1,5 +1,4 @@
 ﻿using System;
-using Untech.Practices.CQRS.Requests;
 
 namespace Untech.Practices.CQRS.Handlers
 {
@@ -15,11 +14,11 @@ namespace Untech.Practices.CQRS.Handlers
 
 		public AdHocCommandHandler(Func<TIn, TOut> func)
 		{
-			Guard.CheckNotNull("func", func);
+			Guard.CheckNotNull(nameof(func), func);
 
 			_func = func;
 		}
 
-		public TOut Handle(TIn command) => _func(command);
+		public TOut Process(TIn command) => _func(command);
 	}
 }

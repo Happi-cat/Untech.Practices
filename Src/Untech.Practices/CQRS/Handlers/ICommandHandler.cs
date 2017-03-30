@@ -1,6 +1,4 @@
-﻿using Untech.Practices.CQRS.Requests;
-
-namespace Untech.Practices.CQRS.Handlers
+﻿namespace Untech.Practices.CQRS.Handlers
 {
 	/// <summary>
 	/// Defines a handler for a command.
@@ -15,6 +13,6 @@ namespace Untech.Practices.CQRS.Handlers
 		/// </summary>
 		/// <param name="command">Command to be handled.</param>
 		/// <returns></returns>
-		TOut Handle(TIn command);
+		TOut Process(TIn command);
 	}
 }

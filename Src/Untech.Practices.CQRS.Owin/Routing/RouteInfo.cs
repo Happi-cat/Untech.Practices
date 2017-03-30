@@ -16,8 +16,8 @@ namespace Untech.Practices.CQRS.Owin.Routing
 			if (other == null) return false;
 			if (ReferenceEquals(this, other)) return true;
 
-			return Equals(UrlTemplate, other.UrlTemplate) &&
-				   Equals(Method, other.Method);
+			return Equals(UrlTemplate, other.UrlTemplate)
+				&& Equals(Method, other.Method);
 		}
 	}
 }

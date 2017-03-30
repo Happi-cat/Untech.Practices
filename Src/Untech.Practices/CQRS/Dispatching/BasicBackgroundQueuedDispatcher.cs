@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
-using Untech.Practices.CQRS.Requests;
 using Untech.Practices.Linq;
 
 namespace Untech.Practices.CQRS.Dispatching
@@ -56,7 +55,7 @@ namespace Untech.Practices.CQRS.Dispatching
 				new QueueProcessor(_messages, _parent).DoWork();
 				sw.Stop();
 
-				Delay(Math.Max(0, MinDelay - (int) sw.ElapsedMilliseconds));
+				Delay(Math.Max(0, MinDelay - (int)sw.ElapsedMilliseconds));
 			}
 		}
 
@@ -76,8 +75,8 @@ namespace Untech.Practices.CQRS.Dispatching
 				TimeToLive = options.TimeToLive;
 
 				Created = DateTime.UtcNow;
-				ExecuteAfter = options.ExecuteAfter != null ? (DateTime?) (Created + options.ExecuteAfter.Value) : null;
-				ExpiresAfter = options.ExpiresAfter != null ? (DateTime?) (Created + options.ExpiresAfter.Value) : null;
+				ExecuteAfter = options.ExecuteAfter != null ? (DateTime?)(Created + options.ExecuteAfter.Value) : null;
+				ExpiresAfter = options.ExpiresAfter != null ? (DateTime?)(Created + options.ExpiresAfter.Value) : null;
 			}
 
 			public QueueOptions Options { get; }

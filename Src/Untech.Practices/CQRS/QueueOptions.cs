@@ -1,15 +1,16 @@
 ﻿using System;
 
-namespace Untech.Practices.CQRS.Dispatching
+namespace Untech.Practices.CQRS
 {
+	/// <summary>
+	/// Represents class that contains different options for queuing of CQRS requests.
+	/// </summary>
 	public class QueueOptions
 	{
-		public static readonly QueueOptions Default = new QueueOptions();
-
-		public QueueOptions()
-		{
-			TimeToLive = 5;
-		}
+		/// <summary>
+		/// Default time to live: 5.
+		/// </summary>
+		public const int DefaultTimeToLive = 5;
 
 		/// <summary>
 		/// Gets or sets execution delay timeout.
@@ -24,11 +25,20 @@ namespace Untech.Practices.CQRS.Dispatching
 		/// <summary>
 		/// Gets or sets number of replies on failures.
 		/// </summary>
-		public int TimeToLive { get; set; }
+		public int TimeToLive { get; set; } = DefaultTimeToLive;
 
 		/// <summary>
 		/// Gets or sets request priority. Max - is the highest priority, min represents lowest priority.
 		/// </summary>
 		public int Priority { get; set; }
+
+		/// <summary>
+		/// Creates default <see cref="QueueOptions"/>.
+		/// </summary>
+		/// <returns></returns>
+		public static QueueOptions CreateDefault() => new QueueOptions
+		{
+			TimeToLive = DefaultTimeToLive
+		};
 	}
 }

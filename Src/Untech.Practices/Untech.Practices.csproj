@@ -51,7 +51,7 @@
     <Compile Include="CQRS\Handlers\ICommandAsyncHandler.cs" />
     <Compile Include="CQRS\Handlers\INotificationAsyncHandler.cs" />
     <Compile Include="CQRS\Handlers\IQueryAsyncHandler.cs" />
-    <Compile Include="CQRS\Dispatching\QueueOptions.cs" />
+    <Compile Include="CQRS\QueueOptions.cs" />
     <Compile Include="CQRS\Handlers\StubCommandHandler.cs" />
     <Compile Include="CQRS\Handlers\StubNotificationHandler.cs" />
     <Compile Include="CQRS\Handlers\StubQueryHandler.cs" />
@@ -66,13 +66,13 @@
     <Compile Include="CQRS\Handlers\AdHocNotificationHandler.cs" />
     <Compile Include="CQRS\Handlers\AdHocQueryHandler.cs" />
     <Compile Include="CQRS\Handlers\CommandHandler.cs" />
-    <Compile Include="CQRS\Requests\ICommand.cs" />
+    <Compile Include="CQRS\ICommand.cs" />
     <Compile Include="CQRS\Handlers\ICommandHandler.cs" />
-    <Compile Include="CQRS\Dispatching\IDispatcher.cs" />
+    <Compile Include="CQRS\IDispatcher.cs" />
     <Compile Include="CQRS\Dispatching\IHandlersResolver.cs" />
-    <Compile Include="CQRS\Requests\INotification.cs" />
+    <Compile Include="CQRS\INotification.cs" />
     <Compile Include="CQRS\Handlers\INotificationHandler.cs" />
-    <Compile Include="CQRS\Requests\IQuery.cs" />
+    <Compile Include="CQRS\IQuery.cs" />
     <Compile Include="CQRS\Handlers\IQueryHandler.cs" />
     <Compile Include="CQRS\Dispatching\IQueuedDispatcher.cs" />
     <Compile Include="Linq\EnumerableExtensions.cs" />

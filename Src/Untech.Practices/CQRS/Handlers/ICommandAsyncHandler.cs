@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Untech.Practices.CQRS.Requests;
 
 namespace Untech.Practices.CQRS.Handlers
 {
@@ -16,6 +15,6 @@ namespace Untech.Practices.CQRS.Handlers
 		/// </summary>
 		/// <param name="command">Command to be handled.</param>
 		/// <returns></returns>
-		Task<TOut> HandleAsync(TIn command);
+		Task<TOut> ProcessAsync(TIn command);
 	}
 }

@@ -28,7 +28,7 @@ namespace Untech.Practices.Repos
 
 		public bool IsSatisfiedBy(T obj)
 		{
-			return ! _inner.IsSatisfiedBy(obj);
+			return !_inner.IsSatisfiedBy(obj);
 		}
 	}
 }

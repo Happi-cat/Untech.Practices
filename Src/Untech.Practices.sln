@@ -1,15 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.CQRS.Owin", "Untech.Practices.CQRS.Owin\Untech.Practices.CQRS.Owin.csproj", "{33803EA9-9EE6-4B58-8A58-31923E0831F2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{839A588F-BFF8-4B49-BD50-235245F9B16A}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices", "Untech.Practices\Untech.Practices.csproj", "{8AD49EF6-1039-4C5D-AC4F-53EA035956D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.CQRS.Owin.Tests", "Untech.Practices.CQRS.Owin.Tests\Untech.Practices.CQRS.Owin.Tests.csproj", "{BF3D4F1E-D58C-4A93-ACF7-35B24E4CD27F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.CQRS.Owin.Tests", "Untech.Practices.CQRS.Owin.Tests\Untech.Practices.CQRS.Owin.Tests.csproj", "{3817BC29-4113-4DC2-8450-B3A4B2518403}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.Tests", "Untech.Practices.Tests\Untech.Practices.Tests.csproj", "{A8797A72-5AB0-47DE-ABA2-A57B6F15A988}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +30,14 @@ Global
 		{8AD49EF6-1039-4C5D-AC4F-53EA035956D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8AD49EF6-1039-4C5D-AC4F-53EA035956D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8AD49EF6-1039-4C5D-AC4F-53EA035956D2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BF3D4F1E-D58C-4A93-ACF7-35B24E4CD27F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BF3D4F1E-D58C-4A93-ACF7-35B24E4CD27F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BF3D4F1E-D58C-4A93-ACF7-35B24E4CD27F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BF3D4F1E-D58C-4A93-ACF7-35B24E4CD27F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3817BC29-4113-4DC2-8450-B3A4B2518403}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3817BC29-4113-4DC2-8450-B3A4B2518403}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3817BC29-4113-4DC2-8450-B3A4B2518403}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3817BC29-4113-4DC2-8450-B3A4B2518403}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8797A72-5AB0-47DE-ABA2-A57B6F15A988}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8797A72-5AB0-47DE-ABA2-A57B6F15A988}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8797A72-5AB0-47DE-ABA2-A57B6F15A988}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8797A72-5AB0-47DE-ABA2-A57B6F15A988}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{BF3D4F1E-D58C-4A93-ACF7-35B24E4CD27F}</ProjectGuid>
+    <ProjectGuid>{3817BC29-4113-4DC2-8450-B3A4B2518403}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Untech.Practices.CQRS.Owin.Tests</RootNamespace>

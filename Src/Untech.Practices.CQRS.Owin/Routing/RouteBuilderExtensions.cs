@@ -1,6 +1,5 @@
 ﻿using Untech.Practices.CQRS.Owin.RequestExecutors;
 using Untech.Practices.CQRS.Owin.RequestMappers;
-using Untech.Practices.CQRS.Requests;
 
 namespace Untech.Practices.CQRS.Owin.Routing
 {

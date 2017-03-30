@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Untech.Practices.CQRS.Requests;
 
 namespace Untech.Practices.CQRS.Handlers
 {
@@ -9,11 +8,11 @@ namespace Untech.Practices.CQRS.Handlers
 	/// <typeparam name="TIn">Request type.</typeparam>
 	/// <typeparam name="TOut">The type of result from the handler.</typeparam>
 	public sealed class StubQueryHandler<TIn, TOut> :
-		IQueryHandler<TIn, TOut>, IQueryAsyncHandler<TIn, TOut> 
+		IQueryHandler<TIn, TOut>, IQueryAsyncHandler<TIn, TOut>
 		where TIn : IQuery<TOut>
 	{
-		public TOut Fetch(TIn command) => default(TOut);
+		public TOut Fetch(TIn query) => default(TOut);
 
-		public Task<TOut> FetchAsync(TIn command) => Task.FromResult(default(TOut));
+		public Task<TOut> FetchAsync(TIn query) => Task.FromResult(default(TOut));
 	}
 }
