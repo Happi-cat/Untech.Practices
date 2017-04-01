@@ -8,7 +8,7 @@ using Untech.Practices.Linq;
 
 namespace Untech.Practices.CQRS.Dispatching
 {
-	public sealed class BasicBackgroundQueuedDispatcher : IQueuedDispatcher
+	public sealed class BasicBackgroundQueue : IQueuedDispatcher
 	{
 		private const int MinDelay = 2000;
 		private const int MaxBatchSize = 50;
@@ -31,7 +31,7 @@ namespace Untech.Practices.CQRS.Dispatching
 		{
 			_parent = parent;
 
-			ThreadPool.QueueUserWorkItem(DoWork);
+			ThreadPool.QueueUserWorkItem(DoWorkContinuously);
 		}
 
 		public void Enqueue<TResponse>(ICommand<TResponse> command, QueueOptions options)
@@ -46,7 +46,7 @@ namespace Untech.Practices.CQRS.Dispatching
 			_waitHandle.Set();
 		}
 
-		private void DoWork(object state)
+		private void DoWorkContinuously(object state)
 		{
 			var sw = new Stopwatch();
 			while (true)

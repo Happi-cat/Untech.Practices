@@ -43,7 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CQRS\Dispatching\BasicBackgroundQueuedDispatcher.cs" />
+    <Compile Include="CQRS\Dispatching\BasicBackgroundQueue.cs" />
     <Compile Include="CQRS\Dispatching\Dispatcher.cs" />
     <Compile Include="CQRS\Dispatching\NoQueuedDispatcher.cs" />
     <Compile Include="CQRS\Dispatching\RequestExecutors\HandlersResolverWrapper.cs" />
