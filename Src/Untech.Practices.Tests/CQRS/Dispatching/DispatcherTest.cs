@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
 
 namespace Untech.Practices.CQRS.Dispatching
 {
@@ -12,7 +11,7 @@ namespace Untech.Practices.CQRS.Dispatching
 		[TestInitialize]
 		public void Init()
 		{
-			_dispatcher = new Dispatcher(new TestResolver());
+			_dispatcher = new Dispatcher(new DummyCQRS.Resolver());
 		}
 
 		[TestMethod]
@@ -115,46 +114,6 @@ namespace Untech.Practices.CQRS.Dispatching
 				.PublishAsync(new DummyCQRS.Notification())
 				.GetAwaiter()
 				.GetResult();
-		}
-
-		[TestMethod]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void EnqueueC_ThrowArgumentNull_WhenArgIsNull()
-		{
-			_dispatcher.Enqueue<int>(null);
-		}
-
-		[TestMethod]
-		public void EnqueueC_Returns_WhenHandlerResolved()
-		{
-			_dispatcher.Enqueue(new DummyCQRS.Command());
-		}
-
-		[TestMethod]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void EnqueueN_ThrowArgumentNull_WhenArgIsNull()
-		{
-			_dispatcher.Enqueue(null);
-		}
-
-		[TestMethod]
-		public void EnqueueN_Returns_WhenHandlerResolved()
-		{
-			_dispatcher.Enqueue(new DummyCQRS.Notification());
-		}
-
-		private class TestResolver : IHandlersResolver
-		{
-			public T ResolveHandler<T>() where T : class
-			{
-				var handler = new DummyCQRS.Handler();
-				return handler as T;
-			}
-
-			public IEnumerable<T> ResolveHandlers<T>() where T : class
-			{
-				yield return ResolveHandler<T>();
-			}
 		}
 	}
 }

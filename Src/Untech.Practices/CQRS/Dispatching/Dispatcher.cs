@@ -35,6 +35,9 @@ namespace Untech.Practices.CQRS.Dispatching
 		}
 
 		/// <inheritdoc />
+		public IQueuedDispatcher Queue => throw new NotImplementedException();
+
+		/// <inheritdoc />
 		public TResponse Fetch<TResponse>(IQuery<TResponse> query)
 		{
 			Guard.CheckNotNull(nameof(query), query);
@@ -92,22 +95,6 @@ namespace Untech.Practices.CQRS.Dispatching
 			return _executors
 				.GetOrAdd(notification.GetType(), MakePublish)
 				.HandleAsync(notification);
-		}
-
-		/// <inheritdoc />
-		public void Enqueue<TResponse>(ICommand<TResponse> command, QueueOptions options)
-		{
-			Guard.CheckNotNull(nameof(command), command);
-
-			_queuedDispatcher.Enqueue(command, options ?? QueueOptions.CreateDefault());
-		}
-
-		/// <inheritdoc />
-		public void Enqueue(INotification notification, QueueOptions options)
-		{
-			Guard.CheckNotNull(nameof(notification), notification);
-
-			_queuedDispatcher.Enqueue(notification, options ?? QueueOptions.CreateDefault());
 		}
 
 		#region [Private Methods]

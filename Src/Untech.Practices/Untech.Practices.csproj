@@ -74,7 +74,7 @@
     <Compile Include="CQRS\Handlers\INotificationHandler.cs" />
     <Compile Include="CQRS\IQuery.cs" />
     <Compile Include="CQRS\Handlers\IQueryHandler.cs" />
-    <Compile Include="CQRS\Dispatching\IQueuedDispatcher.cs" />
+    <Compile Include="CQRS\IQueuedDispatcher.cs" />
     <Compile Include="Linq\EnumerableExtensions.cs" />
     <Compile Include="Mappers\IMapper.cs" />
     <Compile Include="Monads\Maybe.cs" />

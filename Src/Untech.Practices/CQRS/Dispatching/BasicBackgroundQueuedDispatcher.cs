@@ -25,6 +25,8 @@ namespace Untech.Practices.CQRS.Dispatching
 		private readonly EventWaitHandle _waitHandle = new ManualResetEvent(false);
 		private IDispatcher _parent;
 
+		public QueueOptions DefaultOptions { get; set; } = QueueOptions.CreateDefault();
+
 		public void Init(IDispatcher parent)
 		{
 			_parent = parent;
@@ -34,13 +36,13 @@ namespace Untech.Practices.CQRS.Dispatching
 
 		public void Enqueue<TResponse>(ICommand<TResponse> command, QueueOptions options)
 		{
-			_messages.Enqueue(QueuedItem.Create(command, options));
+			_messages.Enqueue(QueuedItem.Create(command, options ?? DefaultOptions));
 			_waitHandle.Set();
 		}
 
 		public void Enqueue(INotification notification, QueueOptions options)
 		{
-			_messages.Enqueue(QueuedItem.Create(notification, options));
+			_messages.Enqueue(QueuedItem.Create(notification, options ?? DefaultOptions));
 			_waitHandle.Set();
 		}
 
@@ -71,7 +73,7 @@ namespace Untech.Practices.CQRS.Dispatching
 		{
 			protected QueuedItem(QueueOptions options)
 			{
-				Options = options;
+				Options = options ?? QueueOptions.CreateDefault();
 				TimeToLive = options.TimeToLive;
 
 				Created = DateTime.UtcNow;

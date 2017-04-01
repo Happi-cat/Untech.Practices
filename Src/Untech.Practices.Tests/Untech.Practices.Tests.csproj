@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CQRS\Dispatching\DispatcherTest.cs" />
+    <Compile Include="CQRS\Dispatching\NoQueuedDispatcher.cs" />
     <Compile Include="CQRS\DummyCQRS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Untech.Practices.CQRS.Dispatching;
 using Untech.Practices.CQRS.Handlers;
 
 namespace Untech.Practices.CQRS
@@ -42,6 +44,20 @@ namespace Untech.Practices.CQRS
 			public Task PublishAsync(Notification notification)
 			{
 				return Task.CompletedTask;
+			}
+		}
+
+		public class Resolver : IHandlersResolver
+		{
+			public T ResolveHandler<T>() where T : class
+			{
+				var handler = new Handler();
+				return handler as T;
+			}
+
+			public IEnumerable<T> ResolveHandlers<T>() where T : class
+			{
+				yield return ResolveHandler<T>();
 			}
 		}
 	}

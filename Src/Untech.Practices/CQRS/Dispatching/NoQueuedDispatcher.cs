@@ -9,6 +9,8 @@ namespace Untech.Practices.CQRS.Dispatching
 	{
 		private IDispatcher _parent;
 
+		public QueueOptions DefaultOptions { get; set; } = QueueOptions.CreateDefault();
+
 		/// <inheritdoc />
 		public void Init(IDispatcher parent)
 		{

@@ -11,6 +11,11 @@ namespace Untech.Practices.CQRS
 	public interface IDispatcher
 	{
 		/// <summary>
+		/// Gets instance of the <see cref="IQueuedDispatcher"/> that enqueues commands and notification in execution queue.
+		/// </summary>
+		IQueuedDispatcher Queue { get; }
+
+		/// <summary>
 		/// Fetches data of type <typeparamref name="TResult"/> for the specified <paramref name="query"/>.
 		/// </summary>
 		/// <typeparam name="TResult">The type of result.</typeparam>
@@ -53,24 +58,5 @@ namespace Untech.Practices.CQRS
 		/// </summary>
 		/// <param name="notification">The command to be published.</param>
 		Task PublishAsync(INotification notification);
-
-		/// <summary>
-		/// Puts the incoming <paramref name="command"/> in execution queue and schedules execution using <paramref name="options"/>.
-		/// This method can be used when command can be executed separately or with a delay in another execution thread 
-		/// and there is no need to wait for result.
-		/// </summary>
-		/// <typeparam name="TResult">The type of result.</typeparam>
-		/// <param name="command">The command to be enqueued.</param>
-		/// <param name="options">The options that can be used for operation execution scheduling.</param>
-		void Enqueue<TResult>(ICommand<TResult> command, QueueOptions options = null);
-
-		/// <summary>
-		/// Puts the incoming <paramref name="notification"/> in execution queue and schedules execution using <paramref name="options"/>.
-		/// This method can be used when command can be executed separately or with a delay in another execution thread 
-		/// and there is no need to wait for result.
-		/// </summary>
-		/// <param name="notification">The notification  to be enqueued.</param>
-		/// <param name="options">The options that can be used for operation execution scheduling.</param>
-		void Enqueue(INotification notification, QueueOptions options = null);
 	}
 }
