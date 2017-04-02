@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 
 namespace Untech.Practices.CQRS.Handlers
 {
@@ -14,7 +15,8 @@ namespace Untech.Practices.CQRS.Handlers
 		/// Handles command asynchronously and returns result.
 		/// </summary>
 		/// <param name="command">Command to be handled.</param>
+		/// <param name="cancellationToken">The token that used for propagation notification that task should be canceled.</param>
 		/// <returns></returns>
-		Task<TOut> ProcessAsync(TIn command);
+		Task<TOut> ProcessAsync(TIn command, CancellationToken cancellationToken);
 	}
 }

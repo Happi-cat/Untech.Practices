@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Untech.Practices.CQRS.Handlers;
 
 namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
@@ -19,10 +20,10 @@ namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 			return handler.Fetch((TIn)args);
 		}
 
-		public Task HandleAsync(object args)
+		public Task HandleAsync(object args, CancellationToken cancellationToken)
 		{
 			var handler = _resolver.ResolveHandler<IQueryAsyncHandler<TIn, TOut>>();
-			return handler.FetchAsync((TIn)args);
+			return handler.FetchAsync((TIn)args, cancellationToken);
 		}
 	}
 }

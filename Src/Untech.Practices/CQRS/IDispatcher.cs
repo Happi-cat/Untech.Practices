@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 
 namespace Untech.Practices.CQRS
 {
@@ -28,8 +29,9 @@ namespace Untech.Practices.CQRS
 		/// </summary>
 		/// <typeparam name="TResult">The type of result.</typeparam>
 		/// <param name="query">The query to be processed.</param>
+		/// <param name="cancellationToken">The token that used for propagation notification that task should be canceled.</param>
 		/// <returns>Matching data.</returns>
-		Task<TResult> FetchAsync<TResult>(IQuery<TResult> query);
+		Task<TResult> FetchAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken);
 
 		/// <summary>
 		/// Processes the incoming <paramref name="command"/> and returns execution result.
@@ -44,8 +46,9 @@ namespace Untech.Practices.CQRS
 		/// </summary>
 		/// <typeparam name="TResult">The type of result.</typeparam>
 		/// <param name="command">The command to be processed.</param>
+		/// <param name="cancellationToken">The token that used for propagation notification that task should be canceled.</param>
 		/// <returns>Execution result.</returns>
-		Task<TResult> ProcessAsync<TResult>(ICommand<TResult> command);
+		Task<TResult> ProcessAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken);
 
 		/// <summary>
 		/// Publishes the incoming <paramref name="notification"/>.
@@ -57,6 +60,7 @@ namespace Untech.Practices.CQRS
 		/// Publishes asynchronously the incoming <paramref name="notification"/>.
 		/// </summary>
 		/// <param name="notification">The command to be published.</param>
-		Task PublishAsync(INotification notification);
+		/// <param name="cancellationToken">The token that used for propagation notification that task should be canceled.</param>
+		Task PublishAsync(INotification notification, CancellationToken cancellationToken);
 	}
 }

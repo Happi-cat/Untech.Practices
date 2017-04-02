@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Untech.Practices.CQRS.Handlers;
 
@@ -26,12 +27,12 @@ namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 			return Unit.Value;
 		}
 
-		public Task HandleAsync(object args)
+		public Task HandleAsync(object args, CancellationToken cancellationToken)
 		{
 			var handlers = _resolver.ResolveHandlers<INotificationAsyncHandler<TIn>>();
 			var input = (TIn)args;
 			var tasks = handlers
-				.Select(n => n.PublishAsync(input))
+				.Select(n => n.PublishAsync(input, cancellationToken))
 				.ToArray();
 
 			return Task.WhenAll(tasks);

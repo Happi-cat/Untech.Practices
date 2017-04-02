@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.Threading;
 using System.Threading.Tasks;
 using Untech.Practices.CQRS.Dispatching.RequestExecutors;
 
@@ -12,7 +13,6 @@ namespace Untech.Practices.CQRS.Dispatching
 	public sealed class Dispatcher : IDispatcher
 	{
 		private readonly IHandlersResolver _handlersResolver;
-		private readonly IQueuedDispatcher _queuedDispatcher;
 		private readonly ConcurrentDictionary<Type, IRequestExecutor> _executors;
 
 		/// <summary>
@@ -27,15 +27,14 @@ namespace Untech.Practices.CQRS.Dispatching
 			Guard.CheckNotNull(nameof(handlersResolver), handlersResolver);
 
 			_handlersResolver = new HandlersResolverWrapper(handlersResolver);
-			_queuedDispatcher = queuedDispatcher ?? new NoQueuedDispatcher();
-
 			_executors = new ConcurrentDictionary<Type, IRequestExecutor>();
 
-			_queuedDispatcher.Init(this);
+			Queue = queuedDispatcher ?? new NoQueuedDispatcher();
+			Queue.Init(this);
 		}
 
 		/// <inheritdoc />
-		public IQueuedDispatcher Queue => throw new NotImplementedException();
+		public IQueuedDispatcher Queue { get; }
 
 		/// <inheritdoc />
 		public TResponse Fetch<TResponse>(IQuery<TResponse> query)
@@ -48,13 +47,13 @@ namespace Untech.Practices.CQRS.Dispatching
 		}
 
 		/// <inheritdoc />
-		public Task<TResponse> FetchAsync<TResponse>(IQuery<TResponse> query)
+		public Task<TResponse> FetchAsync<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken)
 		{
 			Guard.CheckNotNull(nameof(query), query);
 
 			return (Task<TResponse>)_executors
 				.GetOrAdd(query.GetType(), MakeFetch<TResponse>)
-				.HandleAsync(query);
+				.HandleAsync(query, cancellationToken);
 		}
 
 		/// <inheritdoc />
@@ -68,13 +67,13 @@ namespace Untech.Practices.CQRS.Dispatching
 		}
 
 		/// <inheritdoc />
-		public Task<TResponse> ProcessAsync<TResponse>(ICommand<TResponse> command)
+		public Task<TResponse> ProcessAsync<TResponse>(ICommand<TResponse> command, CancellationToken cancellationToken)
 		{
 			Guard.CheckNotNull(nameof(command), command);
 
 			return (Task<TResponse>)_executors
 				.GetOrAdd(command.GetType(), MakeProcess<TResponse>)
-				.HandleAsync(command);
+				.HandleAsync(command, cancellationToken);
 		}
 
 		/// <inheritdoc />
@@ -88,13 +87,13 @@ namespace Untech.Practices.CQRS.Dispatching
 		}
 
 		/// <inheritdoc />
-		public Task PublishAsync(INotification notification)
+		public Task PublishAsync(INotification notification, CancellationToken cancellationToken)
 		{
 			Guard.CheckNotNull(nameof(notification), notification);
 
 			return _executors
 				.GetOrAdd(notification.GetType(), MakePublish)
-				.HandleAsync(notification);
+				.HandleAsync(notification, cancellationToken);
 		}
 
 		#region [Private Methods]

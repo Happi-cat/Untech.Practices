@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
@@ -6,6 +7,6 @@ namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 	{
 		object Handle(object args);
 
-		Task HandleAsync(object args);
+		Task HandleAsync(object args, CancellationToken cancellationToken);
 	}
 }

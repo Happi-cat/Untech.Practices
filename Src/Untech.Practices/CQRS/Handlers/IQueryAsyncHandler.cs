@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 
 namespace Untech.Practices.CQRS.Handlers
 {
@@ -14,7 +15,8 @@ namespace Untech.Practices.CQRS.Handlers
 		/// Fetches query asynchronously.
 		/// </summary>
 		/// <param name="query">Query to fetch.</param>
+		/// <param name="cancellationToken">The token that used for propagation notification that task should be canceled.</param>
 		/// <returns></returns>
-		Task<TOut> FetchAsync(TIn query);
+		Task<TOut> FetchAsync(TIn query, CancellationToken cancellationToken);
 	}
 }

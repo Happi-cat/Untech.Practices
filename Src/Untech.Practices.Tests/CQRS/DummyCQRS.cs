@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Untech.Practices.CQRS.Dispatching;
 using Untech.Practices.CQRS.Handlers;
@@ -31,17 +32,17 @@ namespace Untech.Practices.CQRS
 		{
 			public int Fetch(Query query) => 1;
 
-			public Task<int> FetchAsync(Query query) => Task.FromResult(1);
+			public Task<int> FetchAsync(Query query, CancellationToken cancellationToken) => Task.FromResult(1);
 
 			public int Process(Command command) => 1;
 
-			public Task<int> ProcessAsync(Command command) => Task.FromResult(1);
+			public Task<int> ProcessAsync(Command command, CancellationToken cancellationToken) => Task.FromResult(1);
 
 			public void Publish(Notification notification)
 			{
 			}
 
-			public Task PublishAsync(Notification notification)
+			public Task PublishAsync(Notification notification, CancellationToken cancellationToken)
 			{
 				return Task.CompletedTask;
 			}

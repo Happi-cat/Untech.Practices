@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 
 namespace Untech.Practices.CQRS.Handlers
 {
@@ -10,18 +11,12 @@ namespace Untech.Practices.CQRS.Handlers
 		INotificationHandler<TIn>, INotificationAsyncHandler<TIn>
 		where TIn : INotification
 	{
-		/// <summary>
-		/// Publishes notification.
-		/// </summary>
-		/// <param name="notification">Notification to be handled.</param>
+		/// <inheritdoc />
 		public void Publish(TIn notification)
 		{
 		}
 
-		/// <summary>
-		/// Publishes notification asynchronously.
-		/// </summary>
-		/// <param name="notification">Notification to be handled.</param>
-		public Task PublishAsync(TIn notification) => Task.CompletedTask;
+		/// <inheritdoc />
+		public Task PublishAsync(TIn notification, CancellationToken cancellationToken) => Task.CompletedTask;
 	}
 }

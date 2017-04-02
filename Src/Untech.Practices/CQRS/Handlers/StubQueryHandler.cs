@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 
 namespace Untech.Practices.CQRS.Handlers
 {
@@ -11,8 +12,10 @@ namespace Untech.Practices.CQRS.Handlers
 		IQueryHandler<TIn, TOut>, IQueryAsyncHandler<TIn, TOut>
 		where TIn : IQuery<TOut>
 	{
+		/// <inheritdoc />
 		public TOut Fetch(TIn query) => default(TOut);
 
-		public Task<TOut> FetchAsync(TIn query) => Task.FromResult(default(TOut));
+		/// <inheritdoc />
+		public Task<TOut> FetchAsync(TIn query, CancellationToken cancellationToken) => Task.FromResult(default(TOut));
 	}
 }

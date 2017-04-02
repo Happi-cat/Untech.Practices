@@ -6,7 +6,7 @@ namespace Untech.Practices.CQRS.Dispatching
 	[TestClass]
 	public class NoQueuedDispatcherTest
 	{
-		private IQueuedDispatcher _dispatcher;
+		private NoQueuedDispatcher _dispatcher;
 
 		[TestInitialize]
 		public void Init()
@@ -40,7 +40,5 @@ namespace Untech.Practices.CQRS.Dispatching
 		{
 			_dispatcher.Enqueue(new DummyCQRS.Notification());
 		}
-
-		
 	}
 }

@@ -6,7 +6,7 @@ namespace Untech.Practices.CQRS.Dispatching
 	[TestClass]
 	public class DispatcherTest
 	{
-		private IDispatcher _dispatcher;
+		private Dispatcher _dispatcher;
 
 		[TestInitialize]
 		public void Init()
@@ -40,14 +40,14 @@ namespace Untech.Practices.CQRS.Dispatching
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void FetchAsync_ThrowArgumentNull_WhenArgIsNull()
 		{
-			_dispatcher.FetchAsync<int>(null);
+			_dispatcher.FetchAsync<int>(null, new System.Threading.CancellationToken());
 		}
 
 		[TestMethod]
 		public void FetchAsync_Returns_WhenHandlerResolved()
 		{
 			var res = _dispatcher
-				.FetchAsync(new DummyCQRS.Query())
+				.FetchAsync(new DummyCQRS.Query(), new System.Threading.CancellationToken())
 				.GetAwaiter()
 				.GetResult();
 
@@ -73,14 +73,14 @@ namespace Untech.Practices.CQRS.Dispatching
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void ProcessAsync_ThrowArgumentNull_WhenArgIsNull()
 		{
-			_dispatcher.ProcessAsync<int>(null);
+			_dispatcher.ProcessAsync<int>(null, new System.Threading.CancellationToken());
 		}
 
 		[TestMethod]
 		public void ProcessAsync_Returns_WhenHandlerResolved()
 		{
 			var res = _dispatcher
-				.ProcessAsync(new DummyCQRS.Command())
+				.ProcessAsync(new DummyCQRS.Command(), new System.Threading.CancellationToken())
 				.GetAwaiter()
 				.GetResult();
 
@@ -104,14 +104,14 @@ namespace Untech.Practices.CQRS.Dispatching
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void PublishAsync_ThrowArgumentNull_WhenArgIsNull()
 		{
-			_dispatcher.PublishAsync(null);
+			_dispatcher.PublishAsync(null, new System.Threading.CancellationToken());
 		}
 
 		[TestMethod]
 		public void PublishAsync_Returns_WhenHandlerResolved()
 		{
 			_dispatcher
-				.PublishAsync(new DummyCQRS.Notification())
+				.PublishAsync(new DummyCQRS.Notification(), new System.Threading.CancellationToken())
 				.GetAwaiter()
 				.GetResult();
 		}

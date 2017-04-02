@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 
 namespace Untech.Practices.CQRS.Handlers
 {
@@ -13,6 +14,7 @@ namespace Untech.Practices.CQRS.Handlers
 		/// Publishes notification asynchronously.
 		/// </summary>
 		/// <param name="notification">Notification to be handled.</param>
-		Task PublishAsync(TIn notification);
+		/// <param name="cancellationToken">The token that used for propagation notification that task should be canceled.</param>
+		Task PublishAsync(TIn notification, CancellationToken cancellationToken);
 	}
 }

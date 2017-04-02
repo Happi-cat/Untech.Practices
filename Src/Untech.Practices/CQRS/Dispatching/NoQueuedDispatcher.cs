@@ -18,14 +18,14 @@ namespace Untech.Practices.CQRS.Dispatching
 		}
 
 		/// <inheritdoc />
-		public void Enqueue<TResponse>(ICommand<TResponse> command, QueueOptions options)
+		public void Enqueue<TResponse>(ICommand<TResponse> command, QueueOptions options = null)
 		{
 			CheckInitialized();
 			_parent.Process(command);
 		}
 
 		/// <inheritdoc />
-		public void Enqueue(INotification notification, QueueOptions options)
+		public void Enqueue(INotification notification, QueueOptions options = null)
 		{
 			CheckInitialized();
 			_parent.Publish(notification);
