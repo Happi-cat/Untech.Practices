@@ -2,14 +2,9 @@
 
 namespace Untech.Practices.Monads
 {
-	public sealed class Maybe<T> : IEquatable<Maybe<T>>
+	public struct Maybe<T> : IEquatable<Maybe<T>>
 	{
 		public static readonly Maybe<T> Nothing = new Maybe<T>();
-
-		public Maybe()
-		{
-			HasValue = false;
-		}
 
 		public Maybe(T value)
 		{
