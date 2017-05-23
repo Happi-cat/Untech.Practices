@@ -20,21 +20,21 @@ namespace Untech.Practices.CQRS.Dispatching
 		/// </summary>
 		/// <param name="handlersResolver">The resolver of CQRS handlers.</param>
 		/// <param name="queuedDispatcher">Dispatcher that enqueues CQRS requests. 
-		///    <see cref="NoQueuedDispatcher"/> will be used when null is passed.</param>
+		///    <see cref="SimpleQueueDispatcher"/> will be used when null is passed.</param>
 		/// <exception cref="ArgumentNullException"><paramref name="handlersResolver"/> is null.</exception>
-		public Dispatcher(IHandlersResolver handlersResolver, IQueuedDispatcher queuedDispatcher = null)
+		public Dispatcher(IHandlersResolver handlersResolver, IQueueDispatcher queuedDispatcher = null)
 		{
 			Guard.CheckNotNull(nameof(handlersResolver), handlersResolver);
 
 			_handlersResolver = new HandlersResolverWrapper(handlersResolver);
 			_executors = new ConcurrentDictionary<Type, IRequestExecutor>();
 
-			Queue = queuedDispatcher ?? new NoQueuedDispatcher();
+			Queue = queuedDispatcher ?? new SimpleQueueDispatcher();
 			Queue.Init(this);
 		}
 
 		/// <inheritdoc />
-		public IQueuedDispatcher Queue { get; }
+		public IQueueDispatcher Queue { get; }
 
 		/// <inheritdoc />
 		public TResponse Fetch<TResponse>(IQuery<TResponse> query)

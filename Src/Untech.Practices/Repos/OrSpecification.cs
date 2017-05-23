@@ -9,7 +9,6 @@ namespace Untech.Practices.Repos
 		private readonly ISpecification<T> _left;
 		private readonly ISpecification<T> _right;
 
-
 		public OrSpecification(ISpecification<T> left, ISpecification<T> right)
 		{
 			_right = right;

@@ -1,17 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Untech.Practices.CQRS.Dispatching
 {
 	[TestClass]
-	public class NoQueuedDispatcherTest
+	public class SimpleQueueDispatcherTest
 	{
-		private NoQueuedDispatcher _dispatcher;
+		private SimpleQueueDispatcher _dispatcher;
 
 		[TestInitialize]
 		public void Init()
 		{
-			_dispatcher = new NoQueuedDispatcher();
+			_dispatcher = new SimpleQueueDispatcher();
 			_dispatcher.Init(new Dispatcher(new DummyCQRS.Resolver()));
 		}
 

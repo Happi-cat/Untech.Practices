@@ -8,7 +8,7 @@ using Untech.Practices.Linq;
 
 namespace Untech.Practices.CQRS.Dispatching
 {
-	public sealed class BasicBackgroundQueue : IQueuedDispatcher
+	public sealed class BasicBackgroundQueue : IQueueDispatcher
 	{
 		private const int MinDelay = 2000;
 		private const int MaxBatchSize = 50;
@@ -169,8 +169,7 @@ namespace Untech.Practices.CQRS.Dispatching
 				var messagesToDelay = new List<QueuedItem>();
 				var messagesToProcess = new List<QueuedItem>();
 
-				QueuedItem message;
-				while (counter-- > 0 && _messages.TryTake(out message))
+				while (counter-- > 0 && _messages.TryTake(out QueuedItem message))
 				{
 					if (message.ExecuteAfter > _clock)
 					{

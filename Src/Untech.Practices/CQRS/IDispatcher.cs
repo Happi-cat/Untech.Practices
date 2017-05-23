@@ -12,9 +12,9 @@ namespace Untech.Practices.CQRS
 	public interface IDispatcher
 	{
 		/// <summary>
-		/// Gets instance of the <see cref="IQueuedDispatcher"/> that enqueues commands and notification in execution queue.
+		/// Gets instance of the <see cref="IQueueDispatcher"/> that enqueues commands and notification in execution queue.
 		/// </summary>
-		IQueuedDispatcher Queue { get; }
+		IQueueDispatcher Queue { get; }
 
 		/// <summary>
 		/// Fetches data of type <typeparamref name="TResult"/> for the specified <paramref name="query"/>.

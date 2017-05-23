@@ -1,107 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8AD49EF6-1039-4C5D-AC4F-53EA035956D2}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Untech.Practices</RootNamespace>
-    <AssemblyName>Untech.Practices</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="CQRS\Dispatching\BasicBackgroundQueue.cs" />
-    <Compile Include="CQRS\Dispatching\Dispatcher.cs" />
-    <Compile Include="CQRS\Dispatching\NoQueuedDispatcher.cs" />
-    <Compile Include="CQRS\Dispatching\RequestExecutors\HandlersResolverWrapper.cs" />
-    <Compile Include="CQRS\Handlers\Handlers.cs" />
-    <Compile Include="CQRS\Handlers\ICommandAsyncHandler.cs" />
-    <Compile Include="CQRS\Handlers\INotificationAsyncHandler.cs" />
-    <Compile Include="CQRS\Handlers\IQueryAsyncHandler.cs" />
-    <Compile Include="CQRS\QueueOptions.cs" />
-    <Compile Include="CQRS\Handlers\StubCommandHandler.cs" />
-    <Compile Include="CQRS\Handlers\StubNotificationHandler.cs" />
-    <Compile Include="CQRS\Handlers\StubQueryHandler.cs" />
-    <Compile Include="FaultTolerance\IRetryPolicy.cs" />
-    <Compile Include="FuncExtensions.cs" />
-    <Compile Include="Guard.cs" />
-    <Compile Include="CQRS\Dispatching\RequestExecutors\CommandRequestExecutor.cs" />
-    <Compile Include="CQRS\Dispatching\RequestExecutors\NotificationRequestExecutor.cs" />
-    <Compile Include="CQRS\Dispatching\RequestExecutors\QueryRequestExecutor.cs" />
-    <Compile Include="CQRS\Dispatching\RequestExecutors\IRequestExecutor.cs" />
-    <Compile Include="CQRS\Handlers\AdHocCommandHandler.cs" />
-    <Compile Include="CQRS\Handlers\AdHocNotificationHandler.cs" />
-    <Compile Include="CQRS\Handlers\AdHocQueryHandler.cs" />
-    <Compile Include="CQRS\Handlers\CommandHandler.cs" />
-    <Compile Include="CQRS\ICommand.cs" />
-    <Compile Include="CQRS\Handlers\ICommandHandler.cs" />
-    <Compile Include="CQRS\IDispatcher.cs" />
-    <Compile Include="CQRS\Dispatching\IHandlersResolver.cs" />
-    <Compile Include="CQRS\INotification.cs" />
-    <Compile Include="CQRS\Handlers\INotificationHandler.cs" />
-    <Compile Include="CQRS\IQuery.cs" />
-    <Compile Include="CQRS\Handlers\IQueryHandler.cs" />
-    <Compile Include="CQRS\IQueuedDispatcher.cs" />
-    <Compile Include="Linq\EnumerableExtensions.cs" />
-    <Compile Include="Mappers\IMapper.cs" />
-    <Compile Include="Monads\Maybe.cs" />
-    <Compile Include="Monads\MaybeExtensions.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repos\AdHocProjection.cs" />
-    <Compile Include="Repos\AdHocSpecification.cs" />
-    <Compile Include="Repos\AndSpecification.cs" />
-    <Compile Include="Repos\IProjection.cs" />
-    <Compile Include="Repos\IReadOnlyRepository.cs" />
-    <Compile Include="Repos\IRepository.cs" />
-    <Compile Include="Repos\ISpecification.cs" />
-    <Compile Include="Repos\NotSpecification.cs" />
-    <Compile Include="Repos\OrSpecification.cs" />
-    <Compile Include="Repos\Specifications.cs" />
-    <Compile Include="Unit.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+	<PropertyGroup>
+		<Company>Sergey Svirsky</Company>
+		<Copyright>Copyright \u00A9 Sergey Svirsky 2017</Copyright>
+		<TargetFrameworks>net46;net461;netstandard1.4</TargetFrameworks>
+	</PropertyGroup>
+	<ItemGroup>
+		<None Include="app.config" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Properties\" />
+	</ItemGroup>
+	<ItemGroup Condition="$(TargetFramework) == 'netstandard1.4'">
+	  <PackageReference Include="System.Runtime.Serialization.Formatters" Version="4.3.0" />
+		<PackageReference Include="System.Threading.Thread" Version="4.3.0" />
+		<PackageReference Include="System.Threading.ThreadPool" Version="4.3.0" />
+	</ItemGroup>
 </Project>
