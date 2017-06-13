@@ -1,12 +1,9 @@
 ﻿namespace Untech.Practices.DDD
 {
-	public interface IAggregateRoot
-	{
-		bool CanBeSaved { get; }
-	}
-
-	public interface IAggregateRoot<TKey> : IAggregateRoot
+	public interface IAggregateRoot<TKey>
 	{
 		TKey Key { get; }
+
+		bool CanBeSaved { get; }
 	}
 }
