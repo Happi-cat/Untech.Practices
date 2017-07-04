@@ -15,9 +15,6 @@
 		<PackageReference Include="MSTest.TestFramework" Version="1.1.14" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\Untech.Practices\Untech.Practices.csproj" />
-	</ItemGroup>
-	<ItemGroup>
 	  <Folder Include="Properties\" />
 	</ItemGroup>
 	<ItemGroup>

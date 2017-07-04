@@ -8,8 +8,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices", "Untech.Practices\Untech.Practices.csproj", "{8AD49EF6-1039-4C5D-AC4F-53EA035956D2}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.Tests", "Untech.Practices.Tests\Untech.Practices.Tests.csproj", "{A8797A72-5AB0-47DE-ABA2-A57B6F15A988}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.AspNetCore.CQRS", "Untech.Practices.AspNetCore.CQRS\Untech.Practices.AspNetCore.CQRS.csproj", "{C9282939-DE25-4920-BFEF-7804DFAD798A}"
@@ -18,16 +16,24 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AspNetCore", "AspNetCore", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.AspNetCore.CQRS.Tests", "Untech.Practices.AspNetCore.CQRS.Tests\Untech.Practices.AspNetCore.CQRS.Tests.csproj", "{82E694B7-9119-48C9-B42E-D249584562B1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.CQRS", "Untech.Practices.CQRS\Untech.Practices.CQRS.csproj", "{A432FF73-0F7A-4C79-8FCA-4B7CE968964A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.Repos", "Untech.Practices.Repos\Untech.Practices.Repos.csproj", "{4454DCE9-9F1F-495C-91F5-5F709758C5C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.Collections", "Untech.Practices.Collections\Untech.Practices.Collections.csproj", "{9E8D6A84-28EC-4DDB-B70F-93A9000C636E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.Collections.Tests", "Untech.Practices.Collections.Tests\Untech.Practices.Collections.Tests.csproj", "{E948DB73-4DF6-438D-9818-2A03B6EE991B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.CQRS.Tests", "Untech.Practices.CQRS.Tests\Untech.Practices.CQRS.Tests.csproj", "{DB5062AD-22D9-4236-849A-B4944B83149B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.Core", "Untech.Practices.Core\Untech.Practices.Core.csproj", "{5C81ED62-14F7-49BA-8024-E92374B125C2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8AD49EF6-1039-4C5D-AC4F-53EA035956D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8AD49EF6-1039-4C5D-AC4F-53EA035956D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8AD49EF6-1039-4C5D-AC4F-53EA035956D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8AD49EF6-1039-4C5D-AC4F-53EA035956D2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A8797A72-5AB0-47DE-ABA2-A57B6F15A988}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A8797A72-5AB0-47DE-ABA2-A57B6F15A988}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8797A72-5AB0-47DE-ABA2-A57B6F15A988}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -40,6 +46,30 @@ Global
 		{82E694B7-9119-48C9-B42E-D249584562B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82E694B7-9119-48C9-B42E-D249584562B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82E694B7-9119-48C9-B42E-D249584562B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A432FF73-0F7A-4C79-8FCA-4B7CE968964A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A432FF73-0F7A-4C79-8FCA-4B7CE968964A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A432FF73-0F7A-4C79-8FCA-4B7CE968964A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A432FF73-0F7A-4C79-8FCA-4B7CE968964A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4454DCE9-9F1F-495C-91F5-5F709758C5C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4454DCE9-9F1F-495C-91F5-5F709758C5C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4454DCE9-9F1F-495C-91F5-5F709758C5C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4454DCE9-9F1F-495C-91F5-5F709758C5C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E8D6A84-28EC-4DDB-B70F-93A9000C636E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E8D6A84-28EC-4DDB-B70F-93A9000C636E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E8D6A84-28EC-4DDB-B70F-93A9000C636E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E8D6A84-28EC-4DDB-B70F-93A9000C636E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E948DB73-4DF6-438D-9818-2A03B6EE991B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E948DB73-4DF6-438D-9818-2A03B6EE991B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E948DB73-4DF6-438D-9818-2A03B6EE991B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E948DB73-4DF6-438D-9818-2A03B6EE991B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB5062AD-22D9-4236-849A-B4944B83149B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB5062AD-22D9-4236-849A-B4944B83149B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB5062AD-22D9-4236-849A-B4944B83149B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB5062AD-22D9-4236-849A-B4944B83149B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C81ED62-14F7-49BA-8024-E92374B125C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C81ED62-14F7-49BA-8024-E92374B125C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C81ED62-14F7-49BA-8024-E92374B125C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C81ED62-14F7-49BA-8024-E92374B125C2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -16,6 +16,7 @@
 		<PackageReference Include="System.Threading.Tasks" Version="4.3.0" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\Untech.Practices\Untech.Practices.csproj" />
+		<ProjectReference Include="..\Untech.Practices.Core\Untech.Practices.Core.csproj" />
+		<ProjectReference Include="..\Untech.Practices.CQRS\Untech.Practices.CQRS.csproj" />
 	</ItemGroup>
 </Project>

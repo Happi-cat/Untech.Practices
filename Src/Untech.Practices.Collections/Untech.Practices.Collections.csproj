@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Company>Sergey Svirsky</Company>
+    <Copyright>Copyright \u00A9 Sergey Svirsky 2017</Copyright>
+    <TargetFrameworks>net46;net461;netstandard1.4</TargetFrameworks>
+  </PropertyGroup>
+
+</Project>
