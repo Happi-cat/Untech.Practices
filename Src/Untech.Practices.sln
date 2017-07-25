@@ -1,34 +1,36 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+VisualStudioVersion = 15.0.26430.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{839A588F-BFF8-4B49-BD50-235245F9B16A}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.Tests", "Untech.Practices.Tests\Untech.Practices.Tests.csproj", "{A8797A72-5AB0-47DE-ABA2-A57B6F15A988}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.Tests", "Untech.Practices.Tests\Untech.Practices.Tests.csproj", "{A8797A72-5AB0-47DE-ABA2-A57B6F15A988}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.AspNetCore.CQRS", "Untech.Practices.AspNetCore.CQRS\Untech.Practices.AspNetCore.CQRS.csproj", "{C9282939-DE25-4920-BFEF-7804DFAD798A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AspNetCore", "AspNetCore", "{8768F924-D522-4083-9E64-B05FFF879562}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.AspNetCore.CQRS.Tests", "Untech.Practices.AspNetCore.CQRS.Tests\Untech.Practices.AspNetCore.CQRS.Tests.csproj", "{82E694B7-9119-48C9-B42E-D249584562B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.AspNetCore.CQRS.Tests", "Untech.Practices.AspNetCore.CQRS.Tests\Untech.Practices.AspNetCore.CQRS.Tests.csproj", "{82E694B7-9119-48C9-B42E-D249584562B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.CQRS", "Untech.Practices.CQRS\Untech.Practices.CQRS.csproj", "{A432FF73-0F7A-4C79-8FCA-4B7CE968964A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.CQRS", "Untech.Practices.CQRS\Untech.Practices.CQRS.csproj", "{A432FF73-0F7A-4C79-8FCA-4B7CE968964A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.Repos", "Untech.Practices.Repos\Untech.Practices.Repos.csproj", "{4454DCE9-9F1F-495C-91F5-5F709758C5C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.Repos", "Untech.Practices.Repos\Untech.Practices.Repos.csproj", "{4454DCE9-9F1F-495C-91F5-5F709758C5C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.Collections", "Untech.Practices.Collections\Untech.Practices.Collections.csproj", "{9E8D6A84-28EC-4DDB-B70F-93A9000C636E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.Collections", "Untech.Practices.Collections\Untech.Practices.Collections.csproj", "{9E8D6A84-28EC-4DDB-B70F-93A9000C636E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.Collections.Tests", "Untech.Practices.Collections.Tests\Untech.Practices.Collections.Tests.csproj", "{E948DB73-4DF6-438D-9818-2A03B6EE991B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.Collections.Tests", "Untech.Practices.Collections.Tests\Untech.Practices.Collections.Tests.csproj", "{E948DB73-4DF6-438D-9818-2A03B6EE991B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.CQRS.Tests", "Untech.Practices.CQRS.Tests\Untech.Practices.CQRS.Tests.csproj", "{DB5062AD-22D9-4236-849A-B4944B83149B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.CQRS.Tests", "Untech.Practices.CQRS.Tests\Untech.Practices.CQRS.Tests.csproj", "{DB5062AD-22D9-4236-849A-B4944B83149B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.Core", "Untech.Practices.Core\Untech.Practices.Core.csproj", "{5C81ED62-14F7-49BA-8024-E92374B125C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.Monads", "Untech.Practices.Monads\Untech.Practices.Monads.csproj", "{26B4747B-713B-42CA-AF28-FA003C40E099}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.Monads", "Untech.Practices.Monads\Untech.Practices.Monads.csproj", "{26B4747B-713B-42CA-AF28-FA003C40E099}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.Repos.Queryable", "Untech.Practices.Repos.Queryable\Untech.Practices.Repos.Queryable.csproj", "{BEB322E9-06EB-43B7-B060-99155DD5FDC4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -76,6 +78,10 @@ Global
 		{26B4747B-713B-42CA-AF28-FA003C40E099}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26B4747B-713B-42CA-AF28-FA003C40E099}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{26B4747B-713B-42CA-AF28-FA003C40E099}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BEB322E9-06EB-43B7-B060-99155DD5FDC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEB322E9-06EB-43B7-B060-99155DD5FDC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEB322E9-06EB-43B7-B060-99155DD5FDC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEB322E9-06EB-43B7-B060-99155DD5FDC4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
