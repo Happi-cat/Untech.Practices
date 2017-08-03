@@ -13,9 +13,9 @@ namespace Untech.Practices.CQRS.Handlers
 		where TIn : IQuery<TOut>
 	{
 		/// <inheritdoc />
-		public TOut Fetch(TIn query) => default(TOut);
+		public TOut Handle(TIn query) => default(TOut);
 
 		/// <inheritdoc />
-		public Task<TOut> FetchAsync(TIn query, CancellationToken cancellationToken) => Task.FromResult(default(TOut));
+		public Task<TOut> HandleAsync(TIn query, CancellationToken cancellationToken) => Task.FromResult(default(TOut));
 	}
 }

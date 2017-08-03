@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 {
-	internal interface IRequestExecutor
+	internal interface IHandlerRunner
 	{
 		object Handle(object args);
 

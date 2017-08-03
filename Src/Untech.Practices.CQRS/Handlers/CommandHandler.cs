@@ -7,9 +7,9 @@
 	public abstract class CommandHandler<TIn> : ICommandHandler<TIn, Unit>
 		where TIn : ICommand<Unit>
 	{
-		public Unit Process(TIn command)
+		public Unit Handle(TIn request)
 		{
-			HandleCore(command);
+			HandleCore(request);
 
 			return Unit.Value;
 		}

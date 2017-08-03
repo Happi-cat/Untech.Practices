@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Untech.Practices.AspNetCore.CQRS.Mappers;
 using Untech.Practices.CQRS;
+using Untech.Practices.CQRS.Dispatching;
 
 namespace Untech.Practices.AspNetCore.CQRS
 {

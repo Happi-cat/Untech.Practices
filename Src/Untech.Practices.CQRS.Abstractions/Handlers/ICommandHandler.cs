@@ -5,14 +5,8 @@
 	/// </summary>
 	/// <typeparam name="TIn">The type of command to be handled.</typeparam>
 	/// <typeparam name="TOut">The type of result from the handler.</typeparam>
-	public interface ICommandHandler<in TIn, out TOut>
+	public interface ICommandHandler<in TIn, out TOut> : IRequestHandler<TIn, TOut>
 		where TIn : ICommand<TOut>
 	{
-		/// <summary>
-		/// Handles command and returns result.
-		/// </summary>
-		/// <param name="command">Command to be handled.</param>
-		/// <returns></returns>
-		TOut Process(TIn command);
 	}
 }

@@ -30,13 +30,13 @@ namespace Untech.Practices.CQRS
 			INotificationHandler<Notification>, INotificationAsyncHandler<Notification>
 
 		{
-			public int Fetch(Query query) => 1;
+			public int Handle(Query query) => 1;
 
-			public Task<int> FetchAsync(Query query, CancellationToken cancellationToken) => Task.FromResult(1);
+			public Task<int> HandleAsync(Query query, CancellationToken cancellationToken) => Task.FromResult(1);
 
-			public int Process(Command command) => 1;
+			public int Handle(Command command) => 1;
 
-			public Task<int> ProcessAsync(Command command, CancellationToken cancellationToken) => Task.FromResult(1);
+			public Task<int> HandleAsync(Command command, CancellationToken cancellationToken) => Task.FromResult(1);
 
 			public void Publish(Notification notification)
 			{
@@ -48,17 +48,17 @@ namespace Untech.Practices.CQRS
 			}
 		}
 
-		public class Resolver : IHandlersResolver
+		public class Resolver : ITypeResolver
 		{
-			public T ResolveHandler<T>() where T : class
+			public T ResolveOne<T>() where T : class
 			{
 				var handler = new Handler();
 				return handler as T;
 			}
 
-			public IEnumerable<T> ResolveHandlers<T>() where T : class
+			public IEnumerable<T> ResolveMany<T>() where T : class
 			{
-				yield return ResolveHandler<T>();
+				yield return ResolveOne<T>();
 			}
 		}
 	}

@@ -4,7 +4,7 @@ namespace Untech.Practices.CQRS
 	/// Used as a marker for commands with a response.
 	/// </summary>
 	/// <typeparam name="TResult">The type of result from the handler.</typeparam>
-	public interface ICommand<out TResult>
+	public interface ICommand<out TResult> : IRequest<TResult>
 	{
 	}
 

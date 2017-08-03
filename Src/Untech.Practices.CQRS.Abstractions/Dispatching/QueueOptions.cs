@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Untech.Practices.CQRS
+namespace Untech.Practices.CQRS.Dispatching
 {
 	/// <summary>
 	/// Represents class that contains different options for queuing of CQRS requests.

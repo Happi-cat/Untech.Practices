@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Untech.Practices.AspNetCore.CQRS.Mappers;
 using Untech.Practices.CQRS;
+using Untech.Practices.CQRS.Dispatching;
 
 namespace Untech.Practices.AspNetCore.CQRS
 {

@@ -19,6 +19,6 @@ namespace Untech.Practices.CQRS.Handlers
 			_func = func;
 		}
 
-		public TOut Process(TIn command) => _func(command);
+		public TOut Handle(TIn request) => _func(request);
 	}
 }

@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace Untech.Practices.CQRS
+namespace Untech.Practices.CQRS.Dispatching
 {
 	/// <summary>
 	/// Represents interface of a class that dispatches CQRS requests to handlers and returns execution results.
@@ -11,11 +11,6 @@ namespace Untech.Practices.CQRS
 	/// </remarks>
 	public interface IDispatcher
 	{
-		/// <summary>
-		/// Gets instance of the <see cref="IQueueDispatcher"/> that enqueues commands and notification in execution queue.
-		/// </summary>
-		IQueueDispatcher Queue { get; }
-
 		/// <summary>
 		/// Fetches data of type <typeparamref name="TResult"/> for the specified <paramref name="query"/>.
 		/// </summary>

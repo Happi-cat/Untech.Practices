@@ -11,5 +11,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Untech.Practices.Core\Untech.Practices.Core.csproj" />
+    <ProjectReference Include="..\Untech.Practices.CQRS.Abstractions\Untech.Practices.CQRS.Abstractions.csproj" />
   </ItemGroup>
 </Project>
