@@ -2,6 +2,7 @@
 
 namespace Untech.Practices
 {
+	[Serializable]
 	public abstract class Enumeration : IComparable<Enumeration>, IEquatable<Enumeration>
 	{
 		protected Enumeration()
