@@ -29,7 +29,7 @@ namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 				return HandleAsync(asyncHandler, (TIn)args, CancellationToken.None).Result;
 			}
 
-			throw new NotImplementedException("Handler wasn't implemented");
+			throw new InvalidOperationException("Handler wasn't implemented");
 		}
 
 		public override Task HandleAsync(object args, CancellationToken cancellationToken)
@@ -46,7 +46,7 @@ namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 				return Task.Run(() => Handle(syncHandler, (TIn)args), cancellationToken);
 			}
 
-			throw new NotImplementedException("Handler wasn't implemented");
+			throw new InvalidOperationException("Handler wasn't implemented");
 		}
 	}
 }
