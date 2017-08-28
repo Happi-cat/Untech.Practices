@@ -1,10 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <Company>Sergey Svirsky</Company>
     <Copyright>Copyright \u00A9 Sergey Svirsky 2017</Copyright>
     <TargetFramework>netstandard1</TargetFramework>
     <RootNamespace>Untech.Practices.CQRS</RootNamespace>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Untech.Practices.Core\Untech.Practices.Core.csproj" />
+  </ItemGroup>
 
 </Project>

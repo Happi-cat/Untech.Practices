@@ -2,10 +2,8 @@
   <PropertyGroup>
     <Company>Sergey Svirsky</Company>
     <Copyright>Copyright \u00A9 Sergey Svirsky 2017</Copyright>
-    <TargetFrameworks>net46;net461;netstandard1.4</TargetFrameworks>
+    <TargetFramework>netstandard1</TargetFramework>
     <RootNamespace>Untech.Practices</RootNamespace>
   </PropertyGroup>
-  <ItemGroup Condition="$(TargetFramework) == 'netstandard1.4'">
-    <PackageReference Include="System.Runtime.Serialization.Formatters" Version="4.3.0" />
-  </ItemGroup>
+  
 </Project>

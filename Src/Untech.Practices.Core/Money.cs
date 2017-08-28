@@ -10,8 +10,8 @@ namespace Untech.Practices
 			Currency = currency;
 		}
 
-		public double Amount { get;set; }
-		public Currency Currency { get;set; }
+		public double Amount { get; private set; }
+		public Currency Currency { get; private set; }
 
 		protected override IEnumerable<object> GetEquatableProperties() 
 		{

@@ -17,6 +17,14 @@ namespace Untech.Practices
 			return Equals(obj as ValueObject);
 		}
 
+		public bool Equals(ValueObject other)
+		{
+			if (ReferenceEquals(this, other)) return true;
+			if (ReferenceEquals(other, null)) return false;
+
+			return GetType() == other.GetType() && GetEquatableProperties().SequenceEqual(other.GetEquatableProperties());
+		}
+
 		public override int GetHashCode()
 		{
 			unchecked
@@ -29,14 +37,6 @@ namespace Untech.Practices
 				}
 				return hash;
 			}
-		}
-
-		public bool Equals(ValueObject other)
-		{
-			if (ReferenceEquals(this, other)) return true;
-			if (ReferenceEquals(other, null)) return false;
-
-			return GetType() == other.GetType() && GetEquatableProperties().SequenceEqual(other.GetEquatableProperties());
 		}
 
 		protected abstract IEnumerable<object> GetEquatableProperties();

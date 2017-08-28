@@ -8,9 +8,7 @@ namespace Untech.Practices.Mappers
 
 		public AdHocMapper(Func<TIn, TOut> converter)
 		{
-			Guard.CheckNotNull(nameof(converter), converter);
-
-			_converter = converter;
+			_converter = converter ?? throw new ArgumentNullException(nameof(converter));
 		}
 
 		public TOut Map(TIn input)

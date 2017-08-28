@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Untech.Practices
 {
@@ -15,19 +15,26 @@ namespace Untech.Practices
 			Name = name;
 		}
 
-		public int Id { get; }
+		public int Id { get; private set; }
 
-		public string Name { get; }
-
+		public string Name { get; private set; }
 
 		public override string ToString()
 		{
-			return Name;
+			return string.Format("({0}, {1})", Id, Name);
 		}
 
 		public override bool Equals(object obj)
 		{
 			return Equals(obj as Enumeration<TSelf>);
+		}
+
+		public bool Equals(Enumeration<TSelf> other)
+		{
+			if (ReferenceEquals(this, other)) return true;
+			if (ReferenceEquals(other, null)) return false;
+
+			return Id.Equals(other.Id);
 		}
 
 		public override int GetHashCode()
@@ -43,14 +50,6 @@ namespace Untech.Practices
 		public int CompareTo(object other)
 		{
 			return CompareTo(other as Enumeration<TSelf>);
-		}
-
-		public bool Equals(Enumeration<TSelf> other)
-		{
-			if (ReferenceEquals(this, other)) return true;
-			if (ReferenceEquals(other, null)) return false;
-
-			return Id.Equals(other.Id);
 		}
 
 		public int CompareTo(Enumeration<TSelf> other)
@@ -74,19 +73,26 @@ namespace Untech.Practices
 			Name = name;
 		}
 
-		public TKey Id { get; }
+		public TKey Id { get; private set; }
 
-		public string Name { get; }
-
+		public string Name { get; private set; }
 
 		public override string ToString()
 		{
-			return Name;
+			return string.Format("({0}, {1})", Id, Name);
 		}
 
 		public override bool Equals(object obj)
 		{
 			return Equals(obj as Enumeration<TSelf, TKey>);
+		}
+
+		public bool Equals(Enumeration<TSelf, TKey> other)
+		{
+			if (ReferenceEquals(this, other)) return true;
+			if (ReferenceEquals(other, null)) return false;
+
+			return Id.Equals(other.Id);
 		}
 
 		public override int GetHashCode()
@@ -102,14 +108,6 @@ namespace Untech.Practices
 		public int CompareTo(object other)
 		{
 			return CompareTo(other as Enumeration<TSelf, TKey>);
-		}
-
-		public bool Equals(Enumeration<TSelf, TKey> other)
-		{
-			if (ReferenceEquals(this, other)) return true;
-			if (ReferenceEquals(other, null)) return false;
-
-			return Id.Equals(other.Id);
 		}
 
 		public int CompareTo(Enumeration<TSelf, TKey> other)
