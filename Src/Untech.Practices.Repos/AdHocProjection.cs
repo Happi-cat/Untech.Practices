@@ -9,9 +9,7 @@ namespace Untech.Practices.Repos
 
 		public AdHocProjection(Expression<Func<TEntity, TResult>> expression)
 		{
-			Guard.CheckNotNull("value", expression);
-
-			UnderlyingExpression = expression;
+			UnderlyingExpression = expression ?? throw new ArgumentNullException(nameof(expression));
 			_compiledExpression = expression.Compile();
 		}
 

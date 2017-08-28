@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
-using Untech.Practices.Linq;
 
 namespace Untech.Practices.CQRS.Dispatching
 {
@@ -183,6 +182,7 @@ namespace Untech.Practices.CQRS.Dispatching
 
 				messagesToDelay
 					.OrderBy(n => n.Options.ExecuteAfter)
+					.ToList()
 					.ForEach(AddForDelay);
 
 				return messagesToProcess;

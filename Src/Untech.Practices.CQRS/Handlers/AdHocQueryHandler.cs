@@ -14,9 +14,7 @@ namespace Untech.Practices.CQRS.Handlers
 
 		public AdHocQueryHandler(Func<TIn, TOut> func)
 		{
-			Guard.CheckNotNull(nameof(func), func);
-
-			_func = func;
+			_func = func ?? throw new ArgumentNullException(nameof(func));
 		}
 
 		public TOut Handle(TIn query) => _func(query);

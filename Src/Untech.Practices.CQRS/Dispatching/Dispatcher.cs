@@ -24,9 +24,7 @@ namespace Untech.Practices.CQRS.Dispatching
 		/// <exception cref="ArgumentNullException"><paramref name="typeResolver" /> is null.</exception>
 		public Dispatcher(ITypeResolver typeResolver, ITypeInitializer typeInitializer = null)
 		{
-			Guard.CheckNotNull(nameof(typeResolver), typeResolver);
-
-			_typeResolver = typeResolver;
+			_typeResolver = typeResolver ?? throw new ArgumentNullException(nameof(typeResolver));
 			_typeInitializer = typeInitializer;
 			_handlerRunners = new ConcurrentDictionary<Type, IHandlerRunner>();
 		}
@@ -34,7 +32,7 @@ namespace Untech.Practices.CQRS.Dispatching
 		/// <inheritdoc />
 		public TResponse Fetch<TResponse>(IQuery<TResponse> query)
 		{
-			Guard.CheckNotNull(nameof(query), query);
+			query = query ?? throw new ArgumentNullException(nameof(query));
 
 			return (TResponse)_handlerRunners
 				.GetOrAdd(query.GetType(), MakeFetch<TResponse>)
@@ -44,7 +42,7 @@ namespace Untech.Practices.CQRS.Dispatching
 		/// <inheritdoc />
 		public Task<TResponse> FetchAsync<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken)
 		{
-			Guard.CheckNotNull(nameof(query), query);
+			query = query ?? throw new ArgumentNullException(nameof(query));
 
 			return (Task<TResponse>)_handlerRunners
 				.GetOrAdd(query.GetType(), MakeFetch<TResponse>)
@@ -54,7 +52,7 @@ namespace Untech.Practices.CQRS.Dispatching
 		/// <inheritdoc />
 		public TResponse Process<TResponse>(ICommand<TResponse> command)
 		{
-			Guard.CheckNotNull(nameof(command), command);
+			command = command ?? throw new ArgumentNullException(nameof(command));
 
 			return (TResponse)_handlerRunners
 				.GetOrAdd(command.GetType(), MakeProcess<TResponse>)
@@ -64,7 +62,7 @@ namespace Untech.Practices.CQRS.Dispatching
 		/// <inheritdoc />
 		public Task<TResponse> ProcessAsync<TResponse>(ICommand<TResponse> command, CancellationToken cancellationToken)
 		{
-			Guard.CheckNotNull(nameof(command), command);
+			command = command ?? throw new ArgumentNullException(nameof(command));
 
 			return (Task<TResponse>)_handlerRunners
 				.GetOrAdd(command.GetType(), MakeProcess<TResponse>)
@@ -74,7 +72,7 @@ namespace Untech.Practices.CQRS.Dispatching
 		/// <inheritdoc />
 		public void Publish(INotification notification)
 		{
-			Guard.CheckNotNull(nameof(notification), notification);
+			notification = notification ?? throw new ArgumentNullException(nameof(notification));
 
 			_handlerRunners
 				.GetOrAdd(notification.GetType(), MakePublish)
@@ -84,7 +82,7 @@ namespace Untech.Practices.CQRS.Dispatching
 		/// <inheritdoc />
 		public Task PublishAsync(INotification notification, CancellationToken cancellationToken)
 		{
-			Guard.CheckNotNull(nameof(notification), notification);
+			notification = notification ?? throw new ArgumentNullException(nameof(notification));
 
 			return _handlerRunners
 				.GetOrAdd(notification.GetType(), MakePublish)

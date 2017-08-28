@@ -5,12 +5,12 @@
     <TargetFrameworks>net46;net461;netstandard1.4</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup Condition="$(TargetFramework) == 'netstandard1.4'">
+    <PackageReference Include="System.Linq" Version="4.3.0" />
     <PackageReference Include="System.Runtime.Serialization.Formatters" Version="4.3.0" />
     <PackageReference Include="System.Threading.Thread" Version="4.3.0" />
     <PackageReference Include="System.Threading.ThreadPool" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Untech.Practices.Core\Untech.Practices.Core.csproj" />
     <ProjectReference Include="..\Untech.Practices.CQRS.Abstractions\Untech.Practices.CQRS.Abstractions.csproj" />
   </ItemGroup>
 </Project>

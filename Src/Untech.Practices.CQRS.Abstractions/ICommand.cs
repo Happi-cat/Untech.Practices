@@ -11,7 +11,7 @@ namespace Untech.Practices.CQRS
 	/// <summary>
 	/// Used as a marker for commands without a response.
 	/// </summary>
-	public interface ICommand : ICommand<Unit>
+	public interface ICommand : ICommand<Nothing>
 	{
 	}
 }
