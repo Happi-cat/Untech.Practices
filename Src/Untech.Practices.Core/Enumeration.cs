@@ -2,8 +2,8 @@
 
 namespace Untech.Practices
 {
-	[Serializable]
-	public abstract class Enumeration : IComparable<Enumeration>, IEquatable<Enumeration>
+	public abstract class Enumeration<TSelf> : IComparable<Enumeration<TSelf>>, IEquatable<Enumeration<TSelf>>
+		where TSelf: Enumeration<TSelf>	
 	{
 		protected Enumeration()
 		{
@@ -27,7 +27,7 @@ namespace Untech.Practices
 
 		public override bool Equals(object obj)
 		{
-			return Equals(obj as Enumeration);
+			return Equals(obj as Enumeration<TSelf>);
 		}
 
 		public override int GetHashCode()
@@ -35,7 +35,6 @@ namespace Untech.Practices
 			unchecked
 			{
 				var hash = 17;
-				hash = hash * 37 + GetType().GetHashCode();
 				hash = hash * 37 + Id;
 				return hash;
 			}
@@ -43,20 +42,79 @@ namespace Untech.Practices
 
 		public int CompareTo(object other)
 		{
-			return CompareTo(other as Enumeration);
+			return CompareTo(other as Enumeration<TSelf>);
 		}
 
-		public bool Equals(Enumeration other)
+		public bool Equals(Enumeration<TSelf> other)
 		{
 			if (ReferenceEquals(this, other)) return true;
 			if (ReferenceEquals(other, null)) return false;
 
-			return GetType() == other.GetType() && Id.Equals(other.Id);
+			return Id.Equals(other.Id);
 		}
 
-		public int CompareTo(Enumeration other)
+		public int CompareTo(Enumeration<TSelf> other)
 		{
-			if (ReferenceEquals(other, null)) throw new ArgumentException("Argument is null or has wrong type", nameof(other));
+			if (ReferenceEquals(other, null)) throw new ArgumentNullException(nameof(other));
+			return Id.CompareTo(other.Id);
+		}
+	}
+
+	public abstract class Enumeration<TSelf, TKey> : IComparable<Enumeration<TSelf, TKey>>, IEquatable<Enumeration<TSelf, TKey>>
+		where TSelf: Enumeration<TSelf, TKey>
+		where TKey: IComparable<TKey>, IEquatable<TKey>
+	{
+		protected Enumeration()
+		{
+		}
+
+		protected Enumeration(TKey id, string name)
+		{
+			Id = id;
+			Name = name;
+		}
+
+		public TKey Id { get; }
+
+		public string Name { get; }
+
+
+		public override string ToString()
+		{
+			return Name;
+		}
+
+		public override bool Equals(object obj)
+		{
+			return Equals(obj as Enumeration<TSelf, TKey>);
+		}
+
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				var hash = 17;
+				hash = hash * 37 + Id.GetHashCode();
+				return hash;
+			}
+		}
+
+		public int CompareTo(object other)
+		{
+			return CompareTo(other as Enumeration<TSelf, TKey>);
+		}
+
+		public bool Equals(Enumeration<TSelf, TKey> other)
+		{
+			if (ReferenceEquals(this, other)) return true;
+			if (ReferenceEquals(other, null)) return false;
+
+			return Id.Equals(other.Id);
+		}
+
+		public int CompareTo(Enumeration<TSelf, TKey> other)
+		{
+			if (ReferenceEquals(other, null)) throw new ArgumentNullException(nameof(other));
 			return Id.CompareTo(other.Id);
 		}
 	}

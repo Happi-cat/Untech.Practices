@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Untech.Practices.Core
+namespace Untech.Practices
 {
 	public abstract class ValueObject : IEquatable<ValueObject>
 	{
