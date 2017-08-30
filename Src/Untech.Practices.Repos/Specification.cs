@@ -10,7 +10,7 @@ namespace Untech.Practices.Repos
 			return new AndSpecification<T>(left, right);
 		}
 
-		public static Specification<T> Or<T>(this ISpecification<T> left, ISpecification<T> right)
+		public static Specification<T> Or<T>(this Specification<T> left, Specification<T> right)
 		{
 			return new OrSpecification<T>(left, right);
 		}
@@ -25,12 +25,12 @@ namespace Untech.Practices.Repos
 	{
 		public abstract Expression<Func<T, bool>> UnderlyingExpression { get; }
 
-		public static Specification<T> operator &(Specification<T> left, ISpecification<T> right)
+		public static Specification<T> operator &(Specification<T> left, Specification<T> right)
 		{
 			return new AndSpecification<T>(left, right);
 		}
 
-		public static Specification<T> operator |(Specification<T> left, ISpecification<T> right)
+		public static Specification<T> operator |(Specification<T> left, Specification<T> right)
 		{
 			return new OrSpecification<T>(left, right);
 		}
