@@ -5,5 +5,9 @@
     <TargetFramework>netstandard1</TargetFramework>
     <RootNamespace>Untech.Practices</RootNamespace>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.3.0" />
+  </ItemGroup>
   
 </Project>

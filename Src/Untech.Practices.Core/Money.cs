@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace Untech.Practices
 {
+	[DataContract]
 	public class Money : ValueObject
 	{
 		public Money(double amount, Currency currency)
@@ -10,7 +12,10 @@ namespace Untech.Practices
 			Currency = currency;
 		}
 
+		[DataMember]
 		public double Amount { get; private set; }
+
+		[DataMember]
 		public Currency Currency { get; private set; }
 
 		protected override IEnumerable<object> GetEquatableProperties()

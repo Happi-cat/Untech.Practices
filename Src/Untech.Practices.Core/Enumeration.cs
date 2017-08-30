@@ -1,7 +1,9 @@
 using System;
+using System.Runtime.Serialization;
 
 namespace Untech.Practices
 {
+	[DataContract]
 	public abstract class Enumeration<TSelf> : IComparable<Enumeration<TSelf>>, IEquatable<Enumeration<TSelf>>
 		where TSelf : Enumeration<TSelf>
 	{
@@ -15,8 +17,10 @@ namespace Untech.Practices
 			Name = name;
 		}
 
+		[DataMember]
 		public int Id { get; private set; }
 
+		[DataMember]
 		public string Name { get; private set; }
 
 		public override string ToString()
@@ -59,6 +63,7 @@ namespace Untech.Practices
 		}
 	}
 
+	[DataContract]
 	public abstract class Enumeration<TSelf, TKey> : IComparable<Enumeration<TSelf, TKey>>, IEquatable<Enumeration<TSelf, TKey>>
 		where TSelf : Enumeration<TSelf, TKey>
 		where TKey : IComparable<TKey>, IEquatable<TKey>
@@ -73,8 +78,10 @@ namespace Untech.Practices
 			Name = name;
 		}
 
+		[DataMember]
 		public TKey Id { get; private set; }
 
+		[DataMember]
 		public string Name { get; private set; }
 
 		public override string ToString()
