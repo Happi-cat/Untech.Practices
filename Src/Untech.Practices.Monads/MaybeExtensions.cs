@@ -2,6 +2,9 @@
 
 namespace Untech.Practices.Monads
 {
+	/// <summary>
+	/// 
+	/// </summary>
 	public static class MaybeExtensions
 	{
 		public static Maybe<T> ToJust<T>(this T value)

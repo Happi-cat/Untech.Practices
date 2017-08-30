@@ -4,6 +4,10 @@ using System.Linq;
 
 namespace Untech.Practices
 {
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <seealso cref="System.IEquatable{Untech.Practices.ValueObject}" />
 	public abstract class ValueObject : IEquatable<ValueObject>
 	{
 		public override string ToString()
@@ -39,6 +43,10 @@ namespace Untech.Practices
 			}
 		}
 
+		/// <summary>
+		/// Gets the equatable properties. This method should return values of immutable properties and fields.
+		/// </summary>
+		/// <returns></returns>
 		protected abstract IEnumerable<object> GetEquatableProperties();
 	}
 }

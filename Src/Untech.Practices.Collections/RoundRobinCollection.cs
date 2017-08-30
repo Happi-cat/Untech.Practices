@@ -3,12 +3,21 @@ using System.Collections.Generic;
 
 namespace Untech.Practices.Collections
 {
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <seealso cref="System.Collections.Generic.IEnumerable{T}" />
 	public class RoundRobinCollection<T> : IEnumerable<T>
 	{
 		private readonly object _syncRoot = new object();
 
 		private Node _tail;
 
+		/// <summary>
+		/// Inserts an object at the head.
+		/// </summary>
+		/// <param name="item">The item.</param>
 		public void Push(T item)
 		{
 			lock (_syncRoot)
@@ -30,6 +39,10 @@ namespace Untech.Practices.Collections
 			}
 		}
 
+		/// <summary>
+		/// Removes and returns the head object.
+		/// </summary>
+		/// <returns></returns>
 		public T Pop()
 		{
 			lock (_syncRoot)
@@ -53,6 +66,10 @@ namespace Untech.Practices.Collections
 			}
 		}
 
+		/// <summary>
+		/// Returns the head object without removing it and moves head to next object.
+		/// </summary>
+		/// <returns></returns>
 		public T Peek()
 		{
 			var newHead = MoveNext();
@@ -82,7 +99,7 @@ namespace Untech.Practices.Collections
 				Value = value;
 			}
 
-			public T Value { get; set; }
+			public T Value { get; }
 			public Node Next { get; set; }
 		}
 
