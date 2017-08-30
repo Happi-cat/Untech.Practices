@@ -6,18 +6,18 @@ using Untech.Practices.CQRS.Dispatching;
 
 namespace Untech.Practices.AspNetCore.CQRS
 {
-	public class NotificationAsync<TIn> : CqrsHandler<TIn, Unit>
+	public class NotificationAsync<TIn> : CqrsHandler<TIn, Nothing>
 		where TIn : INotification
 	{
-		public NotificationAsync(IRequestMapper<TIn> requestBinder, IResponseMapper<Unit> responseBinder) : base(requestBinder, responseBinder)
+		public NotificationAsync(IRequestMapper<TIn> requestBinder, IResponseMapper<Nothing> responseBinder) : base(requestBinder, responseBinder)
 		{
 		}
 
-		protected override async Task<Unit> HandleCore(IDispatcher dispatcher, TIn data, CancellationToken cancellationToken)
+		protected override async Task<Nothing> HandleCore(IDispatcher dispatcher, TIn data, CancellationToken cancellationToken)
 		{
 			await dispatcher.PublishAsync(data, cancellationToken);
 
-			return Unit.Value;
+			return Nothing.AtAll;
 		}
 	}
 }

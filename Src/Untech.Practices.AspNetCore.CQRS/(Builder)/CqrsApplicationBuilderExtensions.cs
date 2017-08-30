@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Untech.Practices;
 
 namespace Microsoft.AspNetCore.Builder
 {
@@ -9,8 +8,8 @@ namespace Microsoft.AspNetCore.Builder
 	{
 		public static IApplicationBuilder UseCqrs(this IApplicationBuilder app, Action<IRouteBuilder> configureRoutes)
 		{
-			Guard.CheckNotNull(nameof(app), app);
-			Guard.CheckNotNull(nameof(configureRoutes), configureRoutes);
+			app = app ?? throw new ArgumentNullException(nameof(app));
+			configureRoutes = configureRoutes ?? throw new ArgumentNullException(nameof(configureRoutes));
 
 			var router = new RouteBuilder(app);
 			configureRoutes(router);
@@ -19,8 +18,8 @@ namespace Microsoft.AspNetCore.Builder
 
 		public static IApplicationBuilder UseCqrs(this IApplicationBuilder app, RequestDelegate defaultHandler, Action<IRouteBuilder> configureRoutes)
 		{
-			Guard.CheckNotNull(nameof(app), app);
-			Guard.CheckNotNull(nameof(configureRoutes), configureRoutes);
+			app = app ?? throw new ArgumentNullException(nameof(app));
+			configureRoutes = configureRoutes ?? throw new ArgumentNullException(nameof(configureRoutes));
 
 			var router = new RouteBuilder(app, new RouteHandler(defaultHandler));
 			configureRoutes(router);

@@ -1,12 +1,11 @@
 ﻿using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace Untech.Practices.Collections
 {
-	[TestClass]
 	public class RoundRobinCollectionTest
 	{
-		[TestMethod]
+		[Fact]
 		public void Run()
 		{
 			var collection = new RoundRobinCollection<int>();
@@ -21,13 +20,12 @@ namespace Untech.Practices.Collections
 			var arr1_2 = collection.Take(5).ToList();
 			var arr1_3 = collection.Take(5).ToList();
 
-			Assert.AreEqual(0, collection.Peek());
-			Assert.AreEqual(1, collection.Peek());
-			Assert.AreEqual(2, collection.Pop());
-			Assert.AreEqual(3, collection.Peek());
-			Assert.AreEqual(4, collection.First());
-			Assert.AreEqual(5, collection.Take(5).First());
+			Assert.Equal(0, collection.Peek());
+			Assert.Equal(1, collection.Peek());
+			Assert.Equal(2, collection.Pop());
+			Assert.Equal(3, collection.Peek());
+			Assert.Equal(4, collection.First());
+			Assert.Equal(5, collection.Take(5).First());
 		}
-
 	}
 }

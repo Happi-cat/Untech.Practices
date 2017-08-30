@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Routing;
+﻿using System;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Routing.Constraints;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,8 +12,9 @@ namespace Untech.Practices.AspNetCore.CQRS.Builder
 
 		public EndpointBuilder(IRouteBuilder routeBuilder, string template)
 		{
-			Guard.CheckNotNull(nameof(routeBuilder), routeBuilder);
-			Guard.CheckNotNull(nameof(template), template);
+			routeBuilder = routeBuilder ?? throw new ArgumentNullException(nameof(routeBuilder));
+			template = template ?? throw new ArgumentNullException(nameof(template));
+
 
 			_builder = routeBuilder;
 			_template = template;
@@ -20,8 +22,9 @@ namespace Untech.Practices.AspNetCore.CQRS.Builder
 
 		public IEndpointBuilder MapVerb<TIn, TOut>(string verb, CqrsHandler<TIn, TOut> handler)
 		{
-			Guard.CheckNotNullOrEmpty(nameof(verb), verb);
-			Guard.CheckNotNull(nameof(handler), handler);
+			verb = verb ?? throw new ArgumentNullException(nameof(verb));
+			handler = handler ?? throw new ArgumentNullException(nameof(handler));
+
 
 			var route = new Route(handler, _template,
 				defaults: null,
