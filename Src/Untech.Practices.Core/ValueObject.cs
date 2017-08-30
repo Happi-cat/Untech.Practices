@@ -31,7 +31,7 @@ namespace Untech.Practices
 			{
 				var hash = 17;
 				hash = hash * 37 + GetType().GetHashCode();
-				foreach(var prop in GetEquatableProperties())
+				foreach (var prop in GetEquatableProperties())
 				{
 					hash = hash * 37 + prop?.GetHashCode() ?? 0;
 				}

@@ -13,7 +13,7 @@ namespace Untech.Practices
 		public double Amount { get; private set; }
 		public Currency Currency { get; private set; }
 
-		protected override IEnumerable<object> GetEquatableProperties() 
+		protected override IEnumerable<object> GetEquatableProperties()
 		{
 			yield return Amount;
 			yield return Currency;

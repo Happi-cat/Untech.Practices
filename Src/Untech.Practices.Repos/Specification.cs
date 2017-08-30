@@ -25,17 +25,17 @@ namespace Untech.Practices.Repos
 	{
 		public abstract Expression<Func<T, bool>> UnderlyingExpression { get; }
 
-		public static Specification<T> operator & (Specification<T> left, ISpecification<T> right)
+		public static Specification<T> operator &(Specification<T> left, ISpecification<T> right)
 		{
 			return new AndSpecification<T>(left, right);
 		}
 
-		public static Specification<T> operator | (Specification<T> left, ISpecification<T> right)
+		public static Specification<T> operator |(Specification<T> left, ISpecification<T> right)
 		{
 			return new OrSpecification<T>(left, right);
 		}
-		
-		public static Specification<T> operator ! (Specification<T> inner)
+
+		public static Specification<T> operator !(Specification<T> inner)
 		{
 			return new NotSpecification<T>(inner);
 		}

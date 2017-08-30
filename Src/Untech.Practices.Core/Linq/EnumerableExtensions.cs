@@ -12,7 +12,6 @@ namespace Untech.Practices.Linq
 				? Enumerable.Empty<T>()
 				: source;
 		}
-	
 
 		public static void ForEach<T>(this IEnumerable<T> source, Action<T> action)
 		{

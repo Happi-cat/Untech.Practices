@@ -71,8 +71,8 @@ namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 			}
 		}
 
-		private static IReadOnlyCollection<T> ResolveMany<T>(ITypeResolver resolver) 
-			where T: class
+		private static IReadOnlyCollection<T> ResolveMany<T>(ITypeResolver resolver)
+			where T : class
 		{
 			return (resolver.ResolveMany<T>() ?? Enumerable.Empty<T>())
 				.Where(n => n != null)
