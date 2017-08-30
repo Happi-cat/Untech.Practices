@@ -3,7 +3,7 @@ using System;
 namespace Untech.Practices
 {
 	public abstract class Enumeration<TSelf> : IComparable<Enumeration<TSelf>>, IEquatable<Enumeration<TSelf>>
-		where TSelf: Enumeration<TSelf>	
+		where TSelf : Enumeration<TSelf>
 	{
 		protected Enumeration()
 		{
@@ -60,8 +60,8 @@ namespace Untech.Practices
 	}
 
 	public abstract class Enumeration<TSelf, TKey> : IComparable<Enumeration<TSelf, TKey>>, IEquatable<Enumeration<TSelf, TKey>>
-		where TSelf: Enumeration<TSelf, TKey>
-		where TKey: IComparable<TKey>, IEquatable<TKey>
+		where TSelf : Enumeration<TSelf, TKey>
+		where TKey : IComparable<TKey>, IEquatable<TKey>
 	{
 		protected Enumeration()
 		{
