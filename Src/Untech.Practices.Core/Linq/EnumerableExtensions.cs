@@ -55,5 +55,32 @@ namespace Untech.Practices.Linq
 				yield return item;
 			}
 		}
+
+		public static IEnumerable<IReadOnlyList<T>> ToChunks<T>(this IEnumerable<T> source, int chunkSize)
+		{
+			if (source == null) throw new ArgumentNullException(nameof(source));
+			if (chunkSize <= 0) throw new ArgumentOutOfRangeException(nameof(chunkSize), chunkSize, "Cannot be less than 1");
+
+			var snapshot = new List<T>(source);
+
+			if (snapshot.Count == 0)
+			{
+				yield break;
+			}
+			else if (snapshot.Count <= chunkSize)
+			{
+				yield return snapshot;
+			}
+			else
+			{
+				var chunkIndex = 0;
+				do
+				{
+					var realChunkSize = Math.Min(snapshot.Count - chunkIndex, chunkSize);
+					yield return snapshot.GetRange(chunkIndex, realChunkSize);
+					chunkIndex += realChunkSize;
+				} while (chunkIndex < snapshot.Count);
+			}
+		}
 	}
 }
