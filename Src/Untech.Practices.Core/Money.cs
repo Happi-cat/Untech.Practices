@@ -8,7 +8,7 @@ namespace Untech.Practices
 	/// </summary>
 	/// <seealso cref="Untech.Practices.ValueObject" />
 	[DataContract]
-	public class Money : ValueObject
+	public class Money : ValueObject<Money>
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Money"/> class.

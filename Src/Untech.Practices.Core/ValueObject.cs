@@ -8,7 +8,8 @@ namespace Untech.Practices
 	/// 
 	/// </summary>
 	/// <seealso cref="System.IEquatable{Untech.Practices.ValueObject}" />
-	public abstract class ValueObject : IEquatable<ValueObject>
+	public abstract class ValueObject<T> : IEquatable<T>
+		where T : ValueObject<T>
 	{
 		public override string ToString()
 		{
@@ -18,10 +19,10 @@ namespace Untech.Practices
 
 		public override bool Equals(object obj)
 		{
-			return Equals(obj as ValueObject);
+			return Equals(obj as T);
 		}
 
-		public bool Equals(ValueObject other)
+		public bool Equals(T other)
 		{
 			if (ReferenceEquals(this, other)) return true;
 			if (ReferenceEquals(other, null)) return false;
