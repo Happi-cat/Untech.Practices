@@ -27,7 +27,7 @@ namespace Untech.Practices
 			if (ReferenceEquals(this, other)) return true;
 			if (ReferenceEquals(other, null)) return false;
 
-			return GetType() == other.GetType() && GetEquatableProperties().SequenceEqual(other.GetEquatableProperties());
+			return GetEquatableProperties().SequenceEqual(other.GetEquatableProperties());
 		}
 
 		public override int GetHashCode()
@@ -35,7 +35,6 @@ namespace Untech.Practices
 			unchecked
 			{
 				var hash = 17;
-				hash = hash * 37 + GetType().GetHashCode();
 				foreach (var prop in GetEquatableProperties())
 				{
 					hash = hash * 37 + prop?.GetHashCode() ?? 0;
