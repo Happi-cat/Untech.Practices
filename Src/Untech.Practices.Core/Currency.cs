@@ -9,6 +9,8 @@ namespace Untech.Practices
 	[DataContract]
 	public class Currency : Enumeration<Currency, string>
 	{
+		protected Currency() { }
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Currency"/> class.
 		/// </summary>

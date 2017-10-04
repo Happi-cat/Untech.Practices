@@ -10,6 +10,8 @@ namespace Untech.Practices
 	[DataContract]
 	public class Money : ValueObject<Money>
 	{
+		protected Money() { }
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Money"/> class.
 		/// </summary>
