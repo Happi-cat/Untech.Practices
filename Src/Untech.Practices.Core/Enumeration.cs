@@ -49,6 +49,18 @@ namespace Untech.Practices
 		[DataMember]
 		public string Name { get; private set; }
 
+		public static bool operator ==(Enumeration<TSelf> left, Enumeration<TSelf> right)
+		{
+			return ReferenceEquals(left, null)
+				? ReferenceEquals(right, null)
+				: left.Equals(right);
+		}
+
+		public static bool operator !=(Enumeration<TSelf> left, Enumeration<TSelf> right)
+		{
+			return !(left == right);
+		}
+
 		public override string ToString()
 		{
 			return string.Format("({0}, {1})", Id, Name);
@@ -136,6 +148,18 @@ namespace Untech.Practices
 		/// </value>
 		[DataMember]
 		public string Name { get; private set; }
+
+		public static bool operator ==(Enumeration<TSelf, TKey> left, Enumeration<TSelf, TKey> right)
+		{
+			return ReferenceEquals(left, null)
+				? ReferenceEquals(right, null)
+				: left.Equals(right);
+		}
+
+		public static bool operator !=(Enumeration<TSelf, TKey> left, Enumeration<TSelf, TKey> right)
+		{
+			return !(left == right);
+		}
 
 		public override string ToString()
 		{

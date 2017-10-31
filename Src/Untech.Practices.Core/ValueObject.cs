@@ -8,8 +8,8 @@ namespace Untech.Practices
 	/// 
 	/// </summary>
 	/// <seealso cref="System.IEquatable{Untech.Practices.ValueObject}" />
-	public abstract class ValueObject<T> : IEquatable<T>
-		where T : ValueObject<T>
+	public abstract class ValueObject<TSelf> : IEquatable<TSelf>
+		where TSelf : ValueObject<TSelf>
 	{
 		public override string ToString()
 		{
@@ -17,12 +17,24 @@ namespace Untech.Practices
 			return string.Concat("(", props, ")");
 		}
 
-		public override bool Equals(object obj)
+		public static bool operator ==(ValueObject<TSelf> left, ValueObject<TSelf> right)
 		{
-			return Equals(obj as T);
+			return ReferenceEquals(left, null)
+				? ReferenceEquals(right, null)
+				: left.Equals(right);
 		}
 
-		public bool Equals(T other)
+		public static bool operator !=(ValueObject<TSelf> left, ValueObject<TSelf> right)
+		{
+			return !(left == right);
+		}
+
+		public override bool Equals(object obj)
+		{
+			return Equals(obj as TSelf);
+		}
+
+		public bool Equals(TSelf other)
 		{
 			if (ReferenceEquals(this, other)) return true;
 			if (ReferenceEquals(other, null)) return false;
