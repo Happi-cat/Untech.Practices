@@ -43,7 +43,7 @@ namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 			var syncHandler = _resolver.ResolveOne<IQueryHandler<TIn, TOut>>();
 			if (syncHandler != null)
 			{
-				return Task.Run(() => Handle(syncHandler, (TIn)args), cancellationToken);
+				return Task.FromResult(Handle(syncHandler, (TIn)args));
 			}
 
 			throw new InvalidOperationException("Handler wasn't implemented");
