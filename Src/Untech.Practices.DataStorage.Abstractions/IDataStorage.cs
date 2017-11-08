@@ -9,8 +9,6 @@ namespace Untech.Practices.DataStorage
 	{
 		T Find(TKey key);
 
-		IEnumerable<T> Find(Expression<Func<T, bool>> predicate);
-
 		T Create(T entity);
 
 		T Update(T entity);
