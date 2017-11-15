@@ -8,14 +8,13 @@ namespace Untech.Practices.CQRS.Dispatching
 	/// </summary>
 	public sealed class SimpleQueueDispatcher : IQueueDispatcher
 	{
-		private IDispatcher _parent;
+		private readonly IDispatcher _parent;
 
 		public QueueOptions DefaultOptions { get; set; } = QueueOptions.CreateDefault();
 
-		/// <inheritdoc />
-		public void Init(IDispatcher parent)
+		public SimpleQueueDispatcher(IDispatcher parent)
 		{
-			_parent = parent;
+			_parent = parent ?? throw new ArgumentNullException(nameof(parent));
 		}
 
 		/// <inheritdoc />
@@ -23,7 +22,6 @@ namespace Untech.Practices.CQRS.Dispatching
 		{
 			if (command == null) throw new ArgumentNullException(nameof(command));
 
-			CheckInitialized();
 			Task.Factory.StartNew(() => _parent.Process(command));
 		}
 
@@ -32,14 +30,7 @@ namespace Untech.Practices.CQRS.Dispatching
 		{
 			if (notification == null) throw new ArgumentNullException(nameof(notification));
 
-			CheckInitialized();
 			Task.Factory.StartNew(() => _parent.Publish(notification));
-		}
-
-		private void CheckInitialized()
-		{
-			if (_parent != null) return;
-			throw new InvalidOperationException("Not initialized");
 		}
 	}
 }

@@ -9,8 +9,7 @@ namespace Untech.Practices.CQRS.Dispatching
 
 		public SimpleQueueDispatcherTest()
 		{
-			_dispatcher = new SimpleQueueDispatcher();
-			_dispatcher.Init(new Dispatcher(new DummyCQRS.Resolver()));
+			_dispatcher = new SimpleQueueDispatcher(new Dispatcher(new DummyCQRS.Resolver()));
 		}
 
 		[Fact]
