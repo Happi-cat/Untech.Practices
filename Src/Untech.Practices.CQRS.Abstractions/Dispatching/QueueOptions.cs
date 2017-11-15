@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Untech.Practices.CQRS.Dispatching
 {
@@ -31,6 +32,12 @@ namespace Untech.Practices.CQRS.Dispatching
 		/// Gets or sets request priority. Max - is the highest priority, min represents lowest priority.
 		/// </summary>
 		public int Priority { get; set; }
+
+		/// <summary>
+		/// Gets or sets advanced options. Can be null.
+		/// </summary>
+		/// <returns></returns>
+		public IDictionary<string, object> Advanced { get; set; }
 
 		/// <summary>
 		/// Creates default <see cref="QueueOptions"/>.
