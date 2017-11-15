@@ -5,6 +5,7 @@
     <Copyright>Copyright \u00A9 Sergey Svirsky 2017</Copyright>
     <RootNamespace>Untech.Practices.CQRS</RootNamespace>
     <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

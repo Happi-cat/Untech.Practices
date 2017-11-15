@@ -3,6 +3,12 @@
     <Company>Sergey Svirsky</Company>
     <Copyright>Copyright \u00A9 Sergey Svirsky 2017</Copyright>
     <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
+    <Version>1.0</Version>
+    <FileVersion>1.0</FileVersion>
+    <!-- Increment AssemblyVersion on MAJOR.MINOR change -->
+    <!-- Use Info Version for RC -->
+    <InformationalVersion>1.0</InformationalVersion>
+    <AssemblyVersion>1.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
