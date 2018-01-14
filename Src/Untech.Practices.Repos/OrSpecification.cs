@@ -4,18 +4,18 @@ using System.Linq.Expressions;
 
 namespace Untech.Practices.Repos
 {
-	internal sealed class OrSpecification<T> : ISpecification<T>
+	internal sealed class OrSpecification<T> : Specification<T>
 	{
 		private readonly ISpecification<T> _left;
 		private readonly ISpecification<T> _right;
 
 		public OrSpecification(ISpecification<T> left, ISpecification<T> right)
 		{
-			_right = right;
-			_left = left;
+			_left = left ?? throw new ArgumentNullException(nameof(left));
+			_right = right ?? throw new ArgumentNullException(nameof(right));
 		}
 
-		public Expression<Func<T, bool>> UnderlyingExpression
+		public override Expression<Func<T, bool>> UnderlyingExpression
 		{
 			get
 			{
@@ -28,7 +28,7 @@ namespace Untech.Practices.Repos
 			}
 		}
 
-		public bool IsSatisfiedBy(T obj)
+		public override bool IsSatisfiedBy(T obj)
 		{
 			return _right.IsSatisfiedBy(obj) && _left.IsSatisfiedBy(obj);
 		}

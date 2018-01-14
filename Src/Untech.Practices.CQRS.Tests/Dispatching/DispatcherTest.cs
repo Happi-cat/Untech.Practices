@@ -1,49 +1,44 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
+using Xunit;
 
 namespace Untech.Practices.CQRS.Dispatching
 {
-	[TestClass]
 	public class DispatcherTest
 	{
 		private Dispatcher _dispatcher;
 
-		[TestInitialize]
-		public void Init()
+		public DispatcherTest()
 		{
 			_dispatcher = new Dispatcher(new DummyCQRS.Resolver());
 		}
 
-		[TestMethod]
-		[ExpectedException(typeof(InvalidOperationException))]
+		[Fact]
 		public void Process_ThrownInvalidOperation_WhenHandlerNotFound()
 		{
-			_dispatcher.Process(new DummyCQRS.CommandWithUnknownHandler());
+			Assert.Throws(typeof(InvalidOperationException), () => _dispatcher.Process(new DummyCQRS.CommandWithUnknownHandler()));
 		}
 
-		[TestMethod]
-		[ExpectedException(typeof(ArgumentNullException))]
+		[Fact]
 		public void Fetch_ThrowArgumentNull_WhenArgIsNull()
 		{
-			_dispatcher.Fetch<int>(null);
+			Assert.Throws(typeof(ArgumentNullException), () => _dispatcher.Fetch<int>(null));
 		}
 
-		[TestMethod]
+		[Fact]
 		public void Fetch_Returns_WhenHandlerResolved()
 		{
 			var res = _dispatcher.Fetch(new DummyCQRS.Query());
 
-			Assert.AreEqual(1, res);
+			Assert.Equal(1, res);
 		}
 
-		[TestMethod]
-		[ExpectedException(typeof(ArgumentNullException))]
+		[Fact]
 		public void FetchAsync_ThrowArgumentNull_WhenArgIsNull()
 		{
-			_dispatcher.FetchAsync<int>(null, new System.Threading.CancellationToken());
+			Assert.Throws(typeof(ArgumentNullException), () => _dispatcher.FetchAsync<int>(null, new System.Threading.CancellationToken()));
 		}
 
-		[TestMethod]
+		[Fact]
 		public void FetchAsync_Returns_WhenHandlerResolved()
 		{
 			var res = _dispatcher
@@ -51,32 +46,30 @@ namespace Untech.Practices.CQRS.Dispatching
 				.GetAwaiter()
 				.GetResult();
 
-			Assert.AreEqual(1, res);
+			Assert.Equal(1, res);
 		}
 
-		[TestMethod]
-		[ExpectedException(typeof(ArgumentNullException))]
+		[Fact]
 		public void Process_ThrowArgumentNull_WhenArgIsNull()
 		{
-			_dispatcher.Process<int>(null);
+			Assert.Throws(typeof(ArgumentNullException), () => _dispatcher.Process<int>(null));
 		}
 
-		[TestMethod]
+		[Fact]
 		public void Process_Returns_WhenHandlerResolved()
 		{
 			var res = _dispatcher.Process(new DummyCQRS.Command());
 
-			Assert.AreEqual(1, res);
+			Assert.Equal(1, res);
 		}
 
-		[TestMethod]
-		[ExpectedException(typeof(ArgumentNullException))]
+		[Fact]
 		public void ProcessAsync_ThrowArgumentNull_WhenArgIsNull()
 		{
-			_dispatcher.ProcessAsync<int>(null, new System.Threading.CancellationToken());
+			Assert.Throws(typeof(ArgumentNullException), () => _dispatcher.ProcessAsync<int>(null, new System.Threading.CancellationToken()));
 		}
 
-		[TestMethod]
+		[Fact]
 		public void ProcessAsync_Returns_WhenHandlerResolved()
 		{
 			var res = _dispatcher
@@ -84,30 +77,28 @@ namespace Untech.Practices.CQRS.Dispatching
 				.GetAwaiter()
 				.GetResult();
 
-			Assert.AreEqual(1, res);
+			Assert.Equal(1, res);
 		}
 
-		[TestMethod]
-		[ExpectedException(typeof(ArgumentNullException))]
+		[Fact]
 		public void Publish_ThrowArgumentNull_WhenArgIsNull()
 		{
-			_dispatcher.Publish(null);
+			Assert.Throws(typeof(ArgumentNullException), () => _dispatcher.Publish(null));
 		}
 
-		[TestMethod]
+		[Fact]
 		public void Publish_Returns_WhenHandlerResolved()
 		{
 			_dispatcher.Publish(new DummyCQRS.Notification());
 		}
 
-		[TestMethod]
-		[ExpectedException(typeof(ArgumentNullException))]
+		[Fact]
 		public void PublishAsync_ThrowArgumentNull_WhenArgIsNull()
 		{
-			_dispatcher.PublishAsync(null, new System.Threading.CancellationToken());
+			Assert.Throws(typeof(ArgumentNullException), () => _dispatcher.PublishAsync(null, new System.Threading.CancellationToken()));
 		}
 
-		[TestMethod]
+		[Fact]
 		public void PublishAsync_Returns_WhenHandlerResolved()
 		{
 			_dispatcher

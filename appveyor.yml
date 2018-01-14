@@ -1,0 +1,31 @@
+version: '1.0.{build}'
+for:
+  - branches:
+      only:
+        - master
+    configuration: Release
+  - branches:
+      only:
+        - develop
+    configuration: Debug
+image: Visual Studio 2017
+before_build:
+  - nuget restore Src
+build:
+  project: Src\Untech.Practices.sln
+  publish_nuget: true
+  publish_nuget_symbols: true
+  include_nuget_references: true
+  verbosity: minimal
+dotnet_csproj:
+  patch: true
+  file: '**\*.csproj'
+  version: '{version}'
+  file_version: '{version}'
+  assembly_version: 1.0.0
+  informational_version: '1.0-rc{build}'
+cache:
+  - packages -> **\packages.config
+  - node_modules
+  - '%LocalAppData%\NuGet\Cache'
+  - '%LocalAppData%\NuGet\v3-cache'

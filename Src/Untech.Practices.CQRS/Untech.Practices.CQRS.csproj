@@ -2,14 +2,24 @@
   <PropertyGroup>
     <Company>Sergey Svirsky</Company>
     <Copyright>Copyright \u00A9 Sergey Svirsky 2017</Copyright>
-    <TargetFrameworks>net46;net461;netstandard1.4</TargetFrameworks>
+    <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
+    <Version>1.0</Version>
+    <FileVersion>1.0</FileVersion>
+    <!-- Increment AssemblyVersion on MAJOR.MINOR change -->
+    <!-- Use Info Version for RC -->
+    <InformationalVersion>1.0</InformationalVersion>
+    <AssemblyVersion>1.0</AssemblyVersion>
   </PropertyGroup>
-  <ItemGroup Condition="$(TargetFramework) == 'netstandard1.4'">
+
+  <ItemGroup>
+    <PackageReference Include="System.Linq" Version="4.3.0" />
     <PackageReference Include="System.Runtime.Serialization.Formatters" Version="4.3.0" />
     <PackageReference Include="System.Threading.Thread" Version="4.3.0" />
     <PackageReference Include="System.Threading.ThreadPool" Version="4.3.0" />
   </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\Untech.Practices.Core\Untech.Practices.Core.csproj" />
+    <ProjectReference Include="..\Untech.Practices.CQRS.Abstractions\Untech.Practices.CQRS.Abstractions.csproj" />
   </ItemGroup>
+  
 </Project>

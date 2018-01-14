@@ -4,17 +4,16 @@ using System.Linq.Expressions;
 
 namespace Untech.Practices.Repos
 {
-	internal sealed class NotSpecification<T> : ISpecification<T>
+	internal sealed class NotSpecification<T> : Specification<T>
 	{
 		private readonly ISpecification<T> _inner;
 
-
 		public NotSpecification(ISpecification<T> inner)
 		{
-			_inner = inner;
+			_inner = inner ?? throw new ArgumentNullException(nameof(inner));
 		}
 
-		public Expression<Func<T, bool>> UnderlyingExpression
+		public override Expression<Func<T, bool>> UnderlyingExpression
 		{
 			get
 			{
@@ -26,7 +25,7 @@ namespace Untech.Practices.Repos
 			}
 		}
 
-		public bool IsSatisfiedBy(T obj)
+		public override bool IsSatisfiedBy(T obj)
 		{
 			return !_inner.IsSatisfiedBy(obj);
 		}

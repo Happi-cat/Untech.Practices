@@ -4,14 +4,14 @@
 	/// Represents base command handler without a response.
 	/// </summary>
 	/// <typeparam name="TIn">The type of command to be handled.</typeparam>
-	public abstract class CommandHandler<TIn> : ICommandHandler<TIn, Unit>
-		where TIn : ICommand<Unit>
+	public abstract class CommandHandler<TIn> : ICommandHandler<TIn, Nothing>
+		where TIn : ICommand<Nothing>
 	{
-		public Unit Process(TIn command)
+		public Nothing Handle(TIn request)
 		{
-			HandleCore(command);
+			HandleCore(request);
 
-			return Unit.Value;
+			return Nothing.AtAll;
 		}
 
 		protected abstract void HandleCore(TIn command);

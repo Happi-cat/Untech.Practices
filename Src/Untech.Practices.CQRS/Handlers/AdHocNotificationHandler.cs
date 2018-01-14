@@ -13,9 +13,7 @@ namespace Untech.Practices.CQRS.Handlers
 
 		public AdHocNotificationHandler(Action<TIn> func)
 		{
-			Guard.CheckNotNull(nameof(func), func);
-
-			_func = func;
+			_func = func ?? throw new ArgumentNullException(nameof(func));
 		}
 
 		public void Publish(TIn notification) => _func(notification);

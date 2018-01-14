@@ -3,21 +3,19 @@ using System.Linq.Expressions;
 
 namespace Untech.Practices.Repos
 {
-	public class AdHocSpecification<T> : ISpecification<T>
+	public class AdHocSpecification<T> : Specification<T>
 	{
 		private readonly Func<T, bool> _compiledExpression;
 
 		public AdHocSpecification(Expression<Func<T, bool>> expression)
 		{
-			Guard.CheckNotNull("value", expression);
-
-			UnderlyingExpression = expression;
+			UnderlyingExpression = expression ?? throw new ArgumentNullException(nameof(expression));
 			_compiledExpression = expression.Compile();
 		}
 
-		public Expression<Func<T, bool>> UnderlyingExpression { get; }
+		public override Expression<Func<T, bool>> UnderlyingExpression { get; }
 
-		public bool IsSatisfiedBy(T entity)
+		public override bool IsSatisfiedBy(T entity)
 		{
 			return _compiledExpression(entity);
 		}

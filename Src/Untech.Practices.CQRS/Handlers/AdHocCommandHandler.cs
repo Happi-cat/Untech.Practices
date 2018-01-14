@@ -14,11 +14,9 @@ namespace Untech.Practices.CQRS.Handlers
 
 		public AdHocCommandHandler(Func<TIn, TOut> func)
 		{
-			Guard.CheckNotNull(nameof(func), func);
-
-			_func = func;
+			_func = func ?? throw new ArgumentNullException(nameof(func));
 		}
 
-		public TOut Process(TIn command) => _func(command);
+		public TOut Handle(TIn request) => _func(request);
 	}
 }
