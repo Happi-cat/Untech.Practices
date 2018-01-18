@@ -6,11 +6,11 @@ namespace Untech.Practices.CQRS.Dispatching
 	/// <summary>
 	/// Implements <see cref="IQueueDispatcher"/> with immediate queue.
 	/// </summary>
-	public sealed class SimpleQueueDispatcher : IQueueDispatcher
+	public sealed class InlineQueueDispatcher : IQueueDispatcher
 	{
 		private readonly IDispatcher _parent;
 
-		public SimpleQueueDispatcher(IDispatcher parent)
+		public InlineQueueDispatcher(IDispatcher parent)
 		{
 			_parent = parent ?? throw new ArgumentNullException(nameof(parent));
 		}
@@ -20,7 +20,7 @@ namespace Untech.Practices.CQRS.Dispatching
 		{
 			if (command == null) throw new ArgumentNullException(nameof(command));
 
-			Task.Factory.StartNew(() => _parent.Process(command));
+			_parent.Process(command);
 		}
 
 		/// <inheritdoc />
@@ -28,7 +28,7 @@ namespace Untech.Practices.CQRS.Dispatching
 		{
 			if (notification == null) throw new ArgumentNullException(nameof(notification));
 
-			Task.Factory.StartNew(() => _parent.Publish(notification));
+			_parent.Publish(notification);
 		}
 	}
 }
