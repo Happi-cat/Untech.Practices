@@ -22,6 +22,22 @@ namespace Untech.Practices.Linq
 				: source;
 		}
 
+		public static IEnumerable<T> Except<T>(this IEnumerable<T> source, Func<T, bool> predicate)
+		{
+			source = source ?? throw new ArgumentNullException(nameof(source));
+			predicate = predicate ?? throw new ArgumentNullException(nameof(predicate));
+
+			foreach (var element in source)
+			{
+				if (!predicate(element))
+				{
+					yield return element;
+				}
+			}
+		}
+
+		public static IEnumerable<T> ExceptNulls<T>(this IEnumerable<T> source) => source.Except(n => n == null);
+
 		/// <summary>
 		/// Executes the specified <paramref name="action" /> over each element of the sequence.
 		/// </summary>
