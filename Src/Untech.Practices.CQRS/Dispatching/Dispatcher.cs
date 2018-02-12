@@ -13,20 +13,20 @@ namespace Untech.Practices.CQRS.Dispatching
 	public sealed class Dispatcher : IDispatcher
 	{
 		private readonly ITypeResolver _typeResolver;
-		private readonly ITypeInitializer _typeInitializer;
-		private readonly ConcurrentDictionary<Type, IHandlerRunner> _handlerRunners;
+		private readonly IHandlerInitializer _handlerInitializer;
+		private readonly ConcurrentDictionary<Type, IHandlerInvoker> _handlerRunners;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Dispatcher" />.
 		/// </summary>
 		/// <param name="typeResolver">The resolver of CQRS handlers.</param>
-		/// <param name="typeInitializer">The handler post initializer.</param>
+		/// <param name="handlerInitializer">The handler post initializer.</param>
 		/// <exception cref="ArgumentNullException"><paramref name="typeResolver" /> is null.</exception>
-		public Dispatcher(ITypeResolver typeResolver, ITypeInitializer typeInitializer = null)
+		public Dispatcher(ITypeResolver typeResolver, IHandlerInitializer handlerInitializer = null)
 		{
 			_typeResolver = typeResolver ?? throw new ArgumentNullException(nameof(typeResolver));
-			_typeInitializer = typeInitializer;
-			_handlerRunners = new ConcurrentDictionary<Type, IHandlerRunner>();
+			_handlerInitializer = handlerInitializer;
+			_handlerRunners = new ConcurrentDictionary<Type, IHandlerInvoker>();
 		}
 
 		/// <inheritdoc />
@@ -36,7 +36,7 @@ namespace Untech.Practices.CQRS.Dispatching
 
 			return (TResponse)_handlerRunners
 				.GetOrAdd(query.GetType(), MakeFetch<TResponse>)
-				.Handle(query);
+				.Invoke(query);
 		}
 
 		/// <inheritdoc />
@@ -46,7 +46,7 @@ namespace Untech.Practices.CQRS.Dispatching
 
 			return (Task<TResponse>)_handlerRunners
 				.GetOrAdd(query.GetType(), MakeFetch<TResponse>)
-				.HandleAsync(query, cancellationToken);
+				.InvokeAsync(query, cancellationToken);
 		}
 
 		/// <inheritdoc />
@@ -56,7 +56,7 @@ namespace Untech.Practices.CQRS.Dispatching
 
 			return (TResponse)_handlerRunners
 				.GetOrAdd(command.GetType(), MakeProcess<TResponse>)
-				.Handle(command);
+				.Invoke(command);
 		}
 
 		/// <inheritdoc />
@@ -66,7 +66,7 @@ namespace Untech.Practices.CQRS.Dispatching
 
 			return (Task<TResponse>)_handlerRunners
 				.GetOrAdd(command.GetType(), MakeProcess<TResponse>)
-				.HandleAsync(command, cancellationToken);
+				.InvokeAsync(command, cancellationToken);
 		}
 
 		/// <inheritdoc />
@@ -76,7 +76,7 @@ namespace Untech.Practices.CQRS.Dispatching
 
 			_handlerRunners
 				.GetOrAdd(notification.GetType(), MakePublish)
-				.Handle(notification);
+				.Invoke(notification);
 		}
 
 		/// <inheritdoc />
@@ -86,36 +86,36 @@ namespace Untech.Practices.CQRS.Dispatching
 
 			return _handlerRunners
 				.GetOrAdd(notification.GetType(), MakePublish)
-				.HandleAsync(notification, cancellationToken);
+				.InvokeAsync(notification, cancellationToken);
 		}
 
 		#region [Private Methods]
 
-		private IHandlerRunner MakeFetch<TResponse>(Type type)
+		private IHandlerInvoker MakeFetch<TResponse>(Type type)
 		{
-			return (IHandlerRunner)CreateHandlerRunner(typeof(QueryHandlerRunner<,>), type, typeof(TResponse));
+			return (IHandlerInvoker)CreateHandlerRunner(typeof(QueryHandlerInvoker<,>), type, typeof(TResponse));
 		}
 
-		private IHandlerRunner MakeProcess<TResponse>(Type type)
+		private IHandlerInvoker MakeProcess<TResponse>(Type type)
 		{
-			return (IHandlerRunner)CreateHandlerRunner(typeof(CommandHandlerRunner<,>), type, typeof(TResponse));
+			return (IHandlerInvoker)CreateHandlerRunner(typeof(CommandHandlerInvoker<,>), type, typeof(TResponse));
 		}
 
-		private IHandlerRunner MakePublish(Type type)
+		private IHandlerInvoker MakePublish(Type type)
 		{
-			return (IHandlerRunner)CreateHandlerRunner(typeof(NotificationHandlerRunner<>), type);
+			return (IHandlerInvoker)CreateHandlerRunner(typeof(NotificationHandlerInvoker<>), type);
 		}
 
 		private object CreateHandlerRunner(Type genericExecutorType, Type requestType, Type responseType)
 		{
 			var executorType = genericExecutorType.MakeGenericType(requestType, responseType);
-			return Activator.CreateInstance(executorType, new object[] { _typeResolver, _typeInitializer }, null);
+			return Activator.CreateInstance(executorType, new object[] { _typeResolver, _handlerInitializer }, null);
 		}
 
 		private object CreateHandlerRunner(Type genericExecutorType, Type requestType)
 		{
 			var executorType = genericExecutorType.MakeGenericType(requestType);
-			return Activator.CreateInstance(executorType, new object[] { _typeResolver, _typeInitializer }, null);
+			return Activator.CreateInstance(executorType, new object[] { _typeResolver, _handlerInitializer }, null);
 		}
 
 		#endregion

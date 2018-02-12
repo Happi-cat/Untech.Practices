@@ -1,6 +1,6 @@
 namespace Untech.Practices.CQRS.Dispatching
 {
-	public interface ITypeInitializer
+	public interface IHandlerInitializer
 	{
 		/// <summary>
 		/// Initializes the specified handler.
