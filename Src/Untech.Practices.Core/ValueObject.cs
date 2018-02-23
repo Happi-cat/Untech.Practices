@@ -5,7 +5,7 @@ using System.Linq;
 namespace Untech.Practices
 {
 	/// <summary>
-	/// 
+	///
 	/// </summary>
 	/// <seealso cref="System.IEquatable{Untech.Practices.ValueObject}" />
 	public abstract class ValueObject<TSelf> : IEquatable<TSelf>
@@ -46,12 +46,7 @@ namespace Untech.Practices
 		{
 			unchecked
 			{
-				var hash = 17;
-				foreach (var prop in GetEquatableProperties())
-				{
-					hash = hash * 37 + prop?.GetHashCode() ?? 0;
-				}
-				return hash;
+				return GetEquatableProperties().Aggregate(17, (current, prop) => current * 37 + prop?.GetHashCode() ?? 0);
 			}
 		}
 
