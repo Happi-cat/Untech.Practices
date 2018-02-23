@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-
 namespace Untech.Practices.DataStorage
 {
-	public interface IDataStorage<T, TKey> 
+	public interface IDataStorage<T, TKey>
 		where T: IAggregateRoot<TKey>
 	{
 		T Find(TKey key);
@@ -17,7 +13,7 @@ namespace Untech.Practices.DataStorage
 	}
 
 	public interface IDataStorage<T> : IDataStorage<T, int>
-		where T: IAggregateRoot 
+		where T: IAggregateRoot
 	{
 
 	}
