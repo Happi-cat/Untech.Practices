@@ -31,14 +31,16 @@ namespace Untech.Practices
 
 		public override bool Equals(object obj)
 		{
-			return Equals(obj as TSelf);
+			if (ReferenceEquals(this, obj)) return true;
+			if (ReferenceEquals(obj, null)) return false;
+			if (obj is TSelf self) return Equals(self);
+			return false;
 		}
 
 		public bool Equals(TSelf other)
 		{
 			if (ReferenceEquals(this, other)) return true;
 			if (ReferenceEquals(other, null)) return false;
-
 			return GetEquatableProperties().SequenceEqual(other.GetEquatableProperties());
 		}
 
