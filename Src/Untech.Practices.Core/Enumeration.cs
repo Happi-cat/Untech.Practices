@@ -1,16 +1,17 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace Untech.Practices
 {
 	/// <summary>
-	/// 
+	///
 	/// </summary>
 	/// <typeparam name="TSelf">The type of the self.</typeparam>
 	/// <seealso cref="System.IComparable{Untech.Practices.Enumeration{TSelf}}" />
 	/// <seealso cref="System.IEquatable{Untech.Practices.Enumeration{TSelf}}" />
 	[DataContract]
-	public abstract class Enumeration<TSelf> : IComparable<Enumeration<TSelf>>, IEquatable<Enumeration<TSelf>>
+	public abstract class Enumeration<TSelf> : IComparable<TSelf>, IEquatable<TSelf>
 		where TSelf : Enumeration<TSelf>
 	{
 		/// <summary>
@@ -61,21 +62,20 @@ namespace Untech.Practices
 			return !(left == right);
 		}
 
-		public override string ToString()
-		{
-			return string.Format("({0}, {1})", Id, Name);
-		}
+		public override string ToString() => $"({Id}, {Name})";
 
 		public override bool Equals(object obj)
 		{
-			return Equals(obj as Enumeration<TSelf>);
+			if (ReferenceEquals(this, obj)) return true;
+			if (ReferenceEquals(obj, null)) return false;
+			if (obj is TSelf self) return Equals(self);
+			return false;
 		}
 
-		public bool Equals(Enumeration<TSelf> other)
+		public bool Equals(TSelf other)
 		{
 			if (ReferenceEquals(this, other)) return true;
 			if (ReferenceEquals(other, null)) return false;
-
 			return Id.Equals(other.Id);
 		}
 
@@ -89,12 +89,7 @@ namespace Untech.Practices
 			}
 		}
 
-		public int CompareTo(object other)
-		{
-			return CompareTo(other as Enumeration<TSelf>);
-		}
-
-		public int CompareTo(Enumeration<TSelf> other)
+		public int CompareTo(TSelf other)
 		{
 			if (ReferenceEquals(other, null)) throw new ArgumentNullException(nameof(other));
 			return Id.CompareTo(other.Id);
@@ -102,14 +97,14 @@ namespace Untech.Practices
 	}
 
 	/// <summary>
-	/// 
+	///
 	/// </summary>
 	/// <typeparam name="TSelf">The type of the self.</typeparam>
 	/// <typeparam name="TKey">The type of the key.</typeparam>
 	/// <seealso cref="System.IComparable{Untech.Practices.Enumeration{TSelf}}" />
 	/// <seealso cref="System.IEquatable{Untech.Practices.Enumeration{TSelf}}" />
 	[DataContract]
-	public abstract class Enumeration<TSelf, TKey> : IComparable<Enumeration<TSelf, TKey>>, IEquatable<Enumeration<TSelf, TKey>>
+	public abstract class Enumeration<TSelf, TKey> : IComparable<TSelf>, IEquatable<TSelf>
 		where TSelf : Enumeration<TSelf, TKey>
 		where TKey : IComparable<TKey>, IEquatable<TKey>
 	{
@@ -151,9 +146,8 @@ namespace Untech.Practices
 
 		public static bool operator ==(Enumeration<TSelf, TKey> left, Enumeration<TSelf, TKey> right)
 		{
-			return ReferenceEquals(left, null)
-				? ReferenceEquals(right, null)
-				: left.Equals(right);
+			if (ReferenceEquals(left, null)) return ReferenceEquals(right, null);
+			return left.Equals(right);
 		}
 
 		public static bool operator !=(Enumeration<TSelf, TKey> left, Enumeration<TSelf, TKey> right)
@@ -161,22 +155,21 @@ namespace Untech.Practices
 			return !(left == right);
 		}
 
-		public override string ToString()
-		{
-			return string.Format("({0}, {1})", Id, Name);
-		}
+		public override string ToString() => $"({Id}, {Name})";
 
 		public override bool Equals(object obj)
 		{
-			return Equals(obj as Enumeration<TSelf, TKey>);
+			if (ReferenceEquals(this, obj)) return true;
+			if (ReferenceEquals(obj, null)) return false;
+			if (obj is TSelf self) return Equals(self);
+			return false;
 		}
 
-		public bool Equals(Enumeration<TSelf, TKey> other)
+		public bool Equals(TSelf other)
 		{
 			if (ReferenceEquals(this, other)) return true;
 			if (ReferenceEquals(other, null)) return false;
-
-			return Id.Equals(other.Id);
+			return EqualityComparer<TKey>.Default.Equals(Id, other.Id);
 		}
 
 		public override int GetHashCode()
@@ -184,20 +177,15 @@ namespace Untech.Practices
 			unchecked
 			{
 				var hash = 17;
-				hash = hash * 37 + Id.GetHashCode();
+				hash = hash * 37 + EqualityComparer<TKey>.Default.GetHashCode(Id);
 				return hash;
 			}
 		}
 
-		public int CompareTo(object other)
-		{
-			return CompareTo(other as Enumeration<TSelf, TKey>);
-		}
-
-		public int CompareTo(Enumeration<TSelf, TKey> other)
+		public int CompareTo(TSelf other)
 		{
 			if (ReferenceEquals(other, null)) throw new ArgumentNullException(nameof(other));
-			return Id.CompareTo(other.Id);
+			return Comparer<TKey>.Default.Compare(Id, other.Id);
 		}
 	}
 }
