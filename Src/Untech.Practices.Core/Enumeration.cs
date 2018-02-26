@@ -11,7 +11,7 @@ namespace Untech.Practices
 	/// <seealso cref="System.IComparable{Untech.Practices.Enumeration{TSelf}}" />
 	/// <seealso cref="System.IEquatable{Untech.Practices.Enumeration{TSelf}}" />
 	[DataContract]
-	public abstract class Enumeration<TSelf> : IComparable<TSelf>, IEquatable<TSelf>
+	public abstract class Enumeration<TSelf> : IComparable<TSelf>, IEquatable<TSelf>, IComparable
 		where TSelf : Enumeration<TSelf>
 	{
 		/// <summary>
@@ -64,6 +64,8 @@ namespace Untech.Practices
 
 		public override string ToString() => $"({Id}, {Name})";
 
+
+
 		public override bool Equals(object obj)
 		{
 			if (ReferenceEquals(this, obj)) return true;
@@ -89,6 +91,14 @@ namespace Untech.Practices
 			}
 		}
 
+		public int CompareTo(object obj)
+		{
+			if (ReferenceEquals(obj, null)) throw new ArgumentNullException(nameof(obj));
+			if (obj is TSelf self) return CompareTo(self);
+
+			throw new ArgumentException("Invalid type", nameof(obj));
+		}
+
 		public int CompareTo(TSelf other)
 		{
 			if (ReferenceEquals(other, null)) throw new ArgumentNullException(nameof(other));
@@ -104,7 +114,7 @@ namespace Untech.Practices
 	/// <seealso cref="System.IComparable{Untech.Practices.Enumeration{TSelf}}" />
 	/// <seealso cref="System.IEquatable{Untech.Practices.Enumeration{TSelf}}" />
 	[DataContract]
-	public abstract class Enumeration<TSelf, TKey> : IComparable<TSelf>, IEquatable<TSelf>
+	public abstract class Enumeration<TSelf, TKey> : IComparable<TSelf>, IEquatable<TSelf>, IComparable
 		where TSelf : Enumeration<TSelf, TKey>
 		where TKey : IComparable<TKey>, IEquatable<TKey>
 	{
@@ -180,6 +190,14 @@ namespace Untech.Practices
 				hash = hash * 37 + EqualityComparer<TKey>.Default.GetHashCode(Id);
 				return hash;
 			}
+		}
+
+		public int CompareTo(object obj)
+		{
+			if (ReferenceEquals(obj, null)) throw new ArgumentNullException(nameof(obj));
+			if (obj is TSelf self) return CompareTo(self);
+
+			throw new ArgumentException("Invalid type", nameof(obj));
 		}
 
 		public int CompareTo(TSelf other)
