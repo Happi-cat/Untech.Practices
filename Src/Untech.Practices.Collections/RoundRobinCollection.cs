@@ -116,8 +116,6 @@ namespace Untech.Practices.Collections
 			}
 		}
 
-
-
 		private class Node
 		{
 			public Node(T value)
@@ -152,7 +150,7 @@ namespace Untech.Practices.Collections
 			public bool MoveNext()
 			{
 				_current = _parent.MoveNext();
-				return _current == null;
+				return _current != null;
 			}
 
 			public void Reset()
