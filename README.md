@@ -7,6 +7,5 @@ This repo contains different reusable libraries with boilerplate code:
 * CQRS abstractions
 * CQRS implementation
 * Specialized collections like RoundRobinCollection 
-* IHierarchical interface for hierarchical structures:w
-
+* IHierarchical interface for hierarchical structures
 
