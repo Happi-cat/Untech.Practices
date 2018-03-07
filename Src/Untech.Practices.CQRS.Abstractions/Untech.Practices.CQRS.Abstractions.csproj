@@ -11,9 +11,7 @@
     <InformationalVersion>1.0</InformationalVersion>
     <AssemblyVersion>1.0</AssemblyVersion>
   </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Untech.Practices.Core\Untech.Practices.Core.csproj" />
   </ItemGroup>
-
 </Project>

@@ -4,15 +4,39 @@ using System.Collections.Generic;
 namespace Untech.Practices.Collections
 {
 	/// <summary>
-	/// 
+	/// Represents circle-collection that <see cref="Push(T)" /> element as a head element
+	/// and <see cref="Pop" /> head element setting new head to next element.
+	/// Moves head element pointer via <see cref="Peek" /> and <see cref="IEnumerator.MoveNext" /> to element after head.
 	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	/// <seealso cref="System.Collections.Generic.IEnumerable{T}" />
+	/// <typeparam name="T">Element type.</typeparam>
+	/// <seealso cref="T:System.Collections.Generic.IEnumerable`1" />
 	public class RoundRobinCollection<T> : IEnumerable<T>
 	{
 		private readonly object _syncRoot = new object();
 
 		private Node _tail;
+
+		/// <summary>
+		/// Initalizes a new instance of the <see cref="RoundRobinCollection{T}"/> class.
+		/// </summary>
+		public RoundRobinCollection()
+		{
+
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="RoundRobinCollection{T}"/> with elements from <paramref name="source"/>.
+		/// </summary>
+		/// <param name="source"></param>
+		public RoundRobinCollection(IEnumerable<T> source)
+		{
+			if (source == null) return;
+
+			foreach (var item in source)
+			{
+				Push(item);
+			}
+		}
 
 		/// <summary>
 		/// Inserts an object at the head.
@@ -51,18 +75,17 @@ namespace Untech.Practices.Collections
 				{
 					return default(T);
 				}
-				else if (_tail.Next == _tail)
+
+				if (_tail.Next == _tail)
 				{
 					var oldNode = _tail;
 					_tail = null;
 					return oldNode.Value;
 				}
-				else
-				{
-					var oldHead = _tail.Next;
-					_tail.Next = oldHead.Next;
-					return oldHead.Value;
-				}
+
+				var oldHead = _tail.Next;
+				_tail.Next = oldHead.Next;
+				return oldHead.Value;
 			}
 		}
 
@@ -78,19 +101,20 @@ namespace Untech.Practices.Collections
 				: newHead.Value;
 		}
 
+		/// <inheritdoc />
+		public IEnumerator<T> GetEnumerator() => new Enumerator(this);
+
+		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
 		private Node MoveNext()
 		{
 			lock (_syncRoot)
 			{
-				return (_tail == null)
+				return _tail == null
 					? null
 					: _tail = _tail.Next;
 			}
 		}
-
-		public IEnumerator<T> GetEnumerator() => new Enumerator(this);
-
-		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
 		private class Node
 		{
@@ -126,7 +150,7 @@ namespace Untech.Practices.Collections
 			public bool MoveNext()
 			{
 				_current = _parent.MoveNext();
-				return true;
+				return _current != null;
 			}
 
 			public void Reset()
