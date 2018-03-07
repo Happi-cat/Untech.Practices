@@ -1,4 +1,4 @@
-﻿namespace Untech.Practices.Mappers
+﻿namespace Untech.Practices.ObjectMapping
 {
 	/// <summary>
 	/// Defines method for object mapping from <typeparamref name="TIn"/> to <typeparamref name="TOut"/>.

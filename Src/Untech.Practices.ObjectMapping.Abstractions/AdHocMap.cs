@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Untech.Practices.Mappers
+namespace Untech.Practices.ObjectMapping
 {
 	public class AdHocMap<TIn, TOut> : IMap<TIn, TOut>
 	{

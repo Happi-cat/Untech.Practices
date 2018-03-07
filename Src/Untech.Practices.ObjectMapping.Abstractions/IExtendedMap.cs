@@ -1,4 +1,4 @@
-﻿namespace Untech.Practices.Mappers
+﻿namespace Untech.Practices.ObjectMapping
 {
 	/// <summary>
 	/// Extends <see cref="IMap{TIn,TOut}"/> and defines method for object mapping using already existing destination object.
