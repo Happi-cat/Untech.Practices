@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Untech.Practices.DataStorage
@@ -14,32 +15,36 @@ namespace Untech.Practices.DataStorage
 		/// Finds entity asynchronously with a specified <paramref name="key"/> in the store.
 		/// </summary>
 		/// <param name="key">Key of the entity to find.</param>
+		/// <param name="cancellationToken">Task cancellation token.</param>
 		/// <returns>Entity that was found; otherwise throws <see cref="AggregateRootNotFoundException"/>.</returns>
 		/// <exception cref="AggregateRootNotFoundException">Entity with <paramref name="key"/> cannot be found.</exception>
-		Task<T> FindAsync(TKey key);
+		Task<T> FindAsync(TKey key, CancellationToken cancellationToken = default (CancellationToken));
 
 		/// <summary>
 		/// Creates <paramref name="entity"/> asynchronously in the store.
 		/// </summary>
 		/// <param name="entity">Entity to create.</param>
+		/// <param name="cancellationToken">Task cancellation token.</param>
 		/// <returns>Entity that was created in the store.</returns>
-		Task<T> CreateAsync(T entity);
+		Task<T> CreateAsync(T entity, CancellationToken cancellationToken = default (CancellationToken));
 
 		/// <summary>
 		/// Updates <paramref name="entity"/> asynchronously in the store.
 		/// </summary>
 		/// <param name="entity">Entity to create.</param>
+		/// <param name="cancellationToken">Task cancellation token.</param>
 		/// <returns>Entity that was created in the store.</returns>
 		/// <exception cref="AggregateRootNotFoundException">Entity with <paramref name="key"/> cannot be found.</exception>
-		Task<T> UpdateAsync(T entity);
+		Task<T> UpdateAsync(T entity, CancellationToken cancellationToken = default (CancellationToken));
 
 		/// <summary>
 		/// Deletes <paramref name="entity"/> asynchronously in the store.
 		/// </summary>
 		/// <param name="entity">Entity to delete.</param>
+		/// <param name="cancellationToken">Task cancellation token.</param>
 		/// <returns>True when deleted successfully; otherwise false.</returns>
 		/// <exception cref="AggregateRootNotFoundException">Entity with <paramref name="key"/> cannot be found.</exception>
-		Task<bool> DeleteAsync(T entity);
+		Task<bool> DeleteAsync(T entity, CancellationToken cancellationToken = default (CancellationToken));
 	}
 
 	/// <summary>
