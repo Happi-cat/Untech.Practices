@@ -1,5 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard1.0</TargetFramework>
     <RootNamespace>Untech.Practices.DataStorage</RootNamespace>
@@ -10,5 +9,4 @@
     <InformationalVersion>1.0</InformationalVersion>
     <AssemblyVersion>1.0</AssemblyVersion>
   </PropertyGroup>
-
 </Project>

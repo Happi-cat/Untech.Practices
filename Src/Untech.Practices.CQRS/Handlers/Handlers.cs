@@ -13,7 +13,7 @@ namespace Untech.Practices.CQRS.Handlers
 		public static IQueryHandler<TIn, TOut> Query<TIn, TOut>()
 			where TIn : IQuery<TOut>
 		{
-			return new StubQueryHandler<TIn, TOut>();
+			return new NullQueryHandler<TIn, TOut>();
 		}
 
 		/// <summary>
@@ -38,7 +38,7 @@ namespace Untech.Practices.CQRS.Handlers
 		public static ICommandHandler<TIn, TOut> Command<TIn, TOut>()
 			where TIn : ICommand<TOut>
 		{
-			return new StubCommandHandler<TIn, TOut>();
+			return new NullCommandHandler<TIn, TOut>();
 		}
 
 		/// <summary>
@@ -62,7 +62,7 @@ namespace Untech.Practices.CQRS.Handlers
 		public static INotificationHandler<TIn> Notification<TIn>()
 			where TIn : INotification
 		{
-			return new StubNotificationHandler<TIn>();
+			return new NullNotificationHandler<TIn>();
 		}
 
 		/// <summary>
