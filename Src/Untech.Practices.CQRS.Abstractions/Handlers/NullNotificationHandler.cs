@@ -7,7 +7,7 @@ namespace Untech.Practices.CQRS.Handlers
 	/// Represents dummy notification handler.
 	/// </summary>
 	/// <typeparam name="TIn">The type of notification to be handled.</typeparam>
-	public sealed class StubNotificationHandler<TIn> :
+	public sealed class NullNotificationHandler<TIn> :
 		INotificationHandler<TIn>, INotificationAsyncHandler<TIn>
 		where TIn : INotification
 	{
@@ -17,6 +17,6 @@ namespace Untech.Practices.CQRS.Handlers
 		}
 
 		/// <inheritdoc />
-		public Task PublishAsync(TIn notification, CancellationToken cancellationToken) => Task.CompletedTask;
+		public Task PublishAsync(TIn notification, CancellationToken cancellationToken) => Task.FromResult(0);
 	}
 }

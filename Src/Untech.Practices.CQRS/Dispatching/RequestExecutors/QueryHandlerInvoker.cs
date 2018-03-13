@@ -5,45 +5,45 @@ using Untech.Practices.CQRS.Handlers;
 
 namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 {
-	internal class QueryHandlerRunner<TIn, TOut> : RequestHandlerRunner<TIn, TOut>
+	internal class QueryHandlerInvoker<TIn, TOut> : RequestHandlerInvoker<TIn, TOut>
 		where TIn : IQuery<TOut>
 	{
 		private readonly ITypeResolver _resolver;
 
-		public QueryHandlerRunner(ITypeResolver resolver, ITypeInitializer typeInitializer) : base(resolver, typeInitializer)
+		public QueryHandlerInvoker(ITypeResolver resolver, IHandlerInitializer handlerInitializer) : base(resolver, handlerInitializer)
 		{
 			_resolver = resolver;
 		}
 
-		public override object Handle(object args)
+		public override object Invoke(object args)
 		{
 			var syncHandler = _resolver.ResolveOne<IQueryHandler<TIn, TOut>>();
 			if (syncHandler != null)
 			{
-				return Handle(syncHandler, (TIn)args);
+				return Invoke(syncHandler, (TIn)args);
 			}
 
 			var asyncHandler = _resolver.ResolveOne<IQueryAsyncHandler<TIn, TOut>>();
 			if (asyncHandler != null)
 			{
-				return HandleAsync(asyncHandler, (TIn)args, CancellationToken.None).Result;
+				return InvokeAsync(asyncHandler, (TIn)args, CancellationToken.None).Result;
 			}
 
 			throw new InvalidOperationException("Handler wasn't implemented");
 		}
 
-		public override Task HandleAsync(object args, CancellationToken cancellationToken)
+		public override Task InvokeAsync(object args, CancellationToken cancellationToken)
 		{
 			var asyncHandler = _resolver.ResolveOne<IQueryAsyncHandler<TIn, TOut>>();
 			if (asyncHandler != null)
 			{
-				return HandleAsync(asyncHandler, (TIn)args, cancellationToken);
+				return InvokeAsync(asyncHandler, (TIn)args, cancellationToken);
 			}
 
 			var syncHandler = _resolver.ResolveOne<IQueryHandler<TIn, TOut>>();
 			if (syncHandler != null)
 			{
-				return Task.FromResult(Handle(syncHandler, (TIn)args));
+				return Task.FromResult(Invoke(syncHandler, (TIn)args));
 			}
 
 			throw new InvalidOperationException("Handler wasn't implemented");

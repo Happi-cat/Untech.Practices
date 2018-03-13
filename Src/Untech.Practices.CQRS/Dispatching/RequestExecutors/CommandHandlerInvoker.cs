@@ -5,45 +5,45 @@ using Untech.Practices.CQRS.Handlers;
 
 namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 {
-	internal class CommandHandlerRunner<TIn, TOut> : RequestHandlerRunner<TIn, TOut>
+	internal class CommandHandlerInvoker<TIn, TOut> : RequestHandlerInvoker<TIn, TOut>
 		where TIn : ICommand<TOut>
 	{
 		private readonly ITypeResolver _resolver;
 
-		public CommandHandlerRunner(ITypeResolver resolver, ITypeInitializer typeInitializer) : base(resolver, typeInitializer)
+		public CommandHandlerInvoker(ITypeResolver resolver, IHandlerInitializer handlerInitializer) : base(resolver, handlerInitializer)
 		{
 			_resolver = resolver;
 		}
 
-		public override object Handle(object args)
+		public override object Invoke(object args)
 		{
 			var syncHandler = _resolver.ResolveOne<ICommandHandler<TIn, TOut>>();
 			if (syncHandler != null)
 			{
-				return Handle(syncHandler, (TIn)args);
+				return Invoke(syncHandler, (TIn)args);
 			}
 
 			var asyncHandler = _resolver.ResolveOne<ICommandAsyncHandler<TIn, TOut>>();
 			if (asyncHandler != null)
 			{
-				return HandleAsync(asyncHandler, (TIn)args, CancellationToken.None).Result;
+				return InvokeAsync(asyncHandler, (TIn)args, CancellationToken.None).Result;
 			}
 
 			throw new InvalidOperationException("Handler wasn't implemented");
 		}
 
-		public override Task HandleAsync(object args, CancellationToken cancellationToken)
+		public override Task InvokeAsync(object args, CancellationToken cancellationToken)
 		{
 			var asyncHandler = _resolver.ResolveOne<ICommandAsyncHandler<TIn, TOut>>();
 			if (asyncHandler != null)
 			{
-				return HandleAsync(asyncHandler, (TIn)args, cancellationToken);
+				return InvokeAsync(asyncHandler, (TIn)args, cancellationToken);
 			}
 
 			var syncHandler = _resolver.ResolveOne<ICommandHandler<TIn, TOut>>();
 			if (syncHandler != null)
 			{
-				return Task.FromResult(Handle(syncHandler, (TIn)args));
+				return Task.FromResult(Invoke(syncHandler, (TIn)args));
 			}
 
 			throw new InvalidOperationException("Handler wasn't implemented");

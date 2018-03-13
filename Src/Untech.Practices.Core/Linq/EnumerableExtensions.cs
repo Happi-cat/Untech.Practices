@@ -5,7 +5,7 @@ using System.Linq;
 namespace Untech.Practices.Linq
 {
 	/// <summary>
-	/// 
+	/// Defines extension methods for <see cref="IEnumerable{T}"/>.
 	/// </summary>
 	public static class EnumerableExtensions
 	{
@@ -17,10 +17,24 @@ namespace Untech.Practices.Linq
 		/// <returns></returns>
 		public static IEnumerable<T> EmptyIfNull<T>(this IEnumerable<T> source)
 		{
-			return (source == null)
-				? Enumerable.Empty<T>()
-				: source;
+			return source ?? Enumerable.Empty<T>();
 		}
+
+		public static IEnumerable<T> Except<T>(this IEnumerable<T> source, Func<T, bool> predicate)
+		{
+			source = source ?? throw new ArgumentNullException(nameof(source));
+			predicate = predicate ?? throw new ArgumentNullException(nameof(predicate));
+
+			foreach (var element in source)
+			{
+				if (!predicate(element))
+				{
+					yield return element;
+				}
+			}
+		}
+
+		public static IEnumerable<T> ExceptNulls<T>(this IEnumerable<T> source) => source.Except(n => n == null);
 
 		/// <summary>
 		/// Executes the specified <paramref name="action" /> over each element of the sequence.
@@ -65,7 +79,6 @@ namespace Untech.Practices.Linq
 
 			if (snapshot.Count == 0)
 			{
-				yield break;
 			}
 			else if (snapshot.Count <= chunkSize)
 			{

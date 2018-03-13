@@ -8,7 +8,7 @@ namespace Untech.Practices.CQRS.Handlers
 	/// </summary>
 	/// <typeparam name="TIn">Request type.</typeparam>
 	/// <typeparam name="TOut">The type of result from the handler.</typeparam>
-	public sealed class StubCommandHandler<TIn, TOut> :
+	public sealed class NullCommandHandler<TIn, TOut> :
 		ICommandHandler<TIn, TOut>, ICommandAsyncHandler<TIn, TOut>
 		where TIn : ICommand<TOut>
 	{

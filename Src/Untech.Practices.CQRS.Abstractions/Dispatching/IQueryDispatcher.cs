@@ -7,7 +7,7 @@ namespace Untech.Practices.CQRS.Dispatching
 	/// Represents interface of a class that dispatches CQRS query-requests to handlers and returns execution results.
 	/// </summary>
 	/// <remarks>
-	/// <para>Supports <see cref="IQuery{TResult}"/>, <see cref="ICommand{TResponse}"/>, <see cref="INotification"/> CQRS requests.</para>
+	/// <para>Supports <see cref="IQuery{TResult}"/> CQRS requests.</para>
 	/// </remarks>
 	public interface IQueryDispatcher
 	{

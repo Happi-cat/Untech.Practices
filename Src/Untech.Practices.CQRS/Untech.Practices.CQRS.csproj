@@ -10,16 +10,13 @@
     <InformationalVersion>1.0</InformationalVersion>
     <AssemblyVersion>1.0</AssemblyVersion>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="System.Linq" Version="4.3.0" />
     <PackageReference Include="System.Runtime.Serialization.Formatters" Version="4.3.0" />
     <PackageReference Include="System.Threading.Thread" Version="4.3.0" />
     <PackageReference Include="System.Threading.ThreadPool" Version="4.3.0" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Untech.Practices.CQRS.Abstractions\Untech.Practices.CQRS.Abstractions.csproj" />
   </ItemGroup>
-  
 </Project>

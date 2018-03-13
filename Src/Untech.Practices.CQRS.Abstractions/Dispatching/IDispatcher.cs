@@ -9,7 +9,7 @@ namespace Untech.Practices.CQRS.Dispatching
 	/// <remarks>
 	/// <para>Supports <see cref="IQuery{TResult}"/>, <see cref="ICommand{TResponse}"/>, <see cref="INotification"/> CQRS requests.</para>
 	/// </remarks>
-	public interface IDispatcher : IQueryDispatcher
+	public interface IDispatcher : IQueryDispatcher, INotificationDispatcher
 	{
 		/// <summary>
 		/// Processes the incoming <paramref name="command"/> and returns execution result.
@@ -27,18 +27,5 @@ namespace Untech.Practices.CQRS.Dispatching
 		/// <param name="cancellationToken">The token that used for propagation notification that task should be canceled.</param>
 		/// <returns>Execution result.</returns>
 		Task<TResult> ProcessAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken);
-
-		/// <summary>
-		/// Publishes the incoming <paramref name="notification"/>.
-		/// </summary>
-		/// <param name="notification">The command to be published.</param>
-		void Publish(INotification notification);
-
-		/// <summary>
-		/// Publishes asynchronously the incoming <paramref name="notification"/>.
-		/// </summary>
-		/// <param name="notification">The command to be published.</param>
-		/// <param name="cancellationToken">The token that used for propagation notification that task should be canceled.</param>
-		Task PublishAsync(INotification notification, CancellationToken cancellationToken);
 	}
 }

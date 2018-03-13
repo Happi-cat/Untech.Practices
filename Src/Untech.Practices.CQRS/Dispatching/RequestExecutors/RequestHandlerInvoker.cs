@@ -7,29 +7,29 @@ using Untech.Practices.CQRS.Pipeline;
 
 namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 {
-	internal abstract class RequestHandlerRunner<TIn, TOut> : IHandlerRunner
+	internal abstract class RequestHandlerInvoker<TIn, TOut> : IHandlerInvoker
 		where TIn : IRequest<TOut>
 	{
-		private readonly ITypeInitializer _typeInitializer;
+		private readonly IHandlerInitializer _handlerInitializer;
 		private readonly IReadOnlyCollection<IPipelinePreProcessor<TIn>> _preProcessors;
 		private readonly IReadOnlyCollection<IPipelinePostProcessor<TIn, TOut>> _postProcessors;
 
-		protected RequestHandlerRunner(ITypeResolver resolver, ITypeInitializer typeInitializer)
+		protected RequestHandlerInvoker(ITypeResolver resolver, IHandlerInitializer handlerInitializer)
 		{
-			_typeInitializer = typeInitializer;
+			_handlerInitializer = handlerInitializer;
 
 			_preProcessors = ResolveMany<IPipelinePreProcessor<TIn>>(resolver);
 			_postProcessors = ResolveMany<IPipelinePostProcessor<TIn, TOut>>(resolver);
 		}
 
-		public abstract object Handle(object args);
-		public abstract Task HandleAsync(object args, CancellationToken cancellationToken);
+		public abstract object Invoke(object args);
+		public abstract Task InvokeAsync(object args, CancellationToken cancellationToken);
 
-		protected TOut Handle(IRequestHandler<TIn, TOut> handler, TIn request)
+		protected TOut Invoke(IRequestHandler<TIn, TOut> handler, TIn request)
 		{
 			PreProcess(request);
 
-			_typeInitializer?.Init(handler, request);
+			_handlerInitializer?.Init(handler, request);
 
 			var result = handler.Handle(request);
 
@@ -38,11 +38,11 @@ namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 			return result;
 		}
 
-		protected async Task<TOut> HandleAsync(IRequestAsyncHandler<TIn, TOut> handler, TIn request, CancellationToken cancellationToken)
+		protected async Task<TOut> InvokeAsync(IRequestAsyncHandler<TIn, TOut> handler, TIn request, CancellationToken cancellationToken)
 		{
 			PreProcess(request);
 
-			_typeInitializer?.Init(handler, request);
+			_handlerInitializer?.Init(handler, request);
 
 			var result = await handler.HandleAsync(request, cancellationToken);
 
