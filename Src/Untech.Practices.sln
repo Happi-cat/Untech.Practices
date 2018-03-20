@@ -31,6 +31,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.DataStorag
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.ObjectMapping.Abstractions", "Untech.Practices.ObjectMapping.Abstractions\Untech.Practices.ObjectMapping.Abstractions.csproj", "{EFC54E73-51C6-49F2-AAED-6B2AD4621113}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.Concurrency.Abstractions", "Untech.Practices.Concurrency.Abstractions\Untech.Practices.Concurrency.Abstractions.csproj", "{F84C33F2-B6EE-404F-BF52-A9426E65AB2C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -185,6 +187,18 @@ Global
 		{EFC54E73-51C6-49F2-AAED-6B2AD4621113}.Release|x64.Build.0 = Release|Any CPU
 		{EFC54E73-51C6-49F2-AAED-6B2AD4621113}.Release|x86.ActiveCfg = Release|Any CPU
 		{EFC54E73-51C6-49F2-AAED-6B2AD4621113}.Release|x86.Build.0 = Release|Any CPU
+		{F84C33F2-B6EE-404F-BF52-A9426E65AB2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F84C33F2-B6EE-404F-BF52-A9426E65AB2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F84C33F2-B6EE-404F-BF52-A9426E65AB2C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F84C33F2-B6EE-404F-BF52-A9426E65AB2C}.Debug|x64.Build.0 = Debug|Any CPU
+		{F84C33F2-B6EE-404F-BF52-A9426E65AB2C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F84C33F2-B6EE-404F-BF52-A9426E65AB2C}.Debug|x86.Build.0 = Debug|Any CPU
+		{F84C33F2-B6EE-404F-BF52-A9426E65AB2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F84C33F2-B6EE-404F-BF52-A9426E65AB2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F84C33F2-B6EE-404F-BF52-A9426E65AB2C}.Release|x64.ActiveCfg = Release|Any CPU
+		{F84C33F2-B6EE-404F-BF52-A9426E65AB2C}.Release|x64.Build.0 = Release|Any CPU
+		{F84C33F2-B6EE-404F-BF52-A9426E65AB2C}.Release|x86.ActiveCfg = Release|Any CPU
+		{F84C33F2-B6EE-404F-BF52-A9426E65AB2C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
