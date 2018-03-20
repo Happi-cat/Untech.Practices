@@ -1,0 +1,5 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Untech.Practices.Localization</RootNamespace>
+  </PropertyGroup>
+</Project>
