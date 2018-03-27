@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Untech.Practices.Concurrency.Abstractions
+namespace Untech.Practices.Concurrency
 {
 	/// <summary>
 	/// Manager that implements <see cref="IDistributedLockManager"/> and

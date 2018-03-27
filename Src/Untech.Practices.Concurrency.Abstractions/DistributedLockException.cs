@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Untech.Practices.Concurrency.Abstractions
+namespace Untech.Practices.Concurrency
 {
 	/// <summary>
 	/// Represents errors that occurs when distributed lock wasn't acquired.

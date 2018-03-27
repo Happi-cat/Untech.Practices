@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Untech.Practices.Concurrency.Abstractions
+namespace Untech.Practices.Concurrency
 {
 	/// <summary>
 	/// Defines methods for acquiring distributed lock.

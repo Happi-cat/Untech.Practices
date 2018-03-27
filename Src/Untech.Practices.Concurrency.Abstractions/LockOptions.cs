@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Untech.Practices.Concurrency.Abstractions
+namespace Untech.Practices.Concurrency
 {
 	/// <summary>
 	/// Options for <see cref="IDistributedLockManager"/> for lock acquiring.
