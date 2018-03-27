@@ -5,16 +5,24 @@ using System.Threading.Tasks;
 
 namespace Untech.Practices.Concurrency.Abstractions
 {
+	/// <summary>
+	/// Manager that implements <see cref="IDistributedLockManager"/> and
+	/// provides methods for lock acquiring using <see cref="IDistributedLock"/> as a lock-provider.
+	/// </summary>
 	public class DistributedLockManager : IDistributedLockManager
 	{
 		private readonly IDistributedLock _distributedLock;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DistributedLockManager"/>.
+		/// </summary>
+		/// <param name="distributedLock">Distributed lock to use as a provider.</param>
 		public DistributedLockManager(IDistributedLock distributedLock)
 		{
 			_distributedLock = distributedLock;
 		}
 
-		public IDisposable Acquire(string resource, AcquireOptions options)
+		public IDisposable Acquire(string resource, LockOptions options)
 		{
 			IDisposable acquiredLock;
 			if (options.WaitTime.HasValue)
@@ -23,7 +31,7 @@ namespace Untech.Practices.Concurrency.Abstractions
 
 				if (acquiredLock == null)
 				{
-					throw new TimeoutException($"Lock not acquired for resource {resource} in {options.WaitTime}");
+					throw new DistributedLockTimeoutException(resource);
 				}
 			}
 			else
@@ -31,10 +39,10 @@ namespace Untech.Practices.Concurrency.Abstractions
 				acquiredLock = _distributedLock.TryAcquire(resource, options.ExpiryTime);
 			}
 
-			return acquiredLock ?? throw new DistributedLockException($"Lock not acquired for resource {resource}");
+			return acquiredLock ?? throw new DistributedLockException(resource);
 		}
 
-		public async Task<IDisposable> AcquireAsync(string resource, AcquireOptions options,
+		public async Task<IDisposable> AcquireAsync(string resource, LockOptions options,
 			CancellationToken cancellationToken = default(CancellationToken))
 		{
 			IDisposable acquiredLock;
@@ -44,7 +52,7 @@ namespace Untech.Practices.Concurrency.Abstractions
 
 				if (acquiredLock == null)
 				{
-					throw new TimeoutException($"Lock not acquired for resource {resource} in {options.WaitTime}");
+					throw new DistributedLockTimeoutException(resource);
 				}
 			}
 			else
@@ -52,17 +60,17 @@ namespace Untech.Practices.Concurrency.Abstractions
 				acquiredLock = await _distributedLock.TryAcquireAsync(resource, options.ExpiryTime, cancellationToken);
 			}
 
-			return acquiredLock ?? throw new DistributedLockException($"Lock not acquired for resource {resource}");
+			return acquiredLock ?? throw new DistributedLockException(resource);
 		}
 
-		public IDisposable TryAcquire(string resource, AcquireOptions options)
+		public IDisposable TryAcquire(string resource, LockOptions options)
 		{
 			return options.WaitTime.HasValue
 				? RepeatUntilAcquiredOrTimeouted(resource, options)
 				: _distributedLock.TryAcquire(resource, options.ExpiryTime);
 		}
 
-		public Task<IDisposable> TryAcquireAsync(string resource, AcquireOptions options,
+		public Task<IDisposable> TryAcquireAsync(string resource, LockOptions options,
 			CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return options.WaitTime.HasValue
@@ -70,7 +78,7 @@ namespace Untech.Practices.Concurrency.Abstractions
 				: _distributedLock.TryAcquireAsync(resource, options.ExpiryTime, cancellationToken);
 		}
 
-		private IDisposable RepeatUntilAcquiredOrTimeouted(string resource, AcquireOptions options)
+		private IDisposable RepeatUntilAcquiredOrTimeouted(string resource, LockOptions options)
 		{
 			var waitMills = options.WaitTime.Value.Milliseconds;
 			var retryMills = options.RetryTime?.Milliseconds ?? 50;
@@ -92,7 +100,7 @@ namespace Untech.Practices.Concurrency.Abstractions
 			return null;
 		}
 
-		private async Task<IDisposable> RepeatUntilAcquiredOrTimeoutedAsync(string resource, AcquireOptions options,
+		private async Task<IDisposable> RepeatUntilAcquiredOrTimeoutedAsync(string resource, LockOptions options,
 			CancellationToken cancellationToken)
 		{
 			var waitMills = options.WaitTime.Value.Milliseconds;

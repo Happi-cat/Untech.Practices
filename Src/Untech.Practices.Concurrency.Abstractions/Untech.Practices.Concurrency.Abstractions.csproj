@@ -1,10 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard1.0</TargetFramework>
+    <Company>Sergey Svirsky</Company>
+    <Copyright>Copyright \u00A9 Sergey Svirsky 2018</Copyright>
+    <TargetFramework>netstandard1.3</TargetFramework>
+    <RootNamespace>Untech.Practices.Concurrency</RootNamespace>
+    <Version>1.0</Version>
+    <FileVersion>1.0</FileVersion>
+    <!-- Increment AssemblyVersion on MAJOR.MINOR change -->
+    <!-- Use Info Version for RC -->
+    <InformationalVersion>1.0</InformationalVersion>
+    <AssemblyVersion>1.0</AssemblyVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System.Threading.Thread, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.netcore.app\2.0.0\ref\netcoreapp2.0\System.Threading.Thread.dll</HintPath>
-    </Reference>
+    <PackageReference Include="System.Threading.Thread" Version="4.3.0" />
   </ItemGroup>
 </Project>
