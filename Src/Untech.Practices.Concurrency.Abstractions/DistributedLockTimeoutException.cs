@@ -3,7 +3,7 @@
 namespace Untech.Practices.Concurrency
 {
 	/// <summary>
-	/// Represents errors that occurs when distributed lock wasn't acquired in a specified amount of time.
+	/// Represents errors that occur when distributed lock wasn't acquired in a specified amount of time.
 	/// </summary>
 	public class DistributedLockTimeoutException : TimeoutException
 	{

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace Untech.Practices.Concurrency
 {
 	/// <summary>
-	/// Defines methods for acquiring distributed lock.
+	/// Defines methods for acquiring a distributed lock on a resource.
 	/// </summary>
 	public interface IDistributedLock
 	{

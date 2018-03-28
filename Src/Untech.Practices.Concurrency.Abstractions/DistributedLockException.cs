@@ -3,7 +3,7 @@
 namespace Untech.Practices.Concurrency
 {
 	/// <summary>
-	/// Represents errors that occurs when distributed lock wasn't acquired.
+	/// Represents errors that occur when distributed lock wasn't acquired.
 	/// </summary>
 	public class DistributedLockException : Exception
 	{

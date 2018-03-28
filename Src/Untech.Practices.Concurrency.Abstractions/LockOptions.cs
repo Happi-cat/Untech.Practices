@@ -3,7 +3,7 @@
 namespace Untech.Practices.Concurrency
 {
 	/// <summary>
-	/// Options for <see cref="IDistributedLockManager"/> for lock acquiring.
+	/// Options for <see cref="IDistributedLockManager"/> for distributed lock acquiring.
 	/// </summary>
 	public class LockOptions
 	{

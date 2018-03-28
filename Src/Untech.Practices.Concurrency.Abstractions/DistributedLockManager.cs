@@ -7,7 +7,7 @@ namespace Untech.Practices.Concurrency
 {
 	/// <summary>
 	/// Manager that implements <see cref="IDistributedLockManager"/> and
-	/// provides methods for lock acquiring using <see cref="IDistributedLock"/> as a lock-provider.
+	/// provides methods for acquiring a ditributed lock on a resource using <see cref="IDistributedLock"/> as a lock-provider.
 	/// </summary>
 	public class DistributedLockManager : IDistributedLockManager
 	{
@@ -22,6 +22,7 @@ namespace Untech.Practices.Concurrency
 			_distributedLock = distributedLock;
 		}
 
+		/// <inheritdoc />
 		public IDisposable Acquire(string resource, LockOptions options)
 		{
 			IDisposable acquiredLock;
@@ -42,6 +43,7 @@ namespace Untech.Practices.Concurrency
 			return acquiredLock ?? throw new DistributedLockException(resource);
 		}
 
+		/// <inheritdoc />
 		public async Task<IDisposable> AcquireAsync(string resource, LockOptions options,
 			CancellationToken cancellationToken = default(CancellationToken))
 		{
@@ -63,6 +65,7 @@ namespace Untech.Practices.Concurrency
 			return acquiredLock ?? throw new DistributedLockException(resource);
 		}
 
+		/// <inheritdoc />
 		public IDisposable TryAcquire(string resource, LockOptions options)
 		{
 			return options.WaitTime.HasValue
@@ -70,6 +73,7 @@ namespace Untech.Practices.Concurrency
 				: _distributedLock.TryAcquire(resource, options.ExpiryTime);
 		}
 
+		/// <inheritdoc />
 		public Task<IDisposable> TryAcquireAsync(string resource, LockOptions options,
 			CancellationToken cancellationToken = default(CancellationToken))
 		{
