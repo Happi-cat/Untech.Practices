@@ -84,13 +84,13 @@ namespace Untech.Practices.Concurrency
 
 		private IDisposable RepeatUntilAcquiredOrTimeouted(string resource, LockOptions options)
 		{
-			var waitMills = options.WaitTime.Value.Milliseconds;
-			var retryMills = options.RetryTime?.Milliseconds ?? 50;
+			var wait = options.WaitTime.Value;
+			var retry = options.RetryTime ?? TimeSpan.FromMilliseconds(50);
 
 			var sw = new Stopwatch();
 			sw.Start();
 
-			while (sw.ElapsedMilliseconds < waitMills)
+			while (sw.Elapsed < wait)
 			{
 				var acquiredLock = _distributedLock.TryAcquire(resource, options.ExpiryTime);
 				if (acquiredLock != null)
@@ -98,7 +98,7 @@ namespace Untech.Practices.Concurrency
 					return acquiredLock;
 				}
 
-				Thread.Sleep(retryMills);
+				Thread.Sleep(retry);
 			}
 
 			return null;
@@ -107,13 +107,13 @@ namespace Untech.Practices.Concurrency
 		private async Task<IDisposable> RepeatUntilAcquiredOrTimeoutedAsync(string resource, LockOptions options,
 			CancellationToken cancellationToken)
 		{
-			var waitMills = options.WaitTime.Value.Milliseconds;
-			var retryMills = options.RetryTime?.Milliseconds ?? 50;
+			var wait = options.WaitTime.Value;
+			var retry = options.RetryTime ?? TimeSpan.FromMilliseconds(50);
 
 			var sw = new Stopwatch();
 			sw.Start();
 
-			while (sw.ElapsedMilliseconds < waitMills)
+			while (sw.Elapsed < wait)
 			{
 				var acquiredLock = await _distributedLock.TryAcquireAsync(resource, options.ExpiryTime, cancellationToken);
 				if (acquiredLock != null)
@@ -121,7 +121,7 @@ namespace Untech.Practices.Concurrency
 					return acquiredLock;
 				}
 
-				await Task.Delay(retryMills, cancellationToken);
+				await Task.Delay(retry, cancellationToken);
 			}
 
 			return null;
