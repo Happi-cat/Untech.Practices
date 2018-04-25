@@ -26,8 +26,9 @@ namespace Untech.Practices.DataStorage.Cache
 		}
 
 		/// <inheritdoc />
-		public async Task SetAsync(CacheKey key, object value, CancellationToken cancellationToken = default (CancellationToken))
+		public Task SetAsync(CacheKey key, object value, CancellationToken cancellationToken = default (CancellationToken))
 		{
+			return Task.FromResult(0);
 		}
 
 		/// <inheritdoc />
@@ -36,8 +37,9 @@ namespace Untech.Practices.DataStorage.Cache
 		}
 
 		/// <inheritdoc />
-		public async Task DropAsync(CacheKey key, bool prefix = false, CancellationToken cancellationToken = default (CancellationToken))
+		public Task DropAsync(CacheKey key, bool prefix = false, CancellationToken cancellationToken = default (CancellationToken))
 		{
+			return Task.FromResult(0);
 		}
 	}
 }
