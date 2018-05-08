@@ -12,7 +12,7 @@ image: Visual Studio 2017
 before_build:
   - nuget restore Src
 build:
-  project: Src\Untech.Practices.sln
+  project: Untech.Practices.sln
   publish_nuget: true
   publish_nuget_symbols: true
   include_nuget_references: true
