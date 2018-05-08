@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Untech.Practices.Collections\Untech.Practices.Collections.csproj" />
+    <ProjectReference Include="..\..\src\Untech.Practices.Collections\Untech.Practices.Collections.csproj" />
   </ItemGroup>
 
 </Project>
