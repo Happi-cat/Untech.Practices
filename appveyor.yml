@@ -10,7 +10,7 @@ for:
     configuration: Debug
 image: Visual Studio 2017
 before_build:
-  - nuget restore Src
+  - nuget restore
 build:
   project: Untech.Practices.sln
   publish_nuget: true
