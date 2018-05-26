@@ -15,7 +15,7 @@ namespace Untech.Practices.DataStorage.Cache
 		/// <param name="cancellationToken">Task cancellation token.</param>
 		/// <typeparam name="T">Type of object to read and cast to.</typeparam>
 		/// <returns>Cached object or default value.</returns>
-		Task<T> GetAsync<T>(CacheKey key, CancellationToken cancellationToken = default (CancellationToken));
+		Task<CacheValue<T>> GetAsync<T>(CacheKey key, CancellationToken cancellationToken = default (CancellationToken));
 
 		/// <summary>
 		/// Caches object asynchronously with a specified <paramref name="key"/>.

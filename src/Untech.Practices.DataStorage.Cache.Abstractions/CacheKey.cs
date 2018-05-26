@@ -1,4 +1,5 @@
 using System;
+using Enumerable = System.Linq.Enumerable;
 
 namespace Untech.Practices.DataStorage.Cache
 {
@@ -29,6 +30,12 @@ namespace Untech.Practices.DataStorage.Cache
 
 			_uri = builder.Uri;
 			_key = _uri.GetComponents(UriComponents.Host | UriComponents.Path | UriComponents.Fragment, UriFormat.SafeUnescaped);
+		}
+
+		public CacheKey(string root, string[] segments, string fragment = null)
+			: this(root, JoinSegments(segments), fragment)
+		{
+
 		}
 
 		/// <summary>
@@ -66,6 +73,11 @@ namespace Untech.Practices.DataStorage.Cache
 				default:
 					throw new FormatException(String.Format("The {0} format string is not supported.", format));
 			}
+		}
+
+		private static string JoinSegments(string[] segments)
+		{
+			return string.Join("/", segments ?? Enumerable.Empty<string>());
 		}
 	}
 }

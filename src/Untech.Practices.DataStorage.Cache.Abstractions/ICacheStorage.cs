@@ -1,5 +1,3 @@
-using System;
-
 namespace Untech.Practices.DataStorage.Cache
 {
 	/// <summary>
@@ -13,7 +11,7 @@ namespace Untech.Practices.DataStorage.Cache
 		/// <param name="key">Cache key.</param>
 		/// <typeparam name="T">Type of object to read and cast to.</typeparam>
 		/// <returns>Cached object or default value.</returns>
-		T Get<T>(CacheKey key);
+		CacheValue<T> Get<T>(CacheKey key);
 
 		/// <summary>
 		/// Caches object with a specified <paramref name="key"/>.
