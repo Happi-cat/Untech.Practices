@@ -9,15 +9,15 @@ namespace Untech.Practices.DataStorage.Cache
 	public sealed class NullCacheStorage : ICacheStorage, IAsyncCacheStorage
 	{
 		/// <inheritdoc />
-		public T Get<T>(CacheKey key)
+		public CacheValue<T> Get<T>(CacheKey key)
 		{
-			return default(T);
+			return default(CacheValue<T>);
 		}
 
 		/// <inheritdoc />
-		public Task<T> GetAsync<T>(CacheKey key, CancellationToken cancellationToken = default (CancellationToken))
+		public Task<CacheValue<T>> GetAsync<T>(CacheKey key, CancellationToken cancellationToken = default (CancellationToken))
 		{
-			return Task.FromResult(default(T));
+			return Task.FromResult(default(CacheValue<T>));
 		}
 
 		/// <inheritdoc />
