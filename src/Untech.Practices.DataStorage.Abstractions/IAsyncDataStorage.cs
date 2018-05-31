@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace Untech.Practices.DataStorage
 {
 	/// <summary>
-	/// Defines async CRUD methods for entities that inherits <see cref="IAggregateRoot{TKey}"/>.
+	/// Defines async CRUD methods for entities that inherit <see cref="IAggregateRoot{TKey}"/>.
 	/// </summary>
 	/// <typeparam name="T">Type of the entity.</typeparam>
 	/// <typeparam name="TKey">Type of the entity key.</typeparam>
