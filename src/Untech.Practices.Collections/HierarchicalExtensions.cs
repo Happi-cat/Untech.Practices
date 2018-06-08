@@ -36,11 +36,16 @@ namespace Untech.Practices.Collections
 		{
 			if (node == null) throw new ArgumentNullException(nameof(node));
 
-			yield return node;
+			return GetEnumerable();
 
-			foreach (var descendant in node.Descendants())
+			IEnumerable<T> GetEnumerable()
 			{
-				yield return descendant;
+				yield return node;
+
+				foreach (var descendant in node.Descendants())
+				{
+					yield return descendant;
+				}
 			}
 		}
 	}
