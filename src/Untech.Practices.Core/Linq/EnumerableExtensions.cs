@@ -75,24 +75,24 @@ namespace Untech.Practices.Linq
 			if (source == null) throw new ArgumentNullException(nameof(source));
 			if (chunkSize <= 0) throw new ArgumentOutOfRangeException(nameof(chunkSize), chunkSize, "Cannot be less than 1");
 
-			var snapshot = new List<T>(source);
+			var enumerator = source.GetEnumerator();
+			while (enumerator.MoveNext())
+			{
+				// moved to first element and going to return chunk
+				yield return new List<T>(Chunk());
+				// if last chunk was smaller then chunk size
+				// then MoveNext would be called twice (in Chunk method and current loop)
+			}
 
-			if (snapshot.Count == 0)
+			IEnumerable<T> Chunk()
 			{
-			}
-			else if (snapshot.Count <= chunkSize)
-			{
-				yield return snapshot;
-			}
-			else
-			{
-				var chunkIndex = 0;
+				var itemsReturned = 0;
 				do
 				{
-					var realChunkSize = Math.Min(snapshot.Count - chunkIndex, chunkSize);
-					yield return snapshot.GetRange(chunkIndex, realChunkSize);
-					chunkIndex += realChunkSize;
-				} while (chunkIndex < snapshot.Count);
+					// chunk iterator starts when already moved next
+					yield return enumerator.Current;
+					// if chunk completed then exit without moving next (short curcuit)
+				} while (++itemsReturned < chunkSize && enumerator.MoveNext());
 			}
 		}
 	}
