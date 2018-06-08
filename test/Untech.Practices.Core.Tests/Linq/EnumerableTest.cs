@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Untech.Practices.Linq;
 using Xunit;
@@ -7,28 +8,43 @@ namespace Untech.Practices.Collections.Linq
 {
 	public class EnumerableTest
 	{
-		#region [OrderByPredefinedOrder]
+		#region [OrderByPosition]
 
 		[Fact]
-		public void OrderByPredefinedOrder_ReturnsOrdered_WhenAllKeysPredefined()
+		public void OrderByPosition_ReturnsOrdered_WhenAllKeysPredefined()
 		{
 			var original = new[] { 1, 2, 3, 4, 5, 6 };
 			var expected = new[] { 3, 2, 1, 6, 5, 4 };
 
-			var ordered = original.OrderByPredefinedOrder(n => n, expected).ToList();
+			var ordered = original.OrderByPosition(n => n, expected).ToList();
 
 			Assert.Equal(expected, ordered);
 			Assert.NotEqual(original, ordered);
 		}
 
 		[Fact]
-		public void OrderByPredefinedOrder_ReturnsOrdered_WhenFewKeysPredefined()
+		public void OrderByPosition_ReturnsOrderedPredefinedAndUnorderedUndefinedKeys_WhenFewKeysPredefined()
 		{
-			var original = new[] { 6, 2, 4, 3, 5, 1 };
+			var original = new[] { 6, 1, 4, 5, 2, 3 };
+			var predefined = new[] { 2, 4, 6 };
+			var expected = new[] { 2, 4, 6, 1, 5, 3 };
+
+			var ordered = original.OrderByPosition(n => n, predefined).ToList();
+
+			Assert.Equal(expected, ordered);
+			Assert.NotEqual(original, ordered);
+		}
+
+		[Fact]
+		public void OrderByPosition_ReturnsAllOrdered_WhenFewKeysPredefinedAndComparer()
+		{
+			var original = new[] { 6, 5, 4, 3, 2, 1 };
 			var predefined = new[] { 2, 4, 6 };
 			var expected = new[] { 2, 4, 6, 1, 3, 5 };
 
-			var ordered = original.OrderByPredefinedOrder(n => n, predefined).ToList();
+			var ordered = original
+				.OrderByPosition(n => n, predefined, Comparer<int>.Default)
+				.ToList();
 
 			Assert.Equal(expected, ordered);
 			Assert.NotEqual(original, ordered);

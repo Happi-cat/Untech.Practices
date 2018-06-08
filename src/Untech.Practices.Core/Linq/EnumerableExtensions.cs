@@ -131,26 +131,61 @@ namespace Untech.Practices.Linq
 		/// <typeparam name="T"></typeparam>
 		/// <typeparam name="TKey"></typeparam>
 		/// <returns></returns>
-		public static IOrderedEnumerable<T> OrderByPredefinedOrder<T, TKey>(this IEnumerable<T> source,
+		public static IOrderedEnumerable<T> OrderByPosition<T, TKey>(this IEnumerable<T> source,
 			Func<T, TKey> keySelector,
 			IEnumerable<TKey> orderedKeys)
-			where TKey : IComparable<TKey>
 		{
 			var comparer = new PositionalComparer<TKey>(orderedKeys.EmptyIfNull());
 
 			return source.OrderBy(keySelector, comparer);
 		}
 
-		private class PositionalComparer<T> : IComparer<T>
-			where T : IComparable<T>
+		public static IOrderedEnumerable<T> OrderByPosition<T, TKey>(this IEnumerable<T> source,
+			Func<T, TKey> keySelector,
+			IEnumerable<TKey> orderedKeys,
+			IComparer<TKey> alternateComparer)
 		{
-			private readonly IReadOnlyDictionary<T, int> orderedElements;
+			var comparer = new PositionalComparer<TKey>(orderedKeys.EmptyIfNull(), alternateComparer);
 
-			public PositionalComparer(IEnumerable<T> orderedElements)
+			return source.OrderBy(keySelector, comparer);
+		}
+
+		public static IOrderedEnumerable<T> ThenByPosition<T, TKey>(this IOrderedEnumerable<T> source,
+			Func<T, TKey> keySelector,
+			IEnumerable<TKey> orderedKeys)
+		{
+			var comparer = new PositionalComparer<TKey>(orderedKeys.EmptyIfNull());
+
+			return source.ThenBy(keySelector, comparer);
+		}
+
+		public static IOrderedEnumerable<T> ThenByPosition<T, TKey>(this IOrderedEnumerable<T> source,
+			Func<T, TKey> keySelector,
+			IEnumerable<TKey> orderedKeys,
+			IComparer<TKey> alternateComparer)
+		{
+			var comparer = new PositionalComparer<TKey>(orderedKeys.EmptyIfNull(), alternateComparer);
+
+			return source.ThenBy(keySelector, comparer);
+		}
+
+		private class PositionalComparer<T> : IComparer<T>
+		{
+			private readonly IReadOnlyDictionary<T, int> _orderedElements;
+			private readonly int _elementNotFoundIndex;
+			private readonly IComparer<T> _alternateComparer;
+
+			public PositionalComparer(IEnumerable<T> orderedElements, IComparer<T> alternateComparer = null)
 			{
-				this.orderedElements = orderedElements
+				_orderedElements = orderedElements
 					.Select((n, i) => Tuple.Create(n, i))
 					.ToDictionary(n => n.Item1, n => n.Item2);
+
+				_elementNotFoundIndex = alternateComparer == null
+					? _orderedElements.Count
+					: -1; // -1 mean to use alternate comparer
+
+				_alternateComparer = alternateComparer;
 			}
 
 			public int Compare(T x, T y)
@@ -169,12 +204,14 @@ namespace Untech.Practices.Linq
 				if (indexY > -1) return 1; // means x > y
 
 				// usual comapare
-				return x.CompareTo(y);
+				return _alternateComparer.Compare(x, y);
 			}
 
 			private int IndexOf(T element)
 			{
-				return orderedElements.TryGetValue(element, out int index) ? index : -1;
+				return _orderedElements.TryGetValue(element, out int index)
+					? index
+					: _elementNotFoundIndex;
 			}
 		}
 	}
