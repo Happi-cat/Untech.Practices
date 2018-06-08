@@ -10,14 +10,14 @@ namespace Untech.Practices.Collections.Linq
 		[Fact]
 		public void ToChunks_ThrowsArgNull_WhenSourceIsNull()
 		{
-			Assert.Throws<ArgumentNullException>(() => EnumerableExtensions.ToChunks<int>(null, 10).ToList());
+			Assert.Throws<ArgumentNullException>(() => EnumerableExtensions.ToChunks<int>(null, 10));
 		}
 
 		[Fact]
 		public void ToChunks_ThrowsOutOfRange_WhenChunkSizeIsLE0()
 		{
-			Assert.Throws<ArgumentOutOfRangeException>(() => new [] { 1 }.ToChunks(0).ToList());
-			Assert.Throws<ArgumentOutOfRangeException>(() => new [] { 1 }.ToChunks(-1).ToList());
+			Assert.Throws<ArgumentOutOfRangeException>(() => new [] { 1 }.ToChunks(0));
+			Assert.Throws<ArgumentOutOfRangeException>(() => new [] { 1 }.ToChunks(-1));
 		}
 
 		[Fact]
