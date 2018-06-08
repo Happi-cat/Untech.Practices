@@ -7,6 +7,37 @@ namespace Untech.Practices.Collections.Linq
 {
 	public class EnumerableTest
 	{
+		#region [OrderByPredefinedOrder]
+
+		[Fact]
+		public void OrderByPredefinedOrder_ReturnsOrdered_WhenAllKeysPredefined()
+		{
+			var original = new[] { 1, 2, 3, 4, 5, 6 };
+			var expected = new[] { 3, 2, 1, 6, 5, 4 };
+
+			var ordered = original.OrderByPredefinedOrder(n => n, expected).ToList();
+
+			Assert.Equal(expected, ordered);
+			Assert.NotEqual(original, ordered);
+		}
+
+		[Fact]
+		public void OrderByPredefinedOrder_ReturnsOrdered_WhenFewKeysPredefined()
+		{
+			var original = new[] { 6, 2, 4, 3, 5, 1 };
+			var predefined = new[] { 2, 4, 6 };
+			var expected = new[] { 2, 4, 6, 1, 3, 5 };
+
+			var ordered = original.OrderByPredefinedOrder(n => n, predefined).ToList();
+
+			Assert.Equal(expected, ordered);
+			Assert.NotEqual(original, ordered);
+		}
+
+		#endregion
+
+		#region [ToChunks]
+
 		[Fact]
 		public void ToChunks_ThrowsArgNull_WhenSourceIsNull()
 		{
@@ -45,5 +76,7 @@ namespace Untech.Practices.Collections.Linq
 
 			Assert.Equal(expected, original.ToChunks(4));
 		}
+
+		#endregion
 	}
 }
