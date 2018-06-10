@@ -19,7 +19,10 @@ namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 
 		public object Invoke(object args)
 		{
-			InvokeAsync(args, CancellationToken.None).Wait();
+			InvokeAsync(args, CancellationToken.None)
+				.ConfigureAwait(false)
+				.GetAwaiter()
+				.GetResult();
 
 			return Nothing.AtAll;
 		}

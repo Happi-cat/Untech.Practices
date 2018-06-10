@@ -26,7 +26,10 @@ namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 			var asyncHandler = _resolver.ResolveOne<IQueryAsyncHandler<TIn, TOut>>();
 			if (asyncHandler != null)
 			{
-				return InvokeAsync(asyncHandler, (TIn)args, CancellationToken.None).Result;
+				return InvokeAsync(asyncHandler, (TIn)args, CancellationToken.None)
+					.ConfigureAwait(false)
+					.GetAwaiter()
+					.GetResult();
 			}
 
 			throw new InvalidOperationException("Handler wasn't implemented");
