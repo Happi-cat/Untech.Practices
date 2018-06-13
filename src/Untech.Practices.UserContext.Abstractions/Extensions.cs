@@ -4,28 +4,57 @@ using System.Linq;
 
 namespace Untech.Practices.UserContext
 {
+	/// <summary>
+	/// Defines a set of extension-methods that use <see cref="IUserContext{TKey}"/>.
+	/// </summary>
 	public static class Extensions
 	{
-		public static IQueryable<T> TakeMineOnly<T, TKey>(this IQueryable<T> queryable,
-			IUserContext<TKey> userContext)
-			where T : IHaveUserKey<TKey>
-			where TKey : IEquatable<TKey>
+		/// <summary>
+		/// Returns elements from original sequence that belong to user from <paramref name="userContext"/>.
+		/// </summary>
+		/// <param name="source">The original source.</param>
+		/// <param name="userContext">The user context.</param>
+		/// <typeparam name="TElem">The type of sequence elements.</typeparam>
+		/// <typeparam name="TUserKey">The type of userKey</typeparam>
+		/// <returns></returns>
+		/// <exception cref="ArgumentNullException">
+		/// Thrown when <paramref name="source"/> or <paramref name="userContext"/> is null.
+		/// </exception>
+		public static IQueryable<TElem> TakeMineOnly<TElem, TUserKey>(this IQueryable<TElem> source,
+			IUserContext<TUserKey> userContext)
+			where TElem : IHaveUserKey<TUserKey>
+			where TUserKey : IEquatable<TUserKey>
 		{
-			if (queryable == null) throw new ArgumentNullException(nameof(queryable));
+			if (source == null) throw new ArgumentNullException(nameof(source));
 			if (userContext == null) throw new ArgumentNullException(nameof(userContext));
 
-			return queryable.Where(n => userContext.UserKey.Equals(n.UserKey));
+			var userKeyToMatch = userContext.UserKey;
+
+			return source.Where(n => userKeyToMatch.Equals(n.UserKey));
 		}
 
-		public static IEnumerable<T> TakeMineOnly<T, TKey>(this IEnumerable<T> queryable,
-			IUserContext<TKey> userContext)
-			where T : IHaveUserKey<TKey>
-			where TKey : IEquatable<TKey>
+		/// <summary>
+		/// Returns elements from original sequence that belong to user from <paramref name="userContext"/>.
+		/// </summary>
+		/// <param name="source">The original source.</param>
+		/// <param name="userContext">The user context.</param>
+		/// <typeparam name="TElem">The type of sequence elements.</typeparam>
+		/// <typeparam name="TUserKey">The type of userKey</typeparam>
+		/// <returns></returns>
+		/// <exception cref="ArgumentNullException">
+		/// Thrown when <paramref name="source"/> or <paramref name="userContext"/> is null.
+		/// </exception>
+		public static IEnumerable<TElem> TakeMineOnly<TElem, TUserKey>(this IEnumerable<TElem> source,
+			IUserContext<TUserKey> userContext)
+			where TElem : IHaveUserKey<TUserKey>
+			where TUserKey : IEquatable<TUserKey>
 		{
-			if (queryable == null) throw new ArgumentNullException(nameof(queryable));
+			if (source == null) throw new ArgumentNullException(nameof(source));
 			if (userContext == null) throw new ArgumentNullException(nameof(userContext));
 
-			return queryable.Where(n => userContext.UserKey.Equals(n.UserKey));
+			var userKeyToMatch = userContext.UserKey;
+
+			return source.Where(n => userKeyToMatch.Equals(n.UserKey));
 		}
 	}
 }
