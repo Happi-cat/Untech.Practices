@@ -5,15 +5,23 @@ using System.Threading.Tasks;
 
 namespace Untech.Practices.DataStorage.Cache
 {
+	/// <summary>
+	/// Provides ability to use multi-level <see cref="IAsyncCacheStorage"/>.
+	/// </summary>
 	public class HierarchicalAsyncCacheStorage : IAsyncCacheStorage
 	{
 		private readonly IReadOnlyCollection<IAsyncCacheStorage> _cacheStorages;
 
+		/// <summary>
+		/// Initializes a new instance with a list of cache storages.
+		/// </summary>
+		/// <param name="cacheStorages">The list of cache storages starting from highest priority to lowest.</param>
 		public HierarchicalAsyncCacheStorage(IEnumerable<IAsyncCacheStorage> cacheStorages)
 		{
 			_cacheStorages = new List<IAsyncCacheStorage>(cacheStorages);
 		}
 
+		/// <inheritdoc />
 		public async Task<CacheValue<T>> GetAsync<T>(CacheKey key, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			foreach (var cacheStorage in _cacheStorages)
@@ -26,6 +34,7 @@ namespace Untech.Practices.DataStorage.Cache
 			return default(CacheValue<T>);
 		}
 
+		/// <inheritdoc />
 		public Task SetAsync(CacheKey key, object value, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return Task.WhenAll(_cacheStorages
@@ -33,6 +42,7 @@ namespace Untech.Practices.DataStorage.Cache
 			);
 		}
 
+		/// <inheritdoc />
 		public Task DropAsync(CacheKey key, bool prefix = false, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return Task.WhenAll(_cacheStorages
