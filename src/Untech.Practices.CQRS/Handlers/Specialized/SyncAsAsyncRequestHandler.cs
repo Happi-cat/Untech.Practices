@@ -16,7 +16,7 @@ namespace Untech.Practices.CQRS.Handlers.Specialized
 
 		public Task<TOut> HandleAsync(TIn request, CancellationToken cancellationToken)
 		{
-			return Task.Run(() => _handler.Handle(request), cancellationToken);
+			return Task.FromResult(_handler.Handle(request));
 		}
 	}
 }
