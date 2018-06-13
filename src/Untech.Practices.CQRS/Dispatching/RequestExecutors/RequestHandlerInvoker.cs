@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,25 +8,66 @@ using Untech.Practices.CQRS.Pipeline;
 
 namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 {
-	internal abstract class RequestHandlerInvoker<TIn, TOut> : IHandlerInvoker
+	internal class RequestHandlerInvoker<TIn, TOut> : IHandlerInvoker
 		where TIn : IRequest<TOut>
 	{
+		private readonly ITypeResolver _resolver;
 		private readonly IHandlerInitializer _handlerInitializer;
 		private readonly IReadOnlyCollection<IPipelinePreProcessor<TIn>> _preProcessors;
 		private readonly IReadOnlyCollection<IPipelinePostProcessor<TIn, TOut>> _postProcessors;
 
-		protected RequestHandlerInvoker(ITypeResolver resolver, IHandlerInitializer handlerInitializer)
+		public RequestHandlerInvoker(ITypeResolver resolver, IHandlerInitializer handlerInitializer)
 		{
+			_resolver = resolver;
 			_handlerInitializer = handlerInitializer;
 
 			_preProcessors = ResolveMany<IPipelinePreProcessor<TIn>>(resolver);
 			_postProcessors = ResolveMany<IPipelinePostProcessor<TIn, TOut>>(resolver);
 		}
 
-		public abstract object Invoke(object args);
-		public abstract Task InvokeAsync(object args, CancellationToken cancellationToken);
+		public  object Invoke(object args)
+		{
+			var syncHandler = _resolver.ResolveOne<IRequestHandler<TIn, TOut>>();
+			if (syncHandler != null)
+			{
+				return Invoke(syncHandler, (TIn)args);
+			}
 
-		protected TOut Invoke(IRequestHandler<TIn, TOut> handler, TIn request)
+			var asyncHandler = _resolver.ResolveOne<IRequestAsyncHandler<TIn, TOut>>();
+			if (asyncHandler != null)
+			{
+				return InvokeAsync(asyncHandler, (TIn)args, CancellationToken.None)
+					.ConfigureAwait(false)
+					.GetAwaiter()
+					.GetResult();
+			}
+
+			throw CreateHandlerNotFoundException();
+		}
+
+		public  Task InvokeAsync(object args, CancellationToken cancellationToken)
+		{
+			var asyncHandler = _resolver.ResolveOne<IRequestAsyncHandler<TIn, TOut>>();
+			if (asyncHandler != null)
+			{
+				return InvokeAsync(asyncHandler, (TIn)args, cancellationToken);
+			}
+
+			var syncHandler = _resolver.ResolveOne<IRequestHandler<TIn, TOut>>();
+			if (syncHandler != null)
+			{
+				return Task.FromResult(Invoke(syncHandler, (TIn)args));
+			}
+
+			throw CreateHandlerNotFoundException();
+		}
+
+		private static InvalidOperationException CreateHandlerNotFoundException()
+		{
+			return new InvalidOperationException($"Handler wasn't found for {typeof(TIn)} request.");
+		}
+
+		private TOut Invoke(IRequestHandler<TIn, TOut> handler, TIn request)
 		{
 			PreProcess(request);
 
@@ -38,7 +80,7 @@ namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 			return result;
 		}
 
-		protected async Task<TOut> InvokeAsync(IRequestAsyncHandler<TIn, TOut> handler, TIn request, CancellationToken cancellationToken)
+		private async Task<TOut> InvokeAsync(IRequestAsyncHandler<TIn, TOut> handler, TIn request, CancellationToken cancellationToken)
 		{
 			PreProcess(request);
 

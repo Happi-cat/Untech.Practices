@@ -7,7 +7,7 @@ using Untech.Practices.CQRS.Dispatching.RequestExecutors;
 namespace Untech.Practices.CQRS.Dispatching
 {
 	/// <summary>
-	/// Represents class that implements <see cref="IDispatcher"/> interface 
+	/// Represents class that implements <see cref="IDispatcher"/> interface
 	/// and dispatches incoming CQRS request to appropriate handlers.
 	/// </summary>
 	public sealed class Dispatcher : IDispatcher
@@ -93,12 +93,12 @@ namespace Untech.Practices.CQRS.Dispatching
 
 		private IHandlerInvoker MakeFetch<TResponse>(Type type)
 		{
-			return (IHandlerInvoker)CreateHandlerRunner(typeof(QueryHandlerInvoker<,>), type, typeof(TResponse));
+			return (IHandlerInvoker)CreateHandlerRunner(typeof(RequestHandlerInvoker<,>), type, typeof(TResponse));
 		}
 
 		private IHandlerInvoker MakeProcess<TResponse>(Type type)
 		{
-			return (IHandlerInvoker)CreateHandlerRunner(typeof(CommandHandlerInvoker<,>), type, typeof(TResponse));
+			return (IHandlerInvoker)CreateHandlerRunner(typeof(RequestHandlerInvoker<,>), type, typeof(TResponse));
 		}
 
 		private IHandlerInvoker MakePublish(Type type)
