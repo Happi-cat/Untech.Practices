@@ -29,23 +29,25 @@ namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 		{
 			var input = (TIn)args;
 
-			var syncHandlers = _resolver.ResolveMany<INotificationHandler<TIn>>()
-				.Select(handler => Handle(handler, input, cancellationToken));
+			var syncHandlers = _resolver
+				.ResolveMany<INotificationHandler<TIn>>()
+				.Select(RunSync);
 
-			var asyncHandlers = _resolver.ResolveMany<INotificationAsyncHandler<TIn>>()
-				.Select(handler => Handle(handler, input, cancellationToken));
+			var asyncHandlers = _resolver
+				.ResolveMany<INotificationAsyncHandler<TIn>>()
+				.Select(RunAsync);
 
 			return Task.WhenAll(syncHandlers.Concat(asyncHandlers));
-		}
 
-		private Task Handle(INotificationHandler<TIn> handler, TIn input, CancellationToken cancellationToken)
-		{
-			return Task.Run(() => handler.Publish(input), cancellationToken);
-		}
+			Task RunSync(INotificationHandler<TIn> handler)
+			{
+				return Task.Run(() => handler.Publish(input), cancellationToken);
+			}
 
-		private Task Handle(INotificationAsyncHandler<TIn> handler, TIn input, CancellationToken cancellationToken)
-		{
-			return handler.PublishAsync(input, cancellationToken);
+			Task RunAsync(INotificationAsyncHandler<TIn> handler)
+			{
+				return handler.PublishAsync(input, cancellationToken);
+			}
 		}
 	}
 }
