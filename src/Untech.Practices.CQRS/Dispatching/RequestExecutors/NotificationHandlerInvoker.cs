@@ -9,12 +9,10 @@ namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 		where TIn : INotification
 	{
 		private readonly ITypeResolver _resolver;
-		private readonly IHandlerInitializer _handlerInitializer;
 
-		public NotificationHandlerInvoker(ITypeResolver resolver, IHandlerInitializer handlerInitializer)
+		public NotificationHandlerInvoker(ITypeResolver resolver)
 		{
 			_resolver = resolver;
-			_handlerInitializer = handlerInitializer;
 		}
 
 		public object Invoke(object args)
@@ -42,15 +40,11 @@ namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 
 		private Task Handle(INotificationHandler<TIn> handler, TIn input, CancellationToken cancellationToken)
 		{
-			_handlerInitializer?.Init(handler, input);
-
 			return Task.Run(() => handler.Publish(input), cancellationToken);
 		}
 
 		private Task Handle(INotificationAsyncHandler<TIn> handler, TIn input, CancellationToken cancellationToken)
 		{
-			_handlerInitializer?.Init(handler, input);
-
 			return handler.PublishAsync(input, cancellationToken);
 		}
 	}

@@ -12,14 +12,12 @@ namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 		where TIn : IRequest<TOut>
 	{
 		private readonly ITypeResolver _resolver;
-		private readonly IHandlerInitializer _handlerInitializer;
 		private readonly IReadOnlyCollection<IPipelinePreProcessor<TIn>> _preProcessors;
 		private readonly IReadOnlyCollection<IPipelinePostProcessor<TIn, TOut>> _postProcessors;
 
-		public RequestHandlerInvoker(ITypeResolver resolver, IHandlerInitializer handlerInitializer)
+		public RequestHandlerInvoker(ITypeResolver resolver)
 		{
 			_resolver = resolver;
-			_handlerInitializer = handlerInitializer;
 
 			_preProcessors = ResolveMany<IPipelinePreProcessor<TIn>>(resolver);
 			_postProcessors = ResolveMany<IPipelinePostProcessor<TIn, TOut>>(resolver);
@@ -71,8 +69,6 @@ namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 		{
 			PreProcess(request);
 
-			_handlerInitializer?.Init(handler, request);
-
 			var result = handler.Handle(request);
 
 			PostProcess(request, result);
@@ -83,8 +79,6 @@ namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 		private async Task<TOut> InvokeAsync(IRequestAsyncHandler<TIn, TOut> handler, TIn request, CancellationToken cancellationToken)
 		{
 			PreProcess(request);
-
-			_handlerInitializer?.Init(handler, request);
 
 			var result = await handler.HandleAsync(request, cancellationToken);
 

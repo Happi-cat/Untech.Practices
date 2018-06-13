@@ -13,19 +13,16 @@ namespace Untech.Practices.CQRS.Dispatching
 	public sealed class Dispatcher : IDispatcher
 	{
 		private readonly ITypeResolver _typeResolver;
-		private readonly IHandlerInitializer _handlerInitializer;
 		private readonly ConcurrentDictionary<Type, IHandlerInvoker> _handlerRunners;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Dispatcher" />.
 		/// </summary>
 		/// <param name="typeResolver">The resolver of CQRS handlers.</param>
-		/// <param name="handlerInitializer">The handler post initializer.</param>
 		/// <exception cref="ArgumentNullException"><paramref name="typeResolver" /> is null.</exception>
-		public Dispatcher(ITypeResolver typeResolver, IHandlerInitializer handlerInitializer = null)
+		public Dispatcher(ITypeResolver typeResolver)
 		{
 			_typeResolver = typeResolver ?? throw new ArgumentNullException(nameof(typeResolver));
-			_handlerInitializer = handlerInitializer;
 			_handlerRunners = new ConcurrentDictionary<Type, IHandlerInvoker>();
 		}
 
@@ -109,13 +106,13 @@ namespace Untech.Practices.CQRS.Dispatching
 		private object CreateHandlerRunner(Type genericExecutorType, Type requestType, Type responseType)
 		{
 			var executorType = genericExecutorType.MakeGenericType(requestType, responseType);
-			return Activator.CreateInstance(executorType, new object[] { _typeResolver, _handlerInitializer }, null);
+			return Activator.CreateInstance(executorType, new object[] { _typeResolver }, null);
 		}
 
 		private object CreateHandlerRunner(Type genericExecutorType, Type requestType)
 		{
 			var executorType = genericExecutorType.MakeGenericType(requestType);
-			return Activator.CreateInstance(executorType, new object[] { _typeResolver, _handlerInitializer }, null);
+			return Activator.CreateInstance(executorType, new object[] { _typeResolver }, null);
 		}
 
 		#endregion
