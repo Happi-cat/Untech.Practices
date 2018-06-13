@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Threading;
 using Xunit;
 
 namespace Untech.Practices.CQRS.Dispatching
 {
 	public class DispatcherTest
 	{
-		private Dispatcher _dispatcher;
+		private readonly Dispatcher _dispatcher;
 
 		public DispatcherTest()
 		{
@@ -13,15 +14,9 @@ namespace Untech.Practices.CQRS.Dispatching
 		}
 
 		[Fact]
-		public void Process_ThrownInvalidOperation_WhenHandlerNotFound()
-		{
-			Assert.Throws(typeof(InvalidOperationException), () => _dispatcher.Process(new DummyCQRS.CommandWithUnknownHandler()));
-		}
-
-		[Fact]
 		public void Fetch_ThrowArgumentNull_WhenArgIsNull()
 		{
-			Assert.Throws(typeof(ArgumentNullException), () => _dispatcher.Fetch<int>(null));
+			Assert.Throws<ArgumentNullException>(() => _dispatcher.Fetch<int>(null));
 		}
 
 		[Fact]
@@ -33,26 +28,29 @@ namespace Untech.Practices.CQRS.Dispatching
 		}
 
 		[Fact]
-		public void FetchAsync_ThrowArgumentNull_WhenArgIsNull()
+		public async void FetchAsync_ThrowArgumentNull_WhenArgIsNull()
 		{
-			Assert.Throws(typeof(ArgumentNullException), () => _dispatcher.FetchAsync<int>(null, new System.Threading.CancellationToken()));
+			await Assert.ThrowsAsync<ArgumentNullException>(() => _dispatcher.FetchAsync<int>(null, CancellationToken.None));
 		}
 
 		[Fact]
-		public void FetchAsync_Returns_WhenHandlerResolved()
+		public async void FetchAsync_Returns_WhenHandlerResolved()
 		{
-			var res = _dispatcher
-				.FetchAsync(new DummyCQRS.Query(), new System.Threading.CancellationToken())
-				.GetAwaiter()
-				.GetResult();
+			var res = await _dispatcher.FetchAsync(new DummyCQRS.Query(), CancellationToken.None);
 
 			Assert.Equal(1, res);
 		}
 
 		[Fact]
+		public void Process_ThrownInvalidOperation_WhenHandlerNotFound()
+		{
+			Assert.Throws<InvalidOperationException>(() => _dispatcher.Process(new DummyCQRS.CommandWithUnknownHandler()));
+		}
+
+		[Fact]
 		public void Process_ThrowArgumentNull_WhenArgIsNull()
 		{
-			Assert.Throws(typeof(ArgumentNullException), () => _dispatcher.Process<int>(null));
+			Assert.Throws<ArgumentNullException>(() => _dispatcher.Process<int>(null));
 		}
 
 		[Fact]
@@ -64,18 +62,15 @@ namespace Untech.Practices.CQRS.Dispatching
 		}
 
 		[Fact]
-		public void ProcessAsync_ThrowArgumentNull_WhenArgIsNull()
+		public async void ProcessAsync_ThrowArgumentNull_WhenArgIsNull()
 		{
-			Assert.Throws(typeof(ArgumentNullException), () => _dispatcher.ProcessAsync<int>(null, new System.Threading.CancellationToken()));
+			await Assert.ThrowsAsync<ArgumentNullException>(() => _dispatcher.ProcessAsync<int>(null, CancellationToken.None));
 		}
 
 		[Fact]
-		public void ProcessAsync_Returns_WhenHandlerResolved()
+		public async void ProcessAsync_Returns_WhenHandlerResolved()
 		{
-			var res = _dispatcher
-				.ProcessAsync(new DummyCQRS.Command(), new System.Threading.CancellationToken())
-				.GetAwaiter()
-				.GetResult();
+			var res = await _dispatcher.ProcessAsync(new DummyCQRS.Command(), CancellationToken.None);
 
 			Assert.Equal(1, res);
 		}
@@ -83,7 +78,7 @@ namespace Untech.Practices.CQRS.Dispatching
 		[Fact]
 		public void Publish_ThrowArgumentNull_WhenArgIsNull()
 		{
-			Assert.Throws(typeof(ArgumentNullException), () => _dispatcher.Publish(null));
+			Assert.Throws<ArgumentNullException>(() => _dispatcher.Publish(null));
 		}
 
 		[Fact]
@@ -93,18 +88,15 @@ namespace Untech.Practices.CQRS.Dispatching
 		}
 
 		[Fact]
-		public void PublishAsync_ThrowArgumentNull_WhenArgIsNull()
+		public async void PublishAsync_ThrowArgumentNull_WhenArgIsNull()
 		{
-			Assert.Throws(typeof(ArgumentNullException), () => _dispatcher.PublishAsync(null, new System.Threading.CancellationToken()));
+			await Assert.ThrowsAsync<ArgumentNullException>(() => _dispatcher.PublishAsync(null, CancellationToken.None));
 		}
 
 		[Fact]
-		public void PublishAsync_Returns_WhenHandlerResolved()
+		public async void PublishAsync_Returns_WhenHandlerResolved()
 		{
-			_dispatcher
-				.PublishAsync(new DummyCQRS.Notification(), new System.Threading.CancellationToken())
-				.GetAwaiter()
-				.GetResult();
+			await _dispatcher.PublishAsync(new DummyCQRS.Notification(), CancellationToken.None);
 		}
 	}
 }
