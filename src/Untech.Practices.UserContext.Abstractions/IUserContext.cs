@@ -9,5 +9,7 @@ namespace Untech.Practices.UserContext
 	public interface IUserContext<out TKey> where TKey: IEquatable<TKey>
 	{
 		TKey UserKey { get; }
+
+		string this[string key] { get; }
 	}
 }
