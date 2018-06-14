@@ -8,7 +8,7 @@ namespace Untech.Practices.DataStorage.Cache
 	/// <summary>
 	/// Provides ability to use multi-level <see cref="IAsyncCacheStorage"/>.
 	/// </summary>
-	public class HierarchicalAsyncCacheStorage : IAsyncCacheStorage
+	public class MultiLevelAsyncCacheStorage : IAsyncCacheStorage
 	{
 		private readonly IReadOnlyCollection<IAsyncCacheStorage> _cacheStorages;
 
@@ -16,7 +16,7 @@ namespace Untech.Practices.DataStorage.Cache
 		/// Initializes a new instance with a list of cache storages.
 		/// </summary>
 		/// <param name="cacheStorages">The list of cache storages starting from highest priority to lowest.</param>
-		public HierarchicalAsyncCacheStorage(IEnumerable<IAsyncCacheStorage> cacheStorages)
+		public MultiLevelAsyncCacheStorage(IEnumerable<IAsyncCacheStorage> cacheStorages)
 		{
 			_cacheStorages = new List<IAsyncCacheStorage>(cacheStorages);
 		}

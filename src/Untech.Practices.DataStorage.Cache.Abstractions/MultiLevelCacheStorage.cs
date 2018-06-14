@@ -5,7 +5,7 @@ namespace Untech.Practices.DataStorage.Cache
 	/// <summary>
 	/// Provides ability to use multi-level <see cref="ICacheStorage"/>.
 	/// </summary>
-	public class HierarchicalCacheStorage : ICacheStorage
+	public class MultiLevelCacheStorage : ICacheStorage
 	{
 		private readonly IReadOnlyCollection<ICacheStorage> _cacheStorages;
 
@@ -13,7 +13,7 @@ namespace Untech.Practices.DataStorage.Cache
 		/// Initializes a new instance with a list of cache storages.
 		/// </summary>
 		/// <param name="cacheStorages">The list of cache storages starting from highest priority to lowest.</param>
-		public HierarchicalCacheStorage(IEnumerable<ICacheStorage> cacheStorages)
+		public MultiLevelCacheStorage(IEnumerable<ICacheStorage> cacheStorages)
 		{
 			_cacheStorages = new List<ICacheStorage>(cacheStorages);
 		}
