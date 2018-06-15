@@ -14,7 +14,7 @@ namespace Untech.Practices.UserContext
 	/// <summary>
 	/// Marks user-related models.
 	/// </summary>
-	/// <typeparam name="TKey">The type of user key.</typeparam>
+	/// <typeparam name="TKey">The type of user key. Should implement <see cref="IEquatable{T}"/>.</typeparam>
 	public interface IHaveUserKey<out TKey>
 		where TKey: IEquatable<TKey>
 	{

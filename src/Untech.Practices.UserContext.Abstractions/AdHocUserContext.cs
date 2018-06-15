@@ -6,13 +6,13 @@ namespace Untech.Practices.UserContext
 	/// <summary>
 	/// Basic <see cref="IUserContext{TKey}"/>.
 	/// </summary>
-	/// <typeparam name="TKey"></typeparam>
+	/// <typeparam name="TKey">The type of user key. Should implement <see cref="IEquatable{T}"/>.</typeparam>
 	public class AdHocUserContext<TKey> : IUserContext<TKey> where TKey: IEquatable<TKey>
 	{
 		private readonly IReadOnlyDictionary<string, string> _options;
 
 		/// <summary>
-		/// Initializes a <see cref="AdHocUserContext{TKey}"/> with a predefined <paramref name="userKey"/>
+		/// Initializes a new instance of <see cref="AdHocUserContext{TKey}"/> with a predefined <paramref name="userKey"/>
 		/// and optional user <paramref name="options"/>.
 		/// </summary>
 		/// <param name="userKey">The current user key.</param>
@@ -28,11 +28,11 @@ namespace Untech.Practices.UserContext
 		public TKey UserKey { get; }
 
 		/// <inheritdoc />
-		public string this[string key]
+		public string this[string optionKey]
 		{
 			get
 			{
-				if (_options != null && _options.TryGetValue(key, out var value))
+				if (_options != null && _options.TryGetValue(optionKey, out var value))
 				{
 					return value;
 				}

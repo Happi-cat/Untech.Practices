@@ -13,7 +13,7 @@ namespace Untech.Practices.UserContext
 	/// <summary>
 	/// Describes user context inforamtion.
 	/// </summary>
-	/// <typeparam name="TKey">The type of user key.</typeparam>
+	/// <typeparam name="TKey">The type of user key. Should implement <see cref="IEquatable{T}"/>.</typeparam>
 	public interface IUserContext<out TKey> where TKey: IEquatable<TKey>
 	{
 		/// <summary>
@@ -24,7 +24,7 @@ namespace Untech.Practices.UserContext
 		/// <summary>
 		/// Gets the value corresponding to a user option key.
 		/// </summary>
-		/// <param name="key">The user option key.</param>
-		string this[string key] { get; }
+		/// <param name="optionKey">The user option key.</param>
+		string this[string optionKey] { get; }
 	}
 }

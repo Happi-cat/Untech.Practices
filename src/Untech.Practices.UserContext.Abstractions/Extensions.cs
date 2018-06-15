@@ -15,7 +15,7 @@ namespace Untech.Practices.UserContext
 		/// <param name="source">The original source.</param>
 		/// <param name="userContext">The user context.</param>
 		/// <typeparam name="TElem">The type of sequence elements.</typeparam>
-		/// <typeparam name="TUserKey">The type of userKey</typeparam>
+		/// <typeparam name="TUserKey">The type of user key.</typeparam>
 		/// <returns></returns>
 		/// <exception cref="ArgumentNullException">
 		/// Thrown when <paramref name="source"/> or <paramref name="userContext"/> is null.
@@ -39,7 +39,7 @@ namespace Untech.Practices.UserContext
 		/// <param name="source">The original source.</param>
 		/// <param name="userContext">The user context.</param>
 		/// <typeparam name="TElem">The type of sequence elements.</typeparam>
-		/// <typeparam name="TUserKey">The type of userKey</typeparam>
+		/// <typeparam name="TUserKey">The type of user key.</typeparam>
 		/// <returns></returns>
 		/// <exception cref="ArgumentNullException">
 		/// Thrown when <paramref name="source"/> or <paramref name="userContext"/> is null.
