@@ -22,7 +22,7 @@ namespace Untech.Practices.DataStorage.Cache
 		}
 
 		/// <inheritdoc />
-		public async Task<CacheValue<T>> GetAsync<T>(CacheKey key, CancellationToken cancellationToken = default(CancellationToken))
+		public async Task<CacheValue<T>> GetAsync<T>(string key, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			foreach (var cacheStorage in _cacheStorages)
 			{
@@ -35,7 +35,7 @@ namespace Untech.Practices.DataStorage.Cache
 		}
 
 		/// <inheritdoc />
-		public Task SetAsync(CacheKey key, object value, CancellationToken cancellationToken = default(CancellationToken))
+		public Task SetAsync(string key, object value, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return Task.WhenAll(_cacheStorages
 				.Select(cacheStorage => cacheStorage.SetAsync(key, value, cancellationToken))
@@ -43,10 +43,10 @@ namespace Untech.Practices.DataStorage.Cache
 		}
 
 		/// <inheritdoc />
-		public Task DropAsync(CacheKey key, bool prefix = false, CancellationToken cancellationToken = default(CancellationToken))
+		public Task DropAsync(string key, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			return Task.WhenAll(_cacheStorages
-				.Select(cacheStorage => cacheStorage.DropAsync(key, prefix, cancellationToken))
+				.Select(cacheStorage => cacheStorage.DropAsync(key, cancellationToken))
 			);
 		}
 	}

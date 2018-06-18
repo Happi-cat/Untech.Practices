@@ -19,7 +19,7 @@ namespace Untech.Practices.DataStorage.Cache
 		}
 
 		/// <inheritdoc />
-		public CacheValue<T> Get<T>(CacheKey key)
+		public CacheValue<T> Get<T>(string key)
 		{
 			foreach (var cacheStorage in _cacheStorages)
 			{
@@ -32,7 +32,7 @@ namespace Untech.Practices.DataStorage.Cache
 		}
 
 		/// <inheritdoc />
-		public void Set(CacheKey key, object value)
+		public void Set(string key, object value)
 		{
 			foreach (var cacheStorage in _cacheStorages)
 			{
@@ -41,11 +41,11 @@ namespace Untech.Practices.DataStorage.Cache
 		}
 
 		/// <inheritdoc />
-		public void Drop(CacheKey key, bool prefix = false)
+		public void Drop(string key)
 		{
 			foreach (var cacheStorage in _cacheStorages)
 			{
-				cacheStorage.Drop(key, prefix);
+				cacheStorage.Drop(key);
 			}
 		}
 	}
