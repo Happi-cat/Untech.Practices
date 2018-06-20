@@ -46,5 +46,16 @@ namespace Untech.Practices.Mail
 		{
 			return new MailboxAddress(email);
 		}
+
+		public static implicit operator string(MailboxAddress address)
+		{
+			return address?.Email;
+		}
+
+		/// <inheritdoc />
+		public override string ToString()
+		{
+			return Email;
+		}
 	}
 }
