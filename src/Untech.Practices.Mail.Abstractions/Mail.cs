@@ -18,19 +18,39 @@ namespace Untech.Practices.Mail
 		{
 		}
 
-		public Mail(string type, MailboxAddress to)
-			: this(type, new List<MailboxAddress> {to})
+		/// <summary>
+		/// Initializes a new isntance of the <see cref="Mail"/> with a predefined recepient address and arguments.
+		/// </summary>
+		/// <param name="to">The recepient address.</param>
+		/// <param name="arguments">The mail arguments.</param>
+		/// <exception cref="ArgumentNullException">
+		/// <paramref name="to"/> or <paramref name="arguments"/> is null.
+		/// </exception>
+		public Mail(MailboxAddress to, IMailArguments arguments)
 		{
+			if (to == null) throw new ArgumentNullException(nameof(to));
+			if (arguments == null) throw new ArgumentNullException(nameof(arguments));
+
+			To = new List<MailboxAddress> { to };
+			Arguments = arguments;
 		}
 
-		public Mail(string type, IEnumerable<MailboxAddress> to)
+		/// <summary>
+		/// Initializes a new isntance of the <see cref="Mail"/> with a predefined recepients addresses and arguments.
+		/// </summary>
+		/// <param name="to">Recepients addresses.</param>
+		/// <param name="arguments">The mail arguments.</param>
+		/// <exception cref="ArgumentNullException">
+		/// <paramref name="to"/> or <paramref name="arguments"/> is null.
+		/// </exception>
+		/// <exception cref="ArgumentException"><paramref name="to"/> is empty.</exception>
+		public Mail(IEnumerable<MailboxAddress> to, IMailArguments arguments)
 		{
-			if (string.IsNullOrWhiteSpace(type)) throw new ArgumentNullException(nameof(type));
-
 			var toList = to?.ToList() ?? throw new ArgumentNullException(nameof(to));
 			if (toList.Count == 0) throw new ArgumentException(nameof(to));
 
 			To = toList;
+			Arguments = arguments;
 		}
 
 		/// <summary>
@@ -64,9 +84,9 @@ namespace Untech.Practices.Mail
 		public IReadOnlyCollection<MailboxAddress> Bcc { get; set; }
 
 		/// <summary>
-		/// Gets or sets additional mail arguments.
+		/// Gets additional mail arguments.
 		/// </summary>
 		[DataMember]
-		public object Arguments { get; set; }
+		public IMailArguments Arguments { get; private set; }
 	}
 }
