@@ -55,7 +55,9 @@ namespace Untech.Practices.Mail
 		/// <inheritdoc />
 		public override string ToString()
 		{
-			return Email;
+			return string.IsNullOrWhiteSpace(DisplayName)
+				? Email
+				: $"{DisplayName} <{Email}>";
 		}
 	}
 }
