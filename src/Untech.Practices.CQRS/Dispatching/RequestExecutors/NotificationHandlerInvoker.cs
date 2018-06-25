@@ -9,17 +9,18 @@ namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 		where TIn : INotification
 	{
 		private readonly ITypeResolver _resolver;
-		private readonly IHandlerInitializer _handlerInitializer;
 
-		public NotificationHandlerInvoker(ITypeResolver resolver, IHandlerInitializer handlerInitializer)
+		public NotificationHandlerInvoker(ITypeResolver resolver)
 		{
 			_resolver = resolver;
-			_handlerInitializer = handlerInitializer;
 		}
 
 		public object Invoke(object args)
 		{
-			InvokeAsync(args, CancellationToken.None).Wait();
+			InvokeAsync(args, CancellationToken.None)
+				.ConfigureAwait(false)
+				.GetAwaiter()
+				.GetResult();
 
 			return Nothing.AtAll;
 		}
@@ -28,27 +29,25 @@ namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 		{
 			var input = (TIn)args;
 
-			var syncHandlers = _resolver.ResolveMany<INotificationHandler<TIn>>()
-				.Select(handler => Handle(handler, input, cancellationToken));
+			var syncHandlers = _resolver
+				.ResolveMany<INotificationHandler<TIn>>()
+				.Select(RunSync);
 
-			var asyncHandlers = _resolver.ResolveMany<INotificationAsyncHandler<TIn>>()
-				.Select(handler => Handle(handler, input, cancellationToken));
+			var asyncHandlers = _resolver
+				.ResolveMany<INotificationAsyncHandler<TIn>>()
+				.Select(RunAsync);
 
 			return Task.WhenAll(syncHandlers.Concat(asyncHandlers));
-		}
 
-		private Task Handle(INotificationHandler<TIn> handler, TIn input, CancellationToken cancellationToken)
-		{
-			_handlerInitializer?.Init(handler, input);
+			Task RunSync(INotificationHandler<TIn> handler)
+			{
+				return Task.Run(() => handler.Publish(input), cancellationToken);
+			}
 
-			return Task.Run(() => handler.Publish(input), cancellationToken);
-		}
-
-		private Task Handle(INotificationAsyncHandler<TIn> handler, TIn input, CancellationToken cancellationToken)
-		{
-			_handlerInitializer?.Init(handler, input);
-
-			return handler.PublishAsync(input, cancellationToken);
+			Task RunAsync(INotificationAsyncHandler<TIn> handler)
+			{
+				return handler.PublishAsync(input, cancellationToken);
+			}
 		}
 	}
 }

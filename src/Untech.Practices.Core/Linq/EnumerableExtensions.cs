@@ -25,11 +25,16 @@ namespace Untech.Practices.Linq
 			source = source ?? throw new ArgumentNullException(nameof(source));
 			predicate = predicate ?? throw new ArgumentNullException(nameof(predicate));
 
-			foreach (var element in source)
+			return GetEnumerable();
+
+			IEnumerable<T> GetEnumerable()
 			{
-				if (!predicate(element))
+				foreach (var element in source)
 				{
-					yield return element;
+					if (!predicate(element))
+					{
+						yield return element;
+					}
 				}
 			}
 		}
@@ -63,10 +68,15 @@ namespace Untech.Practices.Linq
 			source = source ?? throw new ArgumentNullException(nameof(source));
 			action = action ?? throw new ArgumentNullException(nameof(action));
 
-			foreach (var item in source)
+			return GetEnumerable();
+
+			IEnumerable<T> GetEnumerable()
 			{
-				action(item);
-				yield return item;
+				foreach (var item in source)
+				{
+					action(item);
+					yield return item;
+				}
 			}
 		}
 
@@ -75,24 +85,133 @@ namespace Untech.Practices.Linq
 			if (source == null) throw new ArgumentNullException(nameof(source));
 			if (chunkSize <= 0) throw new ArgumentOutOfRangeException(nameof(chunkSize), chunkSize, "Cannot be less than 1");
 
-			var snapshot = new List<T>(source);
+			return Chunks();
 
-			if (snapshot.Count == 0)
+			IEnumerable<List<T>> Chunks()
 			{
+				var enumerator = source.GetEnumerator();
+				while (enumerator.MoveNext())
+				{
+					// moved to first element and going to return chunk
+					yield return new List<T>(Chunk(enumerator));
+					// if last chunk was smaller then chunk size
+					// then MoveNext would be called twice (in Chunk method and current loop)
+				}
 			}
-			else if (snapshot.Count <= chunkSize)
+
+			IEnumerable<T> Chunk(IEnumerator<T> enumerator)
 			{
-				yield return snapshot;
-			}
-			else
-			{
-				var chunkIndex = 0;
+				var itemsReturned = 0;
 				do
 				{
-					var realChunkSize = Math.Min(snapshot.Count - chunkIndex, chunkSize);
-					yield return snapshot.GetRange(chunkIndex, realChunkSize);
-					chunkIndex += realChunkSize;
-				} while (chunkIndex < snapshot.Count);
+					// chunk iterator starts when already moved next
+					yield return enumerator.Current;
+					// if chunk completed then exit without moving next (short curcuit)
+				} while (++itemsReturned < chunkSize && enumerator.MoveNext());
+			}
+		}
+
+		public static IEnumerable<T> WhereIf<T>(this IEnumerable<T> source, bool condition, Func<T, bool> predicate)
+		{
+			if (source == null) throw new ArgumentNullException(nameof(source));
+			if (predicate == null) throw new ArgumentNullException(nameof(predicate));
+
+			return condition
+				? source.Where(predicate)
+				: source;
+		}
+
+		/// <summary>
+		/// Orders elements by position of keys in <paramref name="orderedKeys"/> sequence.
+		/// Elements whose keys are not in <paramref name="orderedKeys"/> sequence would be returned afterwards in ascending order.
+		/// </summary>
+		/// <param name="source"></param>
+		/// <param name="keySelector"></param>
+		/// <param name="orderedKeys"></param>
+		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="TKey"></typeparam>
+		/// <returns></returns>
+		public static IOrderedEnumerable<T> OrderByPosition<T, TKey>(this IEnumerable<T> source,
+			Func<T, TKey> keySelector,
+			IEnumerable<TKey> orderedKeys)
+		{
+			var comparer = new PositionalComparer<TKey>(orderedKeys.EmptyIfNull());
+
+			return source.OrderBy(keySelector, comparer);
+		}
+
+		public static IOrderedEnumerable<T> OrderByPosition<T, TKey>(this IEnumerable<T> source,
+			Func<T, TKey> keySelector,
+			IEnumerable<TKey> orderedKeys,
+			IComparer<TKey> alternateComparer)
+		{
+			var comparer = new PositionalComparer<TKey>(orderedKeys.EmptyIfNull(), alternateComparer);
+
+			return source.OrderBy(keySelector, comparer);
+		}
+
+		public static IOrderedEnumerable<T> ThenByPosition<T, TKey>(this IOrderedEnumerable<T> source,
+			Func<T, TKey> keySelector,
+			IEnumerable<TKey> orderedKeys)
+		{
+			var comparer = new PositionalComparer<TKey>(orderedKeys.EmptyIfNull());
+
+			return source.ThenBy(keySelector, comparer);
+		}
+
+		public static IOrderedEnumerable<T> ThenByPosition<T, TKey>(this IOrderedEnumerable<T> source,
+			Func<T, TKey> keySelector,
+			IEnumerable<TKey> orderedKeys,
+			IComparer<TKey> alternateComparer)
+		{
+			var comparer = new PositionalComparer<TKey>(orderedKeys.EmptyIfNull(), alternateComparer);
+
+			return source.ThenBy(keySelector, comparer);
+		}
+
+		private class PositionalComparer<T> : IComparer<T>
+		{
+			private readonly IReadOnlyDictionary<T, int> _orderedElements;
+			private readonly int _elementNotFoundIndex;
+			private readonly IComparer<T> _alternateComparer;
+
+			public PositionalComparer(IEnumerable<T> orderedElements, IComparer<T> alternateComparer = null)
+			{
+				_orderedElements = orderedElements
+					.Select((n, i) => Tuple.Create(n, i))
+					.ToDictionary(n => n.Item1, n => n.Item2);
+
+				_elementNotFoundIndex = alternateComparer == null
+					? _orderedElements.Count
+					: -1; // -1 mean to use alternate comparer
+
+				_alternateComparer = alternateComparer;
+			}
+
+			public int Compare(T x, T y)
+			{
+				var indexX = IndexOf(x);
+				var indexY = IndexOf(y);
+
+				// compare by indexes
+				if (indexX > -1 && indexY > -1)
+				{
+					return indexX.CompareTo(indexY);
+				}
+
+				// ordered elements will be less than elements not in orderedElementsColletion
+				if (indexX > -1) return -1; // means x < y
+				if (indexY > -1) return 1; // means x > y
+
+				// usual comapare
+				return _alternateComparer.Compare(x, y);
+			}
+
+			private int IndexOf(T element)
+			{
+				return _orderedElements.TryGetValue(element, out int index)
+					? index
+					: _elementNotFoundIndex;
 			}
 		}
 	}

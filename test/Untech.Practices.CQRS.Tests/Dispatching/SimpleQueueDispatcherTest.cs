@@ -5,7 +5,7 @@ namespace Untech.Practices.CQRS.Dispatching
 {
 	public class SimpleQueueDispatcherTest
 	{
-		private SimpleQueueDispatcher _dispatcher;
+		private readonly SimpleQueueDispatcher _dispatcher;
 
 		public SimpleQueueDispatcherTest()
 		{
@@ -15,7 +15,7 @@ namespace Untech.Practices.CQRS.Dispatching
 		[Fact]
 		public void EnqueueC_ThrowArgumentNull_WhenArgIsNull()
 		{
-			Assert.Throws(typeof(ArgumentNullException), () => _dispatcher.Enqueue<int>(null));
+			Assert.Throws<ArgumentNullException>(() => _dispatcher.Enqueue<int>(null));
 		}
 
 		[Fact]
@@ -27,7 +27,7 @@ namespace Untech.Practices.CQRS.Dispatching
 		[Fact]
 		public void EnqueueN_ThrowArgumentNull_WhenArgIsNull()
 		{
-			Assert.Throws(typeof(ArgumentNullException), () => _dispatcher.Enqueue(null));
+			Assert.Throws<ArgumentNullException>(() => _dispatcher.Enqueue(null));
 		}
 
 		[Fact]
