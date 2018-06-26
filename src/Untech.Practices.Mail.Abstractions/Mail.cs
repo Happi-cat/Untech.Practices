@@ -54,12 +54,6 @@ namespace Untech.Practices.Mail
 		}
 
 		/// <summary>
-		/// Gets type of mail to process.
-		/// </summary>
-		[DataMember]
-		public string Type { get; private set; }
-
-		/// <summary>
 		/// Gets or sets optional sender mail address.
 		/// </summary>
 		[DataMember]
