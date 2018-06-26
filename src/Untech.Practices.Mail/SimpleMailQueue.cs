@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Threading.Tasks;
 using MailKit;
 using MailKit.Net.Smtp;
 using MimeKit;
@@ -9,23 +11,15 @@ using RazorEngine.Templating;
 
 namespace Untech.Practices.Mail
 {
-	public class MailQueueOptions
-	{
-		public MailboxAddress From { get; private set; }
-		public string Host { get; private set; }
-		public int Port { get; private set; }
-		public bool UseSsl { get; set; }
-	}
-
-	public class MailQueue : IMailQueue
+	public class SimpleMailQueue : IMailQueue
 	{
 		private readonly ITemplateManager _templateManager;
-		private readonly MailQueueOptions _options;
+		private readonly SimpleMailQueueOptions _options;
 
-		public MailQueue(ITemplateManager templateManager, MailQueueOptions options)
+		public SimpleMailQueue(ITemplateManager templateManager, SimpleMailQueueOptions options)
 		{
 			_templateManager = templateManager ?? throw new ArgumentNullException(nameof(templateManager));
-			_options = options;
+			_options = options ?? throw new ArgumentNullException(nameof(options));
 		}
 
 		public void Enqueue(Mail mail)
