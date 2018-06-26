@@ -73,8 +73,9 @@ namespace Untech.Practices.Mail
 		private static IEnumerable<MimeKit.MailboxAddress> ToMimeKitAddresses(
 			IEnumerable<MailboxAddress> mailboxAddresses)
 		{
-			if (mailboxAddresses == null) return Enumerable.Empty<MimeKit.MailboxAddress>();
-			return mailboxAddresses.Select(ToMimekitAddress);
+			return mailboxAddresses == null
+				? Enumerable.Empty<MimeKit.MailboxAddress>()
+				: mailboxAddresses.Select(ToMimekitAddress);
 		}
 	}
 }
