@@ -1,4 +1,4 @@
-﻿namespace Untech.Practices.Mail
+﻿namespace Untech.Practices.Notifications.Mail
 {
 	/// <summary>
 	/// Defines methods for sending mails into mail queue.

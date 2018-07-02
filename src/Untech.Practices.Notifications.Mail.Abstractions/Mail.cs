@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 
-namespace Untech.Practices.Mail
+namespace Untech.Practices.Notifications.Mail
 {
 	/// <summary>
 	/// Represents mail information that can be used for rendering and sending.

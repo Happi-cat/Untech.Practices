@@ -8,6 +8,6 @@
     <PackageReference Include="System.Linq" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Untech.Practices.Mail.Abstractions\Untech.Practices.Mail.Abstractions.csproj" />
+    <ProjectReference Include="..\Untech.Practices.Notifications.Mail.Abstractions\Untech.Practices.Notifications.Mail.Abstractions.csproj" />
   </ItemGroup>
 </Project>

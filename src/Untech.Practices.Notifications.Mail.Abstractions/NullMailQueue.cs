@@ -1,4 +1,4 @@
-﻿namespace Untech.Practices.Mail
+﻿namespace Untech.Practices.Notifications.Mail
 {
 	/// <summary>
 	/// Represents dummy mail queue.

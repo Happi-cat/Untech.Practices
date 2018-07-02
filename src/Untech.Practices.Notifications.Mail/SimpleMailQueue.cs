@@ -9,7 +9,7 @@ using MimeKit;
 using RazorEngine;
 using RazorEngine.Templating;
 
-namespace Untech.Practices.Mail
+namespace Untech.Practices.Notifications.Mail
 {
 	public class SimpleMailQueue : IMailQueue
 	{

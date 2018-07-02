@@ -1,4 +1,4 @@
-
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.16
@@ -40,9 +40,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.UserContex
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.TenantContext.Abstractions", "src\Untech.Practices.TenantContext.Abstractions\Untech.Practices.TenantContext.Abstractions.csproj", "{19AA8B65-3898-4A6D-B679-1FAE744AD1B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.Mail.Abstractions", "src\Untech.Practices.Mail.Abstractions\Untech.Practices.Mail.Abstractions.csproj", "{D8CFB459-469C-41A8-92A2-54A080A9A822}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.Notifications.Mail.Abstractions", "src\Untech.Practices.Notifications.Mail.Abstractions\Untech.Practices.Notifications.Mail.Abstractions.csproj", "{D8CFB459-469C-41A8-92A2-54A080A9A822}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.Mail", "src\Untech.Practices.Mail\Untech.Practices.Mail.csproj", "{8D2B7C7E-2369-4617-9A42-5467FA0C10AE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.Notifications.Mail", "src\Untech.Practices.Notifications.Mail\Untech.Practices.Notifications.Mail.csproj", "{8D2B7C7E-2369-4617-9A42-5467FA0C10AE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.Notifications.Realtime.Abstractions", "src\Untech.Practices.Notifications.Realtime.Abstractions\Untech.Practices.Notifications.Realtime.Abstractions.csproj", "{96307B56-C3EE-4904-AA01-24C313DD1148}"
 EndProject

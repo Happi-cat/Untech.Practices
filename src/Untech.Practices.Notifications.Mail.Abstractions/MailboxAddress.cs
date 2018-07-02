@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Untech.Practices.Mail
+namespace Untech.Practices.Notifications.Mail
 {
 	/// <summary>
 	/// Represents mail address.
