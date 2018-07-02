@@ -28,11 +28,11 @@ namespace Untech.Practices.Mail
 		/// </exception>
 		public Mail(MailboxAddress to, IMailArguments arguments)
 		{
-			if (to == null) throw new ArgumentNullException(nameof(to));
-			if (arguments == null) throw new ArgumentNullException(nameof(arguments));
-
-			To = new List<MailboxAddress> { to };
-			Arguments = arguments;
+			To = new List<MailboxAddress>
+			{
+				to ?? throw new ArgumentNullException(nameof(to))
+			};
+			Arguments = arguments ?? throw new ArgumentNullException(nameof(arguments));
 		}
 
 		/// <summary>
@@ -47,17 +47,11 @@ namespace Untech.Practices.Mail
 		public Mail(IEnumerable<MailboxAddress> to, IMailArguments arguments)
 		{
 			var toList = to?.ToList() ?? throw new ArgumentNullException(nameof(to));
-			if (toList.Count == 0) throw new ArgumentException(nameof(to));
+			if (toList.Count == 0) throw new ArgumentException("Cannot have zero elements", nameof(to));
 
 			To = toList;
 			Arguments = arguments;
 		}
-
-		/// <summary>
-		/// Gets type of mail to process.
-		/// </summary>
-		[DataMember]
-		public string Type { get; private set; }
 
 		/// <summary>
 		/// Gets or sets optional sender mail address.
