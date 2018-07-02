@@ -36,11 +36,11 @@ namespace Untech.Practices.Notifications.Mail
 
 		private MimeMessage CreateMimeMessage(Mail mail)
 		{
-			var modelType = mail.Arguments.GetType();
+			var modelType = mail.TemplateArguments.GetType();
 
-			var subject = CompileTemplate(mail.Arguments.Type + ".subject", modelType, mail.Arguments);
-			var htmlBody = CompileTemplate(mail.Arguments.Type + ".body.html", modelType, mail.Arguments);
-			var txtBody = CompileTemplate(mail.Arguments.Type + ".body.txt", modelType, mail.Arguments);
+			var subject = CompileTemplate(mail.TemplateArguments.TemplateKey + ".subject", modelType, mail.TemplateArguments);
+			var htmlBody = CompileTemplate(mail.TemplateArguments.TemplateKey + ".body.html", modelType, mail.TemplateArguments);
+			var txtBody = CompileTemplate(mail.TemplateArguments.TemplateKey + ".body.txt", modelType, mail.TemplateArguments);
 
 			var message = new MimeMessage();
 
@@ -58,9 +58,9 @@ namespace Untech.Practices.Notifications.Mail
 			return message;
 		}
 
-		private string CompileTemplate(string templateKey, Type modelType, IMailArguments args)
+		private string CompileTemplate(string templateKey, Type modelType, IMailTemplateArguments args)
 		{
-			var templateSource = _templateManager.Resolve(new NameOnlyTemplateKey(args.Type, ResolveType.Global, null));
+			var templateSource = _templateManager.Resolve(new NameOnlyTemplateKey(args.TemplateKey, ResolveType.Global, null));
 
 			return Engine.Razor.RunCompile(templateSource, templateKey, modelType, args);
 		}
