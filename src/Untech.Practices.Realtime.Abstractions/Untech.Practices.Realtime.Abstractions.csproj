@@ -10,5 +10,6 @@
     <!-- Use Info Version for RC -->
     <InformationalVersion>1.0</InformationalVersion>
     <AssemblyVersion>1.0</AssemblyVersion>
+    <LangVersion>7.2</LangVersion>
   </PropertyGroup>
 </Project>
