@@ -78,6 +78,12 @@ namespace Untech.Practices.Notifications.Mail
 		public IReadOnlyCollection<MailboxAddress> Bcc { get; set; }
 
 		/// <summary>
+		/// Gets mail template key (see <see cref="IMailTemplateArguments"/> for more info).
+		/// </summary>
+		[DataMember]
+		public string TemplateKey => TemplateArguments.TemplateKey;
+
+		/// <summary>
 		/// Gets additional mail arguments.
 		/// </summary>
 		[DataMember]

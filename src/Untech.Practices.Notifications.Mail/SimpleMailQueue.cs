@@ -38,9 +38,9 @@ namespace Untech.Practices.Notifications.Mail
 		{
 			var modelType = mail.TemplateArguments.GetType();
 
-			var subject = CompileTemplate(mail.TemplateArguments.TemplateKey + ".subject", modelType, mail.TemplateArguments);
-			var htmlBody = CompileTemplate(mail.TemplateArguments.TemplateKey + ".body.html", modelType, mail.TemplateArguments);
-			var txtBody = CompileTemplate(mail.TemplateArguments.TemplateKey + ".body.txt", modelType, mail.TemplateArguments);
+			var subject = CompileTemplate(mail.TemplateKey + ".subject", modelType, mail.TemplateArguments);
+			var htmlBody = CompileTemplate(mail.TemplateKey + ".body.html", modelType, mail.TemplateArguments);
+			var txtBody = CompileTemplate(mail.TemplateKey + ".body.txt", modelType, mail.TemplateArguments);
 
 			var message = new MimeMessage();
 
