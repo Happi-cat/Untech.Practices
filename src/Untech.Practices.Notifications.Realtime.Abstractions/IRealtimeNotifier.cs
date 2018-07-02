@@ -1,4 +1,4 @@
-﻿namespace Untech.Practices.Realtime
+﻿namespace Untech.Practices.Notifications.Realtime
 {
 	/// <summary>
 	/// Provides methods for sending notifications of a predefined type <typeparamref name="TNotification"/>.

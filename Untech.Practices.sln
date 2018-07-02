@@ -44,7 +44,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.Mail.Abstr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.Mail", "src\Untech.Practices.Mail\Untech.Practices.Mail.csproj", "{8D2B7C7E-2369-4617-9A42-5467FA0C10AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.Realtime.Abstractions", "src\Untech.Practices.Realtime.Abstractions\Untech.Practices.Realtime.Abstractions.csproj", "{96307B56-C3EE-4904-AA01-24C313DD1148}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.Notifications.Realtime.Abstractions", "src\Untech.Practices.Notifications.Realtime.Abstractions\Untech.Practices.Notifications.Realtime.Abstractions.csproj", "{96307B56-C3EE-4904-AA01-24C313DD1148}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

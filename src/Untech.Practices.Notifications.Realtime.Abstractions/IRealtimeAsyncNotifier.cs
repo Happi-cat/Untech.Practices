@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace Untech.Practices.Realtime
+namespace Untech.Practices.Notifications.Realtime
 {
 	/// <summary>
 	/// Provides methods for sending notifications asynchronously of a predefined type <typeparamref name="TNotification"/>.

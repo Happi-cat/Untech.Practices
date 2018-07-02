@@ -3,7 +3,7 @@
     <Company>Sergey Svirsky</Company>
     <Copyright>Copyright \u00A9 Sergey Svirsky 2018</Copyright>
     <TargetFramework>netstandard1</TargetFramework>
-    <RootNamespace>Untech.Practices.Realtime</RootNamespace>
+    <RootNamespace>Untech.Practices.Notifications.Realtime</RootNamespace>
     <Version>1.0</Version>
     <FileVersion>1.0</FileVersion>
     <!-- Increment AssemblyVersion on MAJOR.MINOR change -->

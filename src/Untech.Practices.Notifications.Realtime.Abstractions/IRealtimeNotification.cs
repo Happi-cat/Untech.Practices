@@ -1,4 +1,4 @@
-﻿namespace Untech.Practices.Realtime
+﻿namespace Untech.Practices.Notifications.Realtime
 {
 	/// <summary>
 	/// Represents a common interface for realtime notifications of different types, like:
