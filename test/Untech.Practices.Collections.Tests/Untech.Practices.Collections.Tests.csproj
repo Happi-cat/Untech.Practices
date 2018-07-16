@@ -1,17 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
   <PropertyGroup>
-    <Company>Sergey Svirsky</Company>
-    <Copyright>Copyright \u00A9 Sergey Svirsky 2017</Copyright>
     <RootNamespace>Untech.Practices.Collections</RootNamespace>
-    <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
-    <IsPackable>false</IsPackable>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
-    <PackageReference Include="xunit" Version="2.2.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Untech.Practices.Collections\Untech.Practices.Collections.csproj" />
