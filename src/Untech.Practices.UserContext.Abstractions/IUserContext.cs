@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace Untech.Practices.UserContext
 {
@@ -20,6 +21,11 @@ namespace Untech.Practices.UserContext
 		/// Gets key of the current user.
 		/// </summary>
 		TKey UserKey { get; }
+
+		/// <summary>
+		/// Gets user's culture.
+		/// </summary>
+		CultureInfo Culture { get; }
 
 		/// <summary>
 		/// Gets the value corresponding to a user option key.
