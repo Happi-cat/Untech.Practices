@@ -21,9 +21,10 @@ namespace Untech.Practices.UserContext
 		/// <param name="options">The current user options.</param>
 		public AdHocUserContext(TKey userKey, CultureInfo culture, IReadOnlyDictionary<string, string> options = null)
 		{
-			_options = options;
 			UserKey = userKey;
-			Culture = culture;
+			Culture = culture ?? throw new ArgumentNullException(nameof(culture));
+
+			_options = options;
 		}
 
 		/// <inheritdoc />
