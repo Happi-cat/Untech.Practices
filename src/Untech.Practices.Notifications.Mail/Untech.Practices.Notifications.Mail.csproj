@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MailKit" Version="2.0.4" />
+    <PackageReference Include="RazorEngine" Version="4.5.1-alpha001" />
+    <PackageReference Include="System.Linq" Version="4.3.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Untech.Practices.Notifications.Mail.Abstractions\Untech.Practices.Notifications.Mail.Abstractions.csproj" />
+  </ItemGroup>
+</Project>

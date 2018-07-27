@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Untech.Practices.UserContext
 {
@@ -16,16 +17,21 @@ namespace Untech.Practices.UserContext
 		/// and optional user <paramref name="options"/>.
 		/// </summary>
 		/// <param name="userKey">The current user key.</param>
+		/// <param name="culture">The cultutre of the current user.</param>
 		/// <param name="options">The current user options.</param>
-		public AdHocUserContext(TKey userKey, IReadOnlyDictionary<string, string> options = null)
+		public AdHocUserContext(TKey userKey, CultureInfo culture, IReadOnlyDictionary<string, string> options = null)
 		{
-			_options = options;
 			UserKey = userKey;
-		}
+			Culture = culture ?? throw new ArgumentNullException(nameof(culture));
 
+			_options = options;
+		}
 
 		/// <inheritdoc />
 		public TKey UserKey { get; }
+
+		/// <inheritdoc />
+		public CultureInfo Culture { get; }
 
 		/// <inheritdoc />
 		public string this[string optionKey]
@@ -52,9 +58,10 @@ namespace Untech.Practices.UserContext
 		/// and optional user <paramref name="options"/>.
 		/// </summary>
 		/// <param name="userKey">The current user key.</param>
+		/// <param name="culture">The cultutre of the current user.</param>
 		/// <param name="options">The current user options.</param>
-		public AdHocUserContext(int userKey, IReadOnlyDictionary<string, string> options = null)
-			:base(userKey, options)
+		public AdHocUserContext(int userKey, CultureInfo culture, IReadOnlyDictionary<string, string> options = null)
+			:base(userKey, culture, options)
 		{
 
 		}

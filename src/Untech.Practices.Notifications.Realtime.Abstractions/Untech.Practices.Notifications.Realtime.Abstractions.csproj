@@ -1,0 +1,6 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Untech.Practices.Notifications.Realtime</RootNamespace>
+    <LangVersion>7.2</LangVersion>
+  </PropertyGroup>
+</Project>

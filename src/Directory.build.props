@@ -1,17 +1,15 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project>
   <PropertyGroup>
     <Company>Sergey Svirsky</Company>
     <Copyright>Copyright \u00A9 Sergey Svirsky 2018</Copyright>
-    <TargetFramework>netstandard1</TargetFramework>
-    <RootNamespace>Untech.Practices.Mail</RootNamespace>
+    <TargetFrameworks>netstandard1</TargetFrameworks>
     <Version>1.0</Version>
     <FileVersion>1.0</FileVersion>
     <!-- Increment AssemblyVersion on MAJOR.MINOR change -->
     <!-- Use Info Version for RC -->
-    <InformationalVersion>1.0</InformationalVersion>
+    <InformationalVersion>1.0-rc1</InformationalVersion>
     <AssemblyVersion>1.0</AssemblyVersion>
+    <!-- etc -->
+    <LangVersion>7.2</LangVersion>
   </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.3.0" />
-  </ItemGroup>
 </Project>
