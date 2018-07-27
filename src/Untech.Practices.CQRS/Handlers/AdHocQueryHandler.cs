@@ -3,7 +3,7 @@
 namespace Untech.Practices.CQRS.Handlers
 {
 	/// <summary>
-	/// Represents adapter for <see cref="Func{TIn, TOut}"/>.
+	///     Represents adapter for <see cref="Func{T,TResult}" />.
 	/// </summary>
 	/// <typeparam name="TIn">The type of command to be handled.</typeparam>
 	/// <typeparam name="TOut">The type of result from the handler.</typeparam>
@@ -17,6 +17,9 @@ namespace Untech.Practices.CQRS.Handlers
 			_func = func ?? throw new ArgumentNullException(nameof(func));
 		}
 
-		public TOut Handle(TIn query) => _func(query);
+		public TOut Handle(TIn query)
+		{
+			return _func(query);
+		}
 	}
 }

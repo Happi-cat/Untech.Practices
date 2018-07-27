@@ -5,7 +5,6 @@ using System.Runtime.Serialization;
 namespace Untech.Practices
 {
 	/// <summary>
-	///
 	/// </summary>
 	/// <typeparam name="TSelf">The type of the self.</typeparam>
 	/// <seealso cref="System.IComparable{Untech.Practices.Enumeration{TSelf}}" />
@@ -15,14 +14,14 @@ namespace Untech.Practices
 		where TSelf : Enumeration<TSelf>
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Enumeration{TSelf}"/> class.
+		///     Initializes a new instance of the <see cref="Enumeration{TSelf}" /> class.
 		/// </summary>
 		protected Enumeration()
 		{
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Enumeration{TSelf}"/> class.
+		///     Initializes a new instance of the <see cref="Enumeration{TSelf}" /> class.
 		/// </summary>
 		/// <param name="id">The identifier.</param>
 		/// <param name="name">The name.</param>
@@ -33,63 +32,22 @@ namespace Untech.Practices
 		}
 
 		/// <summary>
-		/// Gets the identifier.
+		///     Gets the identifier.
 		/// </summary>
 		/// <value>
-		/// The identifier.
+		///     The identifier.
 		/// </value>
 		[DataMember]
 		public int Id { get; private set; }
 
 		/// <summary>
-		/// Gets the name.
+		///     Gets the name.
 		/// </summary>
 		/// <value>
-		/// The name.
+		///     The name.
 		/// </value>
 		[DataMember]
 		public string Name { get; private set; }
-
-		public static bool operator ==(Enumeration<TSelf> left, Enumeration<TSelf> right)
-		{
-			return ReferenceEquals(left, null)
-				? ReferenceEquals(right, null)
-				: left.Equals(right);
-		}
-
-		public static bool operator !=(Enumeration<TSelf> left, Enumeration<TSelf> right)
-		{
-			return !(left == right);
-		}
-
-		public override string ToString() => $"({Id}, {Name})";
-
-
-
-		public override bool Equals(object obj)
-		{
-			if (ReferenceEquals(this, obj)) return true;
-			if (ReferenceEquals(obj, null)) return false;
-			if (obj is TSelf self) return Equals(self);
-			return false;
-		}
-
-		public bool Equals(TSelf other)
-		{
-			if (ReferenceEquals(this, other)) return true;
-			if (ReferenceEquals(other, null)) return false;
-			return Id.Equals(other.Id);
-		}
-
-		public override int GetHashCode()
-		{
-			unchecked
-			{
-				var hash = 17;
-				hash = hash * 37 + Id;
-				return hash;
-			}
-		}
 
 		public int CompareTo(object obj)
 		{
@@ -104,10 +62,52 @@ namespace Untech.Practices
 			if (ReferenceEquals(other, null)) throw new ArgumentNullException(nameof(other));
 			return Id.CompareTo(other.Id);
 		}
+
+		public bool Equals(TSelf other)
+		{
+			if (ReferenceEquals(this, other)) return true;
+			if (ReferenceEquals(other, null)) return false;
+			return Id.Equals(other.Id);
+		}
+
+		public static bool operator ==(Enumeration<TSelf> left, Enumeration<TSelf> right)
+		{
+			return ReferenceEquals(left, null)
+				? ReferenceEquals(right, null)
+				: left.Equals(right);
+		}
+
+		public static bool operator !=(Enumeration<TSelf> left, Enumeration<TSelf> right)
+		{
+			return !(left == right);
+		}
+
+		public override string ToString()
+		{
+			return $"({Id}, {Name})";
+		}
+
+
+		public override bool Equals(object obj)
+		{
+			if (ReferenceEquals(this, obj)) return true;
+			if (ReferenceEquals(obj, null)) return false;
+			if (obj is TSelf self) return Equals(self);
+			return false;
+		}
+
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				int hash = 17;
+				hash = hash * 37 + Id;
+				return hash;
+			}
+		}
 	}
 
 	/// <summary>
-	///
 	/// </summary>
 	/// <typeparam name="TSelf">The type of the self.</typeparam>
 	/// <typeparam name="TKey">The type of the key.</typeparam>
@@ -119,14 +119,14 @@ namespace Untech.Practices
 		where TKey : IComparable<TKey>, IEquatable<TKey>
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Enumeration{TSelf, TKey}"/> class.
+		///     Initializes a new instance of the <see cref="Enumeration{TSelf, TKey}" /> class.
 		/// </summary>
 		protected Enumeration()
 		{
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Enumeration{TSelf, TKey}"/> class.
+		///     Initializes a new instance of the <see cref="Enumeration{TSelf, TKey}" /> class.
 		/// </summary>
 		/// <param name="id">The identifier.</param>
 		/// <param name="name">The name.</param>
@@ -137,60 +137,22 @@ namespace Untech.Practices
 		}
 
 		/// <summary>
-		/// Gets the identifier.
+		///     Gets the identifier.
 		/// </summary>
 		/// <value>
-		/// The identifier.
+		///     The identifier.
 		/// </value>
 		[DataMember]
 		public TKey Id { get; private set; }
 
 		/// <summary>
-		/// Gets the name.
+		///     Gets the name.
 		/// </summary>
 		/// <value>
-		/// The name.
+		///     The name.
 		/// </value>
 		[DataMember]
 		public string Name { get; private set; }
-
-		public static bool operator ==(Enumeration<TSelf, TKey> left, Enumeration<TSelf, TKey> right)
-		{
-			if (ReferenceEquals(left, null)) return ReferenceEquals(right, null);
-			return left.Equals(right);
-		}
-
-		public static bool operator !=(Enumeration<TSelf, TKey> left, Enumeration<TSelf, TKey> right)
-		{
-			return !(left == right);
-		}
-
-		public override string ToString() => $"({Id}, {Name})";
-
-		public override bool Equals(object obj)
-		{
-			if (ReferenceEquals(this, obj)) return true;
-			if (ReferenceEquals(obj, null)) return false;
-			if (obj is TSelf self) return Equals(self);
-			return false;
-		}
-
-		public bool Equals(TSelf other)
-		{
-			if (ReferenceEquals(this, other)) return true;
-			if (ReferenceEquals(other, null)) return false;
-			return EqualityComparer<TKey>.Default.Equals(Id, other.Id);
-		}
-
-		public override int GetHashCode()
-		{
-			unchecked
-			{
-				var hash = 17;
-				hash = hash * 37 + EqualityComparer<TKey>.Default.GetHashCode(Id);
-				return hash;
-			}
-		}
 
 		public int CompareTo(object obj)
 		{
@@ -204,6 +166,47 @@ namespace Untech.Practices
 		{
 			if (ReferenceEquals(other, null)) throw new ArgumentNullException(nameof(other));
 			return Comparer<TKey>.Default.Compare(Id, other.Id);
+		}
+
+		public bool Equals(TSelf other)
+		{
+			if (ReferenceEquals(this, other)) return true;
+			if (ReferenceEquals(other, null)) return false;
+			return EqualityComparer<TKey>.Default.Equals(Id, other.Id);
+		}
+
+		public static bool operator ==(Enumeration<TSelf, TKey> left, Enumeration<TSelf, TKey> right)
+		{
+			if (ReferenceEquals(left, null)) return ReferenceEquals(right, null);
+			return left.Equals(right);
+		}
+
+		public static bool operator !=(Enumeration<TSelf, TKey> left, Enumeration<TSelf, TKey> right)
+		{
+			return !(left == right);
+		}
+
+		public override string ToString()
+		{
+			return $"({Id}, {Name})";
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (ReferenceEquals(this, obj)) return true;
+			if (ReferenceEquals(obj, null)) return false;
+			if (obj is TSelf self) return Equals(self);
+			return false;
+		}
+
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				int hash = 17;
+				hash = hash * 37 + EqualityComparer<TKey>.Default.GetHashCode(Id);
+				return hash;
+			}
 		}
 	}
 }

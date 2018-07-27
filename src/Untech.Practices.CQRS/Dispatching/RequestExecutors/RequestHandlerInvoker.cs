@@ -28,7 +28,7 @@ namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 		public Task InvokeAsync(object args, CancellationToken cancellationToken)
 		{
 			return new RunAsyncHandler(_resolver)
-				.HandleAsync((TIn) args, cancellationToken);
+				.HandleAsync((TIn)args, cancellationToken);
 		}
 
 		private static InvalidOperationException CreateHandlerNotFoundException()
@@ -38,18 +38,14 @@ namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 
 		private static void PreProcess(ITypeResolver typeResolver, TIn request)
 		{
-			foreach (var preProcessor in ResolveMany<IPipelinePreProcessor<TIn>>(typeResolver))
-			{
+			foreach (IPipelinePreProcessor<TIn> preProcessor in ResolveMany<IPipelinePreProcessor<TIn>>(typeResolver))
 				preProcessor.Process(request);
-			}
 		}
 
 		private static void PostProcess(ITypeResolver typeResolver, TIn request, TOut result)
 		{
-			foreach (var postProcessor in ResolveMany<IPipelinePostProcessor<TIn, TOut>>(typeResolver))
-			{
-				postProcessor.Process(request, result);
-			}
+			foreach (IPipelinePostProcessor<TIn, TOut> postProcessor in
+				ResolveMany<IPipelinePostProcessor<TIn, TOut>>(typeResolver)) postProcessor.Process(request, result);
 		}
 
 		private static IEnumerable<T> ResolveMany<T>(ITypeResolver resolver)
@@ -70,11 +66,11 @@ namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 
 			public TOut Handle(TIn request)
 			{
-				var handler = GetHandlerOrThrow();
+				IRequestHandler<TIn, TOut> handler = GetHandlerOrThrow();
 
 				PreProcess(_resolver, request);
 
-				var result = handler.Handle(request);
+				TOut result = handler.Handle(request);
 
 				PostProcess(_resolver, request, result);
 
@@ -83,13 +79,13 @@ namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 
 			private IRequestHandler<TIn, TOut> GetHandlerOrThrow()
 			{
-				var syncHandler = _resolver.ResolveOne<IRequestHandler<TIn, TOut>>();
+				IRequestHandler<TIn, TOut> syncHandler = _resolver.ResolveOne<IRequestHandler<TIn, TOut>>();
 				if (syncHandler != null)
 					return syncHandler;
 
-				var asyncHandler = _resolver.ResolveOne<IRequestAsyncHandler<TIn, TOut>>();
+				IRequestAsyncHandler<TIn, TOut> asyncHandler = _resolver.ResolveOne<IRequestAsyncHandler<TIn, TOut>>();
 				if (asyncHandler != null)
-					return new AsyncAsSyncRequestHandler<TIn,TOut>(asyncHandler);
+					return new AsyncAsSyncRequestHandler<TIn, TOut>(asyncHandler);
 
 				throw CreateHandlerNotFoundException();
 			}
@@ -106,11 +102,11 @@ namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 
 			public async Task<TOut> HandleAsync(TIn request, CancellationToken cancellationToken)
 			{
-				var handler = GetAsyncHandlerOrThrow();
+				IRequestAsyncHandler<TIn, TOut> handler = GetAsyncHandlerOrThrow();
 
 				PreProcess(_resolver, request);
 
-				var result = await handler.HandleAsync(request, cancellationToken);
+				TOut result = await handler.HandleAsync(request, cancellationToken);
 
 				PostProcess(_resolver, request, result);
 
@@ -119,11 +115,11 @@ namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 
 			private IRequestAsyncHandler<TIn, TOut> GetAsyncHandlerOrThrow()
 			{
-				var asyncHandler = _resolver.ResolveOne<IRequestAsyncHandler<TIn, TOut>>();
+				IRequestAsyncHandler<TIn, TOut> asyncHandler = _resolver.ResolveOne<IRequestAsyncHandler<TIn, TOut>>();
 				if (asyncHandler != null)
 					return asyncHandler;
 
-				var syncHandler = _resolver.ResolveOne<IRequestHandler<TIn, TOut>>();
+				IRequestHandler<TIn, TOut> syncHandler = _resolver.ResolveOne<IRequestHandler<TIn, TOut>>();
 				if (syncHandler != null)
 					return new SyncAsAsyncRequestHandler<TIn, TOut>(syncHandler);
 

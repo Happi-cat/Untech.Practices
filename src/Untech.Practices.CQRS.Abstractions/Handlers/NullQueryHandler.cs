@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace Untech.Practices.CQRS.Handlers
 {
 	/// <summary>
-	/// Represents dummy query handler that returns default value.
+	///     Represents dummy query handler that returns default value.
 	/// </summary>
 	/// <typeparam name="TIn">Request type.</typeparam>
 	/// <typeparam name="TOut">The type of result from the handler.</typeparam>
@@ -13,9 +13,15 @@ namespace Untech.Practices.CQRS.Handlers
 		where TIn : IQuery<TOut>
 	{
 		/// <inheritdoc />
-		public TOut Handle(TIn query) => default(TOut);
+		public Task<TOut> HandleAsync(TIn query, CancellationToken cancellationToken)
+		{
+			return Task.FromResult(default(TOut));
+		}
 
 		/// <inheritdoc />
-		public Task<TOut> HandleAsync(TIn query, CancellationToken cancellationToken) => Task.FromResult(default(TOut));
+		public TOut Handle(TIn query)
+		{
+			return default;
+		}
 	}
 }

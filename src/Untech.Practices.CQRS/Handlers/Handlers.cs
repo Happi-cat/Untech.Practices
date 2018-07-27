@@ -5,7 +5,7 @@ namespace Untech.Practices.CQRS.Handlers
 	public static class Handlers
 	{
 		/// <summary>
-		/// Returns dummy query handler.
+		///     Returns dummy query handler.
 		/// </summary>
 		/// <typeparam name="TIn">The type of query to be handled.</typeparam>
 		/// <typeparam name="TOut">The type of result from the handler.</typeparam>
@@ -17,7 +17,7 @@ namespace Untech.Practices.CQRS.Handlers
 		}
 
 		/// <summary>
-		/// Returns query handler from <see cref="Func{T, TResult}"/>
+		///     Returns query handler from <see cref="Func{T, TResult}" />
 		/// </summary>
 		/// <typeparam name="TIn">The type of query to be handled.</typeparam>
 		/// <typeparam name="TOut">The type of result from the handler.</typeparam>
@@ -30,7 +30,7 @@ namespace Untech.Practices.CQRS.Handlers
 		}
 
 		/// <summary>
-		/// Returns dummy command handler.
+		///     Returns dummy command handler.
 		/// </summary>
 		/// <typeparam name="TIn">The type of command to be handled.</typeparam>
 		/// <typeparam name="TOut">The type of result from the handler.</typeparam>
@@ -42,7 +42,7 @@ namespace Untech.Practices.CQRS.Handlers
 		}
 
 		/// <summary>
-		/// Returns command handler from <see cref="Func{T, TResult}"/>
+		///     Returns command handler from <see cref="Func{T, TResult}" />
 		/// </summary>
 		/// <typeparam name="TIn">The type of command to be handled.</typeparam>
 		/// <typeparam name="TOut">The type of result from the handler.</typeparam>
@@ -55,7 +55,7 @@ namespace Untech.Practices.CQRS.Handlers
 		}
 
 		/// <summary>
-		/// Returns dummy notification handler.
+		///     Returns dummy notification handler.
 		/// </summary>
 		/// <typeparam name="TIn">The type of notification to be handled.</typeparam>
 		/// <returns></returns>
@@ -66,7 +66,7 @@ namespace Untech.Practices.CQRS.Handlers
 		}
 
 		/// <summary>
-		/// Returns notification handler from <see cref="Action{T}"/>
+		///     Returns notification handler from <see cref="Action{T}" />
 		/// </summary>
 		/// <typeparam name="TIn">The type of notification to be handled.</typeparam>
 		/// <param name="func"></param>

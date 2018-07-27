@@ -3,7 +3,7 @@
 namespace Untech.Practices.CQRS.Handlers
 {
 	/// <summary>
-	/// Represents adapter for <see cref="Action{TIn}"/>.
+	///     Represents adapter for <see cref="Action{T}" />.
 	/// </summary>
 	/// <typeparam name="TIn">The type of command to be handled.</typeparam>
 	public sealed class AdHocNotificationHandler<TIn> : INotificationHandler<TIn>
@@ -16,6 +16,9 @@ namespace Untech.Practices.CQRS.Handlers
 			_func = func ?? throw new ArgumentNullException(nameof(func));
 		}
 
-		public void Publish(TIn notification) => _func(notification);
+		public void Publish(TIn notification)
+		{
+			_func(notification);
+		}
 	}
 }

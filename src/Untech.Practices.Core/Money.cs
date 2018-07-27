@@ -4,16 +4,17 @@ using System.Runtime.Serialization;
 namespace Untech.Practices
 {
 	/// <summary>
-	/// 
 	/// </summary>
 	/// <seealso cref="Untech.Practices.ValueObject" />
 	[DataContract]
 	public class Money : ValueObject<Money>
 	{
-		protected Money() { }
+		protected Money()
+		{
+		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Money"/> class.
+		///     Initializes a new instance of the <see cref="Money" /> class.
 		/// </summary>
 		/// <param name="amount">The amount.</param>
 		/// <param name="currency">The currency.</param>
@@ -24,19 +25,19 @@ namespace Untech.Practices
 		}
 
 		/// <summary>
-		/// Gets the amount.
+		///     Gets the amount.
 		/// </summary>
 		/// <value>
-		/// The amount.
+		///     The amount.
 		/// </value>
 		[DataMember]
 		public double Amount { get; private set; }
 
 		/// <summary>
-		/// Gets the currency.
+		///     Gets the currency.
 		/// </summary>
 		/// <value>
-		/// The currency.
+		///     The currency.
 		/// </value>
 		[DataMember]
 		public Currency Currency { get; private set; }
