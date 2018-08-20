@@ -72,9 +72,9 @@ namespace Untech.Practices
 
 		public static bool operator ==(Enumeration<TSelf> left, Enumeration<TSelf> right)
 		{
-			return ReferenceEquals(left, null)
-				? ReferenceEquals(right, null)
-				: left.Equals(right);
+			if (ReferenceEquals(left, null) ^ ReferenceEquals(right, null))
+				return false;
+			return ReferenceEquals(left, null) || left.Equals(right);
 		}
 
 		public static bool operator !=(Enumeration<TSelf> left, Enumeration<TSelf> right)
