@@ -4,7 +4,7 @@ using System.Globalization;
 namespace Untech.Practices.UserContext
 {
 	/// <summary>
-	///     Describes user context infomation.
+	///     Describes user context information.
 	///     Can be used when user key is of <see cref="int" /> type.
 	/// </summary>
 	public interface IUserContext : IUserContext<int>
@@ -12,7 +12,7 @@ namespace Untech.Practices.UserContext
 	}
 
 	/// <summary>
-	///     Describes user context inforamtion.
+	///     Describes user context information.
 	/// </summary>
 	/// <typeparam name="TKey">The type of user key. Should implement <see cref="IEquatable{T}" />.</typeparam>
 	public interface IUserContext<out TKey> where TKey : IEquatable<TKey>
