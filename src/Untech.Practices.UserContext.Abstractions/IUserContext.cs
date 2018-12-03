@@ -31,6 +31,6 @@ namespace Untech.Practices.UserContext
 		///     Gets the value corresponding to a user option key.
 		/// </summary>
 		/// <param name="optionKey">The user option key.</param>
-		string this[string optionKey] { get; }
+		object this[string optionKey] { get; }
 	}
 }

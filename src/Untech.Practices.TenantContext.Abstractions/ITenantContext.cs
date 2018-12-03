@@ -18,7 +18,7 @@ namespace Untech.Practices.TenantContext
 		/// Gets the value corresponding to a tenant option key.
 		/// </summary>
 		/// <param name="optionKey">The tenant option key.</param>
-		string this[string optionKey] { get; }
+		object this[string optionKey] { get; }
 	}
 
 	/// <summary>
