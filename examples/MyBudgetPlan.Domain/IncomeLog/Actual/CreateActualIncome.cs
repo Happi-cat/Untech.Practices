@@ -25,11 +25,6 @@ namespace MyBudgetPlan.Domain.IncomeLog.Actual
 
 	public class UpdateActualIncome : ICommand<ActualIncome>
 	{
-		public int Key { get; }
-		public string CategoryKey { get; }
-		public Money Amount { get; }
-		public string Description { get; }
-
 		public UpdateActualIncome(int key, string categoryKey, Money amount, string description = null)
 		{
 			Key = key;
@@ -37,6 +32,11 @@ namespace MyBudgetPlan.Domain.IncomeLog.Actual
 			Amount = amount;
 			Description = description;
 		}
+
+		public int Key { get; }
+		public string CategoryKey { get; }
+		public Money Amount { get; }
+		public string Description { get; }
 	}
 
 	public class DeleteActualIncome : ICommand<ActualIncome>
@@ -47,6 +47,5 @@ namespace MyBudgetPlan.Domain.IncomeLog.Actual
 		}
 
 		public int Key { get; }
-
 	}
 }

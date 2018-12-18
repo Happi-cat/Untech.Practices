@@ -13,7 +13,6 @@ namespace MyBudgetPlan.Domain.Reports.Monthly
 	{
 		private MonthlyBudgetReport()
 		{
-
 		}
 
 		public MonthlyBudgetReport(YearMonth when, IMoneyCalculator calculator,
@@ -21,7 +20,6 @@ namespace MyBudgetPlan.Domain.Reports.Monthly
 			IncomeMonthLog incomeLog,
 			ExpenseMonthLog expenseLog)
 		{
-
 			When = when;
 
 			ProjectedBalance = calculator.Minus(

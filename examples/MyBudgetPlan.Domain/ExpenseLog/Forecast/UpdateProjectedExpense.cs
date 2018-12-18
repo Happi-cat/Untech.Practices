@@ -5,11 +5,6 @@ namespace MyBudgetPlan.Domain.ExpenseLog.Forecast
 {
 	public class UpdateProjectedExpense : ICommand<ProjectedExpense>
 	{
-		public int Key { get; }
-		public string CategoryKey { get; }
-		public Money Amount { get; }
-		public string Description { get; }
-
 		public UpdateProjectedExpense(int key, string categoryKey, Money amount, string description = null)
 		{
 			Key = key;
@@ -17,5 +12,10 @@ namespace MyBudgetPlan.Domain.ExpenseLog.Forecast
 			Amount = amount;
 			Description = description;
 		}
+
+		public int Key { get; }
+		public string CategoryKey { get; }
+		public Money Amount { get; }
+		public string Description { get; }
 	}
 }

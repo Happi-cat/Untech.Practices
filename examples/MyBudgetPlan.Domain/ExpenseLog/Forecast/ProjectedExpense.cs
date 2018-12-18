@@ -1,10 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using MyBudgetPlan.Domain.ExpenseLog.MonthLog;
 using Untech.Practices;
-using Untech.Practices.CQRS;
-using Untech.Practices.DataStorage;
 
 namespace MyBudgetPlan.Domain.ExpenseLog.Forecast
 {
@@ -15,11 +12,10 @@ namespace MyBudgetPlan.Domain.ExpenseLog.Forecast
 
 		private ProjectedExpense()
 		{
-
 		}
 
 		public ProjectedExpense(int key, string categoryKey, YearMonth when, Money amount, string description = null)
-		  :base(key)
+			: base(key)
 		{
 			CategoryKey = categoryKey;
 			When = when;
@@ -57,14 +53,11 @@ namespace MyBudgetPlan.Domain.ExpenseLog.Forecast
 
 		public void UpdateCategory(string categoryKey)
 		{
-			var oldValue = CategoryKey;
+			string oldValue = CategoryKey;
 			CategoryKey = categoryKey;
 
-			var shouldRaise = Key != 0 && oldValue != categoryKey;
-			if (shouldRaise)
-			{
-				Raise(new ExpenseMonthLogChanged(When));
-			}
+			bool shouldRaise = Key != 0 && oldValue != categoryKey;
+			if (shouldRaise) Raise(new ExpenseMonthLogChanged(When));
 		}
 
 		public void UpdateDescription(string description)

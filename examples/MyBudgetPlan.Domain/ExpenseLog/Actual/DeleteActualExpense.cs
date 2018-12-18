@@ -10,6 +10,5 @@ namespace MyBudgetPlan.Domain.ExpenseLog.Actual
 		}
 
 		public int Key { get; }
-
 	}
 }

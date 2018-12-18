@@ -12,7 +12,6 @@ namespace MyBudgetPlan.Domain.IncomeLog.MonthLog
 	{
 		private IncomeMonthLog()
 		{
-
 		}
 
 		public IncomeMonthLog(YearMonth when,

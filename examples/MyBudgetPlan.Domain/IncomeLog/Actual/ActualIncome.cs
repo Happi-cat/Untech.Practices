@@ -1,11 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using MyBudgetPlan.Domain.IncomeLog.MonthLog;
 using NodaTime;
 using Untech.Practices;
-using Untech.Practices.CQRS;
-using Untech.Practices.DataStorage;
 
 namespace MyBudgetPlan.Domain.IncomeLog.Actual
 {
@@ -16,11 +13,10 @@ namespace MyBudgetPlan.Domain.IncomeLog.Actual
 
 		private ActualIncome()
 		{
-
 		}
 
 		public ActualIncome(int key, LocalDate when, Money amount, string description = null)
-		:base(key)
+			: base(key)
 		{
 			When = when;
 			Amount = amount;

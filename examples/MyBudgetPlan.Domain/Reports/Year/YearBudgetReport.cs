@@ -11,7 +11,6 @@ namespace MyBudgetPlan.Domain.Reports.Year
 	{
 		private YearBudgetReport()
 		{
-
 		}
 
 		public YearBudgetReport(IMoneyCalculator calculator, IEnumerable<MonthlyBudgetReport> months)

@@ -1,10 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using MyBudgetPlan.Domain.IncomeLog.MonthLog;
 using Untech.Practices;
-using Untech.Practices.CQRS;
-using Untech.Practices.DataStorage;
 
 namespace MyBudgetPlan.Domain.IncomeLog.Forecast
 {

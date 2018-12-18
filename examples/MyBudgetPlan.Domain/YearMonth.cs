@@ -10,7 +10,6 @@ namespace MyBudgetPlan.Domain
 	{
 		private YearMonth()
 		{
-
 		}
 
 		public YearMonth(int year, int month)

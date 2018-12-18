@@ -21,9 +21,6 @@ namespace MyBudgetPlan.Domain.ExpenseLog.Category
 		}
 
 		[DataMember]
-		public string Key { get; private set; }
-
-		[DataMember]
 		public string Title { get; private set; }
 
 		[DataMember]
@@ -31,7 +28,7 @@ namespace MyBudgetPlan.Domain.ExpenseLog.Category
 		{
 			get
 			{
-				var indexOfDelimiter = Key.LastIndexOf(Delimiter, StringComparison.OrdinalIgnoreCase);
+				int indexOfDelimiter = Key.LastIndexOf(Delimiter, StringComparison.OrdinalIgnoreCase);
 
 				return indexOfDelimiter > -1
 					? Key.Substring(0, indexOfDelimiter)
@@ -41,6 +38,9 @@ namespace MyBudgetPlan.Domain.ExpenseLog.Category
 
 		[DataMember]
 		public string Description { get; private set; }
+
+		[DataMember]
+		public string Key { get; private set; }
 
 		public bool IsSameOrDescendantOf(string parentKey)
 		{

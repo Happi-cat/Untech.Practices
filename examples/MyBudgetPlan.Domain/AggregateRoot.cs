@@ -12,7 +12,6 @@ namespace MyBudgetPlan.Domain
 
 		protected AggregateRoot()
 		{
-
 		}
 
 		protected AggregateRoot(int key)
@@ -20,10 +19,10 @@ namespace MyBudgetPlan.Domain
 			Key = key;
 		}
 
-		public int Key { get; private set; }
-
 		[IgnoreDataMember]
 		public IReadOnlyList<INotification> NotificationsToRaise => _notifications;
+
+		public int Key { get; }
 
 		protected void Raise(INotification notification)
 		{
