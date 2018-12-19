@@ -22,6 +22,7 @@ namespace MyBudgetPlan.Domain
 		[IgnoreDataMember]
 		public IReadOnlyList<INotification> NotificationsToRaise => _notifications;
 
+		[DataMember]
 		public int Key { get; }
 
 		protected void Raise(INotification notification)
