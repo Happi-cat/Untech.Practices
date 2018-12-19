@@ -4,16 +4,16 @@ using System.Runtime.Serialization;
 using MyBudgetPlan.Domain.Reports.Monthly;
 using Untech.Practices;
 
-namespace MyBudgetPlan.Domain.Reports.Year
+namespace MyBudgetPlan.Domain.Reports.Annual
 {
 	[DataContract]
-	public class YearBudgetReport
+	public class AnnualBudgetReport
 	{
-		private YearBudgetReport()
+		private AnnualBudgetReport()
 		{
 		}
 
-		public YearBudgetReport(IMoneyCalculator calculator, IEnumerable<MonthlyBudgetReport> months)
+		public AnnualBudgetReport(IMoneyCalculator calculator, IEnumerable<MonthlyBudgetReport> months)
 		{
 			Months = months.ToList();
 
