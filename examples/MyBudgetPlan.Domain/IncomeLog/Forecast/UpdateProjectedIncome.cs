@@ -1,25 +1,21 @@
-using NodaTime;
 using Untech.Practices;
 using Untech.Practices.CQRS;
 
 namespace MyBudgetPlan.Domain.IncomeLog.Forecast
 {
-	public class CreateProjectedIncome : ICommand<ProjectedIncome>
+	public class UpdateProjectedIncome : ICommand<ProjectedIncome>
 	{
-		public CreateProjectedIncome(string categoryKey, YearMonth when, Money amount, string description = null)
+		public UpdateProjectedIncome(int key, string categoryKey, Money amount, string description = null)
 		{
+			Key = key;
 			CategoryKey = categoryKey;
-			When = when;
 			Amount = amount;
 			Description = description;
 		}
 
+		public int Key { get; }
 		public string CategoryKey { get; }
-
-		public LocalDate When { get; }
-
 		public Money Amount { get; }
-
 		public string Description { get; }
 	}
 }

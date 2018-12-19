@@ -15,6 +15,11 @@ namespace MyBudgetPlan.Domain.IncomeLog.Actual
 		{
 		}
 
+		public ActualIncome(CreateActualIncome request)
+			: this(0, request.When, request.Amount, request.Description)
+		{
+		}
+
 		public ActualIncome(int key, LocalDate when, Money amount, string description = null)
 			: base(key)
 		{
@@ -39,6 +44,12 @@ namespace MyBudgetPlan.Domain.IncomeLog.Actual
 
 		[DataMember]
 		public string Description { get; set; }
+
+		public void Update(UpdateActualIncome request)
+		{
+			UpdateAmount(request.Amount);
+			UpdateDescription(request.Description);
+		}
 
 		public void UpdateAmount(Money amount)
 		{

@@ -14,6 +14,11 @@ namespace MyBudgetPlan.Domain.ExpenseLog.Forecast
 		{
 		}
 
+		public ProjectedExpense(CreateProjectedExpense request)
+			: this(0, request.CategoryKey, request.When, request.Amount, request.Description)
+		{
+		}
+
 		public ProjectedExpense(int key, string categoryKey, YearMonth when, Money amount, string description = null)
 			: base(key)
 		{
@@ -42,6 +47,13 @@ namespace MyBudgetPlan.Domain.ExpenseLog.Forecast
 
 		[DataMember]
 		public string Description { get; set; }
+
+		public void Update(UpdateProjectedExpense request)
+		{
+			UpdateCategory(request.CategoryKey);
+			UpdateAmount(request.Amount);
+			UpdateDescription(request.Description);
+		}
 
 		public void UpdateAmount(Money amount)
 		{

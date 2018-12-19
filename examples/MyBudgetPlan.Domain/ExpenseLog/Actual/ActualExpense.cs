@@ -15,6 +15,11 @@ namespace MyBudgetPlan.Domain.ExpenseLog.Actual
 		{
 		}
 
+		public ActualExpense(CreateActualExpense request)
+			: this(0, request.CategoryKey, request.When, request.Amount, request.Description)
+		{
+		}
+
 		public ActualExpense(int key, string categoryKey, LocalDate when, Money amount, string description = null)
 			: base(key)
 		{
@@ -43,6 +48,13 @@ namespace MyBudgetPlan.Domain.ExpenseLog.Actual
 
 		[DataMember]
 		public string Description { get; private set; }
+
+		public void Update(UpdateActualExpense request)
+		{
+			UpdateCategory(request.CategoryKey);
+			UpdateAmount(request.Amount);
+			UpdateDescription(request.Description);
+		}
 
 		public void UpdateAmount(Money amount)
 		{

@@ -5,10 +5,25 @@ using Untech.Practices;
 
 namespace MyBudgetPlan.Domain.IncomeLog.Forecast
 {
+	[DataContract]
 	public class ProjectedIncome : AggregateRoot
 	{
 		private Money _amount;
 
+		public ProjectedIncome(CreateProjectedIncome request)
+			: this(0, request.When, request.Amount, request.Description)
+		{
+		}
+
+		public ProjectedIncome(int key, YearMonth when, Money amount, string description = null)
+			: base(key)
+		{
+			When = when;
+			Amount = amount;
+			Description = description;
+		}
+
+		[DataMember]
 		public YearMonth When { get; private set; }
 
 		[DataMember]
@@ -22,7 +37,14 @@ namespace MyBudgetPlan.Domain.IncomeLog.Forecast
 			}
 		}
 
+		[DataMember]
 		public string Description { get; set; }
+
+		public void Update(UpdateProjectedIncome request)
+		{
+			UpdateAmount(request.Amount);
+			UpdateDescription(request.Description);
+		}
 
 		public void UpdateAmount(Money amount)
 		{
