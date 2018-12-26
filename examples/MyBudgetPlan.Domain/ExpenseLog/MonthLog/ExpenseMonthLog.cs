@@ -20,41 +20,24 @@ namespace MyBudgetPlan.Domain.ExpenseLog.MonthLog
 			IEnumerable<ProjectedExpense> forecast = null)
 		{
 			When = when;
-			Actual = actual?.ToList() ?? new List<ActualExpense>();
+			Transactions = actual?.ToList() ?? new List<ActualExpense>();
 			Forecast = forecast?.ToList() ?? new List<ProjectedExpense>();
 
-			ActualTotal = CalcActualTotal(calculator);
-			ProjectedTotal = CalcProjectedTotal(calculator);
-			Difference = calculator.Minus(ActualTotal, ProjectedTotal);
+			Total = FinancialStats.GetTotal(calculator,
+				Transactions.Select(n => n.Amount),
+				Forecast.Select(n => n.Amount));
 		}
 
 		[DataMember]
 		public YearMonth When { get; private set; }
 
 		[DataMember]
-		public Money ActualTotal { get; private set; }
+		public FinancialStats Total { get; private set; }
 
 		[DataMember]
-		public Money ProjectedTotal { get; private set; }
-
-		[DataMember]
-		public Money Difference { get; private set; }
-
-
-		[DataMember]
-		public IReadOnlyList<ActualExpense> Actual { get; private set; }
+		public IReadOnlyList<ActualExpense> Transactions { get; private set; }
 
 		[DataMember]
 		public IReadOnlyList<ProjectedExpense> Forecast { get; private set; }
-
-		private Money CalcActualTotal(IMoneyCalculator calculator)
-		{
-			return calculator.Sum(Actual.Select(n => n.Amount));
-		}
-
-		private Money CalcProjectedTotal(IMoneyCalculator calculator)
-		{
-			return calculator.Sum(Forecast.Select(n => n.Amount));
-		}
 	}
 }

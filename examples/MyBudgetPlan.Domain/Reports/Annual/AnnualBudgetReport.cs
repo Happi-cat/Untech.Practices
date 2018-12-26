@@ -17,32 +17,20 @@ namespace MyBudgetPlan.Domain.Reports.Annual
 		{
 			Months = months.ToList();
 
-			ProjectedIncome = calculator.Sum(Months.Select(n => n.ProjectedIncome));
-			ProjectedExpense = calculator.Sum(Months.Select(n => n.ProjectedExpense));
-			ProjectedBalance = calculator.Sum(Months.Select(n => n.ProjectedBalance));
+			Income = FinancialStats.GetTotal(calculator, Months.Select(n => n.Income));
+			Expense = FinancialStats.GetTotal(calculator, Months.Select(n => n.Expense));
 
-			ActualIncome = calculator.Sum(Months.Select(n => n.ActualIncome));
-			ActualExpense = calculator.Sum(Months.Select(n => n.ActualExpense));
-			ActualBalance = calculator.Sum(Months.Select(n => n.ActualBalance));
+			Balance = FinancialStats.GetBalance(calculator, Income, Expense);
 		}
 
 		[DataMember]
-		public Money ProjectedIncome { get; private set; }
+		public FinancialStats Income { get; private set; }
 
 		[DataMember]
-		public Money ProjectedExpense { get; private set; }
+		public FinancialStats Expense { get; private set; }
 
 		[DataMember]
-		public Money ProjectedBalance { get; private set; }
-
-		[DataMember]
-		public Money ActualIncome { get; private set; }
-
-		[DataMember]
-		public Money ActualExpense { get; private set; }
-
-		[DataMember]
-		public Money ActualBalance { get; private set; }
+		public FinancialStats Balance { get; private set; }
 
 		[DataMember]
 		public IReadOnlyList<MonthlyBudgetReport> Months { get; private set; }

@@ -22,19 +22,9 @@ namespace MyBudgetPlan.Domain.Reports.Monthly
 		{
 			When = when;
 
-			ProjectedIncome = incomeLog.ProjectedTotal;
-			ProjectedExpense = expenseLog.ProjectedTotal;
-			ProjectedBalance = calculator.Minus(
-				incomeLog.ProjectedTotal,
-				expenseLog.ProjectedTotal
-			);
-
-			ActualIncome = incomeLog.ActualTotal;
-			ActualExpense = expenseLog.ActualTotal;
-			ActualBalance = calculator.Minus(
-				incomeLog.ActualTotal,
-				expenseLog.ActualTotal
-			);
+			Income = incomeLog.Total;
+			Expense = expenseLog.Total;
+			Balance = FinancialStats.GetBalance(calculator, Income, Expense);
 
 			Expenses = GetExpensesReport(calculator, categories, expenseLog);
 		}
@@ -43,22 +33,13 @@ namespace MyBudgetPlan.Domain.Reports.Monthly
 		public YearMonth When { get; private set; }
 
 		[DataMember]
-		public Money ProjectedIncome { get; private set; }
+		public FinancialStats Income { get; private set; }
 
 		[DataMember]
-		public Money ProjectedExpense { get; private set; }
+		public FinancialStats Expense { get; private set; }
 
 		[DataMember]
-		public Money ProjectedBalance { get; private set; }
-
-		[DataMember]
-		public Money ActualIncome { get; private set; }
-
-		[DataMember]
-		public Money ActualExpense { get; private set; }
-
-		[DataMember]
-		public Money ActualBalance { get; private set; }
+		public FinancialStats Balance { get; private set; }
 
 		[DataMember]
 		public IEnumerable<ExpenseCategoryReport> Expenses { get; private set; }

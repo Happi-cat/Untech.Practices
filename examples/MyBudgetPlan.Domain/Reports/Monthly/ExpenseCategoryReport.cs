@@ -17,15 +17,14 @@ namespace MyBudgetPlan.Domain.Reports.Monthly
 			Title = category.Title;
 			Description = category.Description;
 
-			Projected = calculator.Sum(expenseLog.Actual
-				.Where(n => category.IsSameOrParentOf(n.CategoryKey))
-				.Select(n => n.Amount));
-
-			Actual = calculator.Sum(expenseLog.Forecast
-				.Where(n => category.IsSameOrParentOf(n.CategoryKey))
-				.Select(n => n.Amount));
-
-			Difference = calculator.Minus(Actual, Projected);
+			Total = FinancialStats.GetTotal(calculator,
+				expenseLog.Transactions
+					.Where(n => category.IsSameOrParentOf(n.CategoryKey))
+					.Select(n => n.Amount),
+				expenseLog.Forecast
+					.Where(n => category.IsSameOrParentOf(n.CategoryKey))
+					.Select(n => n.Amount)
+			);
 		}
 
 		[DataMember]
@@ -38,12 +37,6 @@ namespace MyBudgetPlan.Domain.Reports.Monthly
 		public string Description { get; private set; }
 
 		[DataMember]
-		public Money Projected { get; private set; }
-
-		[DataMember]
-		public Money Actual { get; private set; }
-
-		[DataMember]
-		public Money Difference { get; private set; }
+		public FinancialStats Total { get; private set; }
 	}
 }
