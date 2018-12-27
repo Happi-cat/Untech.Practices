@@ -1,14 +1,22 @@
+using System.Runtime.Serialization;
 using Untech.Practices.CQRS;
 
 namespace MyBudgetPlan.Domain.ExpenseLog.Actual
 {
+	[DataContract]
 	public class DeleteActualExpense : ICommand<ActualExpense>
 	{
+		private DeleteActualExpense()
+		{
+
+		}
+
 		public DeleteActualExpense(int key)
 		{
 			Key = key;
 		}
 
-		public int Key { get; }
+		[DataMember]
+		public int Key { get; private set; }
 	}
 }

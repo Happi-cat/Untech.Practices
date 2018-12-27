@@ -1,25 +1,35 @@
+using System.Runtime.Serialization;
 using NodaTime;
 using Untech.Practices;
 using Untech.Practices.CQRS;
 
 namespace MyBudgetPlan.Domain.IncomeLog.Actual
 {
+	[DataContract]
 	public class CreateActualIncome : ICommand<ActualIncome>
 	{
-		public CreateActualIncome(string categoryKey, LocalDate when, Money amount, string description = null)
+		private CreateActualIncome()
+		{
+
+		}
+
+		public CreateActualIncome(string categoryKey, LocalDate when, Money amount)
 		{
 			CategoryKey = categoryKey;
 			When = when;
 			Amount = amount;
-			Description = description;
 		}
 
-		public string CategoryKey { get; }
+		[DataMember]
+		public string CategoryKey { get; private set; }
 
-		public LocalDate When { get; }
+		[DataMember]
+		public LocalDate When { get; private set; }
 
-		public Money Amount { get; }
+		[DataMember]
+		public Money Amount { get; private set; }
 
-		public string Description { get; }
+		[DataMember]
+		public string Description { get; set; }
 	}
 }

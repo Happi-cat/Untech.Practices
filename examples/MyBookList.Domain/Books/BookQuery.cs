@@ -1,12 +1,12 @@
 using System.Runtime.Serialization;
 using Untech.Practices.CQRS;
 
-namespace MyBudgetPlan.Domain.IncomeLog.Forecast
+namespace MyBookList.Domain.Books
 {
 	[DataContract]
-	public class DeleteProjectedIncome : ICommand<ProjectedIncome>
+	public class BookQuery : IQuery<Book>
 	{
-		public DeleteProjectedIncome(int key)
+		public BookQuery(int key)
 		{
 			Key = key;
 		}

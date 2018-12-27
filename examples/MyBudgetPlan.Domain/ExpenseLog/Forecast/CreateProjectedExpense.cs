@@ -1,24 +1,34 @@
+using System.Runtime.Serialization;
 using Untech.Practices;
 using Untech.Practices.CQRS;
 
 namespace MyBudgetPlan.Domain.ExpenseLog.Forecast
 {
+	[DataContract]
 	public class CreateProjectedExpense : ICommand<ProjectedExpense>
 	{
-		public CreateProjectedExpense(string categoryKey, YearMonth when, Money amount, string description = null)
+		private CreateProjectedExpense()
+		{
+
+		}
+
+		public CreateProjectedExpense(string categoryKey, YearMonth when, Money amount)
 		{
 			CategoryKey = categoryKey;
 			When = when;
 			Amount = amount;
-			Description = description;
 		}
 
-		public string CategoryKey { get; }
+		[DataMember]
+		public string CategoryKey { get; private set; }
 
-		public YearMonth When { get; }
+		[DataMember]
+		public YearMonth When { get; private set; }
 
-		public Money Amount { get; }
+		[DataMember]
+		public Money Amount { get; private set; }
 
-		public string Description { get; }
+		[DataMember]
+		public string Description { get; set; }
 	}
 }

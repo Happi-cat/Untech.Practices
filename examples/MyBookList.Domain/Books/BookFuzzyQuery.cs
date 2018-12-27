@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using Untech.Practices.CQRS;
 
@@ -7,10 +8,7 @@ namespace MyBookList.Domain.Books
 	[DataContract]
 	public class BookSearchQuery : IQuery<IEnumerable<Book>>
 	{
-		private BookSearchQuery()
-		{
-
-		}
+		private IReadOnlyList<string> _tags;
 
 		public BookSearchQuery(int count,
 			string author = null,
@@ -24,12 +22,16 @@ namespace MyBookList.Domain.Books
 		public int Count { get; private set; }
 
 		[DataMember]
-		public string Author { get; private set; }
+		public string Author { get; set; }
 
 		[DataMember]
-		public string Title { get; private set; }
+		public string Title { get; set; }
 
 		[DataMember]
-		public IReadOnlyList<string> Tags { get; private set; }
+		public IReadOnlyList<string> Tags
+		{
+			get => _tags ?? (_tags = new List<string>());
+			set => _tags = value;
+		}
 	}
 }
