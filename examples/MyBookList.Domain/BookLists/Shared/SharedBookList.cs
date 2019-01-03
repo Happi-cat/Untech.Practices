@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Tracing;
 using System.Linq;
 using System.Runtime.Serialization;
-using MyBookList.Domain.Books;
+using MyBookList.Domain.Library;
 using Untech.Practices.DataStorage;
 
 namespace MyBookList.Domain.BookLists.Shared

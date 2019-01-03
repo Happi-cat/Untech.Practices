@@ -1,9 +1,8 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
 using Untech.Practices.CQRS;
 
-namespace MyBookList.Domain.Books
+namespace MyBookList.Domain.Library
 {
 	[DataContract]
 	public class BookSearchQuery : IQuery<IEnumerable<Book>>

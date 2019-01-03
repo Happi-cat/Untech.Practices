@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Runtime.Serialization;
-using MyBookList.Domain.Books;
+using MyBookList.Domain.Library;
 using Untech.Practices.CQRS;
 using Untech.Practices.DataStorage;
 

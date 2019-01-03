@@ -1,7 +1,7 @@
 using System.Runtime.Serialization;
 using Untech.Practices.CQRS;
 
-namespace MyBookList.Domain.Books
+namespace MyBookList.Domain.Library
 {
 	[DataContract]
 	public class BookQuery : IQuery<Book>

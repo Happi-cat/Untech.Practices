@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Untech.Practices.DataStorage;
 
-namespace MyBookList.Domain.Books
+namespace MyBookList.Domain.Library
 {
 	[DataContract]
 	public class Book : IAggregateRoot
