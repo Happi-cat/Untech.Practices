@@ -4,7 +4,7 @@ using Untech.Practices.CQRS;
 namespace MyBudgetPlan.Domain.IncomeLog.Actual
 {
 	[DataContract]
-	public class DeleteActualIncome : ICommand<ActualIncome>
+	public class DeleteActualIncome : ICommand
 	{
 		private DeleteActualIncome()
 		{

@@ -4,7 +4,7 @@ using Untech.Practices.CQRS;
 namespace MyBudgetPlan.Domain.IncomeLog.Forecast
 {
 	[DataContract]
-	public class DeleteProjectedIncome : ICommand<ProjectedIncome>
+	public class DeleteProjectedIncome : ICommand
 	{
 		public DeleteProjectedIncome(int key)
 		{

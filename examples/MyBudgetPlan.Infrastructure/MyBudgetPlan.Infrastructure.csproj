@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\Untech.Practices.CQRS.Abstractions\Untech.Practices.CQRS.Abstractions.csproj" />
+      <ProjectReference Include="..\..\src\Untech.Practices.DataStorage.Cache.Abstractions\Untech.Practices.DataStorage.Cache.Abstractions.csproj" />
+      <ProjectReference Include="..\..\src\Untech.Practices.UserContext.Abstractions\Untech.Practices.UserContext.Abstractions.csproj" />
+      <ProjectReference Include="..\MyBudgetPlan.Domain\MyBudgetPlan.Domain.csproj" />
+    </ItemGroup>
+
+</Project>

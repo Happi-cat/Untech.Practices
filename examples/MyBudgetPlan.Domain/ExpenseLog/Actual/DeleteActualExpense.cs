@@ -4,7 +4,7 @@ using Untech.Practices.CQRS;
 namespace MyBudgetPlan.Domain.ExpenseLog.Actual
 {
 	[DataContract]
-	public class DeleteActualExpense : ICommand<ActualExpense>
+	public class DeleteActualExpense : ICommand
 	{
 		private DeleteActualExpense()
 		{

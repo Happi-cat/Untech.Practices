@@ -40,5 +40,11 @@ namespace MyBudgetPlan.Domain
 			yield return Year;
 			yield return Month;
 		}
+
+
+		public override string ToString()
+		{
+			return Year + "." + Month;
+		}
 	}
 }
