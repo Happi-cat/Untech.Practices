@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Runtime.Serialization;
 using MyBookList.Domain.Library;
-using Untech.Practices.CQRS;
 using Untech.Practices.DataStorage;
 
 namespace MyBookList.Domain.BookLists.My
@@ -28,7 +27,7 @@ namespace MyBookList.Domain.BookLists.My
 
 		}
 
-		public MyBook(int key, int? bookKey, string author, string title, MyBookStatus status, int? ordering = null, string notes = null)
+		public MyBook(int key, int? bookKey, string author, string title, MyBookStatus status, int? ordering = null, string review = null)
 		{
 			Key = key;
 			BookKey = bookKey;
@@ -36,7 +35,7 @@ namespace MyBookList.Domain.BookLists.My
 			Author = author;
 			Title = title;
 			Status = status;
-			Notes = notes;
+			Review = review;
 		}
 
 		[DataMember]
@@ -55,7 +54,7 @@ namespace MyBookList.Domain.BookLists.My
 		public string Title { get; private set; }
 
 		[DataMember]
-		public string Notes { get; private set; }
+		public string Review { get; private set; }
 
 		[DataMember]
 		public MyBookStatus Status { get; private set; }
@@ -65,51 +64,14 @@ namespace MyBookList.Domain.BookLists.My
 			Status = status;
 		}
 
-		public void UpdateNotes(string notes)
+		public void UpdateReview(string review)
 		{
-			Notes = notes;
+			Review = review;
 		}
 
 		public void UpdateOrdering(int? ordering)
 		{
 			Ordering = ordering;
 		}
-	}
-
-	public class AddNewBookToMyBookList : ICommand
-	{
-
-	}
-
-	public class AddExistingBookToMyBookList : ICommand
-	{
-
-	}
-
-	public class AddSharedListBooksToMyBookList : ICommand
-	{
-
-	}
-
-	public class UpdateMyBookStatus : ICommand { }
-
-	public class UpdateMyBookOrdering : ICommand
-	{
-
-	}
-
-	public class UpdateMyBookNote : ICommand
-	{
-
-	}
-
-	public class MyBookListQuery : IQuery<MyBookList>
-	{
-
-	}
-
-	public class NextBooksToReadQuery : IQuery<IEnumerable<MyBook>>
-	{
-		public bool GetLucky { get; private set; }
 	}
 }

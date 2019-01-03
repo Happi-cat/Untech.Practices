@@ -1,7 +1,9 @@
+using System.Runtime.Serialization;
 using Untech.Practices.CQRS;
 
 namespace MyBookList.Domain.BookLists.Shared
 {
+	[DataContract]
 	public class SharedBookListQuery : IQuery<SharedBookList>
 	{
 		public SharedBookListQuery(int key)
@@ -9,6 +11,7 @@ namespace MyBookList.Domain.BookLists.Shared
 			Key = key;
 		}
 
+		[DataMember]
 		public int Key { get; private set; }
 	}
 }

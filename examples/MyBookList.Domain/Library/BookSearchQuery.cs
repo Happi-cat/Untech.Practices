@@ -9,10 +9,7 @@ namespace MyBookList.Domain.Library
 	{
 		private IReadOnlyList<string> _tags;
 
-		public BookSearchQuery(int count,
-			string author = null,
-			string title = null,
-			IEnumerable<string> tags = null)
+		public BookSearchQuery(int count)
 		{
 			Count = count;
 		}
