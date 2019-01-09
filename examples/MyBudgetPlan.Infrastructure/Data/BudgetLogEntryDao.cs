@@ -1,14 +1,34 @@
 using System;
 using MyBudgetPlan.Domain;
 using Shared.Infrastructure.Data;
+using Untech.Practices;
 
 namespace MyBudgetPlan.Infrastructure.Data
 {
-	public abstract class BudgetLogEntryDao<T> : IUserScopedDao
+	public class BudgetLogEntryDao<T> : IUserScopedDao
 		where T: BudgetLogEntry
 	{
-		public int Key { get; set; }
-		public int UserKey { get; set; }
-		public DateTime When { get; set; }
+		private BudgetLogEntryDao()
+		{
+
+		}
+
+		public BudgetLogEntryDao(int key, int userKey, DateTime when, Money amount)
+		{
+			Key = key;
+			UserKey = userKey;
+			When = when;
+			Currency = amount.Currency.Id;
+			Amount = amount.Amount;
+		}
+
+		public int Key { get; private set; }
+		public int UserKey { get; private set; }
+		public DateTime When { get; private set; }
+		public string Currency { get; private set; }
+		public double Amount { get; private set; }
+
+		public string Category { get; set; }
+		public string Description { get; set; }
 	}
 }
