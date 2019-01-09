@@ -11,6 +11,7 @@ namespace MyBudgetPlan.Domain.IncomeLog.Forecast
 		public ProjectedIncome(CreateProjectedIncome request)
 			: this(0, request.When, request.Amount, request.Description)
 		{
+			Raise(new IncomeMonthLogChanged(request.When));
 		}
 
 		public ProjectedIncome(int key, YearMonth when, Money amount, string description = null)

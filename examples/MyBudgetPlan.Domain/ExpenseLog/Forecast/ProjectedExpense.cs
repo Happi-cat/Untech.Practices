@@ -15,6 +15,7 @@ namespace MyBudgetPlan.Domain.ExpenseLog.Forecast
 		public ProjectedExpense(CreateProjectedExpense request)
 			: this(0, request.CategoryKey, request.When, request.Amount, request.Description)
 		{
+			Raise(new ExpenseMonthLogChanged(request.When));
 		}
 
 		public ProjectedExpense(int key, string categoryKey, YearMonth when, Money amount, string description = null)

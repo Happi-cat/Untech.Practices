@@ -15,6 +15,7 @@ namespace MyBudgetPlan.Domain.ExpenseLog.Actual
 		public ActualExpense(CreateActualExpense request)
 			: this(0, request.CategoryKey, request.When, request.Amount, request.Description)
 		{
+			Raise(new ExpenseMonthLogChanged(request.When));
 		}
 
 		public ActualExpense(int key, string categoryKey, LocalDate when, Money amount, string description = null)

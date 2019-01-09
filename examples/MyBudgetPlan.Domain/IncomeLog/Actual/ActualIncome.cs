@@ -16,6 +16,7 @@ namespace MyBudgetPlan.Domain.IncomeLog.Actual
 		public ActualIncome(CreateActualIncome request)
 			: this(0, request.When, request.Amount, request.Description)
 		{
+			Raise(new IncomeMonthLogChanged(request.When));
 		}
 
 		public ActualIncome(int key, LocalDate when, Money amount, string description = null)
