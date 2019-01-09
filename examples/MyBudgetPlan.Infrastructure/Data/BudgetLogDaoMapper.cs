@@ -17,7 +17,7 @@ namespace MyBudgetPlan.Infrastructure.Data
 		{
 			return new ActualIncome(dao.Key,
 				LocalDate.FromDateTime(dao.When),
-				new Money(dao.Amount, new Currency(dao.Currency, null)),
+				new Money(dao.Amount, new Currency(dao.Currency, dao.Currency)),
 				dao.Description);
 		}
 
@@ -36,7 +36,7 @@ namespace MyBudgetPlan.Infrastructure.Data
 		{
 			return new ProjectedIncome(dao.Key,
 				LocalDate.FromDateTime(dao.When),
-				new Money(dao.Amount, new Currency(dao.Currency, null)),
+				new Money(dao.Amount, new Currency(dao.Currency, dao.Currency)),
 				dao.Description);
 		}
 
@@ -56,7 +56,7 @@ namespace MyBudgetPlan.Infrastructure.Data
 			return new ActualExpense(dao.Key,
 				dao.Category,
 				LocalDate.FromDateTime(dao.When),
-				new Money(dao.Amount, new Currency(dao.Currency, null)),
+				new Money(dao.Amount, new Currency(dao.Currency, dao.Currency)),
 				dao.Description);
 		}
 
@@ -77,7 +77,7 @@ namespace MyBudgetPlan.Infrastructure.Data
 			return new ProjectedExpense(dao.Key,
 				dao.Category,
 				LocalDate.FromDateTime(dao.When),
-				new Money(dao.Amount, new Currency(dao.Currency, null)),
+				new Money(dao.Amount, new Currency(dao.Currency, dao.Currency)),
 				dao.Description);
 		}
 
