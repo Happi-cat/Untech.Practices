@@ -9,6 +9,7 @@
       <ProjectReference Include="..\..\src\Untech.Practices.DataStorage.Cache.Abstractions\Untech.Practices.DataStorage.Cache.Abstractions.csproj" />
       <ProjectReference Include="..\..\src\Untech.Practices.UserContext.Abstractions\Untech.Practices.UserContext.Abstractions.csproj" />
       <ProjectReference Include="..\MyBudgetPlan.Domain\MyBudgetPlan.Domain.csproj" />
+      <ProjectReference Include="..\Shared.Infrastructure\Shared.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>

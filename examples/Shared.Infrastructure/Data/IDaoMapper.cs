@@ -1,6 +1,6 @@
 using Untech.Practices.UserContext;
 
-namespace MyBudgetPlan.Infrastructure.Data
+namespace Shared.Infrastructure.Data
 {
 	public interface IDaoMapper<T, TDao>
 	{
