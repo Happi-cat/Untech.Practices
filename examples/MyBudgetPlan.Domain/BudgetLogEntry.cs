@@ -6,15 +6,15 @@ using Untech.Practices.DataStorage;
 namespace MyBudgetPlan.Domain
 {
 	[DataContract]
-	public abstract class AggregateRoot : IAggregateRoot
+	public abstract class BudgetLogEntry : IAggregateRoot
 	{
 		private readonly List<INotification> _notifications = new List<INotification>();
 
-		protected AggregateRoot()
+		protected BudgetLogEntry()
 		{
 		}
 
-		protected AggregateRoot(int key)
+		protected BudgetLogEntry(int key)
 		{
 			Key = key;
 		}

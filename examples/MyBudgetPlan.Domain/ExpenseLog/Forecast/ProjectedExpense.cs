@@ -6,7 +6,7 @@ using Untech.Practices;
 namespace MyBudgetPlan.Domain.ExpenseLog.Forecast
 {
 	[DataContract]
-	public class ProjectedExpense : AggregateRoot
+	public class ProjectedExpense : BudgetLogEntry
 	{
 		private Money _amount;
 

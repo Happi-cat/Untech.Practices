@@ -7,7 +7,7 @@ using Untech.Practices;
 namespace MyBudgetPlan.Domain.IncomeLog.Actual
 {
 	[DataContract]
-	public class ActualIncome : AggregateRoot
+	public class ActualIncome : BudgetLogEntry
 	{
 		private Money _amount;
 

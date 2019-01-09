@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MyBudgetPlan.Domain.ExpenseLog.Forecast;
@@ -27,7 +26,7 @@ namespace MyBudgetPlan.Infrastructure
 		{
 			var item = new ProjectedExpense(request);
 
-			await _dataStorage.CreateAsync(item, cancellationToken);
+			item = await _dataStorage.CreateAsync(item, cancellationToken);
 			await PublishNotifications(item);
 
 			return item;
