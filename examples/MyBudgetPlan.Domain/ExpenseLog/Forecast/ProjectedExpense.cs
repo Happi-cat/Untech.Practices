@@ -8,8 +8,6 @@ namespace MyBudgetPlan.Domain.ExpenseLog.Forecast
 	[DataContract]
 	public class ProjectedExpense : BudgetLogEntry
 	{
-		private Money _amount;
-
 		private ProjectedExpense()
 		{
 		}
@@ -33,20 +31,6 @@ namespace MyBudgetPlan.Domain.ExpenseLog.Forecast
 
 		[DataMember]
 		public YearMonth When { get; private set; }
-
-		[DataMember]
-		public Money Amount
-		{
-			get => _amount;
-			private set
-			{
-				if (value.Amount < 0) throw new ArgumentException("Amount cannot be negative");
-				_amount = value;
-			}
-		}
-
-		[DataMember]
-		public string Description { get; set; }
 
 		public void Update(UpdateProjectedExpense request)
 		{

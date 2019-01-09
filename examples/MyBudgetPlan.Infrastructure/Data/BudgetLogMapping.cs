@@ -26,19 +26,16 @@ namespace MyBudgetPlan.Infrastructure.Data
 			 string tableName)
 			where T : BudgetLogEntry
 		{
-			return ConfigureBase<T>(b, tableName);
+			return b.Entity<BudgetLogEntryDao<T>>().HasTableName(tableName).HasSchemaName(SchemaName)
+				.Property(n => n.Key).IsPrimaryKey().IsIdentity()
+				.Property(n => n.UserKey)
+				.Property(n => n.When)
+				.Property(n => n.Currency)
+				.Property(n => n.Amount)
+				.Property(n => n.Description).IsNullable();
 		}
 
 		private PropertyMappingBuilder<BudgetLogEntryDao<T>> ConfigureExpense<T>(
-			FluentMappingBuilder b,
-			string tableName)
-			where T : BudgetLogEntry
-		{
-			return ConfigureBase<T>(b, tableName)
-				.Property(n => n.Category);
-		}
-
-		private PropertyMappingBuilder<BudgetLogEntryDao<T>> ConfigureBase<T>(
 			FluentMappingBuilder b,
 			string tableName)
 			where T : BudgetLogEntry
@@ -49,7 +46,8 @@ namespace MyBudgetPlan.Infrastructure.Data
 				.Property(n => n.When)
 				.Property(n => n.Currency)
 				.Property(n => n.Amount)
-				.Property(n => n.Description).IsNullable();
+				.Property(n => n.Description).IsNullable()
+				.Property(n => n.Category);
 		}
 	}
 }

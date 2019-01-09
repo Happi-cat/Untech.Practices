@@ -1,4 +1,3 @@
-using System;
 using System.Runtime.Serialization;
 using MyBudgetPlan.Domain.ExpenseLog.MonthLog;
 using NodaTime;
@@ -9,8 +8,6 @@ namespace MyBudgetPlan.Domain.ExpenseLog.Actual
 	[DataContract]
 	public class ActualExpense : BudgetLogEntry
 	{
-		private Money _amount;
-
 		private ActualExpense()
 		{
 		}
@@ -34,20 +31,6 @@ namespace MyBudgetPlan.Domain.ExpenseLog.Actual
 
 		[DataMember]
 		public LocalDate When { get; private set; }
-
-		[DataMember]
-		public Money Amount
-		{
-			get => _amount;
-			private set
-			{
-				if (value.Amount < 0) throw new ArgumentException("Amount cannot be negative");
-				_amount = value;
-			}
-		}
-
-		[DataMember]
-		public string Description { get; private set; }
 
 		public void Update(UpdateActualExpense request)
 		{

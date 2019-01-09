@@ -9,8 +9,6 @@ namespace MyBudgetPlan.Domain.IncomeLog.Actual
 	[DataContract]
 	public class ActualIncome : BudgetLogEntry
 	{
-		private Money _amount;
-
 		private ActualIncome()
 		{
 		}
@@ -30,20 +28,6 @@ namespace MyBudgetPlan.Domain.IncomeLog.Actual
 
 		[DataMember]
 		public LocalDate When { get; private set; }
-
-		[DataMember]
-		public Money Amount
-		{
-			get => _amount;
-			private set
-			{
-				if (value.Amount < 0) throw new ArgumentException("Amount cannot be negative");
-				_amount = value;
-			}
-		}
-
-		[DataMember]
-		public string Description { get; set; }
 
 		public void Update(UpdateActualIncome request)
 		{
