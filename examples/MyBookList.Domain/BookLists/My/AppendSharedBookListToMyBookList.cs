@@ -1,10 +1,11 @@
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Untech.Practices.CQRS;
 
 namespace MyBookList.Domain.BookLists.My
 {
 	[DataContract]
-	public class AppendSharedBookListToMyBookList : ICommand
+	public class AppendSharedBookListToMyBookList : ICommand<IEnumerable<MyBook>>
 	{
 		public AppendSharedBookListToMyBookList(int sharedBookListKey)
 		{

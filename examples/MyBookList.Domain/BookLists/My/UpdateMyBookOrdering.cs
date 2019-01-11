@@ -6,16 +6,16 @@ namespace MyBookList.Domain.BookLists.My
 	[DataContract]
 	public class UpdateMyBookOrdering : ICommand
 	{
-		public UpdateMyBookOrdering(int key, MyBookStatus status)
+		public UpdateMyBookOrdering(int key, int? ordering)
 		{
 			Key = key;
-			Status = status;
+			Ordering = ordering;
 		}
 
 		[DataMember]
 		public int Key { get; private set; }
 
 		[DataMember]
-		public MyBookStatus Status { get; private set; }
+		public int? Ordering { get; private set; }
 	}
 }

@@ -6,7 +6,7 @@ using Untech.Practices.CQRS;
 namespace MyBookList.Domain.BookLists.My
 {
 	[DataContract]
-	public class AppendNewBookToMyBookList : ICommand
+	public class AppendNewBookToMyBookList : ICommand<MyBook>
 	{
 		public AppendNewBookToMyBookList(string title, string author, IEnumerable<string> tags)
 		{
