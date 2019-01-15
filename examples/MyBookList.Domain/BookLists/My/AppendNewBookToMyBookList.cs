@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
 using Untech.Practices.CQRS;
 
@@ -8,11 +6,15 @@ namespace MyBookList.Domain.BookLists.My
 	[DataContract]
 	public class AppendNewBookToMyBookList : ICommand<MyBook>
 	{
-		public AppendNewBookToMyBookList(string title, string author, IEnumerable<string> tags)
+		private AppendNewBookToMyBookList()
+		{
+
+		}
+
+		public AppendNewBookToMyBookList(string title, string author)
 		{
 			Title = title;
 			Author = author;
-			Tags = tags?.ToList() ?? new List<string>();
 		}
 
 		[DataMember]
@@ -20,8 +22,5 @@ namespace MyBookList.Domain.BookLists.My
 
 		[DataMember]
 		public string Author { get; private set; }
-
-		[DataMember]
-		public IReadOnlyList<string> Tags { get; private set; }
 	}
 }

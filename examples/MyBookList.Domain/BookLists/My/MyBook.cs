@@ -15,7 +15,7 @@ namespace MyBookList.Domain.BookLists.My
 
 		}
 
-		public MyBook(string author, string title, IEnumerable<string> tags,int? ordering = null,  string notes = null)
+		public MyBook(string author, string title, int? ordering = null,  string notes = null)
 			: this (0, null, author, title, MyBookStatus.Pending,  ordering, notes)
 		{
 

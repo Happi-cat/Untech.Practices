@@ -53,7 +53,7 @@ namespace MyBookList.Infrastructure
 
 		public async Task<MyBook> HandleAsync(AppendNewBookToMyBookList request, CancellationToken cancellationToken)
 		{
-			var book = new MyBook(request.Author, request.Title, request.Tags);
+			var book = new MyBook(request.Author, request.Title);
 
 			book = await _myBookDataStorage.CreateAsync(book, cancellationToken);
 
