@@ -10,4 +10,8 @@
       <ProjectReference Include="..\Shared.Infrastructure\Shared.Infrastructure.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="morelinq" Version="3.1.0" />
+    </ItemGroup>
+
 </Project>

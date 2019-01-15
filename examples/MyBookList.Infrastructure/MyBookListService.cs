@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,14 +15,12 @@ using MyList = MyBookList.Domain.BookLists.My.MyBookList;
 namespace MyBookList.Infrastructure
 {
 	public class MyBookListService : IQueryAsyncHandler<MyBookListQuery, MyList>,
-		IQueryAsyncHandler<BooksToReadQuery, IEnumerable<MyBook>>,
 		ICommandAsyncHandler<AppendExistingBookToMyBookList, MyBook>,
 		ICommandAsyncHandler<AppendNewBookToMyBookList, MyBook>,
 		ICommandAsyncHandler<AppendSharedBookListToMyBookList, IEnumerable<MyBook>>,
 		ICommandAsyncHandler<UpdateMyBookReview, Nothing>,
 		ICommandAsyncHandler<UpdateMyBookStatus, Nothing>,
 		ICommandAsyncHandler<UpdateMyBookOrdering, Nothing>
-
 	{
 		private readonly IAsyncDataStorage<MyBook> _myBookDataStorage;
 		private readonly IQueryDispatcher _queryDispatcher;
@@ -40,29 +37,6 @@ namespace MyBookList.Infrastructure
 			var books = await _queryDispatcher.FetchAsync(new MyBooksQuery(), cancellationToken);
 
 			return new MyList(books);
-		}
-
-		public async Task<IEnumerable<MyBook>> HandleAsync(BooksToReadQuery request, CancellationToken cancellationToken)
-		{
-			var pendingBooks = await _queryDispatcher.FetchAsync(new MyBooksQuery
-			{
-				OnlyStatuses = new []{ MyBookStatus.Pending, MyBookStatus.Postponed }
-			}, cancellationToken);
-
-			if (request.GetLucky)
-			{
-				var random = new Random(unchecked((int)DateTime.UtcNow.Ticks));
-
-				return pendingBooks
-					.Where(b => random.Next(100) > 80)
-					.Take(10)
-					.ToList();
-			}
-
-			return pendingBooks
-				.OrderByDescending(b => b.Ordering)
-				.Take(10)
-				.ToList();
 		}
 
 		public async Task<MyBook> HandleAsync(AppendExistingBookToMyBookList request,
@@ -132,6 +106,5 @@ namespace MyBookList.Infrastructure
 
 			return Nothing.AtAll;
 		}
-
 	}
 }
