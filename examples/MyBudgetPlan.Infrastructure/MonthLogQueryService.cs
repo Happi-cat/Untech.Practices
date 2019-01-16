@@ -2,21 +2,16 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using MyBudgetPlan.Domain;
-using MyBudgetPlan.Domain.ExpenseLog.Actual;
-using MyBudgetPlan.Domain.ExpenseLog.Forecast;
-using MyBudgetPlan.Domain.ExpenseLog.MonthLog;
-using MyBudgetPlan.Domain.IncomeLog.Actual;
-using MyBudgetPlan.Domain.IncomeLog.Forecast;
-using MyBudgetPlan.Domain.IncomeLog.MonthLog;
+using MyBudgetPlan.Domain.Forecasts;
+using MyBudgetPlan.Domain.MonthLogs;
+using MyBudgetPlan.Domain.Transactions;
 using MyBudgetPlan.Infrastructure.Data;
-using Untech.Practices.CQRS;
 using Untech.Practices.CQRS.Dispatching;
 using Untech.Practices.CQRS.Handlers;
 
 namespace MyBudgetPlan.Infrastructure
 {
-	public class MonthLogQueryService : IQueryAsyncHandler<IncomeMonthLogQuery, IncomeMonthLog>,
-		IQueryAsyncHandler<ExpenseMonthLogQuery, ExpenseMonthLog>
+	public class MonthLogQueryService : IQueryAsyncHandler<MonthLogQuery, MonthLog>
 	{
 		private readonly IMoneyCalculator _moneyCalculator;
 		private readonly IQueryDispatcher _queryDispatcher;
@@ -27,27 +22,18 @@ namespace MyBudgetPlan.Infrastructure
 			_queryDispatcher = queryDispatcher;
 		}
 
-		public async Task<IncomeMonthLog> HandleAsync(IncomeMonthLogQuery request, CancellationToken cancellationToken)
+		public async Task<MonthLog> HandleAsync(MonthLogQuery request, CancellationToken cancellationToken)
 		{
-			var actual = await FetchBudgetLogAsync<ActualIncome>(request.When, cancellationToken);
-			var forecast = await FetchBudgetLogAsync<ProjectedIncome>(request.When, cancellationToken);
+			var actual = await FetchBudgetLogAsync<Transaction>(request, cancellationToken);
+			var forecast = await FetchBudgetLogAsync<Forecast>(request, cancellationToken);
 
-			return new IncomeMonthLog(request.When, _moneyCalculator, actual, forecast);
+			return new MonthLog(request.Log, request.When, _moneyCalculator, actual, forecast);
 		}
 
-		public async Task<ExpenseMonthLog> HandleAsync(ExpenseMonthLogQuery request,
-			CancellationToken cancellationToken)
-		{
-			var actual = await FetchBudgetLogAsync<ActualExpense>(request.When, cancellationToken);
-			var forecast = await FetchBudgetLogAsync<ProjectedExpense>(request.When, cancellationToken);
-
-			return new ExpenseMonthLog(request.When, _moneyCalculator, actual, forecast);
-		}
-
-		private Task<IEnumerable<T>> FetchBudgetLogAsync<T>(YearMonth when, CancellationToken cancellationToken)
+		private Task<IEnumerable<T>> FetchBudgetLogAsync<T>(MonthLogQuery request, CancellationToken cancellationToken)
 			where T: BudgetLogEntry
 		{
-			return _queryDispatcher.FetchAsync(new BudgetLogQuery<T>(when), cancellationToken);
+			return _queryDispatcher.FetchAsync(new BudgetLogQuery<T>(request.Log, request.When), cancellationToken);
 		}
 	}
 }

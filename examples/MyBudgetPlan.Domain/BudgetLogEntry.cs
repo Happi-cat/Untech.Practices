@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Runtime.Serialization;
 using Untech.Practices;
 using Untech.Practices.CQRS;
@@ -18,9 +19,10 @@ namespace MyBudgetPlan.Domain
 		{
 		}
 
-		protected BudgetLogEntry(int key)
+		protected BudgetLogEntry(int key, BudgetLogType log)
 		{
 			Key = key;
+			Log = log;
 		}
 
 		[IgnoreDataMember]
@@ -28,6 +30,12 @@ namespace MyBudgetPlan.Domain
 
 		[DataMember]
 		public int Key { get; private set; }
+
+		[DataMember]
+		public BudgetLogType Log { get; private set; }
+
+		[DataMember]
+		public string CategoryKey { get; protected set; }
 
 		[DataMember]
 		public Money Amount

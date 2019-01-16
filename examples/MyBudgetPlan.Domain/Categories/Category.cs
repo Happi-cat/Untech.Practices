@@ -2,18 +2,18 @@ using System;
 using System.Runtime.Serialization;
 using Untech.Practices.DataStorage;
 
-namespace MyBudgetPlan.Domain.ExpenseLog.Category
+namespace MyBudgetPlan.Domain.Categories
 {
 	[DataContract]
-	public class ExpenseCategory : IAggregateRoot<string>
+	public class Category : IAggregateRoot<string>
 	{
 		private const string Delimiter = ":";
 
-		private ExpenseCategory()
+		private Category()
 		{
 		}
 
-		public ExpenseCategory(string key, string title, string description = null)
+		public Category(string key, string title, string description = null)
 		{
 			Key = key;
 			Title = title;

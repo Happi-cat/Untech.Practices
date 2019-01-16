@@ -2,17 +2,17 @@ using System.Runtime.Serialization;
 using Untech.Practices;
 using Untech.Practices.CQRS;
 
-namespace MyBudgetPlan.Domain.ExpenseLog.Forecast
+namespace MyBudgetPlan.Domain.Forecasts
 {
 	[DataContract]
-	public class UpdateProjectedExpense : ICommand<ProjectedExpense>
+	public class UpdateForecast : ICommand<Forecast>
 	{
-		private UpdateProjectedExpense()
+		private UpdateForecast()
 		{
 
 		}
 
-		public UpdateProjectedExpense(int key, string categoryKey, Money amount)
+		public UpdateForecast(int key, string categoryKey, Money amount)
 		{
 			Key = key;
 			CategoryKey = categoryKey;

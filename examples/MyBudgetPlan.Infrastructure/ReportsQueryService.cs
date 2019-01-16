@@ -1,12 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MyBudgetPlan.Domain;
-using MyBudgetPlan.Domain.ExpenseLog.Category;
-using MyBudgetPlan.Domain.ExpenseLog.MonthLog;
-using MyBudgetPlan.Domain.IncomeLog.MonthLog;
+using MyBudgetPlan.Domain.Categories;
+using MyBudgetPlan.Domain.MonthLogs;
 using MyBudgetPlan.Domain.Reports.Annual;
 using MyBudgetPlan.Domain.Reports.Monthly;
 using NodaTime;
@@ -20,8 +18,7 @@ namespace MyBudgetPlan.Infrastructure
 {
 	public class ReportsQueryService : IQueryAsyncHandler<MonthlyBudgetReportQuery, MonthlyBudgetReport>,
 		IQueryAsyncHandler<AnnualBudgetReportQuery, AnnualBudgetReport>,
-		INotificationAsyncHandler<IncomeMonthLogChanged>,
-		INotificationAsyncHandler<ExpenseMonthLogChanged>
+		INotificationAsyncHandler<MonthLogChanged>
 	{
 		private readonly IUserContext _userContext;
 		private readonly IMoneyCalculator _moneyCalculator;
@@ -49,9 +46,9 @@ namespace MyBudgetPlan.Infrastructure
 				return cachedReport;
 			}
 
-			var categories = await FetchAsync(new ExpenseCategoriesQuery(), cancellationToken);
-			var expenseLog = await FetchAsync(new ExpenseMonthLogQuery(request.When), cancellationToken);
-			var incomeLog = await FetchAsync(new IncomeMonthLogQuery(request.When), cancellationToken);
+			var categories = await FetchAsync(new CategoriesQuery(), cancellationToken);
+			var expenseLog = await FetchAsync(new MonthLogQuery(BudgetLogType.Expenses, request.When), cancellationToken);
+			var incomeLog = await FetchAsync(new MonthLogQuery(BudgetLogType.Incomes, request.When), cancellationToken);
 
 			var report = new MonthlyBudgetReport(request.When, _moneyCalculator, categories, incomeLog, expenseLog);
 
@@ -67,13 +64,7 @@ namespace MyBudgetPlan.Infrastructure
 			return new AnnualBudgetReport(_moneyCalculator, monthlyReports);
 		}
 
-		public async Task PublishAsync(IncomeMonthLogChanged notification, CancellationToken cancellationToken)
-		{
-			var cacheKey = GetCacheKey(notification.When);
-			await _cacheStorage.DropAsync(cacheKey, cancellationToken);
-		}
-
-		public async Task PublishAsync(ExpenseMonthLogChanged notification, CancellationToken cancellationToken)
+		public async Task PublishAsync(MonthLogChanged notification, CancellationToken cancellationToken)
 		{
 			var cacheKey = GetCacheKey(notification.When);
 			await _cacheStorage.DropAsync(cacheKey, cancellationToken);

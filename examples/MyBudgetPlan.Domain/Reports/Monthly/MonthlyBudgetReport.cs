@@ -1,10 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using MyBudgetPlan.Domain.ExpenseLog.Category;
-using MyBudgetPlan.Domain.ExpenseLog.MonthLog;
-using MyBudgetPlan.Domain.IncomeLog.MonthLog;
-using Untech.Practices;
+using MyBudgetPlan.Domain.Categories;
+using MyBudgetPlan.Domain.MonthLogs;
 
 namespace MyBudgetPlan.Domain.Reports.Monthly
 {
@@ -16,10 +15,13 @@ namespace MyBudgetPlan.Domain.Reports.Monthly
 		}
 
 		public MonthlyBudgetReport(YearMonth when, IMoneyCalculator calculator,
-			IEnumerable<ExpenseCategory> categories,
-			IncomeMonthLog incomeLog,
-			ExpenseMonthLog expenseLog)
+			IEnumerable<Category> categories,
+			MonthLog incomeLog,
+			MonthLog expenseLog)
 		{
+			if (incomeLog.Log != BudgetLogType.Incomes) throw new ArgumentException(nameof(incomeLog));
+			if (expenseLog.Log != BudgetLogType.Expenses) throw new ArgumentException(nameof(expenseLog));
+
 			When = when;
 
 			Income = incomeLog.Total;
@@ -45,8 +47,8 @@ namespace MyBudgetPlan.Domain.Reports.Monthly
 		public IEnumerable<ExpenseCategoryReport> Expenses { get; private set; }
 
 		private IEnumerable<ExpenseCategoryReport> GetExpensesReport(IMoneyCalculator calculator,
-			IEnumerable<ExpenseCategory> categories,
-			ExpenseMonthLog expenseLog)
+			IEnumerable<Category> categories,
+			MonthLog expenseLog)
 		{
 			return categories.Select(category => new ExpenseCategoryReport(
 				category,

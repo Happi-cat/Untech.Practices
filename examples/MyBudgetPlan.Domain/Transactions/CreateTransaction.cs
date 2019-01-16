@@ -3,22 +3,26 @@ using NodaTime;
 using Untech.Practices;
 using Untech.Practices.CQRS;
 
-namespace MyBudgetPlan.Domain.IncomeLog.Actual
+namespace MyBudgetPlan.Domain.Transactions
 {
 	[DataContract]
-	public class CreateActualIncome : ICommand<ActualIncome>
+	public class CreateTransaction : ICommand<Transaction>
 	{
-		private CreateActualIncome()
+		private CreateTransaction()
 		{
 
 		}
 
-		public CreateActualIncome(string categoryKey, LocalDate when, Money amount)
+		public CreateTransaction(BudgetLogType log, string categoryKey, LocalDate when, Money amount)
 		{
+			Log = log;
 			CategoryKey = categoryKey;
 			When = when;
 			Amount = amount;
 		}
+
+		[DataMember]
+		public BudgetLogType Log { get; private set; }
 
 		[DataMember]
 		public string CategoryKey { get; private set; }

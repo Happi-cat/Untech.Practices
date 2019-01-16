@@ -1,17 +1,17 @@
 using System.Runtime.Serialization;
 using Untech.Practices.CQRS;
 
-namespace MyBudgetPlan.Domain.IncomeLog.Actual
+namespace MyBudgetPlan.Domain.Transactions
 {
 	[DataContract]
-	public class DeleteActualIncome : ICommand
+	public class DeleteTransaction : ICommand
 	{
-		private DeleteActualIncome()
+		private DeleteTransaction()
 		{
 
 		}
 
-		public DeleteActualIncome(int key)
+		public DeleteTransaction(int key)
 		{
 			Key = key;
 		}

@@ -1,17 +1,17 @@
 using System.Runtime.Serialization;
 using Untech.Practices.CQRS;
 
-namespace MyBudgetPlan.Domain.ExpenseLog.Forecast
+namespace MyBudgetPlan.Domain.Forecasts
 {
 	[DataContract]
-	public class DeleteProjectedExpense : ICommand
+	public class DeleteForecast : ICommand
 	{
-		private DeleteProjectedExpense()
+		private DeleteForecast()
 		{
 
 		}
 
-		public DeleteProjectedExpense(int key)
+		public DeleteForecast(int key)
 		{
 			Key = key;
 		}

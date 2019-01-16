@@ -1,6 +1,6 @@
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
-using MyBudgetPlan.Domain.ExpenseLog.Forecast;
+using MyBudgetPlan.Domain.Transactions;
 using Untech.Practices;
 using Untech.Practices.CQRS.Dispatching;
 using Untech.Practices.CQRS.Handlers;
@@ -8,23 +8,23 @@ using Untech.Practices.DataStorage;
 
 namespace MyBudgetPlan.Infrastructure
 {
-	public class ProjectedExpenseService : ICommandAsyncHandler<CreateProjectedExpense, ProjectedExpense>,
-		ICommandAsyncHandler<UpdateProjectedExpense, ProjectedExpense>,
-		ICommandAsyncHandler<DeleteProjectedExpense, Nothing>
+	public class TransactionService : ICommandAsyncHandler<CreateTransaction, Transaction>,
+		ICommandAsyncHandler<UpdateTransaction, Transaction>,
+		ICommandAsyncHandler<DeleteTransaction, Nothing>
 	{
-		private readonly IAsyncDataStorage<ProjectedExpense> _dataStorage;
+		private readonly IAsyncDataStorage<Transaction> _dataStorage;
 		private readonly INotificationDispatcher _notificationDispatcher;
 
-		public ProjectedExpenseService(IAsyncDataStorage<ProjectedExpense> dataStorage,
+		public TransactionService(IAsyncDataStorage<Transaction> dataStorage,
 			INotificationDispatcher notificationDispatcher)
 		{
 			_dataStorage = dataStorage;
 			_notificationDispatcher = notificationDispatcher;
 		}
 
-		public async Task<ProjectedExpense> HandleAsync(CreateProjectedExpense request, CancellationToken cancellationToken)
+		public async Task<Transaction> HandleAsync(CreateTransaction request, CancellationToken cancellationToken)
 		{
-			var item = new ProjectedExpense(request);
+			var item = new Transaction(request);
 
 			item = await _dataStorage.CreateAsync(item, cancellationToken);
 			await PublishNotifications(item);
@@ -32,7 +32,7 @@ namespace MyBudgetPlan.Infrastructure
 			return item;
 		}
 
-		public async Task<ProjectedExpense> HandleAsync(UpdateProjectedExpense request, CancellationToken cancellationToken)
+		public async Task<Transaction> HandleAsync(UpdateTransaction request, CancellationToken cancellationToken)
 		{
 			var item = await _dataStorage.FindAsync(request.Key, cancellationToken);
 
@@ -44,7 +44,7 @@ namespace MyBudgetPlan.Infrastructure
 			return item;
 		}
 
-		public async Task<Nothing> HandleAsync(DeleteProjectedExpense request, CancellationToken cancellationToken)
+		public async Task<Nothing> HandleAsync(DeleteTransaction request, CancellationToken cancellationToken)
 		{
 			var item = await _dataStorage.FindAsync(request.Key, cancellationToken);
 
@@ -53,7 +53,7 @@ namespace MyBudgetPlan.Infrastructure
 			return Nothing.AtAll;
 		}
 
-		private Task PublishNotifications(ProjectedExpense item)
+		private Task PublishNotifications(Transaction item)
 		{
 			return _notificationDispatcher.PublishAsync(item, CancellationToken.None);
 		}

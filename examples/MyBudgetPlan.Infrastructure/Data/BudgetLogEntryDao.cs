@@ -13,10 +13,11 @@ namespace MyBudgetPlan.Infrastructure.Data
 
 		}
 
-		public BudgetLogEntryDao(int key, int userKey, DateTime when, Money amount)
+		public BudgetLogEntryDao(int key, int userKey, BudgetLogType log, DateTime when, Money amount)
 		{
 			Key = key;
 			UserKey = userKey;
+			Log = log;
 			When = when;
 			Currency = amount.Currency.Id;
 			Amount = amount.Amount;
@@ -24,6 +25,7 @@ namespace MyBudgetPlan.Infrastructure.Data
 
 		public int Key { get; private set; }
 		public int UserKey { get; private set; }
+		public BudgetLogType Log { get; protected set; }
 		public DateTime When { get; private set; }
 		public string Currency { get; private set; }
 		public double Amount { get; private set; }

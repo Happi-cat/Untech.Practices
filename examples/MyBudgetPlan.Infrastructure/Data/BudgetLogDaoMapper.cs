@@ -1,69 +1,29 @@
-using MyBudgetPlan.Domain.ExpenseLog.Actual;
-using MyBudgetPlan.Domain.ExpenseLog.Forecast;
-using MyBudgetPlan.Domain.IncomeLog.Actual;
-using MyBudgetPlan.Domain.IncomeLog.Forecast;
+using MyBudgetPlan.Domain.Forecasts;
+using MyBudgetPlan.Domain.Transactions;
 using NodaTime;
 using Untech.Practices;
 using Untech.Practices.UserContext;
 
 namespace MyBudgetPlan.Infrastructure.Data
 {
-	public struct BudgetLogDaoMapper : IBudgetLogDaoMapper<ActualIncome>,
-		IBudgetLogDaoMapper<ProjectedIncome>,
-		IBudgetLogDaoMapper<ActualExpense>,
-		IBudgetLogDaoMapper<ProjectedExpense>
+	public struct BudgetLogDaoMapper : IBudgetLogDaoMapper<Transaction>,
+		IBudgetLogDaoMapper<Forecast>
 	{
-		public ActualIncome FromDao(IUserContext userContext, BudgetLogEntryDao<ActualIncome> dao)
+		public Transaction FromDao(IUserContext userContext, BudgetLogEntryDao<Transaction> dao)
 		{
-			return new ActualIncome(dao.Key,
-				LocalDate.FromDateTime(dao.When),
-				new Money(dao.Amount, new Currency(dao.Currency, dao.Currency)),
-				dao.Description);
-		}
-
-		public BudgetLogEntryDao<ActualIncome> ToDao(IUserContext userContext, ActualIncome entity)
-		{
-			return new BudgetLogEntryDao<ActualIncome>(entity.Key,
-				userContext.UserKey,
-				entity.When.ToDateTimeUnspecified(),
-				entity.Amount)
-			{
-				Description = entity.Description
-			};
-		}
-
-		public ProjectedIncome FromDao(IUserContext userContext, BudgetLogEntryDao<ProjectedIncome> dao)
-		{
-			return new ProjectedIncome(dao.Key,
-				LocalDate.FromDateTime(dao.When),
-				new Money(dao.Amount, new Currency(dao.Currency, dao.Currency)),
-				dao.Description);
-		}
-
-		public BudgetLogEntryDao<ProjectedIncome> ToDao(IUserContext userContext, ProjectedIncome entity)
-		{
-			return new BudgetLogEntryDao<ProjectedIncome>(entity.Key,
-				userContext.UserKey,
-				((LocalDate)entity.When).ToDateTimeUnspecified(),
-				entity.Amount)
-			{
-				Description = entity.Description
-			};
-		}
-
-		public ActualExpense FromDao(IUserContext userContext, BudgetLogEntryDao<ActualExpense> dao)
-		{
-			return new ActualExpense(dao.Key,
+			return new Transaction(dao.Key,
+				dao.Log,
 				dao.Category,
 				LocalDate.FromDateTime(dao.When),
 				new Money(dao.Amount, new Currency(dao.Currency, dao.Currency)),
 				dao.Description);
 		}
 
-		public BudgetLogEntryDao<ActualExpense> ToDao(IUserContext userContext, ActualExpense entity)
+		public BudgetLogEntryDao<Transaction> ToDao(IUserContext userContext, Transaction entity)
 		{
-			return new BudgetLogEntryDao<ActualExpense>(entity.Key,
+			return new BudgetLogEntryDao<Transaction>(entity.Key,
 				userContext.UserKey,
+				entity.Log,
 				entity.When.ToDateTimeUnspecified(),
 				entity.Amount)
 			{
@@ -72,19 +32,21 @@ namespace MyBudgetPlan.Infrastructure.Data
 			};
 		}
 
-		public ProjectedExpense FromDao(IUserContext userContext, BudgetLogEntryDao<ProjectedExpense> dao)
+		public Forecast FromDao(IUserContext userContext, BudgetLogEntryDao<Forecast> dao)
 		{
-			return new ProjectedExpense(dao.Key,
+			return new Forecast(dao.Key,
+				dao.Log,
 				dao.Category,
 				LocalDate.FromDateTime(dao.When),
 				new Money(dao.Amount, new Currency(dao.Currency, dao.Currency)),
 				dao.Description);
 		}
 
-		public BudgetLogEntryDao<ProjectedExpense> ToDao(IUserContext userContext, ProjectedExpense entity)
+		public BudgetLogEntryDao<Forecast> ToDao(IUserContext userContext, Forecast entity)
 		{
-			return new BudgetLogEntryDao<ProjectedExpense>(entity.Key,
+			return new BudgetLogEntryDao<Forecast>(entity.Key,
 				userContext.UserKey,
+				entity.Log,
 				((LocalDate)entity.When).ToDateTimeUnspecified(),
 				entity.Amount)
 			{

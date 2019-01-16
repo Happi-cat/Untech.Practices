@@ -1,25 +1,25 @@
 using System;
 using System.Runtime.Serialization;
-using MyBudgetPlan.Domain.ExpenseLog.MonthLog;
+using MyBudgetPlan.Domain.MonthLogs;
 using Untech.Practices;
 
-namespace MyBudgetPlan.Domain.ExpenseLog.Forecast
+namespace MyBudgetPlan.Domain.Forecasts
 {
 	[DataContract]
-	public class ProjectedExpense : BudgetLogEntry
+	public class Forecast : BudgetLogEntry
 	{
-		private ProjectedExpense()
+		private Forecast()
 		{
 		}
 
-		public ProjectedExpense(CreateProjectedExpense request)
-			: this(0, request.CategoryKey, request.When, request.Amount, request.Description)
+		public Forecast(CreateForecast request)
+			: this(0, request.Log, request.CategoryKey, request.When, request.Amount, request.Description)
 		{
-			Raise(new ExpenseMonthLogChanged(request.When));
+			Raise(new MonthLogChanged(request.Log, request.When));
 		}
 
-		public ProjectedExpense(int key, string categoryKey, YearMonth when, Money amount, string description = null)
-			: base(key)
+		public Forecast(int key, BudgetLogType log, string categoryKey, YearMonth when, Money amount, string description = null)
+			: base(key, log)
 		{
 			CategoryKey = categoryKey;
 			When = when;
@@ -28,12 +28,9 @@ namespace MyBudgetPlan.Domain.ExpenseLog.Forecast
 		}
 
 		[DataMember]
-		public string CategoryKey { get; private set; }
-
-		[DataMember]
 		public YearMonth When { get; private set; }
 
-		public void Update(UpdateProjectedExpense request)
+		public void Update(UpdateForecast request)
 		{
 			UpdateCategory(request.CategoryKey);
 			UpdateAmount(request.Amount);
@@ -45,7 +42,7 @@ namespace MyBudgetPlan.Domain.ExpenseLog.Forecast
 			if (amount.Amount < 0) throw new ArgumentException("Amount cannot be negative", nameof(amount));
 
 			Amount = amount;
-			Raise(new ExpenseMonthLogChanged(When));
+			Raise(new MonthLogChanged(Log, When));
 		}
 
 		public void UpdateCategory(string categoryKey)
@@ -54,7 +51,7 @@ namespace MyBudgetPlan.Domain.ExpenseLog.Forecast
 			CategoryKey = categoryKey;
 
 			bool shouldRaise = Key != 0 && oldValue != categoryKey;
-			if (shouldRaise) Raise(new ExpenseMonthLogChanged(When));
+			if (shouldRaise) Raise(new MonthLogChanged(Log, When));
 		}
 
 		public void UpdateDescription(string description)

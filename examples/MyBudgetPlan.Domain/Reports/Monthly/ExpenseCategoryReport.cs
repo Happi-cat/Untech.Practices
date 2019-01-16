@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Runtime.Serialization;
-using MyBudgetPlan.Domain.ExpenseLog.Category;
-using MyBudgetPlan.Domain.ExpenseLog.MonthLog;
+using MyBudgetPlan.Domain.Categories;
+using MyBudgetPlan.Domain.MonthLogs;
 using Untech.Practices;
 
 namespace MyBudgetPlan.Domain.Reports.Monthly
@@ -9,9 +9,9 @@ namespace MyBudgetPlan.Domain.Reports.Monthly
 	[DataContract]
 	public class ExpenseCategoryReport
 	{
-		public ExpenseCategoryReport(ExpenseCategory category,
+		public ExpenseCategoryReport(Category category,
 			IMoneyCalculator calculator,
-			ExpenseMonthLog expenseLog)
+			MonthLog expenseLog)
 		{
 			CategoryKey = category.Key;
 			Title = category.Title;
@@ -21,7 +21,7 @@ namespace MyBudgetPlan.Domain.Reports.Monthly
 				expenseLog.Transactions
 					.Where(n => category.IsSameOrParentOf(n.CategoryKey))
 					.Select(n => n.Amount),
-				expenseLog.Forecast
+				expenseLog.Forecasts
 					.Where(n => category.IsSameOrParentOf(n.CategoryKey))
 					.Select(n => n.Amount)
 			);

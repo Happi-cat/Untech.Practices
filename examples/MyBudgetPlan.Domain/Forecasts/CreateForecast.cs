@@ -1,30 +1,33 @@
 using System.Runtime.Serialization;
-using NodaTime;
 using Untech.Practices;
 using Untech.Practices.CQRS;
 
-namespace MyBudgetPlan.Domain.IncomeLog.Forecast
+namespace MyBudgetPlan.Domain.Forecasts
 {
 	[DataContract]
-	public class CreateProjectedIncome : ICommand<ProjectedIncome>
+	public class CreateForecast : ICommand<Forecast>
 	{
-		private CreateProjectedIncome()
+		private CreateForecast()
 		{
 
 		}
 
-		public CreateProjectedIncome(string categoryKey, YearMonth when, Money amount)
+		public CreateForecast(BudgetLogType log, string categoryKey, YearMonth when, Money amount)
 		{
+			Log = log;
 			CategoryKey = categoryKey;
 			When = when;
 			Amount = amount;
 		}
 
 		[DataMember]
+		public BudgetLogType Log { get; private set; }
+
+		[DataMember]
 		public string CategoryKey { get; private set; }
 
 		[DataMember]
-		public LocalDate When { get; private set; }
+		public YearMonth When { get; private set; }
 
 		[DataMember]
 		public Money Amount { get; private set; }
