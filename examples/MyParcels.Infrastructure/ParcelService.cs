@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using LinqToDB;
 using MyParcels.Domain;
-using MyParcels.Infrastructure.Data;
 using Untech.Practices;
 using Untech.Practices.CQRS.Handlers;
 using Untech.Practices.UserContext;
@@ -29,26 +28,21 @@ namespace MyParcels.Infrastructure
 		{
 			using (var context = GetContext())
 			{
-				var daos = await GetMyParcels(context).ToListAsync(cancellationToken);
+				var items = await GetMyParcels(context).ToListAsync(cancellationToken);
 
-				return daos
-					.Select(n => new Parcel(n.Key, n.Description))
-					.ToList();
+				return items;
 			}
 		}
 
 		public async Task<Parcel> HandleAsync(CreateOrUpdateParcel request, CancellationToken cancellationToken)
 		{
-			var dao = new ParcelDao(request.TrackingNumber, _userContext.UserKey)
-			{
-				Description = request.Description
-			};
+			var item = new Parcel(request.TrackingNumber, _userContext.UserKey, request.Description);
 
 			using (var context = GetContext())
 			{
-				await context.InsertOrReplaceAsync(dao, token: cancellationToken);
+				await context.InsertOrReplaceAsync(item, token: cancellationToken);
 
-				return new Parcel(dao.Key, dao.Description);
+				return item;
 			}
 		}
 
@@ -69,9 +63,9 @@ namespace MyParcels.Infrastructure
 			return _dataContext();
 		}
 
-		private IQueryable<ParcelDao> GetMyParcels(IDataContext context)
+		private IQueryable<Parcel> GetMyParcels(IDataContext context)
 		{
-			return context.GetTable<ParcelDao>()
+			return context.GetTable<Parcel>()
 				.Where(p => p.UserKey == _userContext.UserKey);
 		}
 	}

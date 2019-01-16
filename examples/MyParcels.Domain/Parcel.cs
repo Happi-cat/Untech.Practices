@@ -11,14 +11,18 @@ namespace MyParcels.Domain
 
 		}
 
-		public Parcel(string trackingNumber, string description = null)
+		public Parcel(string trackingNumber, int userKey, string description = null)
 		{
 			Key = trackingNumber;
+			UserKey = userKey;
 			Description = description;
 		}
 
 		[DataMember]
 		public string Key { get; private set; }
+
+		[DataMember]
+		public int UserKey { get; private set; }
 
 		[DataMember]
 		public string Description { get; private set; }
