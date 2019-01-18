@@ -25,7 +25,7 @@ namespace MyBudgetPlan.Infrastructure.Data
 		public async Task<IEnumerable<T>> HandleAsync(BudgetLogQuery<T> request, CancellationToken cancellationToken)
 		{
 			var from = ((LocalDate)request.When).ToDateTimeUnspecified();
-			var to = from.AddDays(1);
+			var to = from.AddMonths(1);
 
 			using (var dataContext = GetContext())
 			{
