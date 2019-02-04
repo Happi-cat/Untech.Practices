@@ -1,7 +1,7 @@
 ﻿namespace Untech.Practices.Notifications.Sms
 {
 	/// <summary>
-	/// Represents dummy sms queue.
+	///     Represents dummy sms queue.
 	/// </summary>
 	public class NullSmsQueue : ISmsQueue
 	{

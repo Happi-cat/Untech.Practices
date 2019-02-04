@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Untech.Practices.CQRS.Handlers;
@@ -27,13 +28,13 @@ namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 
 		public Task InvokeAsync(object args, CancellationToken cancellationToken)
 		{
-			var input = (TIn)args;
+			TIn input = (TIn)args;
 
-			var syncHandlers = _resolver
+			IEnumerable<Task> syncHandlers = _resolver
 				.ResolveMany<INotificationHandler<TIn>>()
 				.Select(RunSync);
 
-			var asyncHandlers = _resolver
+			IEnumerable<Task> asyncHandlers = _resolver
 				.ResolveMany<INotificationAsyncHandler<TIn>>()
 				.Select(RunAsync);
 

@@ -3,7 +3,6 @@
 namespace Untech.Practices.Monads
 {
 	/// <summary>
-	/// 
 	/// </summary>
 	public static class MaybeExtensions
 	{
@@ -26,16 +25,14 @@ namespace Untech.Practices.Monads
 
 		public static Maybe<B> Bind<A, B>(this Maybe<A> a, Func<A, Maybe<B>> func)
 		{
-			return a.HasValue ?
-				func(a.Value) :
-				Maybe<B>.Nothing;
+			return a.HasValue ? func(a.Value) : Maybe<B>.Nothing;
 		}
 
 		public static Maybe<C> SelectMany<A, B, C>(this Maybe<A> a, Func<A, Maybe<B>> func, Func<A, B, C> select)
 		{
 			return a.Bind(aval =>
 				func(aval).Bind(bval =>
-						select(aval, bval).ToMaybe()));
+					select(aval, bval).ToMaybe()));
 		}
 
 		public static Maybe<B> Select<A, B>(this Maybe<A> a, Func<A, Maybe<B>> func)

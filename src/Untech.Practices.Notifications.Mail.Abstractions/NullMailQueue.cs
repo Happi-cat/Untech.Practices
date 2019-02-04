@@ -1,7 +1,7 @@
 ﻿namespace Untech.Practices.Notifications.Mail
 {
 	/// <summary>
-	/// Represents dummy mail queue.
+	///     Represents dummy mail queue.
 	/// </summary>
 	public class NullMailQueue : IMailQueue
 	{

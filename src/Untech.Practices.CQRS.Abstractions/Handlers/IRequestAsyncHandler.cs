@@ -7,7 +7,7 @@ namespace Untech.Practices.CQRS.Handlers
 		where TIn : IRequest<TOut>
 	{
 		/// <summary>
-		/// Handles request asynchronously and returns result.
+		///     Handles request asynchronously and returns result.
 		/// </summary>
 		/// <param name="request">Request to be handled.</param>
 		/// <param name="cancellationToken">The token that used for propagation notification that task should be canceled.</param>

@@ -4,15 +4,15 @@ using System.Threading.Tasks;
 namespace Untech.Practices.CQRS.Dispatching
 {
 	/// <summary>
-	/// Represents interface of a class that dispatches CQRS query-requests to handlers and returns execution results.
+	///     Represents interface of a class that dispatches CQRS query-requests to handlers and returns execution results.
 	/// </summary>
 	/// <remarks>
-	/// <para>Supports <see cref="IQuery{TResult}"/> CQRS requests.</para>
+	///     <para>Supports <see cref="IQuery{TResult}" /> CQRS requests.</para>
 	/// </remarks>
 	public interface IQueryDispatcher
 	{
 		/// <summary>
-		/// Fetches data of type <typeparamref name="TResult"/> for the specified <paramref name="query"/>.
+		///     Fetches data of type <typeparamref name="TResult" /> for the specified <paramref name="query" />.
 		/// </summary>
 		/// <typeparam name="TResult">The type of result.</typeparam>
 		/// <param name="query">The query to be processed.</param>
@@ -20,7 +20,7 @@ namespace Untech.Practices.CQRS.Dispatching
 		TResult Fetch<TResult>(IQuery<TResult> query);
 
 		/// <summary>
-		/// Fetches asynchronously data of type <typeparamref name="TResult"/> for the specified <paramref name="query"/>.
+		///     Fetches asynchronously data of type <typeparamref name="TResult" /> for the specified <paramref name="query" />.
 		/// </summary>
 		/// <typeparam name="TResult">The type of result.</typeparam>
 		/// <param name="query">The query to be processed.</param>

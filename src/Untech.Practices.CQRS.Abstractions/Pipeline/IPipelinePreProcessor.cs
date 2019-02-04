@@ -3,13 +3,14 @@
 namespace Untech.Practices.CQRS.Pipeline
 {
 	/// <summary>
-	/// Defines a pipeline step that will be triggered beefore <see cref="IRequestHandler{TIn,TOut}"/> or <see cref="IRequestAsyncHandler{TIn,TOut}"/>
+	///     Defines a pipeline step that will be triggered beefore <see cref="IRequestHandler{TIn,TOut}" /> or
+	///     <see cref="IRequestAsyncHandler{TIn,TOut}" />
 	/// </summary>
 	/// <typeparam name="TRequest">CQRS request type.</typeparam>
 	public interface IPipelinePreProcessor<in TRequest>
 	{
 		/// <summary>
-		/// Pre process <paramref name="request"/>.
+		///     Pre process <paramref name="request" />.
 		/// </summary>
 		/// <param name="request">CQRS request.</param>
 		void Process(TRequest request);

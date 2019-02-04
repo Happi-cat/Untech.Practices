@@ -4,15 +4,18 @@ using System.Threading.Tasks;
 namespace Untech.Practices.CQRS.Dispatching
 {
 	/// <summary>
-	/// Represents interface of a class that dispatches CQRS requests to handlers and returns execution results.
+	///     Represents interface of a class that dispatches CQRS requests to handlers and returns execution results.
 	/// </summary>
 	/// <remarks>
-	/// <para>Supports <see cref="IQuery{TResult}"/>, <see cref="ICommand{TResponse}"/>, <see cref="INotification"/> CQRS requests.</para>
+	///     <para>
+	///         Supports <see cref="IQuery{TResult}" />, <see cref="ICommand{TResponse}" />, <see cref="INotification" />
+	///         CQRS requests.
+	///     </para>
 	/// </remarks>
 	public interface IDispatcher : IQueryDispatcher, INotificationDispatcher
 	{
 		/// <summary>
-		/// Processes the incoming <paramref name="command"/> and returns execution result.
+		///     Processes the incoming <paramref name="command" /> and returns execution result.
 		/// </summary>
 		/// <typeparam name="TResult">The type of result.</typeparam>
 		/// <param name="command">The command to be processed.</param>
@@ -20,7 +23,7 @@ namespace Untech.Practices.CQRS.Dispatching
 		TResult Process<TResult>(ICommand<TResult> command);
 
 		/// <summary>
-		/// Processes asynchronously the incoming <paramref name="command"/> and returns execution result.
+		///     Processes asynchronously the incoming <paramref name="command" /> and returns execution result.
 		/// </summary>
 		/// <typeparam name="TResult">The type of result.</typeparam>
 		/// <param name="command">The command to be processed.</param>

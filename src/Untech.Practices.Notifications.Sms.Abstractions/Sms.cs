@@ -4,20 +4,20 @@ using System.Runtime.Serialization;
 namespace Untech.Practices.Notifications.Sms
 {
 	/// <summary>
-	/// Represents SMS info that can be used for rendering and sending.
+	///     Represents SMS info that can be used for rendering and sending.
 	/// </summary>
 	[DataContract]
 	public class Sms
 	{
 		/// <summary>
-		/// For serializers
+		///     For serializers
 		/// </summary>
 		private Sms()
 		{
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Sms"/> with a predefined <paramref name="toNumber"/> and arguments.
+		///     Initializes a new instance of the <see cref="Sms" /> with a predefined <paramref name="toNumber" /> and arguments.
 		/// </summary>
 		/// <param name="toNumber">Recepients number</param>
 		/// <param name="arguments"></param>
@@ -31,19 +31,19 @@ namespace Untech.Practices.Notifications.Sms
 		}
 
 		/// <summary>
-		/// Gets recepients phone number.
+		///     Gets recepients phone number.
 		/// </summary>
 		[DataMember]
 		public string ToNumber { get; private set; }
 
 		/// <summary>
-		/// Gets the template key.
+		///     Gets the template key.
 		/// </summary>
 		[DataMember]
 		public string TemplateKey => TemplateArguments.TemplateKey;
 
 		/// <summary>
-		/// Gets additional arguments.
+		///     Gets additional arguments.
 		/// </summary>
 		[DataMember]
 		public ISmsTemplateArguments TemplateArguments { get; private set; }

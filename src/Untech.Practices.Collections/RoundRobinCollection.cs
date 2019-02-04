@@ -4,9 +4,9 @@ using System.Collections.Generic;
 namespace Untech.Practices.Collections
 {
 	/// <summary>
-	/// Represents circle-collection that <see cref="Push(T)" /> element as a head element
-	/// and <see cref="Pop" /> head element setting new head to next element.
-	/// Moves head element pointer via <see cref="Peek" /> and <see cref="IEnumerator.MoveNext" /> to element after head.
+	///     Represents circle-collection that <see cref="Push(T)" /> element as a head element
+	///     and <see cref="Pop" /> head element setting new head to next element.
+	///     Moves head element pointer via <see cref="Peek" /> and <see cref="IEnumerator.MoveNext" /> to element after head.
 	/// </summary>
 	/// <typeparam name="T">Element type.</typeparam>
 	/// <seealso cref="T:System.Collections.Generic.IEnumerable`1" />
@@ -17,29 +17,37 @@ namespace Untech.Practices.Collections
 		private Node _tail;
 
 		/// <summary>
-		/// Initalizes a new instance of the <see cref="RoundRobinCollection{T}"/> class.
+		///     Initalizes a new instance of the <see cref="RoundRobinCollection{T}" /> class.
 		/// </summary>
 		public RoundRobinCollection()
 		{
-
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="RoundRobinCollection{T}"/> with elements from <paramref name="source"/>.
+		///     Initializes a new instance of the <see cref="RoundRobinCollection{T}" /> with elements from
+		///     <paramref name="source" />.
 		/// </summary>
 		/// <param name="source"></param>
 		public RoundRobinCollection(IEnumerable<T> source)
 		{
 			if (source == null) return;
 
-			foreach (var item in source)
-			{
-				Push(item);
-			}
+			foreach (T item in source) Push(item);
+		}
+
+		/// <inheritdoc />
+		public IEnumerator<T> GetEnumerator()
+		{
+			return new Enumerator(this);
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
 		}
 
 		/// <summary>
-		/// Inserts an object at the head.
+		///     Inserts an object at the head.
 		/// </summary>
 		/// <param name="item">The item.</param>
 		public void Push(T item)
@@ -64,47 +72,39 @@ namespace Untech.Practices.Collections
 		}
 
 		/// <summary>
-		/// Removes and returns the head object.
+		///     Removes and returns the head object.
 		/// </summary>
 		/// <returns></returns>
 		public T Pop()
 		{
 			lock (_syncRoot)
 			{
-				if (_tail == null)
-				{
-					return default(T);
-				}
+				if (_tail == null) return default;
 
 				if (_tail.Next == _tail)
 				{
-					var oldNode = _tail;
+					Node oldNode = _tail;
 					_tail = null;
 					return oldNode.Value;
 				}
 
-				var oldHead = _tail.Next;
+				Node oldHead = _tail.Next;
 				_tail.Next = oldHead.Next;
 				return oldHead.Value;
 			}
 		}
 
 		/// <summary>
-		/// Returns the head object without removing it and moves head to next object.
+		///     Returns the head object without removing it and moves head to next object.
 		/// </summary>
 		/// <returns></returns>
 		public T Peek()
 		{
-			var newHead = MoveNext();
+			Node newHead = MoveNext();
 			return newHead == null
-				? default(T)
+				? default
 				: newHead.Value;
 		}
-
-		/// <inheritdoc />
-		public IEnumerator<T> GetEnumerator() => new Enumerator(this);
-
-		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
 		private Node MoveNext()
 		{
@@ -139,7 +139,7 @@ namespace Untech.Practices.Collections
 
 			public T Current => _current != null
 				? _current.Value
-				: default(T);
+				: default;
 
 			object IEnumerator.Current => Current;
 

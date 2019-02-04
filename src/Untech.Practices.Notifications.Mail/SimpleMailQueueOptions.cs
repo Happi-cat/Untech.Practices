@@ -9,9 +9,9 @@
 			From = from;
 		}
 
-		public MailboxAddress From { get; private set; }
-		public string Host { get; private set; }
-		public int Port { get; private set; }
+		public MailboxAddress From { get; }
+		public string Host { get; }
+		public int Port { get; }
 		public bool UseSsl { get; set; }
 	}
 }

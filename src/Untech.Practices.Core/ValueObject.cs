@@ -5,23 +5,46 @@ using System.Linq;
 namespace Untech.Practices
 {
 	/// <summary>
-	///
 	/// </summary>
 	/// <seealso cref="System.IEquatable{Untech.Practices.ValueObject}" />
 	public abstract class ValueObject<TSelf> : IEquatable<TSelf>
 		where TSelf : ValueObject<TSelf>
 	{
+		public bool Equals(TSelf other)
+		{
+			if (ReferenceEquals(this, other)) return true;
+			if (ReferenceEquals(other, null)) return false;
+
+			using (IEnumerator<object> thisValues = GetEquatableProperties().GetEnumerator())
+			using (IEnumerator<object> otherValues = other.GetEquatableProperties().GetEnumerator())
+			{
+				while (thisValues.MoveNext() && otherValues.MoveNext())
+				{
+					var thisValue = thisValues.Current;
+					var otherValue = otherValues.Current;
+
+					if (ReferenceEquals(thisValue, null) ^ ReferenceEquals(otherValue, null))
+						return false;
+
+					if (thisValue != null && !thisValue.Equals(otherValue))
+						return false;
+				}
+
+				return !thisValues.MoveNext() && !otherValues.MoveNext();
+			}
+		}
+
 		public override string ToString()
 		{
-			var props = string.Join(", ", GetEquatableProperties());
+			string props = string.Join(", ", GetEquatableProperties());
 			return string.Concat("(", props, ")");
 		}
 
 		public static bool operator ==(ValueObject<TSelf> left, ValueObject<TSelf> right)
 		{
-			return ReferenceEquals(left, null)
-				? ReferenceEquals(right, null)
-				: left.Equals(right);
+			if (ReferenceEquals(left, null) ^ ReferenceEquals(right, null))
+				return false;
+			return ReferenceEquals(left, null) || left.Equals(right);
 		}
 
 		public static bool operator !=(ValueObject<TSelf> left, ValueObject<TSelf> right)
@@ -37,23 +60,17 @@ namespace Untech.Practices
 			return false;
 		}
 
-		public bool Equals(TSelf other)
-		{
-			if (ReferenceEquals(this, other)) return true;
-			if (ReferenceEquals(other, null)) return false;
-			return GetEquatableProperties().SequenceEqual(other.GetEquatableProperties());
-		}
-
 		public override int GetHashCode()
 		{
 			unchecked
 			{
-				return GetEquatableProperties().Aggregate(17, (current, prop) => current * 37 + prop?.GetHashCode() ?? 0);
+				return GetEquatableProperties()
+					.Aggregate(17, (current, prop) => current * 37 + prop?.GetHashCode() ?? 0);
 			}
 		}
 
 		/// <summary>
-		/// Gets the equatable properties. This method should return values of immutable properties and fields.
+		///     Gets the equatable properties. This method should return values of immutable properties and fields.
 		/// </summary>
 		/// <returns></returns>
 		protected abstract IEnumerable<object> GetEquatableProperties();

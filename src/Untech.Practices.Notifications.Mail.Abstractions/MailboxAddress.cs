@@ -4,24 +4,24 @@ using System.Runtime.Serialization;
 namespace Untech.Practices.Notifications.Mail
 {
 	/// <summary>
-	/// Represents mail address.
+	///     Represents mail address.
 	/// </summary>
 	[DataContract]
 	public class MailboxAddress : IEquatable<MailboxAddress>
 	{
 		/// <summary>
-		/// For serializers
+		///     For serializers
 		/// </summary>
 		private MailboxAddress()
 		{
 		}
 
 		/// <summary>
-		/// Initializes a new instance of <see cref="MailboxAddress"/> with the specified <paramref name="email"/>.
+		///     Initializes a new instance of <see cref="MailboxAddress" /> with the specified <paramref name="email" />.
 		/// </summary>
 		/// <param name="email">The email.</param>
 		/// <exception cref="ArgumentNullException">
-		/// <paramref name="email"/> is null or whitespace.
+		///     <paramref name="email" /> is null or whitespace.
 		/// </exception>
 		public MailboxAddress(string email)
 		{
@@ -31,16 +31,23 @@ namespace Untech.Practices.Notifications.Mail
 		}
 
 		/// <summary>
-		/// Gets email.
+		///     Gets email.
 		/// </summary>
 		[DataMember]
 		public string Email { get; private set; }
 
 		/// <summary>
-		/// Gets or sets display name if it was specified, otherwise returns null.
+		///     Gets or sets display name if it was specified, otherwise returns null.
 		/// </summary>
 		[DataMember]
 		public string DisplayName { get; set; }
+
+		public bool Equals(MailboxAddress other)
+		{
+			if (ReferenceEquals(null, other)) return false;
+			if (ReferenceEquals(this, other)) return true;
+			return string.Equals(Email, other.Email, StringComparison.OrdinalIgnoreCase);
+		}
 
 		public static implicit operator MailboxAddress(string email)
 		{
@@ -60,18 +67,11 @@ namespace Untech.Practices.Notifications.Mail
 				: $"{DisplayName} <{Email}>";
 		}
 
-		public bool Equals(MailboxAddress other)
-		{
-			if (ReferenceEquals(null, other)) return false;
-			if (ReferenceEquals(this, other)) return true;
-			return string.Equals(Email, other.Email, StringComparison.OrdinalIgnoreCase);
-		}
-
 		public override bool Equals(object obj)
 		{
 			if (ReferenceEquals(null, obj)) return false;
 			if (ReferenceEquals(this, obj)) return true;
-			if (obj.GetType() != this.GetType()) return false;
+			if (obj.GetType() != GetType()) return false;
 			return Equals((MailboxAddress)obj);
 		}
 

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace Untech.Practices.CQRS.Dispatching
 {
 	/// <summary>
-	/// Implements <see cref="IQueueDispatcher"/> with immediate queue.
+	///     Implements <see cref="IQueueDispatcher" /> with immediate queue.
 	/// </summary>
 	public sealed class SimpleQueueDispatcher : IQueueDispatcher
 	{

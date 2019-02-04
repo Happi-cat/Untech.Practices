@@ -3,23 +3,22 @@
 namespace Untech.Practices.UserContext
 {
 	/// <summary>
-	/// Marks user-related models.
-	/// Can be used when user key is of <see cref="Int32"/> type.
+	///     Marks user-related models.
+	///     Can be used when user key is of <see cref="int" /> type.
 	/// </summary>
 	public interface IHaveUserKey : IHaveUserKey<int>
 	{
-
 	}
 
 	/// <summary>
-	/// Marks user-related models.
+	///     Marks user-related models.
 	/// </summary>
-	/// <typeparam name="TKey">The type of user key. Should implement <see cref="IEquatable{T}"/>.</typeparam>
+	/// <typeparam name="TKey">The type of user key. Should implement <see cref="IEquatable{T}" />.</typeparam>
 	public interface IHaveUserKey<out TKey>
-		where TKey: IEquatable<TKey>
+		where TKey : IEquatable<TKey>
 	{
 		/// <summary>
-		/// Gets key of the user associated with current object.
+		///     Gets key of the user associated with current object.
 		/// </summary>
 		TKey UserKey { get; }
 	}
