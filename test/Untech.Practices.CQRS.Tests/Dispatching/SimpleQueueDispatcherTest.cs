@@ -1,39 +1,43 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Untech.Practices.CQRS.Dispatching
 {
-	public class SimpleQueueDispatcherTest
+	public class InlineQueueDispatcherTest
 	{
-		private readonly SimpleQueueDispatcher _dispatcher;
+		private readonly InlineQueueDispatcher _dispatcher;
 
-		public SimpleQueueDispatcherTest()
+		public InlineQueueDispatcherTest()
 		{
-			_dispatcher = new SimpleQueueDispatcher(new Dispatcher(new DummyCQRS.Resolver()));
+			_dispatcher = new InlineQueueDispatcher(new Dispatcher(new DummyCQRS.Resolver()));
 		}
 
 		[Fact]
-		public void EnqueueC_ThrowArgumentNull_WhenArgIsNull()
+		public async Task EnqueueC_ThrowArgumentNull_WhenArgIsNull()
 		{
-			Assert.Throws<ArgumentNullException>(() => _dispatcher.Enqueue<int>(null));
+			await Assert.ThrowsAsync<ArgumentNullException>(() => _dispatcher.EnqueueAsync<int>(null));
 		}
 
 		[Fact]
-		public void EnqueueC_Returns_WhenHandlerResolved()
+		public async Task EnqueueC_Returns_WhenHandlerResolved()
 		{
-			_dispatcher.Enqueue(new DummyCQRS.Command());
+			await _dispatcher.EnqueueAsync(new DummyCQRS.Command());
 		}
 
 		[Fact]
-		public void EnqueueN_ThrowArgumentNull_WhenArgIsNull()
+		public async Task EnqueueN_ThrowArgumentNull_WhenArgIsNull()
 		{
-			Assert.Throws<ArgumentNullException>(() => _dispatcher.Enqueue(null));
+			INotification msg = null;
+			await Assert.ThrowsAsync<ArgumentNullException>(() =>
+				_dispatcher.EnqueueAsync(msg, CancellationToken.None));
 		}
 
 		[Fact]
-		public void EnqueueN_Returns_WhenHandlerResolved()
+		public async Task EnqueueN_Returns_WhenHandlerResolved()
 		{
-			_dispatcher.Enqueue(new DummyCQRS.Notification());
+			await _dispatcher.EnqueueAsync(new DummyCQRS.Notification(), CancellationToken.None);
 		}
 	}
 }
