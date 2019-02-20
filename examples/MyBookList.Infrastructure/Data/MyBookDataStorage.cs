@@ -12,7 +12,7 @@ using Untech.Practices.UserContext;
 namespace MyBookList.Infrastructure.Data
 {
 	public class MyBookDataStorage : UserScopedGenericDataStorage<MyBook, MyBookDao, Mappers>,
-		IQueryAsyncHandler<MyBooksQuery, IEnumerable<MyBook>>
+		IQueryHandler<MyBooksQuery, IEnumerable<MyBook>>
 	{
 		public MyBookDataStorage(IUserContext userContext, Func<IDataContext> dataContext)
 			: base(userContext, dataContext)

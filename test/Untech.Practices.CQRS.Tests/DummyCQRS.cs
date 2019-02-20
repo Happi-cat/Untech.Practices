@@ -25,9 +25,9 @@ namespace Untech.Practices.CQRS
 		}
 
 		public class Handler :
-			IQueryHandler<Query, int>, IQueryAsyncHandler<Query, int>,
-			ICommandHandler<Command, int>, ICommandAsyncHandler<Command, int>,
-			INotificationHandler<Notification>, INotificationAsyncHandler<Notification>
+			IQueryHandler<Query, int>, IQueryHandler<Query, int>,
+			ICommandHandler<Command, int>, ICommandHandler<Command, int>,
+			INotificationHandler<Notification>, INotificationHandler<Notification>
 
 		{
 			public int Handle(Query query) => 1;

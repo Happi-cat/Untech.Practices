@@ -1,16 +1,20 @@
-﻿namespace Untech.Practices.CQRS.Handlers
+﻿using System.Threading;
+using System.Threading.Tasks;
+
+namespace Untech.Practices.CQRS.Handlers
 {
 	/// <summary>
-	///     Defines a handler for a notification.
+	///     Defines an async handler for a notification.
 	/// </summary>
 	/// <typeparam name="TIn">Notification type</typeparam>
 	public interface INotificationHandler<in TIn>
 		where TIn : INotification
 	{
 		/// <summary>
-		///     Publishes notification.
+		///     Publishes notification asynchronously.
 		/// </summary>
 		/// <param name="notification">Notification to be handled.</param>
-		void Publish(TIn notification);
+		/// <param name="cancellationToken">The token that used for propagation notification that task should be canceled.</param>
+		Task PublishAsync(TIn notification, CancellationToken cancellationToken);
 	}
 }

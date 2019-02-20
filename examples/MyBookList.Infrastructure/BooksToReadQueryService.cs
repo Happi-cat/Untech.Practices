@@ -10,7 +10,7 @@ using Untech.Practices.CQRS.Handlers;
 
 namespace MyBookList.Infrastructure
 {
-	public class BooksToReadQueryService : IQueryAsyncHandler<BooksToReadQuery, IEnumerable<MyBook>>
+	public class BooksToReadQueryService : IQueryHandler<BooksToReadQuery, IEnumerable<MyBook>>
 	{
 		private readonly IQueryDispatcher _queryDispatcher;
 

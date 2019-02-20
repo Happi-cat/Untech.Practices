@@ -9,7 +9,7 @@ using Untech.Practices.UserContext;
 
 namespace Shared.Infrastructure.Data
 {
-	public class UserScopedGenericDataStorage<T, TTable, TMapper> : IAsyncDataStorage<T>
+	public class UserScopedGenericDataStorage<T, TTable, TMapper> : IDataStorage<T>
 		where T : IAggregateRoot
 		where TTable : class, IUserScopedDao
 		where TMapper : struct, IDaoMapper<T, TTable>
@@ -23,7 +23,7 @@ namespace Shared.Infrastructure.Data
 			_dataContext = dataContext;
 		}
 
-		public virtual async Task<T> FindAsync(int key, CancellationToken cancellationToken)
+		public virtual async Task<T> GetAsync(int key, CancellationToken cancellationToken)
 		{
 			using (var dataContext = _dataContext())
 			{

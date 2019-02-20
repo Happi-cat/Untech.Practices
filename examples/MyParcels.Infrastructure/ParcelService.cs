@@ -11,9 +11,9 @@ using Untech.Practices.UserContext;
 
 namespace MyParcels.Infrastructure
 {
-	public class ParcelService : IQueryAsyncHandler<ParcelsQuery, IEnumerable<Parcel>>,
-		ICommandAsyncHandler<CreateOrUpdateParcel, Parcel>,
-		ICommandAsyncHandler<DeleteParcel, Nothing>
+	public class ParcelService : IQueryHandler<ParcelsQuery, IEnumerable<Parcel>>,
+		ICommandHandler<CreateOrUpdateParcel, Parcel>,
+		ICommandHandler<DeleteParcel, Nothing>
 	{
 		private readonly IUserContext _userContext;
 		private readonly Func<IDataContext> _dataContext;

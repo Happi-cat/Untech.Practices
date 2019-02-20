@@ -1,10 +1,13 @@
-﻿using Untech.Practices.CQRS.Handlers;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Untech.Practices.CQRS.Handlers;
 
 namespace Untech.Practices.CQRS.Pipeline
 {
 	/// <summary>
 	///     Defines a pipeline step that will be triggered after <see cref="IRequestHandler{TIn,TOut}" /> or
-	///     <see cref="IRequestAsyncHandler{TIn,TOut}" />
+	///     <see cref="IRequestHandler{TIn,TOut}" />
 	/// </summary>
 	/// <typeparam name="TRequest">CQRS request type.</typeparam>
 	/// <typeparam name="TResponse">CQRS response type.</typeparam>
@@ -17,5 +20,15 @@ namespace Untech.Practices.CQRS.Pipeline
 		/// <param name="response"><see cref="IRequest{TResult}" /> execution response.</param>
 		/// :w
 		void Process(TRequest request, TResponse response);
+	}
+
+	public interface IPipeline<TRequest, TResponse>
+	{
+		TResponse Invoke(TRequest request, Func<TResponse> next);
+	}
+
+	public interface IAsyncPipeline<TRequest, TResponse>
+	{
+		Task<TResponse> InvokeAsync(TRequest request, Func<TResponse> next, CancellationToken cancellationToken);
 	}
 }

@@ -15,14 +15,6 @@ namespace Untech.Practices.CQRS.Dispatching
 	public interface IDispatcher : IQueryDispatcher, INotificationDispatcher
 	{
 		/// <summary>
-		///     Processes the incoming <paramref name="command" /> and returns execution result.
-		/// </summary>
-		/// <typeparam name="TResult">The type of result.</typeparam>
-		/// <param name="command">The command to be processed.</param>
-		/// <returns>Execution result.</returns>
-		TResult Process<TResult>(ICommand<TResult> command);
-
-		/// <summary>
 		///     Processes asynchronously the incoming <paramref name="command" /> and returns execution result.
 		/// </summary>
 		/// <typeparam name="TResult">The type of result.</typeparam>

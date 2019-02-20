@@ -9,19 +9,13 @@ namespace Untech.Practices.CQRS.Handlers
 	/// <typeparam name="TIn">Request type.</typeparam>
 	/// <typeparam name="TOut">The type of result from the handler.</typeparam>
 	public sealed class NullQueryHandler<TIn, TOut> :
-		IQueryHandler<TIn, TOut>, IQueryAsyncHandler<TIn, TOut>
+		IQueryHandler<TIn, TOut>
 		where TIn : IQuery<TOut>
 	{
 		/// <inheritdoc />
 		public Task<TOut> HandleAsync(TIn query, CancellationToken cancellationToken)
 		{
 			return Task.FromResult(default(TOut));
-		}
-
-		/// <inheritdoc />
-		public TOut Handle(TIn query)
-		{
-			return default;
 		}
 	}
 }
