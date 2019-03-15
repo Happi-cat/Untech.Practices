@@ -13,7 +13,7 @@ using Untech.Practices.UserContext;
 namespace MyBudgetPlan.Infrastructure.Data
 {
 	public class BudgetLogDataStorage<T, TTable, TMapper> : UserScopedGenericDataStorage<T, TTable, TMapper>,
-		IQueryAsyncHandler<BudgetLogQuery<T>, IEnumerable<T>>
+		IQueryHandler<BudgetLogQuery<T>, IEnumerable<T>>
 		where T : BudgetLogEntry
 		where TTable : BudgetLogEntryDao<T>
 		where TMapper : struct, IDaoMapper<T, TTable>

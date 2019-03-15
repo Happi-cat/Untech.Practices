@@ -6,26 +6,26 @@ using System.Threading.Tasks;
 namespace Untech.Practices.DataStorage.Cache
 {
 	/// <summary>
-	///     Provides ability to use multi-level <see cref="IAsyncCacheStorage" />.
+	///     Provides ability to use multi-level <see cref="ICacheStorage" />.
 	/// </summary>
-	public class MultiLevelAsyncCacheStorage : IAsyncCacheStorage
+	public class MultiLevelCacheStorage : ICacheStorage
 	{
-		private readonly IReadOnlyCollection<IAsyncCacheStorage> _cacheStorages;
+		private readonly IReadOnlyCollection<ICacheStorage> _cacheStorages;
 
 		/// <summary>
 		///     Initializes a new instance with a list of cache storages.
 		/// </summary>
 		/// <param name="cacheStorages">The list of cache storages starting from highest priority to lowest.</param>
-		public MultiLevelAsyncCacheStorage(IEnumerable<IAsyncCacheStorage> cacheStorages)
+		public MultiLevelCacheStorage(IEnumerable<ICacheStorage> cacheStorages)
 		{
-			_cacheStorages = new List<IAsyncCacheStorage>(cacheStorages);
+			_cacheStorages = new List<ICacheStorage>(cacheStorages);
 		}
 
 		/// <inheritdoc />
 		public async Task<CacheValue<T>> GetAsync<T>(string key,
 			CancellationToken cancellationToken = default)
 		{
-			foreach (IAsyncCacheStorage cacheStorage in _cacheStorages)
+			foreach (ICacheStorage cacheStorage in _cacheStorages)
 			{
 				CacheValue<T> value = await cacheStorage.GetAsync<T>(key, cancellationToken);
 

@@ -16,36 +16,17 @@ namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 			_resolver = resolver;
 		}
 
-		public object Invoke(object args)
-		{
-			InvokeAsync(args, CancellationToken.None)
-				.ConfigureAwait(false)
-				.GetAwaiter()
-				.GetResult();
-
-			return Nothing.AtAll;
-		}
-
 		public Task InvokeAsync(object args, CancellationToken cancellationToken)
 		{
 			TIn input = (TIn)args;
 
-			IEnumerable<Task> syncHandlers = _resolver
-				.ResolveMany<INotificationHandler<TIn>>()
-				.Select(RunSync);
-
 			IEnumerable<Task> asyncHandlers = _resolver
-				.ResolveMany<INotificationAsyncHandler<TIn>>()
+				.ResolveMany<INotificationHandler<TIn>>()
 				.Select(RunAsync);
 
-			return Task.WhenAll(syncHandlers.Concat(asyncHandlers));
+			return Task.WhenAll(asyncHandlers);
 
-			Task RunSync(INotificationHandler<TIn> handler)
-			{
-				return Task.Run(() => handler.Publish(input), cancellationToken);
-			}
-
-			Task RunAsync(INotificationAsyncHandler<TIn> handler)
+			Task RunAsync(INotificationHandler<TIn> handler)
 			{
 				return handler.PublishAsync(input, cancellationToken);
 			}

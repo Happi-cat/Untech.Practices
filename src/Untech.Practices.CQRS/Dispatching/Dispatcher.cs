@@ -27,16 +27,6 @@ namespace Untech.Practices.CQRS.Dispatching
 		}
 
 		/// <inheritdoc />
-		public TResponse Fetch<TResponse>(IQuery<TResponse> query)
-		{
-			query = query ?? throw new ArgumentNullException(nameof(query));
-
-			return (TResponse)_handlerRunners
-				.GetOrAdd(query.GetType(), MakeFetch<TResponse>)
-				.Invoke(query);
-		}
-
-		/// <inheritdoc />
 		public Task<TResponse> FetchAsync<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken)
 		{
 			query = query ?? throw new ArgumentNullException(nameof(query));
@@ -47,16 +37,6 @@ namespace Untech.Practices.CQRS.Dispatching
 		}
 
 		/// <inheritdoc />
-		public TResponse Process<TResponse>(ICommand<TResponse> command)
-		{
-			command = command ?? throw new ArgumentNullException(nameof(command));
-
-			return (TResponse)_handlerRunners
-				.GetOrAdd(command.GetType(), MakeProcess<TResponse>)
-				.Invoke(command);
-		}
-
-		/// <inheritdoc />
 		public Task<TResponse> ProcessAsync<TResponse>(ICommand<TResponse> command, CancellationToken cancellationToken)
 		{
 			command = command ?? throw new ArgumentNullException(nameof(command));
@@ -64,16 +44,6 @@ namespace Untech.Practices.CQRS.Dispatching
 			return (Task<TResponse>)_handlerRunners
 				.GetOrAdd(command.GetType(), MakeProcess<TResponse>)
 				.InvokeAsync(command, cancellationToken);
-		}
-
-		/// <inheritdoc />
-		public void Publish(INotification notification)
-		{
-			notification = notification ?? throw new ArgumentNullException(nameof(notification));
-
-			_handlerRunners
-				.GetOrAdd(notification.GetType(), MakePublish)
-				.Invoke(notification);
 		}
 
 		/// <inheritdoc />

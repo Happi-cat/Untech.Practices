@@ -14,18 +14,18 @@ using MyList = MyBookList.Domain.BookLists.My.MyBookList;
 
 namespace MyBookList.Infrastructure
 {
-	public class MyBookListService : IQueryAsyncHandler<MyBookListQuery, MyList>,
-		ICommandAsyncHandler<AppendExistingBookToMyBookList, MyBook>,
-		ICommandAsyncHandler<AppendNewBookToMyBookList, MyBook>,
-		ICommandAsyncHandler<AppendSharedBookListToMyBookList, IEnumerable<MyBook>>,
-		ICommandAsyncHandler<UpdateMyBookReview, Nothing>,
-		ICommandAsyncHandler<UpdateMyBookStatus, Nothing>,
-		ICommandAsyncHandler<UpdateMyBookOrdering, Nothing>
+	public class MyBookListService : IQueryHandler<MyBookListQuery, MyList>,
+		ICommandHandler<AppendExistingBookToMyBookList, MyBook>,
+		ICommandHandler<AppendNewBookToMyBookList, MyBook>,
+		ICommandHandler<AppendSharedBookListToMyBookList, IEnumerable<MyBook>>,
+		ICommandHandler<UpdateMyBookReview, Nothing>,
+		ICommandHandler<UpdateMyBookStatus, Nothing>,
+		ICommandHandler<UpdateMyBookOrdering, Nothing>
 	{
-		private readonly IAsyncDataStorage<MyBook> _myBookDataStorage;
+		private readonly IDataStorage<MyBook> _myBookDataStorage;
 		private readonly IQueryDispatcher _queryDispatcher;
 
-		public MyBookListService(IAsyncDataStorage<MyBook> myBookDataStorage, IQueryDispatcher queryDispatcher)
+		public MyBookListService(IDataStorage<MyBook> myBookDataStorage, IQueryDispatcher queryDispatcher)
 		{
 			_myBookDataStorage = myBookDataStorage;
 			_queryDispatcher = queryDispatcher;
@@ -79,7 +79,7 @@ namespace MyBookList.Infrastructure
 
 		public async Task<Nothing> HandleAsync(UpdateMyBookReview request, CancellationToken cancellationToken)
 		{
-			var myBook = await _myBookDataStorage.FindAsync(request.Key, cancellationToken);
+			var myBook = await _myBookDataStorage.GetAsync(request.Key, cancellationToken);
 
 			myBook.UpdateReview(request.Review);
 			await _myBookDataStorage.UpdateAsync(myBook, cancellationToken);
@@ -89,7 +89,7 @@ namespace MyBookList.Infrastructure
 
 		public async Task<Nothing> HandleAsync(UpdateMyBookStatus request, CancellationToken cancellationToken)
 		{
-			var myBook = await _myBookDataStorage.FindAsync(request.Key, cancellationToken);
+			var myBook = await _myBookDataStorage.GetAsync(request.Key, cancellationToken);
 
 			myBook.UpdateStatus(request.Status);
 			await _myBookDataStorage.UpdateAsync(myBook, cancellationToken);
@@ -99,7 +99,7 @@ namespace MyBookList.Infrastructure
 
 		public async Task<Nothing> HandleAsync(UpdateMyBookOrdering request, CancellationToken cancellationToken)
 		{
-			var myBook = await _myBookDataStorage.FindAsync(request.Key, cancellationToken);
+			var myBook = await _myBookDataStorage.GetAsync(request.Key, cancellationToken);
 
 			myBook.UpdateOrdering(request.Ordering);
 			await _myBookDataStorage.UpdateAsync(myBook, cancellationToken);

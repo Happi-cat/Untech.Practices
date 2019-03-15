@@ -1,4 +1,6 @@
-﻿namespace Untech.Practices.Notifications.Mail
+﻿using System.Threading.Tasks;
+
+namespace Untech.Practices.Notifications.Mail
 {
 	/// <summary>
 	/// Defines methods for sending mails into mail queue.
@@ -9,6 +11,6 @@
 		/// Adds mail for sending into mail queue.
 		/// </summary>
 		/// <param name="mail">The mail to sent.</param>
-		void Enqueue(Mail mail);
+		Task EnqueueAsync(Mail mail);
 	}
 }
