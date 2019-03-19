@@ -2,26 +2,38 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using AsyncCommandEngine.Examples;
+using AsyncCommandEngine.Examples.Features.Throttling;
+using AsyncCommandEngine.Run;
 using Microsoft.Extensions.Hosting;
+using Untech.AsyncCommmandEngine.Abstractions;
 using Untech.Practices.CQRS;
 using Untech.Practices.CQRS.Dispatching;
 using Untech.Practices.CQRS.Handlers;
 
-namespace AsyncCommandEngine.Run
+namespace Untech.AsyncCommmandEngine.Abstractions
 {
+	// used for request specific options/configuration
+	public interface IRequestTypeMetadataAccessor
+	{
+		TAttr GetAttribute<TAttr>() where TAttr: Attribute;
+		IEnumerable<TAttr> GetAttributes<TAttr>() where TAttr: Attribute;
+	}
+
 	public class AceRequest
 	{
-		public AceRequest(string commandName, ICommandTypeMetadata typeMetadata)
+		public AceRequest(string typeName, IRequestTypeMetadataAccessor typeMetadataAccessor)
 		{
-			CommandName = commandName;
-			CommandTypeMetadata = typeMetadata;
+			TypeName = typeName;
+			TypeMetadataAccessor = typeMetadataAccessor;
 		}
 
-		public string CommandName { get; private set; }
-		public ICommandTypeMetadata CommandTypeMetadata { get; private set; }
+		public string TypeName { get; private set; }
+		public IRequestTypeMetadataAccessor TypeMetadataAccessor { get; private set; }
 	}
 
 	public class AceContext
@@ -33,6 +45,7 @@ namespace AsyncCommandEngine.Run
 		}
 
 		public AceRequest Request { get; private set; }
+
 		public CancellationToken RequestAborted { get; set; }
 		public IDictionary<object, object> Items { get; set; }
 	}
@@ -43,84 +56,11 @@ namespace AsyncCommandEngine.Run
 	{
 		Task Execute(AceContext context, AceRequestProcessorDelegate next);
 	}
+}
 
-	public class DummyAceProcessorMiddleware : IAceProcessorMiddleware
-	{
-		public async Task Execute(AceContext context, AceRequestProcessorDelegate next)
-		{
-			context.RequestAborted.ThrowIfCancellationRequested();
-
-			await next(context);
-		}
-	}
-
-	public class WatchDogProcessorMiddleware : IAceProcessorMiddleware
-	{
-		private readonly WatchDogOptions _options;
-
-		public WatchDogProcessorMiddleware(WatchDogOptions options)
-		{
-			_options = options;
-		}
-
-		public async Task Execute(AceContext context, AceRequestProcessorDelegate next)
-		{
-			var timeout = GetTimeout(context);
-			if (timeout != null)
-			{
-				var timeoutTokenSource = new CancellationTokenSource(timeout.Value);
-				var linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(
-					timeoutTokenSource.Token,
-					context.RequestAborted);
-
-				context.RequestAborted = linkedTokenSource.Token;
-			}
-
-			await next(context);
-		}
-
-		private TimeSpan? GetTimeout(AceContext context)
-		{
-			var attr = context.Request.CommandTypeMetadata.GetAttribute<WatchDogOptionsAttribute>();
-
-			if (attr != null) return attr.Timeout;
-			if (_options.CommandTimeouts.TryGetValue(context.Request.CommandName, out var timeout)) return timeout;
-			return _options.DefaultTimeout;
-		}
-	}
-
-	public class DummyCommand : ICommand<int>
-	{
-	}
-
-	[WatchDogOptions(0, 10, 0)]
-	public class DummyCommandHandler: ICommandHandler<DummyCommand, int>
-	{
-		public Task<int> HandleAsync(DummyCommand request, CancellationToken cancellationToken)
-		{
-			Console.WriteLine("Hello World!");
-			return Task.FromResult(100);
-		}
-	}
-
-
-	public class DebounceOptions{ }
-
-	public class ThrottleOptions
-	{
-		public int? DefaultRunAtOnce { get; set; }
-
-
-	}
-
-	public interface ICommandTypeMetadata
-	{
-		Type Type { get; }
-
-		TAttr GetAttribute<TAttr>() where TAttr: Attribute;
-	}
-
-	public class CommandTypeMetadata<T> : ICommandTypeMetadata
+namespace AsyncCommandEngine.Run
+{
+	public class RequestTypeMetadataAccessor<T> : IRequestTypeMetadataAccessor
 	{
 		private static readonly Type s_type = typeof(T);
 
@@ -129,6 +69,11 @@ namespace AsyncCommandEngine.Run
 		public TAttr GetAttribute<TAttr>() where TAttr:Attribute
 		{
 			return AttrCache<TAttr>.Attributes.FirstOrDefault();
+		}
+
+		public IEnumerable<TAttr> GetAttributes<TAttr>() where TAttr : Attribute
+		{
+			return AttrCache<TAttr>.Attributes;
 		}
 
 		private struct AttrCache<TAttr> where TAttr: Attribute
@@ -142,32 +87,37 @@ namespace AsyncCommandEngine.Run
 		}
 	}
 
-	[AttributeUsage(AttributeTargets.Class)]
-	public class WatchDogOptionsAttribute : Attribute
+	public class NullRequestTypeMetadataAccessor : IRequestTypeMetadataAccessor
 	{
-		private readonly int _hours;
-		private readonly int _minutes;
-		private readonly int _seconds;
-
-		public WatchDogOptionsAttribute(int hours, int minutes, int seconds)
+		public TAttr GetAttribute<TAttr>() where TAttr : Attribute
 		{
-			_hours = hours;
-			_minutes = minutes;
-			_seconds = seconds;
+			return default(TAttr);
 		}
 
-		public TimeSpan Timeout => new TimeSpan(_hours, _minutes, _seconds);
+		public IEnumerable<TAttr> GetAttributes<TAttr>() where TAttr : Attribute
+		{
+			return Enumerable.Empty<TAttr>();
+		}
 	}
-
-	public class WatchDogOptions
+	public class DummyAceProcessorMiddleware : IAceProcessorMiddleware
 	{
-		/// <summary>
-		/// Null is for disabled default timeout
-		/// </summary>
-		public TimeSpan? DefaultTimeout { get; set; }
+		public async Task Execute(AceContext context, AceRequestProcessorDelegate next)
+		{
+			context.RequestAborted.ThrowIfCancellationRequested();
 
-		public ReadOnlyDictionary<string, TimeSpan> CommandTimeouts { get; set; }
+			await next(context);
+		}
 	}
+
+
+
+
+	public class DebounceOptions{ }
+
+
+
+
+
 
 	public class AceBuilder
 	{
@@ -228,6 +178,7 @@ namespace AsyncCommandEngine.Run
 	public class AceProcessor
 	{
 		private readonly IReadOnlyList<IAceProcessorMiddleware> _middlewares;
+		private AceRequestProcessorDelegate _cachedNext;
 
 		public AceProcessor(IEnumerable<IAceProcessorMiddleware> middlewares)
 		{
@@ -236,7 +187,9 @@ namespace AsyncCommandEngine.Run
 
 		public Task Execute(AceContext context)
 		{
-			return GetNext(0)(context);
+			if (_cachedNext == null) _cachedNext = GetNext(0);
+
+			return _cachedNext(context);
 		}
 
 		private AceRequestProcessorDelegate GetNext(int nextState)
@@ -268,7 +221,7 @@ namespace AsyncCommandEngine.Run
 				.UseWatchDog(new WatchDogOptions
 				{
 					DefaultTimeout = TimeSpan.FromMinutes(1),
-					CommandTimeouts = new ReadOnlyDictionary<string, TimeSpan>(new Dictionary<string, TimeSpan>
+					RequestTimeouts = new ReadOnlyDictionary<string, TimeSpan>(new Dictionary<string, TimeSpan>
 					{
 						["Library1.Command1"] = TimeSpan.FromMinutes(10)
 					})
@@ -276,7 +229,7 @@ namespace AsyncCommandEngine.Run
 				.BuildService();
 
 
-			service.Execute(new AceContext(new AceRequest("test", new CommandTypeMetadata<DummyCommandHandler>())));
+			service.Execute(new AceContext(new AceRequest("test", new RequestTypeMetadataAccessor<DummyCommandHandler>())));
 
 		}
 	}
