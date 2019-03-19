@@ -26,14 +26,17 @@ namespace Untech.AsyncCommmandEngine.Abstractions
 
 	public class AceRequest
 	{
-		public AceRequest(string typeName, IRequestTypeMetadataAccessor typeMetadataAccessor)
+		public AceRequest(string typeName, DateTimeOffset created, IRequestTypeMetadataAccessor typeMetadataAccessor)
 		{
 			TypeName = typeName;
+			Created = created;
 			TypeMetadataAccessor = typeMetadataAccessor;
 		}
 
 		public string TypeName { get; private set; }
 		public IRequestTypeMetadataAccessor TypeMetadataAccessor { get; private set; }
+		public DateTimeOffset Created { get; private set; }
+		public string Body { get; private set; }
 	}
 
 	public class AceContext
@@ -229,7 +232,7 @@ namespace AsyncCommandEngine.Run
 				.BuildService();
 
 
-			service.Execute(new AceContext(new AceRequest("test", new RequestTypeMetadataAccessor<DummyCommandHandler>())));
+			service.Execute(new AceContext(new AceRequest("test", DateTimeOffset.UtcNow, new RequestTypeMetadataAccessor<DummyCommandHandler>())));
 
 		}
 	}

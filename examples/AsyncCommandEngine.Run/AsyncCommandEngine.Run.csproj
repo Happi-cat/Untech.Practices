@@ -12,6 +12,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Untech.Practices.CQRS.Abstractions\Untech.Practices.CQRS.Abstractions.csproj" />
     <ProjectReference Include="..\..\src\Untech.Practices.CQRS\Untech.Practices.CQRS.csproj" />
+    <ProjectReference Include="..\..\src\Untech.Practices.DataStorage.Cache.Abstractions\Untech.Practices.DataStorage.Cache.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>
