@@ -2,23 +2,21 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using AsyncCommandEngine.Examples;
+using AsyncCommandEngine.Examples.Features.Debounce;
 using AsyncCommandEngine.Examples.Features.Throttling;
-using AsyncCommandEngine.Run;
 using Microsoft.Extensions.Hosting;
 using Untech.AsyncCommmandEngine.Abstractions;
-using Untech.Practices.CQRS;
 using Untech.Practices.CQRS.Dispatching;
 using Untech.Practices.CQRS.Handlers;
 
 namespace Untech.AsyncCommmandEngine.Abstractions
 {
 	// used for request specific options/configuration
-	public interface IRequestTypeMetadataAccessor
+	public interface IRequestMetadata
 	{
 		TAttr GetAttribute<TAttr>() where TAttr: Attribute;
 		IEnumerable<TAttr> GetAttributes<TAttr>() where TAttr: Attribute;
@@ -26,15 +24,15 @@ namespace Untech.AsyncCommmandEngine.Abstractions
 
 	public class AceRequest
 	{
-		public AceRequest(string typeName, DateTimeOffset created, IRequestTypeMetadataAccessor typeMetadataAccessor)
+		public AceRequest(string typeName, DateTimeOffset created, IRequestMetadata metadata)
 		{
 			TypeName = typeName;
 			Created = created;
-			TypeMetadataAccessor = typeMetadataAccessor;
+			Metadata = metadata;
 		}
 
 		public string TypeName { get; private set; }
-		public IRequestTypeMetadataAccessor TypeMetadataAccessor { get; private set; }
+		public IRequestMetadata Metadata { get; private set; }
 		public DateTimeOffset Created { get; private set; }
 		public string Body { get; private set; }
 	}
@@ -63,11 +61,9 @@ namespace Untech.AsyncCommmandEngine.Abstractions
 
 namespace AsyncCommandEngine.Run
 {
-	public class RequestTypeMetadataAccessor<T> : IRequestTypeMetadataAccessor
+	public class RequestMetadata<T> : IRequestMetadata
 	{
 		private static readonly Type s_type = typeof(T);
-
-		public Type Type => s_type;
 
 		public TAttr GetAttribute<TAttr>() where TAttr:Attribute
 		{
@@ -90,7 +86,7 @@ namespace AsyncCommandEngine.Run
 		}
 	}
 
-	public class NullRequestTypeMetadataAccessor : IRequestTypeMetadataAccessor
+	public class NullRequestMetadata : IRequestMetadata
 	{
 		public TAttr GetAttribute<TAttr>() where TAttr : Attribute
 		{
@@ -115,7 +111,6 @@ namespace AsyncCommandEngine.Run
 
 
 
-	public class DebounceOptions{ }
 
 
 
@@ -131,22 +126,11 @@ namespace AsyncCommandEngine.Run
 			throw new NotImplementedException();
 		}
 
-		public AceBuilder UseDebounce(DebounceOptions debounceOptions)
+		public AceBuilder Use(Func<IAceProcessorMiddleware> creator)
 		{
-			throw new NotImplementedException();
-		}
-
-		public AceBuilder UseThottling(ThrottleOptions throttleOptions)
-		{
-			throw new NotImplementedException();
-		}
-
-		public AceBuilder UseWatchDog(WatchDogOptions watchDogOptions)
-		{
-			_middlewares.Add(new WatchDogProcessorMiddleware(watchDogOptions));
+			_middlewares.Add(creator());
 			return this;
 		}
-
 		public IHostedService Build()
 		{
 			throw new NotImplementedException();
@@ -213,11 +197,97 @@ namespace AsyncCommandEngine.Run
 		}
 	}
 
+	class RequestMetadataProvider
+	{
+		private readonly Assembly[] _assemblies;
+		private readonly IReadOnlyDictionary<string, IRequestMetadata> _commandsMetadata;
+
+		public RequestMetadataProvider(Assembly[] assemblies)
+		{
+			_assemblies = assemblies;
+			_commandsMetadata = GetCommandHandlerTypes(assemblies);
+		}
+
+		private static Dictionary<string, IRequestMetadata> GetCommandHandlerTypes(Assembly[] assemblies)
+		{
+			var commandToMetadataMap = new Dictionary<string, IRequestMetadata>();
+			var types = assemblies
+				.SelectMany(a => a.GetTypes())
+				.Select(t => new TypeDetective(t));
+
+			foreach (var typeDetective in types)
+			{
+				foreach (var commandType in typeDetective.GetCommandTypes())
+				{
+					if (commandToMetadataMap.ContainsKey(commandType.FullName))
+					{
+						throw new InvalidOperationException($"Found several handlers for {commandType}");
+					}
+
+					commandToMetadataMap.Add(commandType.FullName, typeDetective.GetMetadata());
+				}
+			}
+
+			return commandToMetadataMap;
+		}
+
+		public IRequestMetadata GetMetadata(string commandTypeName)
+		{
+			return _commandsMetadata.TryGetValue(commandTypeName, out var requestMetadata)
+				? requestMetadata
+				: new NullRequestMetadata();
+		}
+
+		private class TypeDetective
+		{
+			private static readonly Type s_genericCommandHandlerType = typeof(ICommandHandler<,>);
+
+			private readonly Type _type;
+			private readonly Type[] _supportableCommands;
+
+			private IRequestMetadata _metadata;
+
+			public TypeDetective(Type type)
+			{
+				_type = type;
+				_supportableCommands = _type
+					.GetInterfaces()
+					.Where(ifType => ifType.IsGenericType
+						&& ifType.GetGenericTypeDefinition() == s_genericCommandHandlerType)
+					.Select(ifType => ifType.GetGenericArguments()[0])
+					.ToArray();
+			}
+
+			public Type SuspectedType => _type;
+
+			public IEnumerable<Type> GetCommandTypes()
+			{
+				return _supportableCommands;
+			}
+
+			public IRequestMetadata GetMetadata()
+			{
+				if (_metadata == null)
+				{
+					var requestMetadataType = typeof(RequestMetadata<>).MakeGenericType(_type);
+					_metadata = (IRequestMetadata)Activator.CreateInstance(requestMetadataType);
+				}
+
+				return _metadata;
+			}
+		}
+	}
+
 
 	class Program
 	{
 		static void Main(string[] args)
 		{
+			var type = typeof(DummyCommandHandler);
+
+			var metadata = new RequestMetadataProvider(new[] { type.Assembly })
+				.GetMetadata(typeof(DummyCommand).FullName);
+
 			var service = new AceBuilder()
 //				.UseDebounce(new DebounceOptions())
 //				.UseThottling(new ThrottleOptions())
@@ -232,7 +302,7 @@ namespace AsyncCommandEngine.Run
 				.BuildService();
 
 
-			service.Execute(new AceContext(new AceRequest("test", DateTimeOffset.UtcNow, new RequestTypeMetadataAccessor<DummyCommandHandler>())));
+			service.Execute(new AceContext(new AceRequest("test", DateTimeOffset.UtcNow, new RequestMetadata<DummyCommandHandler>())));
 
 		}
 	}

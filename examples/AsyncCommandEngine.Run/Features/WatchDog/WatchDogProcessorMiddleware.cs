@@ -32,7 +32,7 @@ namespace AsyncCommandEngine.Run
 
 		private TimeSpan? GetTimeout(AceContext context)
 		{
-			var attr = context.Request.TypeMetadataAccessor.GetAttribute<WatchDogTimeoutAttribute>();
+			var attr = context.Request.Metadata.GetAttribute<WatchDogTimeoutAttribute>();
 
 			if (attr != null) return attr.Timeout;
 			if (_options.RequestTimeouts.TryGetValue(context.Request.TypeName, out var timeout)) return timeout;

@@ -11,6 +11,7 @@ namespace AsyncCommandEngine.Examples
 	{
 	}
 
+	[WatchDogTimeout(0, 10, 0)]
 	public class DummyCommandHandler: ICommandHandler<DummyCommand, int>
 	{
 		public Task<int> HandleAsync(DummyCommand request, CancellationToken cancellationToken)

@@ -4,10 +4,27 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AsyncCommandEngine.Run;
 using Untech.AsyncCommmandEngine.Abstractions;
 
 namespace AsyncCommandEngine.Examples.Features.Throttling
 {
+	public static class AceBuilderExtensions
+	{
+		public static AceBuilder UseThrottling(this AceBuilder builder)
+		{
+			return UseThrottling(builder, new ThrottleOptions());
+		}
+
+		public static AceBuilder UseThrottling(this AceBuilder builder, ThrottleOptions options)
+		{
+			if (builder == null) throw new ArgumentNullException(nameof(builder));
+			if (options == null) throw new ArgumentNullException(nameof(options));
+
+			return builder.Use(() => new ThrottleMiddelware(options));
+		}
+	}
+
 	public class ThrottleOptions
 	{
 		public int? DefaultRunAtOnce { get; set; }
@@ -32,7 +49,7 @@ namespace AsyncCommandEngine.Examples.Features.Throttling
 		public string Group { get; }
 	}
 
-	public class ThrottleMiddelware : IAceProcessorMiddleware
+	internal class ThrottleMiddelware : IAceProcessorMiddleware
 	{
 		private readonly ThrottleOptions _options;
 		private readonly Dictionary<string, SemaphoreSlim> _semaphores;
@@ -46,7 +63,7 @@ namespace AsyncCommandEngine.Examples.Features.Throttling
 
 		public async Task Execute(AceContext context, AceRequestProcessorDelegate next)
 		{
-			var semaphores = GetSemaphores(GetGroupKeys(context.Request.TypeMetadataAccessor));
+			var semaphores = GetSemaphores(GetGroupKeys(context.Request.Metadata));
 
 			await Task.WhenAll(semaphores.Select(s => s.WaitAsync(context.RequestAborted)));
 
@@ -60,11 +77,11 @@ namespace AsyncCommandEngine.Examples.Features.Throttling
 			}
 		}
 
-		private IEnumerable<string> GetGroupKeys(IRequestTypeMetadataAccessor metadataAccessor)
+		private IEnumerable<string> GetGroupKeys(IRequestMetadata metadata)
 		{
 			yield return "*";
 
-			foreach (var attribute in metadataAccessor.GetAttributes<ThrottleGroupAttribute>())
+			foreach (var attribute in metadata.GetAttributes<ThrottleGroupAttribute>())
 			{
 				if (!string.IsNullOrEmpty(attribute.Group))
 					yield return attribute.Group;
