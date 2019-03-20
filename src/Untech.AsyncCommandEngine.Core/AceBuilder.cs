@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.Hosting;
-using Untech.AsyncCommmandEngine.Abstractions;
 
-namespace AsyncCommandEngine.Run
+namespace Untech.AsyncCommandEngine
 {
 	public class AceBuilder
 	{
@@ -20,12 +18,8 @@ namespace AsyncCommandEngine.Run
 			_middlewares.Add(creator());
 			return this;
 		}
-		public IHostedService Build()
-		{
-			throw new NotImplementedException();
-		}
 
-		internal AceProcessor BuildService()
+		public AceProcessor BuildService()
 		{
 			var predefinedMiddlewares = new IAceProcessorMiddleware[]
 			{

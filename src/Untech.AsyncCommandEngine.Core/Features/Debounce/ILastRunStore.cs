@@ -1,9 +1,8 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Untech.AsyncCommmandEngine.Abstractions;
 
-namespace AsyncCommandEngine.Examples.Features.Debounce
+namespace Untech.AsyncCommandEngine.Features.Debounce
 {
 	public interface ILastRunStore
 	{

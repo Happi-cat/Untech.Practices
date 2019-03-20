@@ -1,9 +1,8 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Untech.AsyncCommmandEngine.Abstractions;
 
-namespace AsyncCommandEngine.Run
+namespace Untech.AsyncCommandEngine.Features.WatchDog
 {
 	internal class WatchDogMiddleware : IAceProcessorMiddleware
 	{
@@ -14,7 +13,7 @@ namespace AsyncCommandEngine.Run
 			_options = options;
 		}
 
-		public async Task Execute(AceContext context, AceRequestProcessorDelegate next)
+		public async Task ExecuteAsync(AceContext context, AceRequestProcessorDelegate next)
 		{
 			var timeout = GetTimeout(context);
 			if (timeout != null)

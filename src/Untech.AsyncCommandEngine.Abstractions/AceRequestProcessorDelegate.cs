@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Untech.AsyncCommmandEngine.Abstractions
+namespace Untech.AsyncCommandEngine
 {
 	public delegate Task AceRequestProcessorDelegate(AceContext context);
 }

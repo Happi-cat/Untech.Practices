@@ -1,4 +1,4 @@
-namespace AsyncCommandEngine.Examples.Features.Throttling
+namespace Untech.AsyncCommandEngine.Features.Throttling
 {
 	public class ThrottleGroupOptions
 	{

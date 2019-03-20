@@ -1,11 +1,11 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using AsyncCommandEngine.Run;
+using Untech.AsyncCommandEngine.Features.WatchDog;
 using Untech.Practices.CQRS;
 using Untech.Practices.CQRS.Handlers;
 
-namespace AsyncCommandEngine.Examples
+namespace Untech.AsyncCommandEngine
 {
 	public class DummyCommand : ICommand<int>
 	{

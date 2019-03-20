@@ -1,6 +1,6 @@
 using System;
 
-namespace AsyncCommandEngine.Run
+namespace Untech.AsyncCommandEngine.Features.WatchDog
 {
 	[AttributeUsage(AttributeTargets.Class)]
 	public sealed class WatchDogTimeoutAttribute : Attribute

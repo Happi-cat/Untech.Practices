@@ -1,6 +1,6 @@
 using System;
 
-namespace Untech.AsyncCommmandEngine.Abstractions
+namespace Untech.AsyncCommandEngine
 {
 	public class AceRequest
 	{

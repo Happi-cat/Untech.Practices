@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+      <RootNamespace>Untech.AsyncCommandEngine</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Untech.AsyncCommandEngine.Abstractions\Untech.AsyncCommandEngine.Abstractions.csproj" />
+      <ProjectReference Include="..\Untech.Practices.CQRS.Abstractions\Untech.Practices.CQRS.Abstractions.csproj" />
+    </ItemGroup>
+
+</Project>

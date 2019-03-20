@@ -1,11 +1,10 @@
 using System.Threading.Tasks;
-using Untech.AsyncCommmandEngine.Abstractions;
 
-namespace AsyncCommandEngine.Run
+namespace Untech.AsyncCommandEngine
 {
 	internal class EnsureIsNotAbortedMiddleware : IAceProcessorMiddleware
 	{
-		public Task Execute(AceContext context, AceRequestProcessorDelegate next)
+		public Task ExecuteAsync(AceContext context, AceRequestProcessorDelegate next)
 		{
 			context.RequestAborted.ThrowIfCancellationRequested();
 

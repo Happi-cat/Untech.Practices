@@ -1,6 +1,6 @@
 using System;
 
-namespace AsyncCommandEngine.Run
+namespace Untech.AsyncCommandEngine.Features.WatchDog
 {
 	public static class AceBuilderExtensions
 	{

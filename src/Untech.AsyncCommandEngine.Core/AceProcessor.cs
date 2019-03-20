@@ -1,12 +1,12 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Untech.AsyncCommmandEngine.Abstractions;
 
-namespace AsyncCommandEngine.Run
+namespace Untech.AsyncCommandEngine
 {
-	internal class AceProcessor
+	public class AceProcessor
 	{
+		private static readonly AceRequestProcessorDelegate _defaultNext = ctx => Task.FromResult(0);
+
 		private readonly AceRequestProcessorDelegate _next;
 
 		public AceProcessor(IEnumerable<IAceProcessorMiddleware> middlewares)
@@ -21,18 +21,15 @@ namespace AsyncCommandEngine.Run
 
 		private static AceRequestProcessorDelegate GetNext(Queue<IAceProcessorMiddleware> middlewares)
 		{
-			if (middlewares.TryDequeue(out IAceProcessorMiddleware middleware))
+			if (middlewares.Count > 0)
 			{
+				var middleware = middlewares.Dequeue();
 				var next = GetNext(middlewares);
 
-				return ctx =>
-				{
-					Console.WriteLine("Middleware: {0}", middleware.GetType());
-					return middleware.Execute(ctx, next);
-				};
+				return ctx => middleware.ExecuteAsync(ctx, next);
 			}
 
-			return ctx => Task.CompletedTask;
+			return _defaultNext;
 		}
 	}
 }

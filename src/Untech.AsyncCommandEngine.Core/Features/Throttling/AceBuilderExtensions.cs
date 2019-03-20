@@ -1,7 +1,6 @@
 using System;
-using AsyncCommandEngine.Run;
 
-namespace AsyncCommandEngine.Examples.Features.Throttling
+namespace Untech.AsyncCommandEngine.Features.Throttling
 {
 	public static class AceBuilderExtensions
 	{

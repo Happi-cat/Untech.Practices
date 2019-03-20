@@ -1,9 +1,7 @@
 using System.Threading.Tasks;
-using AsyncCommandEngine.Examples;
-using Untech.AsyncCommmandEngine.Abstractions;
 using Untech.Practices.CQRS.Dispatching;
 
-namespace AsyncCommandEngine.Run
+namespace Untech.AsyncCommandEngine
 {
 	internal class CqrsMiddleware : IAceProcessorMiddleware
 	{
@@ -14,9 +12,8 @@ namespace AsyncCommandEngine.Run
 			_dispatcher = dispatcher;
 		}
 
-		public async Task Execute(AceContext context, AceRequestProcessorDelegate next)
+		public async Task ExecuteAsync(AceContext context, AceRequestProcessorDelegate next)
 		{
-			await new DummyCommandHandler().HandleAsync(new DummyCommand(), context.RequestAborted);
 //			await _dispatcher.ProcessAsync(new DummyCommand(), context.RequestAborted);
 		}
 	}

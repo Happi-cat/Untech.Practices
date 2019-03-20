@@ -1,6 +1,6 @@
 using System.Collections.ObjectModel;
 
-namespace AsyncCommandEngine.Examples.Features.Throttling
+namespace Untech.AsyncCommandEngine.Features.Throttling
 {
 	public class ThrottleOptions
 	{

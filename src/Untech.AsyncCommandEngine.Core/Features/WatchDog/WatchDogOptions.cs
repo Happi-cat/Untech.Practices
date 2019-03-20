@@ -1,7 +1,7 @@
 using System;
 using System.Collections.ObjectModel;
 
-namespace AsyncCommandEngine.Run
+namespace Untech.AsyncCommandEngine.Features.WatchDog
 {
 	public class WatchDogOptions
 	{

@@ -2,9 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Untech.AsyncCommmandEngine.Abstractions;
 
-namespace AsyncCommandEngine.Examples.Features.Throttling
+namespace Untech.AsyncCommandEngine.Features.Throttling
 {
 	internal class ThrottleMiddleware : IAceProcessorMiddleware
 	{
@@ -18,7 +17,7 @@ namespace AsyncCommandEngine.Examples.Features.Throttling
 			_semaphores = new Dictionary<string, SemaphoreSlim>();
 		}
 
-		public async Task Execute(AceContext context, AceRequestProcessorDelegate next)
+		public async Task ExecuteAsync(AceContext context, AceRequestProcessorDelegate next)
 		{
 			var semaphores = GetSemaphores(GetGroupKeys(context.Request.Metadata));
 
@@ -30,7 +29,7 @@ namespace AsyncCommandEngine.Examples.Features.Throttling
 			}
 			finally
 			{
-				semaphores.ForEach(s => s.Release());
+				foreach (var semaphore in semaphores) semaphore.Release();
 			}
 		}
 

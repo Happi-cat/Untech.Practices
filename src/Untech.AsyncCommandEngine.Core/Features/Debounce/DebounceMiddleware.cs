@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
-using Untech.AsyncCommmandEngine.Abstractions;
 
-namespace AsyncCommandEngine.Examples.Features.Debounce
+namespace Untech.AsyncCommandEngine.Features.Debounce
 {
 	internal class DebounceMiddleware : IAceProcessorMiddleware
 	{
@@ -12,7 +11,7 @@ namespace AsyncCommandEngine.Examples.Features.Debounce
 			_lastRunStore = lastRunStore;
 		}
 
-		public async Task Execute(AceContext context, AceRequestProcessorDelegate next)
+		public async Task ExecuteAsync(AceContext context, AceRequestProcessorDelegate next)
 		{
 			var debounceAttribute = context.Request.Metadata.GetAttribute<DebounceAttribute>();
 

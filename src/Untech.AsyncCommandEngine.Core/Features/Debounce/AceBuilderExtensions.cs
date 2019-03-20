@@ -1,7 +1,6 @@
 using System;
-using AsyncCommandEngine.Run;
 
-namespace AsyncCommandEngine.Examples.Features.Debounce
+namespace Untech.AsyncCommandEngine.Features.Debounce
 {
 	public static class AceBuilderExtensions
 	{

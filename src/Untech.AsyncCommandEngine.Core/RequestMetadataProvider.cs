@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
-using Untech.AsyncCommmandEngine.Abstractions;
 using Untech.Practices.CQRS.Handlers;
 
-namespace AsyncCommandEngine.Run
+namespace Untech.AsyncCommandEngine
 {
-	internal class RequestMetadataProvider
+	public class RequestMetadataProvider
 	{
 		private readonly Assembly[] _assemblies;
 		private readonly IReadOnlyDictionary<string, IRequestMetadata> _commandsMetadata;
@@ -23,7 +22,7 @@ namespace AsyncCommandEngine.Run
 		{
 			var commandToMetadataMap = new Dictionary<string, IRequestMetadata>();
 			var types = assemblies
-				.SelectMany(a => a.GetTypes())
+				.SelectMany(a => a.DefinedTypes)
 				.Select(t => new TypeDetective(t));
 
 			foreach (var typeDetective in types)
@@ -53,23 +52,23 @@ namespace AsyncCommandEngine.Run
 		{
 			private static readonly Type s_genericCommandHandlerType = typeof(ICommandHandler<,>);
 
-			private readonly Type _type;
+			private readonly TypeInfo _type;
 			private readonly Type[] _supportableCommands;
 
 			private IRequestMetadata _metadata;
 
-			public TypeDetective(Type type)
+			public TypeDetective(TypeInfo type)
 			{
 				_type = type;
 				_supportableCommands = _type
-					.GetInterfaces()
-					.Where(ifType => ifType.IsGenericType
+					.ImplementedInterfaces
+					.Where(ifType => ifType.IsConstructedGenericType
 						&& ifType.GetGenericTypeDefinition() == s_genericCommandHandlerType)
-					.Select(ifType => ifType.GetGenericArguments()[0])
+					.Select(ifType => ifType.GenericTypeArguments[0])
 					.ToArray();
 			}
 
-			public Type SuspectedType => _type;
+			public TypeInfo SuspectedType => _type;
 
 			public IEnumerable<Type> GetCommandTypes()
 			{
@@ -80,7 +79,7 @@ namespace AsyncCommandEngine.Run
 			{
 				if (_metadata == null)
 				{
-					var requestMetadataType = typeof(RequestMetadata<>).MakeGenericType(_type);
+					var requestMetadataType = typeof(RequestMetadata<>).MakeGenericType(_type.AsType());
 					_metadata = (IRequestMetadata)Activator.CreateInstance(requestMetadataType);
 				}
 
@@ -108,7 +107,10 @@ namespace AsyncCommandEngine.Run
 
 				static AttrCache()
 				{
-					Attributes = new ReadOnlyCollection<TAttr>(s_type.GetCustomAttributes<TAttr>().ToList());
+					Attributes = new ReadOnlyCollection<TAttr>(s_type
+						.GetTypeInfo()
+						.GetCustomAttributes<TAttr>()
+						.ToList());
 				}
 			}
 		}
@@ -117,7 +119,7 @@ namespace AsyncCommandEngine.Run
 		{
 			public TAttr GetAttribute<TAttr>() where TAttr : Attribute
 			{
-				return default(TAttr);
+				return default;
 			}
 
 			public IEnumerable<TAttr> GetAttributes<TAttr>() where TAttr : Attribute

@@ -1,6 +1,6 @@
 using System;
 
-namespace AsyncCommandEngine.Examples.Features.Throttling
+namespace Untech.AsyncCommandEngine.Features.Throttling
 {
 	[AttributeUsage(AttributeTargets.Class)]
 	public class ThrottleGroupAttribute : Attribute
