@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
 using AsyncCommandEngine.Examples;
 using AsyncCommandEngine.Examples.Features.Debounce;
@@ -16,52 +15,11 @@ using Untech.Practices.CQRS.Handlers;
 namespace Untech.AsyncCommmandEngine.Abstractions
 {
 	// used for request specific options/configuration
-	public interface IRequestMetadata
-	{
-		TAttr GetAttribute<TAttr>() where TAttr: Attribute;
-		IEnumerable<TAttr> GetAttributes<TAttr>() where TAttr: Attribute;
-	}
-
-	public class AceRequest
-	{
-		public AceRequest(string typeName, DateTimeOffset created, IRequestMetadata metadata)
-		{
-			TypeName = typeName;
-			Created = created;
-			Metadata = metadata;
-		}
-
-		public string TypeName { get; private set; }
-		public IRequestMetadata Metadata { get; private set; }
-		public DateTimeOffset Created { get; private set; }
-		public string Body { get; private set; }
-	}
-
-	public class AceContext
-	{
-		public AceContext(AceRequest request)
-		{
-			Request = request;
-			Items = new Dictionary<object, object>();
-		}
-
-		public AceRequest Request { get; private set; }
-
-		public CancellationToken RequestAborted { get; set; }
-		public IDictionary<object, object> Items { get; set; }
-	}
-
-	public delegate Task AceRequestProcessorDelegate(AceContext context);
-
-	public interface IAceProcessorMiddleware
-	{
-		Task Execute(AceContext context, AceRequestProcessorDelegate next);
-	}
 }
 
 namespace AsyncCommandEngine.Run
 {
-	public class RequestMetadata<T> : IRequestMetadata
+	internal class RequestMetadata<T> : IRequestMetadata
 	{
 		private static readonly Type s_type = typeof(T);
 
@@ -86,7 +44,7 @@ namespace AsyncCommandEngine.Run
 		}
 	}
 
-	public class NullRequestMetadata : IRequestMetadata
+	internal class NullRequestMetadata : IRequestMetadata
 	{
 		public TAttr GetAttribute<TAttr>() where TAttr : Attribute
 		{
@@ -162,38 +120,34 @@ namespace AsyncCommandEngine.Run
 		}
 	}
 
-	public class AceProcessor
+	internal class AceProcessor
 	{
-		private readonly IReadOnlyList<IAceProcessorMiddleware> _middlewares;
-		private AceRequestProcessorDelegate _cachedNext;
+		private AceRequestProcessorDelegate _next;
 
 		public AceProcessor(IEnumerable<IAceProcessorMiddleware> middlewares)
 		{
-			_middlewares = middlewares.ToList();
+			_next = GetNext(new Queue<IAceProcessorMiddleware>(middlewares ?? new List<IAceProcessorMiddleware>()));
 		}
 
 		public Task Execute(AceContext context)
 		{
-			if (_cachedNext == null) _cachedNext = GetNext(0);
-
-			return _cachedNext(context);
+			return _next(context);
 		}
 
-		private AceRequestProcessorDelegate GetNext(int nextState)
+		private static AceRequestProcessorDelegate GetNext(Queue<IAceProcessorMiddleware> middlewares)
 		{
-			return ctx =>
+			if (middlewares.TryDequeue(out IAceProcessorMiddleware middleware))
 			{
-				if (nextState >= _middlewares.Count) throw NextWasCalledAfterLastMiddleware();
+				var next = GetNext(middlewares);
 
-				var middleware = _middlewares[nextState];
-				Console.WriteLine("Middleware: {0}", middleware.GetType());
-				return middleware.Execute(ctx, GetNext(nextState + 1));
-			};
-		}
+				return ctx =>
+				{
+					Console.WriteLine("Middleware: {0}", middleware.GetType());
+					return middleware.Execute(ctx, next);
+				};
+			}
 
-		private Exception NextWasCalledAfterLastMiddleware()
-		{
-			return new InvalidOperationException("next was called inside final middle.");
+			return ctx => Task.CompletedTask;
 		}
 	}
 
