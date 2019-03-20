@@ -5,11 +5,11 @@ using Untech.AsyncCommmandEngine.Abstractions;
 
 namespace AsyncCommandEngine.Run
 {
-	public class WatchDogProcessorMiddleware : IAceProcessorMiddleware
+	internal class WatchDogMiddleware : IAceProcessorMiddleware
 	{
 		private readonly WatchDogOptions _options;
 
-		public WatchDogProcessorMiddleware(WatchDogOptions options)
+		public WatchDogMiddleware(WatchDogOptions options)
 		{
 			_options = options;
 		}

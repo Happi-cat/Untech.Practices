@@ -1,34 +1,8 @@
-using System;
-using System.Threading;
 using System.Threading.Tasks;
-using AsyncCommandEngine.Run;
 using Untech.AsyncCommmandEngine.Abstractions;
 
 namespace AsyncCommandEngine.Examples.Features.Debounce
 {
-	public static class AceBuilderExtensions
-	{
-		public static AceBuilder UseDebounce(this AceBuilder builder, ILastRunStore lastRunStore)
-		{
-			if (builder == null) throw new ArgumentNullException(nameof(builder));
-			if (lastRunStore == null) throw new ArgumentNullException(nameof(lastRunStore));
-
-			return builder.Use(() => new DebounceMiddleware(lastRunStore));
-		}
-	}
-
-	[AttributeUsage(AttributeTargets.Class)]
-	public class DebounceAttribute : Attribute
-	{
-
-	}
-
-	public interface ILastRunStore
-	{
-		Task<DateTimeOffset?> GetLastRunAsync(AceRequest request, CancellationToken cancellationToken);
-		Task SetLastRunAsync(AceRequest request);
-	}
-
 	internal class DebounceMiddleware : IAceProcessorMiddleware
 	{
 		private readonly ILastRunStore _lastRunStore;
