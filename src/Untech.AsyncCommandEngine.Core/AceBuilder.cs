@@ -1,34 +1,36 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Untech.Practices.CQRS.Dispatching;
 
 namespace Untech.AsyncCommandEngine
 {
 	public class AceBuilder
 	{
-		private readonly List<IAceProcessorMiddleware> _middlewares = new List<IAceProcessorMiddleware>();
+		private readonly List<IRequestProcessorMiddleware> _middlewares = new List<IRequestProcessorMiddleware>();
 
 		public AceBuilder UseTransport()
 		{
 			throw new NotImplementedException();
 		}
 
-		public AceBuilder Use(Func<IAceProcessorMiddleware> creator)
+		public AceBuilder Use(Func<IRequestProcessorMiddleware> creator)
 		{
 			_middlewares.Add(creator());
 			return this;
 		}
 
-		public AceProcessor BuildService()
+		public RequestProcessor BuildService(IRequestTypeFinder requestTypeFinder,
+			IRequestMaterializer requestMaterializer,
+			Func<Context, IDispatcher> container)
 		{
-			var predefinedMiddlewares = new IAceProcessorMiddleware[]
+			var predefinedMiddlewares = new IRequestProcessorMiddleware[]
 			{
-
 				new EnsureIsNotAbortedMiddleware(),
-				new CqrsMiddleware(null),
+				new CqrsMiddleware(requestTypeFinder, requestMaterializer, container),
 			};
 
-			return new AceProcessor(_middlewares.Concat(predefinedMiddlewares));
+			return new RequestProcessor(_middlewares.Concat(predefinedMiddlewares));
 		}
 	}
 }

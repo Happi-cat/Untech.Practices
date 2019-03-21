@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Untech.AsyncCommandEngine.Features.Throttling
 {
-	internal class ThrottleMiddleware : IAceProcessorMiddleware
+	internal class ThrottleMiddleware : IRequestProcessorMiddleware
 	{
 		private readonly ThrottleOptions _options;
 		private readonly Dictionary<string, SemaphoreSlim> _semaphores;
@@ -17,11 +17,11 @@ namespace Untech.AsyncCommandEngine.Features.Throttling
 			_semaphores = new Dictionary<string, SemaphoreSlim>();
 		}
 
-		public async Task ExecuteAsync(AceContext context, AceRequestProcessorDelegate next)
+		public async Task ExecuteAsync(Context context, RequestProcessorCallback next)
 		{
-			var semaphores = GetSemaphores(GetGroupKeys(context.Request.Metadata));
+			var semaphores = GetSemaphores(GetGroupKeys(context.RequestMetadata));
 
-			await Task.WhenAll(semaphores.Select(s => s.WaitAsync(context.RequestAborted)));
+			await Task.WhenAll(semaphores.Select(s => s.WaitAsync(context.Aborted)));
 
 			try
 			{
@@ -33,11 +33,11 @@ namespace Untech.AsyncCommandEngine.Features.Throttling
 			}
 		}
 
-		private IEnumerable<string> GetGroupKeys(IRequestMetadata metadata)
+		private IEnumerable<string> GetGroupKeys(IRequestMetadataAccessor metadataAccessor)
 		{
 			yield return "*";
 
-			foreach (var attribute in metadata.GetAttributes<ThrottleGroupAttribute>())
+			foreach (var attribute in metadataAccessor.GetAttributes<ThrottleGroupAttribute>())
 			{
 				if (!string.IsNullOrEmpty(attribute.Group))
 					yield return attribute.Group;

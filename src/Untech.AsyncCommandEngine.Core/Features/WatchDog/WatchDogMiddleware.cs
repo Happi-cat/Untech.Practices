@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Untech.AsyncCommandEngine.Features.WatchDog
 {
-	internal class WatchDogMiddleware : IAceProcessorMiddleware
+	internal class WatchDogMiddleware : IRequestProcessorMiddleware
 	{
 		private readonly WatchDogOptions _options;
 
@@ -13,7 +13,7 @@ namespace Untech.AsyncCommandEngine.Features.WatchDog
 			_options = options;
 		}
 
-		public async Task ExecuteAsync(AceContext context, AceRequestProcessorDelegate next)
+		public async Task ExecuteAsync(Context context, RequestProcessorCallback next)
 		{
 			var timeout = GetTimeout(context);
 			if (timeout != null)
@@ -21,20 +21,20 @@ namespace Untech.AsyncCommandEngine.Features.WatchDog
 				var watchdogTokenSource = new CancellationTokenSource(timeout.Value);
 				var linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(
 					watchdogTokenSource.Token,
-					context.RequestAborted);
+					context.Aborted);
 
-				context.RequestAborted = linkedTokenSource.Token;
+				context.Aborted = linkedTokenSource.Token;
 			}
 
 			await next(context);
 		}
 
-		private TimeSpan? GetTimeout(AceContext context)
+		private TimeSpan? GetTimeout(Context context)
 		{
-			var attr = context.Request.Metadata.GetAttribute<WatchDogTimeoutAttribute>();
+			var attr = context.RequestMetadata.GetAttribute<WatchDogTimeoutAttribute>();
 
 			if (attr != null) return attr.Timeout;
-			if (_options.RequestTimeouts.TryGetValue(context.Request.TypeName, out var timeout)) return timeout;
+			if (_options.RequestTimeouts.TryGetValue(context.RequestName, out var timeout)) return timeout;
 			return _options.DefaultTimeout;
 		}
 	}

@@ -2,11 +2,11 @@ using System.Threading.Tasks;
 
 namespace Untech.AsyncCommandEngine
 {
-	internal class EnsureIsNotAbortedMiddleware : IAceProcessorMiddleware
+	internal class EnsureIsNotAbortedMiddleware : IRequestProcessorMiddleware
 	{
-		public Task ExecuteAsync(AceContext context, AceRequestProcessorDelegate next)
+		public Task ExecuteAsync(Context context, RequestProcessorCallback next)
 		{
-			context.RequestAborted.ThrowIfCancellationRequested();
+			context.Aborted.ThrowIfCancellationRequested();
 
 			return next(context);
 		}

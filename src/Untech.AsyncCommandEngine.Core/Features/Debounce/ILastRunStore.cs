@@ -6,7 +6,7 @@ namespace Untech.AsyncCommandEngine.Features.Debounce
 {
 	public interface ILastRunStore
 	{
-		Task<DateTimeOffset?> GetLastRunAsync(AceRequest request, CancellationToken cancellationToken);
-		Task SetLastRunAsync(AceRequest request);
+		Task<DateTimeOffset?> GetLastRunAsync(Request request, CancellationToken cancellationToken);
+		Task SetLastRunAsync(Request request);
 	}
 }

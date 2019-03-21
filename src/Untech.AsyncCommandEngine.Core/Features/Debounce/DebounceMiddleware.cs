@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 
 namespace Untech.AsyncCommandEngine.Features.Debounce
 {
-	internal class DebounceMiddleware : IAceProcessorMiddleware
+	internal class DebounceMiddleware : IRequestProcessorMiddleware
 	{
 		private readonly ILastRunStore _lastRunStore;
 
@@ -11,13 +11,13 @@ namespace Untech.AsyncCommandEngine.Features.Debounce
 			_lastRunStore = lastRunStore;
 		}
 
-		public async Task ExecuteAsync(AceContext context, AceRequestProcessorDelegate next)
+		public async Task ExecuteAsync(Context context, RequestProcessorCallback next)
 		{
-			var debounceAttribute = context.Request.Metadata.GetAttribute<DebounceAttribute>();
+			var debounceAttribute = context.RequestMetadata.GetAttribute<DebounceAttribute>();
 
 			if (debounceAttribute != null)
 			{
-				var lastRun = await _lastRunStore.GetLastRunAsync(context.Request, context.RequestAborted);
+				var lastRun = await _lastRunStore.GetLastRunAsync(context.Request, context.Aborted);
 				if (lastRun != null && context.Request.Created < lastRun)
 					return;
 
