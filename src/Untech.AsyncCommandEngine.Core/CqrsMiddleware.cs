@@ -1,12 +1,9 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Untech.Practices.CQRS;
 using Untech.Practices.CQRS.Dispatching;
@@ -97,10 +94,8 @@ namespace Untech.AsyncCommandEngine
 
 					var method = s_executeCommandMethodInfo.MakeGenericMethod(requestType, resultType);
 
-//					return (ExecutorCallback)method.CreateDelegate(typeof(ExecutorCallback));
 					return BuildCallback(method);
 				}
-
 
 				if (genericTypeDef == typeof(INotification))
 				{
@@ -114,8 +109,6 @@ namespace Untech.AsyncCommandEngine
 
 			ExecutorCallback BuildCallback(MethodInfo methodInfo)
 			{
-				Expression<ExecutorCallback> test = (middleware, context) => ExecuteCommandAsync<Demo, object>(middleware, context);
-
 				var p0 = Expression.Parameter(typeof(CqrsMiddleware), "middleware");
 				var p1 = Expression.Parameter(typeof(Context), "context");
 
@@ -128,8 +121,6 @@ namespace Untech.AsyncCommandEngine
 				return lambda.Compile();
 			}
 		}
-
-		private class Demo : ICommand<object> {}
 
 		private static Task ExecuteCommandAsync<TRequest, TResult>(CqrsMiddleware middleware, Context context)
 			where TRequest: ICommand<TResult>
