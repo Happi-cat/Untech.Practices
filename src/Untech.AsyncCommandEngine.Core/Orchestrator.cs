@@ -8,55 +8,102 @@ namespace Untech.AsyncCommandEngine
 {
 	public class Orchestrator : IOrchestrator
 	{
+		private const int SlidingCoefficientRadius = 5;
+
 		private readonly ITransport _transport;
 		private readonly RequestProcessor _requestProcessor;
 		private readonly RequestMetadataAccessors _requestMetadataAccessors;
-		private readonly Timer _timer;
-		private readonly List<Slot> _slots;
-
 		private readonly object _sync = new object();
 
-		public Orchestrator(ITransport transport, RequestProcessor requestProcessor)
+		private readonly List<Slot> _slots;
+
+		private int _ticks = 0;
+		private int _slidingCoefficient = 0;
+		private CancellationTokenSource _aborted;
+		private Timer _timer;
+
+		public Orchestrator(ITransport transport, RequestMetadataAccessors requestMetadataAccessors, RequestProcessor requestProcessor)
 		{
 			_transport = transport;
 			_requestProcessor = requestProcessor;
+			_requestMetadataAccessors = requestMetadataAccessors;
+
+			_slots = Enumerable.Range(0, 5).Select(n => new Slot()).ToList();
 		}
 
-		public async Task StartAsync()
+		public Task StartAsync()
 		{
-			throw new NotImplementedException();
+			_timer = new Timer(OnTimer, null, TimeSpan.Zero, TimeSpan.FromSeconds(10));
+			_aborted = new CancellationTokenSource();
+
+			return Task.CompletedTask;
 		}
 
-		public async Task StopAsync(CancellationToken cancellationToken)
+		public Task StopAsync(TimeSpan delay)
 		{
-			throw new NotImplementedException();
+			_timer.Dispose();
+			_aborted.CancelAfter(delay);
+
+			return Task.WhenAll(_slots.Select(s => s._task));
 		}
 
-		private void OnTimer()
-		{
-			if (Monitor.IsEntered(_sync)) return;
 
+
+		private void OnTimer(object state)
+		{
 			lock (_sync)
 			{
-				var availableSlots = _slots.Where(slot => slot.CanTake()).ToList();
-
-				foreach (var slot in availableSlots)
+				if (_ticks <= 0)
 				{
-					slot.Take(Do);
+					var slot = _slots.FirstOrDefault(n => n.CanTake());
+					slot?.Take(Do);
+
+					_ticks = GetTicksFromSlidingCoefficient();
 				}
+				else
+				{
+					_ticks--;
+				}
+			}
+
+			int GetTicksFromSlidingCoefficient()
+			{
+				var c = _slidingCoefficient + SlidingCoefficientRadius;
+				return Math.Max(0, Math.Min(c, SlidingCoefficientRadius * 2));
 			}
 		}
 
 		private async Task Do()
 		{
-			var request = await _transport.GetRequestAsync();
+			var requests = await _transport.GetRequestsAsync(10);
 
-			await Do(request);
+			UpdateSlidingCoefficient();
+
+			await Task.WhenAll(requests.Select(Do));
+
+			void UpdateSlidingCoefficient()
+			{
+				var l = requests.Length;
+				var c = _slidingCoefficient;
+				const int maxC = SlidingCoefficientRadius * 2;
+
+				if (l <= 2 && c < maxC)
+				{
+					Interlocked.Increment(ref _slidingCoefficient);
+				}
+				else if (l >= 8 && -maxC < c)
+				{
+					Interlocked.Decrement(ref _slidingCoefficient);
+				}
+			}
 		}
 
 		private Task Do(Request request)
 		{
-			var context = new Context(request, _requestMetadataAccessors.GetMetadata(request.Name));
+			var context = new Context(request, _requestMetadataAccessors.GetMetadata(request.Name))
+			{
+				Aborted = _aborted.Token
+			};
 
 			return Do(context);
 		}
@@ -78,7 +125,7 @@ namespace Untech.AsyncCommandEngine
 
 		private class Slot
 		{
-			private Task _task;
+			public Task _task;
 
 			public bool CanTake()
 			{

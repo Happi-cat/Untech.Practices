@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,7 +14,7 @@ namespace Untech.AsyncCommandEngine
 
 	public interface ITransport
 	{
-		Task<Request> GetRequestAsync();
+		Task<Request[]> GetRequestsAsync(int count);
 		Task CompleteRequestAsync(Request request);
 		Task FailRequestAsync(Request request, Exception exception);
 	}
@@ -21,6 +22,6 @@ namespace Untech.AsyncCommandEngine
 	public interface IOrchestrator
 	{
 		Task StartAsync();
-		Task StopAsync(CancellationToken cancellationToken);
+		Task StopAsync(TimeSpan delay);
 	}
 }

@@ -21,7 +21,7 @@ namespace Untech.AsyncCommandEngine.Features.Throttling
 		{
 			var semaphores = GetSemaphores(GetGroupKeys(context));
 
-			await Task.WhenAll(semaphores.Select(s => s.WaitAsync(context.Aborted)));
+			await WaitAsync(semaphores, context);
 
 			try
 			{
@@ -29,8 +29,18 @@ namespace Untech.AsyncCommandEngine.Features.Throttling
 			}
 			finally
 			{
-				foreach (var semaphore in semaphores) semaphore.Release();
+				Release(semaphores);
 			}
+		}
+
+		private static Task WaitAsync(IEnumerable<SemaphoreSlim> semaphores, Context context)
+		{
+			return Task.WhenAll(semaphores.Select(s => s.WaitAsync(context.Aborted)));
+		}
+
+		private static void Release(IEnumerable<SemaphoreSlim> semaphores)
+		{
+			foreach (var semaphore in semaphores) semaphore.Release();
 		}
 
 		private IEnumerable<string> GetGroupKeys(Context context)
