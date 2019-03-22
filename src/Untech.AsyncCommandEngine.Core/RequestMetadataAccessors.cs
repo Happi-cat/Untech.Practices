@@ -37,9 +37,9 @@ namespace Untech.AsyncCommandEngine
 			return requestsMetadata;
 		}
 
-		public IRequestMetadataAccessor GetMetadata(string commandTypeName)
+		public IRequestMetadataAccessor GetMetadata(string requestTypeName)
 		{
-			return _requestsMetadata.TryGetValue(commandTypeName, out var requestMetadata)
+			return _requestsMetadata.TryGetValue(requestTypeName, out var requestMetadata)
 				? requestMetadata
 				: new NullRequestMetadataAccessor();
 		}
@@ -86,17 +86,17 @@ namespace Untech.AsyncCommandEngine
 				}
 				else
 				{
-					var requestMetadataType =typeof(RequestMetadataAccessor<>).MakeGenericType(_suspectedType.AsType());
-					_metadataAccessor = (IRequestMetadataAccessor)Activator.CreateInstance(requestMetadataType);
+					var accessorType =typeof(RequestMetadataAccessor<>).MakeGenericType(_suspectedType.AsType());
+					_metadataAccessor = (IRequestMetadataAccessor)Activator.CreateInstance(accessorType);
 				}
 
 				return _metadataAccessor;
 			}
 		}
 
-		private class RequestMetadataAccessor<T> : IRequestMetadataAccessor
+		private class RequestMetadataAccessor<TMetadataContainer> : IRequestMetadataAccessor
 		{
-			private static readonly Type s_type = typeof(T);
+			private static readonly Type s_typeMetadataContainer = typeof(TMetadataContainer);
 
 			public TAttr GetAttribute<TAttr>() where TAttr:Attribute
 			{
@@ -114,7 +114,7 @@ namespace Untech.AsyncCommandEngine
 
 				static AttrCache()
 				{
-					Attributes = new ReadOnlyCollection<TAttr>(s_type
+					Attributes = new ReadOnlyCollection<TAttr>(s_typeMetadataContainer
 						.GetTypeInfo()
 						.GetCustomAttributes<TAttr>()
 						.ToList());

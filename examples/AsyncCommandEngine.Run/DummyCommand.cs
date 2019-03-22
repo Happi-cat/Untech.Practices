@@ -1,47 +1,61 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Untech.AsyncCommandEngine.Features.Throttling;
 using Untech.AsyncCommandEngine.Features.WatchDog;
+using Untech.Practices;
 using Untech.Practices.CQRS;
 using Untech.Practices.CQRS.Handlers;
 
-namespace Untech.AsyncCommandEngine
+namespace AsyncCommandEngine.Run
 {
-	public class DummyCommand : ICommand<int>
+	public class DemoCommand : ICommand
 	{
+		public DelayCommand DelayCommand { get; set; }
+		public ThrowCommand ThrowCommand { get; set; }
 	}
 
-	[WatchDogTimeout(0, 10, 0)]
-	public class DummyCommandHandler: ICommandHandler<DummyCommand, int>
+	public class DelayCommand : ICommand
 	{
-		public Task<int> HandleAsync(DummyCommand request, CancellationToken cancellationToken)
+		public TimeSpan Timeout { get; set; }
+	}
+
+	public class ThrowCommand : ICommand
+	{
+
+	}
+
+	[WatchDogTimeout(0, 1, 0)]
+	[ThrottleGroup("DemoHandlers")]
+	public class DemoHandlers :
+		ICommandHandler<DemoCommand, Nothing>,
+		ICommandHandler<DelayCommand, Nothing>,
+		ICommandHandler<ThrowCommand, Nothing>
+	{
+		public async Task<Nothing> HandleAsync(DemoCommand request, CancellationToken cancellationToken)
 		{
-			Console.WriteLine("Hello World!");
-			return Task.FromResult(100);
+			if (request.DelayCommand != null)
+			{
+				await HandleAsync(request.DelayCommand, cancellationToken);
+			}
+
+			if (request.ThrowCommand != null)
+			{
+				await HandleAsync(request.ThrowCommand, cancellationToken);
+			}
+
+			return Nothing.AtAll;
 		}
-	}
 
-
-	public class DummyEvent : INotification
-	{
-
-	}
-
-	public class DummyEventHandler1 : INotificationHandler<DummyEvent>
-	{
-		public Task PublishAsync(DummyEvent notification, CancellationToken cancellationToken)
+		public async Task<Nothing> HandleAsync(DelayCommand request, CancellationToken cancellationToken)
 		{
-			Console.WriteLine("Hello World!");
-			return Task.CompletedTask;
+			await Task.Delay(request.Timeout, cancellationToken);
+			return Nothing.AtAll;
 		}
-	}
 
-	public class DummyEventHandler2 : INotificationHandler<DummyEvent>
-	{
-		public Task PublishAsync(DummyEvent notification, CancellationToken cancellationToken)
+		public Task<Nothing> HandleAsync(ThrowCommand request, CancellationToken cancellationToken)
 		{
-			Console.WriteLine("Hello World!");
-			return Task.CompletedTask;
+			throw new InvalidOperationException("Ooops");
 		}
 	}
 }

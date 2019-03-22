@@ -4,6 +4,6 @@ namespace Untech.AsyncCommandEngine
 {
 	public interface IRequestProcessorMiddleware
 	{
-		Task ExecuteAsync(Context context, RequestProcessorCallback next);
+		Task InvokeAsync(Context context, RequestProcessorCallback next);
 	}
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -55,8 +56,10 @@ namespace Untech.AsyncCommandEngine
 			_dispatcherSelector = dispatcherSelector;
 		}
 
-		public Task ExecuteAsync(Context context, RequestProcessorCallback next)
+		public Task InvokeAsync(Context context, RequestProcessorCallback next)
 		{
+			context.Aborted.ThrowIfCancellationRequested();
+
 			var requestType = _requestTypeFinder.Find(context.RequestName);
 
 			return s_executors
@@ -66,14 +69,11 @@ namespace Untech.AsyncCommandEngine
 
 		private ExecutorCallback BuildExecutor(Type requestType)
 		{
-			var callbacks = new List<ExecutorCallback>();
-
-			foreach (var implementedInterface in requestType.GetTypeInfo().ImplementedInterfaces)
-			{
-				var callback = BuildCallbackOrNull(implementedInterface);
-				if (callback != null)
-					callbacks.Add(callback);
-			}
+			var callbacks = requestType
+				.GetTypeInfo().ImplementedInterfaces
+				.Select(TryBuildCallback)
+				.Where(callback => callback != null)
+				.ToList();
 
 			if (callbacks.Count > 1)
 				throw new InvalidOperationException($"Request type {requestType} has multiple interfaces of type ICommand<> and INotification)");
@@ -82,7 +82,7 @@ namespace Untech.AsyncCommandEngine
 
 			return callbacks[0];
 
-			ExecutorCallback BuildCallbackOrNull(Type ifType)
+			ExecutorCallback TryBuildCallback(Type ifType)
 			{
 				if (!ifType.IsGenericType) return null;
 
@@ -113,8 +113,7 @@ namespace Untech.AsyncCommandEngine
 				var p1 = Expression.Parameter(typeof(Context), "context");
 
 				var lambda = Expression.Lambda<ExecutorCallback>(
-					Expression.Call(methodInfo, p0, p1)
-					,
+					Expression.Call(methodInfo, p0, p1),
 					p0, p1
 				);
 
@@ -125,8 +124,6 @@ namespace Untech.AsyncCommandEngine
 		private static Task ExecuteCommandAsync<TRequest, TResult>(CqrsMiddleware middleware, Context context)
 			where TRequest: ICommand<TResult>
 		{
-			Debugger.Break();
-
 			var dispatcher = middleware._dispatcherSelector(context);
 			var command = middleware._materializer.Materialize(context.Request);
 

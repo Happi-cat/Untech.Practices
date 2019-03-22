@@ -24,13 +24,12 @@ namespace Untech.AsyncCommandEngine
 			IRequestMaterializer requestMaterializer,
 			Func<Context, IDispatcher> container)
 		{
-			var predefinedMiddlewares = new IRequestProcessorMiddleware[]
+			var predefinedMiddleware = new IRequestProcessorMiddleware[]
 			{
-				new EnsureIsNotAbortedMiddleware(),
 				new CqrsMiddleware(requestTypeFinder, requestMaterializer, container),
 			};
 
-			return new RequestProcessor(_middlewares.Concat(predefinedMiddlewares));
+			return new RequestProcessor(_middlewares.Concat(predefinedMiddleware));
 		}
 	}
 }

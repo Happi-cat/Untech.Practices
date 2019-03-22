@@ -13,7 +13,7 @@ namespace Untech.AsyncCommandEngine.Features.WatchDog
 			_options = options;
 		}
 
-		public async Task ExecuteAsync(Context context, RequestProcessorCallback next)
+		public async Task InvokeAsync(Context context, RequestProcessorCallback next)
 		{
 			var timeout = GetTimeout(context);
 			if (timeout != null)

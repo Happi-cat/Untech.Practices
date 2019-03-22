@@ -11,7 +11,7 @@ namespace Untech.AsyncCommandEngine.Features.Debounce
 			_lastRunStore = lastRunStore;
 		}
 
-		public async Task ExecuteAsync(Context context, RequestProcessorCallback next)
+		public async Task InvokeAsync(Context context, RequestProcessorCallback next)
 		{
 			var debounceAttribute = context.RequestMetadata.GetAttribute<DebounceAttribute>();
 

@@ -17,9 +17,9 @@ namespace Untech.AsyncCommandEngine.Features.Throttling
 			_semaphores = new Dictionary<string, SemaphoreSlim>();
 		}
 
-		public async Task ExecuteAsync(Context context, RequestProcessorCallback next)
+		public async Task InvokeAsync(Context context, RequestProcessorCallback next)
 		{
-			var semaphores = GetSemaphores(GetGroupKeys(context.RequestMetadata));
+			var semaphores = GetSemaphores(GetGroupKeys(context));
 
 			await Task.WhenAll(semaphores.Select(s => s.WaitAsync(context.Aborted)));
 
@@ -33,14 +33,18 @@ namespace Untech.AsyncCommandEngine.Features.Throttling
 			}
 		}
 
-		private IEnumerable<string> GetGroupKeys(IRequestMetadataAccessor metadataAccessor)
+		private IEnumerable<string> GetGroupKeys(Context context)
 		{
-			yield return "*";
+			return GetEnumerable()
+				.Where(n => !string.IsNullOrEmpty(n))
+				.Distinct();
 
-			foreach (var attribute in metadataAccessor.GetAttributes<ThrottleGroupAttribute>())
+			IEnumerable<string> GetEnumerable()
 			{
-				if (!string.IsNullOrEmpty(attribute.Group))
+				foreach (var attribute in context.RequestMetadata.GetAttributes<ThrottleGroupAttribute>())
 					yield return attribute.Group;
+
+				yield return context.RequestName;
 			}
 		}
 
@@ -68,7 +72,7 @@ namespace Untech.AsyncCommandEngine.Features.Throttling
 			{
 				if (_semaphores.TryGetValue(groupKey, out semaphore)) return semaphore;
 
-				semaphore = new SemaphoreSlim(0, maxCount.Value);
+				semaphore = new SemaphoreSlim(maxCount.Value, maxCount.Value);
 				_semaphores.Add(groupKey, semaphore);
 
 				return semaphore;
@@ -77,12 +81,10 @@ namespace Untech.AsyncCommandEngine.Features.Throttling
 
 		private int? GetMaxCount(string groupKey)
 		{
-			if (groupKey == "*") return _options.DefaultRunAtOnce;
+			if (string.IsNullOrEmpty(groupKey)) return null;
 
-			if (_options.Groups.TryGetValue(groupKey, out var options))
-			{
+			if (_options.Groups != null && _options.Groups.TryGetValue(groupKey, out var options))
 				return options.RunAtOnce ?? _options.DefaultRunAtOnceInGroup;
-			}
 
 			return _options.DefaultRunAtOnceInGroup;
 		}
