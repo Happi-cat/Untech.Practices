@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,7 +23,8 @@ namespace Untech.AsyncCommandEngine
 		private CancellationTokenSource _aborted;
 		private Timer _timer;
 
-		public Orchestrator(ITransport transport, RequestMetadataAccessors requestMetadataAccessors, RequestProcessor requestProcessor)
+		public Orchestrator(ITransport transport, RequestMetadataAccessors requestMetadataAccessors,
+			RequestProcessor requestProcessor)
 		{
 			_transport = transport;
 			_requestProcessor = requestProcessor;
@@ -44,10 +46,8 @@ namespace Untech.AsyncCommandEngine
 			_timer.Dispose();
 			_aborted.CancelAfter(delay);
 
-			return Task.WhenAll(_slots.Select(s => s._task));
+			return Task.WhenAll(_slots.Select(s => s.Task));
 		}
-
-
 
 		private void OnTimer(object state)
 		{
@@ -125,18 +125,18 @@ namespace Untech.AsyncCommandEngine
 
 		private class Slot
 		{
-			public Task _task;
+			public Task Task = Task.CompletedTask;
 
 			public bool CanTake()
 			{
-				return _task.Status == TaskStatus.RanToCompletion || _task.Status == TaskStatus.Faulted;
+				return Task.Status == TaskStatus.RanToCompletion || Task.Status == TaskStatus.Faulted;
 			}
 
 			public void Take(Func<Task> function)
 			{
 				if (!CanTake()) throw new InvalidOperationException();
 
-				_task = Task.Run(function);
+				Task = Task.Run(function);
 			}
 		}
 	}
