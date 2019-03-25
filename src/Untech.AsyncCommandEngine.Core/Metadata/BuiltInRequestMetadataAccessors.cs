@@ -99,7 +99,7 @@ namespace Untech.AsyncCommandEngine.Metadata
 
 			public TAttr GetAttribute<TAttr>() where TAttr:Attribute
 			{
-				return AttrCache<TAttr>.Attributes.FirstOrDefault();
+				return AttrCache<TAttr>.Attributes.SingleOrDefault();
 			}
 
 			public IEnumerable<TAttr> GetAttributes<TAttr>() where TAttr : Attribute

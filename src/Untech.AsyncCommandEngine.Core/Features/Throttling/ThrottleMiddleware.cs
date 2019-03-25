@@ -51,8 +51,9 @@ namespace Untech.AsyncCommandEngine.Features.Throttling
 
 			IEnumerable<string> GetEnumerable()
 			{
-				foreach (var attribute in context.RequestMetadata.GetAttributes<ThrottleGroupAttribute>())
-					yield return attribute.Group;
+				var attr = context.RequestMetadata.GetAttribute<ThrottleGroupAttribute>();
+				if (attr != null)
+					yield return attr.Group;
 
 				yield return context.RequestName;
 			}

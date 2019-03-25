@@ -1,31 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Untech.AsyncCommandEngine.Metadata
 {
-	public class CompositeRequestMetadataAccessor : IRequestMetadataAccessor
-	{
-		private readonly IEnumerable<IRequestMetadataAccessor> _accessors;
-
-		public CompositeRequestMetadataAccessor(IEnumerable<IRequestMetadataAccessor> accessors)
-		{
-			_accessors = accessors.ToList();
-		}
-
-		public TAttr GetAttribute<TAttr>() where TAttr : Attribute
-		{
-			return _accessors
-				.Select(n => n.GetAttribute<TAttr>())
-				.FirstOrDefault(n => !ReferenceEquals(n, null));
-		}
-
-		public IEnumerable<TAttr> GetAttributes<TAttr>() where TAttr : Attribute
-		{
-			return _accessors.SelectMany(n => n.GetAttributes<TAttr>());
-		}
-	}
-
 	public class CompositeRequestMetadataAccessors : IRequestMetadataAccessors
 	{
 		private readonly IEnumerable<IRequestMetadataAccessors> _accessors;
@@ -41,7 +18,5 @@ namespace Untech.AsyncCommandEngine.Metadata
 
 			return new CompositeRequestMetadataAccessor(accessors);
 		}
-
-
 	}
 }
