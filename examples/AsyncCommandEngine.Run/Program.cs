@@ -66,8 +66,11 @@ namespace AsyncCommandEngine.Run
 
 		class DemoMiddleware : IRequestProcessorMiddleware
 		{
+			private int _nextTraceId = 0;
+
 			public async Task InvokeAsync(Context context, RequestProcessorCallback next)
 			{
+				context.TraceIdentifier = Interlocked.Increment(ref _nextTraceId).ToString();
 
 				try
 				{
@@ -75,7 +78,8 @@ namespace AsyncCommandEngine.Run
 				}
 				catch (Exception e)
 				{
-					Console.WriteLine("{0}:{1}: crashed with {2}", context.TraceIdentifier, DateTime.UtcNow.Ticks, e.Message);
+					Console.WriteLine("{0}:{1}: crashed with {2}", context.TraceIdentifier, DateTime.UtcNow.Ticks,
+						e.Message);
 					throw;
 				}
 			}
@@ -155,14 +159,6 @@ namespace AsyncCommandEngine.Run
 				CreateContext(new DelayCommand { Timeout = TimeSpan.FromMinutes(2) }, metadataAccessors),
 			};
 
-
-			var traceIdentifier = 1;
-			foreach (var context in contexts)
-			{
-				context.TraceIdentifier = traceIdentifier.ToString();
-				traceIdentifier++;
-			}
-
 //			var tasks = contexts
 //					.Select(ctx => (ctx, Task.Run(() => service.InvokeAsync(ctx))))
 //					.ToArray();
@@ -186,7 +182,7 @@ namespace AsyncCommandEngine.Run
 		{
 			Func<int, Task> taskAction = async (int n) =>
 			{
-				Console.WriteLine("{0}: B in {1}",n, Thread.CurrentThread.ManagedThreadId);
+				Console.WriteLine("{0}: B in {1}", n, Thread.CurrentThread.ManagedThreadId);
 				await Task.CompletedTask;
 				Console.WriteLine("{0}: E in {1}", n, Thread.CurrentThread.ManagedThreadId);
 			};
