@@ -6,11 +6,14 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Untech.AsyncCommandEngine;
 using Untech.AsyncCommandEngine.Features.Throttling;
 using Untech.AsyncCommandEngine.Features.WatchDog;
+using Untech.AsyncCommandEngine.Metadata;
+using Untech.AsyncCommandEngine.Processing;
 using Untech.Practices.CQRS.Dispatching;
 
 namespace AsyncCommandEngine.Run
@@ -67,6 +70,7 @@ namespace AsyncCommandEngine.Run
 				catch (Exception e)
 				{
 					Console.WriteLine("{0}:{1}: crashed with {2}", context.TraceIdentifier, DateTime.UtcNow.Ticks, e.Message);
+					throw;
 				}
 			}
 		}
@@ -97,9 +101,11 @@ namespace AsyncCommandEngine.Run
 
 		static void Main(string[] args)
 		{
+			Test1();
+
 			var type = typeof(DemoHandlers);
 
-			var metadataAccessors = new RequestMetadataAccessors(new[] { type.Assembly });
+			var metadataAccessors = new BuiltInRequestMetadataAccessors(new[] { type.Assembly });
 
 			var service = new AceBuilder()
 				.Use(() => new DemoMiddleware())
@@ -153,14 +159,17 @@ namespace AsyncCommandEngine.Run
 				traceIdentifier++;
 			}
 
-			var tasks = contexts
-					.Select(ctx => (ctx, Task.Run(() => service.InvokeAsync(ctx))))
-					.ToArray();
+//			var tasks = contexts
+//					.Select(ctx => (ctx, Task.Run(() => service.InvokeAsync(ctx))))
+//					.ToArray();
+//
+//			Task.WaitAll(tasks.Select(n => n.Item2).ToArray());
 
-			Task.WaitAll(tasks.Select(n => n.Item2).ToArray());
+			service.InvokeAsync(CreateContext(new ThrowCommand(), metadataAccessors)).GetAwaiter().GetResult();
+			;
 		}
 
-		private static Context CreateContext<T>(T body, RequestMetadataAccessors metadataAccessors)
+		private static Context CreateContext<T>(T body, BuiltInRequestMetadataAccessors metadataAccessors)
 		{
 			return new Context(
 				new DemoRequest<T>(body),
@@ -168,5 +177,23 @@ namespace AsyncCommandEngine.Run
 			);
 		}
 
+
+		private static void Test1()
+		{
+			Func<int, Task> taskAction = async (int n) =>
+			{
+				Console.WriteLine("{0}: B in {1}",n, Thread.CurrentThread.ManagedThreadId);
+				await Task.CompletedTask;
+				Console.WriteLine("{0}: E in {1}", n, Thread.CurrentThread.ManagedThreadId);
+			};
+
+			Console.WriteLine("B in {0}", Thread.CurrentThread.ManagedThreadId);
+
+			Task.WhenAll(Enumerable.Range(0, 10).Select(taskAction))
+				.GetAwaiter()
+				.GetResult();
+
+			Console.WriteLine("E in {0}", Thread.CurrentThread.ManagedThreadId);
+		}
 	}
 }

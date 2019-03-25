@@ -5,13 +5,13 @@ using System.Linq;
 using System.Reflection;
 using Untech.Practices.CQRS.Handlers;
 
-namespace Untech.AsyncCommandEngine
+namespace Untech.AsyncCommandEngine.Metadata
 {
-	public class RequestMetadataAccessors
+	public class BuiltInRequestMetadataAccessors : IRequestMetadataAccessors
 	{
 		private readonly IReadOnlyDictionary<string, IRequestMetadataAccessor> _requestsMetadata;
 
-		public RequestMetadataAccessors(Assembly[] assemblies)
+		public BuiltInRequestMetadataAccessors(Assembly[] assemblies)
 		{
 			_requestsMetadata = CollectRequestsMetadata(assemblies);
 		}
@@ -37,9 +37,9 @@ namespace Untech.AsyncCommandEngine
 			return requestsMetadata;
 		}
 
-		public IRequestMetadataAccessor GetMetadata(string requestTypeName)
+		public IRequestMetadataAccessor GetMetadata(string requestName)
 		{
-			return _requestsMetadata.TryGetValue(requestTypeName, out var requestMetadata)
+			return _requestsMetadata.TryGetValue(requestName, out var requestMetadata)
 				? requestMetadata
 				: new NullRequestMetadataAccessor();
 		}
@@ -47,7 +47,7 @@ namespace Untech.AsyncCommandEngine
 		private class TypeDetective
 		{
 			private static readonly Type s_genericCommandHandlerType = typeof(ICommandHandler<,>);
-			private static readonly Type s_genericRequestMetadataType = typeof(IRequestMetadata<>);
+			private static readonly Type s_genericRequestMetadataType = typeof(IRequestMetadataSource<>);
 
 			private readonly TypeInfo _suspectedType;
 			private readonly Type[] _supportableRequests;

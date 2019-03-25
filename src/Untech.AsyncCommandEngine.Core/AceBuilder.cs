@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Untech.AsyncCommandEngine.Processing;
 using Untech.Practices.CQRS.Dispatching;
 
 namespace Untech.AsyncCommandEngine

@@ -1,8 +1,10 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Untech.AsyncCommandEngine;
 using Untech.AsyncCommandEngine.Features.Throttling;
 using Untech.AsyncCommandEngine.Features.WatchDog;
+using Untech.AsyncCommandEngine.Metadata;
 using Untech.Practices;
 using Untech.Practices.CQRS;
 using Untech.Practices.CQRS.Handlers;

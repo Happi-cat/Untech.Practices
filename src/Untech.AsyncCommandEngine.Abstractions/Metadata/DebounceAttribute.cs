@@ -1,6 +1,6 @@
 using System;
 
-namespace Untech.AsyncCommandEngine.Features.Debounce
+namespace Untech.AsyncCommandEngine.Metadata
 {
 	[AttributeUsage(AttributeTargets.Class)]
 	public class DebounceAttribute : Attribute

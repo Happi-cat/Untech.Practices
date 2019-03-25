@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Untech.AsyncCommandEngine
@@ -9,6 +10,6 @@ namespace Untech.AsyncCommandEngine
 		public abstract string Name { get; }
 		public abstract Stream Body { get; }
 		public abstract DateTimeOffset Created { get; }
-		public abstract IAttributesDictionary Attributes { get; }
+		public abstract IDictionary<string, string> Attributes { get; }
 	}
 }

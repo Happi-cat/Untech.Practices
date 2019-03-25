@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using Untech.AsyncCommandEngine.Metadata;
 
 namespace Untech.AsyncCommandEngine
 {

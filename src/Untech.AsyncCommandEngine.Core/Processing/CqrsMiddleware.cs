@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -9,7 +7,7 @@ using System.Threading.Tasks;
 using Untech.Practices.CQRS;
 using Untech.Practices.CQRS.Dispatching;
 
-namespace Untech.AsyncCommandEngine
+namespace Untech.AsyncCommandEngine.Processing
 {
 	public interface IRequestTypeFinder
 	{
@@ -60,11 +58,16 @@ namespace Untech.AsyncCommandEngine
 		{
 			context.Aborted.ThrowIfCancellationRequested();
 
-			var requestType = _requestTypeFinder.Find(context.RequestName);
-
 			return s_executors
-				.GetOrAdd(context.RequestName, name => BuildExecutor(requestType))
+				.GetOrAdd(context.RequestName, BuildExecutor)
 				.Invoke(this, context);
+		}
+
+		private ExecutorCallback BuildExecutor(string requestName)
+		{
+			var requestType = _requestTypeFinder.Find(requestName);
+
+			return BuildExecutor(requestType);
 		}
 
 		private ExecutorCallback BuildExecutor(Type requestType)
