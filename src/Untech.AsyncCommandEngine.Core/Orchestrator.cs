@@ -22,7 +22,7 @@ namespace Untech.AsyncCommandEngine
 		private readonly ITransport _transport;
 		private readonly IRequestProcessor _requestProcessor;
 		private readonly IRequestMetadataAccessors _metadataAccessors;
-		private readonly object _sync = new object();
+		private readonly object _warpUseSyncRoot = new object();
 
 		private readonly List<Warp> _warps;
 
@@ -60,7 +60,7 @@ namespace Untech.AsyncCommandEngine
 
 		private void OnTimer()
 		{
-			lock (_sync)
+			lock (_warpUseSyncRoot)
 			{
 				var slot = _warps.FirstOrDefault(n => n.CanRun());
 				slot?.Run(ExecuteAsync);

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -11,7 +12,7 @@ namespace Untech.AsyncCommandEngine.Features.Throttling
 	{
 		private readonly ThrottleOptions _options;
 		private readonly Dictionary<string, SemaphoreSlim> _semaphores;
-		private readonly object _semaphoresSyncRoot = new object();
+		private readonly object _semaphoresWriteSyncRoot = new object();
 
 		public ThrottleMiddleware(ThrottleOptions options)
 		{
@@ -37,7 +38,17 @@ namespace Untech.AsyncCommandEngine.Features.Throttling
 
 		private static Task WaitAsync(IEnumerable<SemaphoreSlim> semaphores, Context context)
 		{
-			return Task.WhenAll(semaphores.Select(s => s.WaitAsync(context.Aborted)));
+			var waitTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+			var compositeTokenSource = CancellationTokenSource.CreateLinkedTokenSource(
+				waitTokenSource.Token,
+				context.Aborted);
+
+			return WaitAsync(semaphores, compositeTokenSource.Token);
+		}
+
+		private static Task WaitAsync(IEnumerable<SemaphoreSlim> semaphores, CancellationToken cancellationToken)
+		{
+			return Task.WhenAll(semaphores.Select(s => s.WaitAsync(cancellationToken)));
 		}
 
 		private static void Release(IEnumerable<SemaphoreSlim> semaphores)
@@ -49,7 +60,8 @@ namespace Untech.AsyncCommandEngine.Features.Throttling
 		{
 			return GetEnumerable()
 				.Where(n => !string.IsNullOrEmpty(n))
-				.Distinct();
+				.Distinct()
+				.OrderBy(n => n);
 
 			IEnumerable<string> GetEnumerable()
 			{
@@ -80,7 +92,7 @@ namespace Untech.AsyncCommandEngine.Features.Throttling
 			var maxCount = GetMaxCount(groupKey);
 			if (maxCount == null) return null;
 
-			lock (_semaphoresSyncRoot)
+			lock (_semaphoresWriteSyncRoot)
 			{
 				if (_semaphores.TryGetValue(groupKey, out semaphore)) return semaphore;
 
