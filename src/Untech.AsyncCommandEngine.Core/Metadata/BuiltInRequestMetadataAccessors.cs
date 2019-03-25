@@ -121,19 +121,6 @@ namespace Untech.AsyncCommandEngine.Metadata
 			}
 		}
 
-		private class NullRequestMetadataAccessor : IRequestMetadataAccessor
-		{
-			public static readonly NullRequestMetadataAccessor Default = new NullRequestMetadataAccessor();
 
-			public TAttr GetAttribute<TAttr>() where TAttr : Attribute
-			{
-				return default;
-			}
-
-			public IEnumerable<TAttr> GetAttributes<TAttr>() where TAttr : Attribute
-			{
-				return Enumerable.Empty<TAttr>();
-			}
-		}
 	}
 }
