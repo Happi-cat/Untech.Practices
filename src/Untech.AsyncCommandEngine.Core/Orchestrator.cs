@@ -63,44 +63,38 @@ namespace Untech.AsyncCommandEngine
 			lock (_sync)
 			{
 				var slot = _warps.FirstOrDefault(n => n.CanRun());
-				slot?.Run(Do);
+				slot?.Run(ExecuteAsync);
 			}
 		}
 
-		private async Task Do()
+		private async Task ExecuteAsync()
 		{
 			var requests = await _transport.GetRequestsAsync(_options.RequestsPerWarp);
 
 			UpdateSlidingCoefficient();
 
-			await Task.WhenAll(requests.Select(Do));
+			await Task.WhenAll(requests.Select(ExecuteAsync));
 
 			void UpdateSlidingCoefficient()
 			{
 				var l = requests.Length;
 
-				if (l <= 2)
-				{
-					_timer.SlideUp();
-				}
-				else if (l >= 8)
-				{
-					_timer.SlideDown();
-				}
+				if (l <= 2) _timer.SlideUp();
+				else if (l >= 8) _timer.SlideDown();
 			}
 		}
 
-		private Task Do(Request request)
+		private Task ExecuteAsync(Request request)
 		{
 			var context = new Context(request, _metadataAccessors.GetMetadata(request.Name))
 			{
 				Aborted = _aborted.Token
 			};
 
-			return Do(context);
+			return ExecuteAsync(context);
 		}
 
-		private async Task Do(Context context)
+		private async Task ExecuteAsync(Context context)
 		{
 			try
 			{
