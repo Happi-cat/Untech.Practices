@@ -18,7 +18,7 @@ namespace Untech.AsyncCommandEngine.Metadata
 
 		private static Dictionary<string, IRequestMetadataAccessor> CollectRequestsMetadata(Assembly[] assemblies)
 		{
-			var requestsMetadata = new Dictionary<string, IRequestMetadataAccessor>();
+			var requestsMetadata = new List<(string, IRequestMetadataAccessor)>();
 			var typeDetectives = assemblies
 				.SelectMany(a => a.DefinedTypes)
 				.Where(a => a.IsPublic)
@@ -28,13 +28,12 @@ namespace Untech.AsyncCommandEngine.Metadata
 			foreach (var requestType in typeDetective.GetSupportableRequestTypes())
 			{
 				if (string.IsNullOrEmpty(requestType.FullName)) continue;
-				if (requestsMetadata.ContainsKey(requestType.FullName))
-					throw new InvalidOperationException($"Found several handlers for {requestType}");
-
-				requestsMetadata.Add(requestType.FullName, typeDetective.GetMetadata());
+				requestsMetadata.Add((requestType.FullName, typeDetective.GetMetadata()));
 			}
 
-			return requestsMetadata;
+			return requestsMetadata
+				.GroupBy(n => n.Item1, n=> n.Item2)
+				.ToDictionary(n => n.Key, n => (IRequestMetadataAccessor)new CompositeRequestMetadataAccessor(n));
 		}
 
 		public IRequestMetadataAccessor GetMetadata(string requestName)
