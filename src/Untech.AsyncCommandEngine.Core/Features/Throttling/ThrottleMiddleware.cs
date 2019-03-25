@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -22,46 +21,33 @@ namespace Untech.AsyncCommandEngine.Features.Throttling
 
 		public async Task InvokeAsync(Context context, RequestProcessorCallback next)
 		{
-			var semaphores = GetSemaphores(GetGroupKeys(context));
+			var semaphore = TryGetOrAddSemaphore(GetGroupKey(context));
 
-			await WaitAsync(semaphores, context);
-
-			try
+			if (semaphore == null)
 			{
 				await next(context);
 			}
-			finally
+			else
 			{
-				Release(semaphores);
+				await semaphore.WaitAsync(context.Aborted);
+
+				try
+				{
+					await next(context);
+				}
+				finally
+				{
+					semaphore.Release();
+				}
 			}
 		}
 
-		private static Task WaitAsync(IEnumerable<SemaphoreSlim> semaphores, Context context)
-		{
-			var waitTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(10));
-			var compositeTokenSource = CancellationTokenSource.CreateLinkedTokenSource(
-				waitTokenSource.Token,
-				context.Aborted);
-
-			return WaitAsync(semaphores, compositeTokenSource.Token);
-		}
-
-		private static Task WaitAsync(IEnumerable<SemaphoreSlim> semaphores, CancellationToken cancellationToken)
-		{
-			return Task.WhenAll(semaphores.Select(s => s.WaitAsync(cancellationToken)));
-		}
-
-		private static void Release(IEnumerable<SemaphoreSlim> semaphores)
-		{
-			foreach (var semaphore in semaphores) semaphore.Release();
-		}
-
-		private IEnumerable<string> GetGroupKeys(Context context)
+		private string GetGroupKey(Context context)
 		{
 			return GetEnumerable()
 				.Where(n => !string.IsNullOrEmpty(n))
-				.Distinct()
-				.OrderBy(n => n);
+				.OrderBy(n => n)
+				.FirstOrDefault();
 
 			IEnumerable<string> GetEnumerable()
 			{
@@ -69,19 +55,6 @@ namespace Untech.AsyncCommandEngine.Features.Throttling
 					yield return attribute.Group;
 
 				yield return context.RequestName;
-			}
-		}
-
-		private List<SemaphoreSlim> GetSemaphores(IEnumerable<string> groups)
-		{
-			return GetEnumerable().Where(n => n != null).ToList();
-
-			IEnumerable<SemaphoreSlim> GetEnumerable()
-			{
-				foreach (var @group in groups)
-				{
-					yield return TryGetOrAddSemaphore(group);
-				}
 			}
 		}
 
