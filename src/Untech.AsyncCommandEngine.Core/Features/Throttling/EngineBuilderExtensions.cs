@@ -2,14 +2,14 @@ using System;
 
 namespace Untech.AsyncCommandEngine.Features.Throttling
 {
-	public static class AceBuilderExtensions
+	public static class EngineBuilderExtensions
 	{
-		public static AceBuilder UseThrottling(this AceBuilder builder)
+		public static EngineBuilder UseThrottling(this EngineBuilder builder)
 		{
 			return UseThrottling(builder, new ThrottleOptions());
 		}
 
-		public static AceBuilder UseThrottling(this AceBuilder builder, ThrottleOptions options)
+		public static EngineBuilder UseThrottling(this EngineBuilder builder, ThrottleOptions options)
 		{
 			if (builder == null) throw new ArgumentNullException(nameof(builder));
 			if (options == null) throw new ArgumentNullException(nameof(options));

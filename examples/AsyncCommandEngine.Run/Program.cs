@@ -117,7 +117,7 @@ namespace AsyncCommandEngine.Run
 
 			var metadataAccessors = new BuiltInRequestMetadataAccessors(new[] { type.Assembly });
 
-			var service = new AceBuilder()
+			var service = new EngineBuilder()
 				.Use(() => new DemoMiddleware())
 				.UseThrottling(new ThrottleOptions { DefaultRunAtOnceInGroup = 2 })
 				.UseWatchDog(new WatchDogOptions

@@ -2,9 +2,9 @@ using System;
 
 namespace Untech.AsyncCommandEngine.Features.Debounce
 {
-	public static class AceBuilderExtensions
+	public static class EngineBuilderExtensions
 	{
-		public static AceBuilder UseDebounce(this AceBuilder builder, ILastRunStore lastRunStore)
+		public static EngineBuilder UseDebounce(this EngineBuilder builder, ILastRunStore lastRunStore)
 		{
 			if (builder == null) throw new ArgumentNullException(nameof(builder));
 			if (lastRunStore == null) throw new ArgumentNullException(nameof(lastRunStore));
