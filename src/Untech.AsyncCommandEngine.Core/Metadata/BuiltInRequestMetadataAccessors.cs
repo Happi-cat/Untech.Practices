@@ -23,7 +23,7 @@ namespace Untech.AsyncCommandEngine.Metadata
 				.Where(a => a.IsPublic)
 				.Select(t => new TypeDetective(t));
 
-			var requestsMetadata = new List<(string FullName, IRequestMetadataAccessor)>();
+			var requestsMetadata = new List<(string FullName, IRequestMetadataAccessor Accessor)>();
 			foreach (TypeDetective typeDetective in typeDetectives)
 			foreach (Type requestType in typeDetective.GetSupportableRequestTypes())
 			{
@@ -32,7 +32,7 @@ namespace Untech.AsyncCommandEngine.Metadata
 			}
 
 			return requestsMetadata
-				.GroupBy(n => n.Item1, n=> n.Item2)
+				.GroupBy(n => n.FullName, n=> n.Accessor)
 				.ToDictionary(n => n.Key, n => (IRequestMetadataAccessor)new CompositeRequestMetadataAccessor(n));
 		}
 
@@ -40,7 +40,7 @@ namespace Untech.AsyncCommandEngine.Metadata
 		{
 			return _requestsMetadata.TryGetValue(requestName, out var requestMetadata)
 				? requestMetadata
-				: new NullRequestMetadataAccessor();
+				: NullRequestMetadataAccessor.Default;
 		}
 
 		private class TypeDetective
@@ -123,6 +123,8 @@ namespace Untech.AsyncCommandEngine.Metadata
 
 		private class NullRequestMetadataAccessor : IRequestMetadataAccessor
 		{
+			public static readonly NullRequestMetadataAccessor Default = new NullRequestMetadataAccessor();
+
 			public TAttr GetAttribute<TAttr>() where TAttr : Attribute
 			{
 				return default;
