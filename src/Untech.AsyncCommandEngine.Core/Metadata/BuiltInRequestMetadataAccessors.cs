@@ -18,14 +18,14 @@ namespace Untech.AsyncCommandEngine.Metadata
 
 		private static Dictionary<string, IRequestMetadataAccessor> CollectRequestsMetadata(Assembly[] assemblies)
 		{
-			var requestsMetadata = new List<(string, IRequestMetadataAccessor)>();
 			var typeDetectives = assemblies
 				.SelectMany(a => a.DefinedTypes)
 				.Where(a => a.IsPublic)
 				.Select(t => new TypeDetective(t));
 
-			foreach (var typeDetective in typeDetectives)
-			foreach (var requestType in typeDetective.GetSupportableRequestTypes())
+			var requestsMetadata = new List<(string FullName, IRequestMetadataAccessor)>();
+			foreach (TypeDetective typeDetective in typeDetectives)
+			foreach (Type requestType in typeDetective.GetSupportableRequestTypes())
 			{
 				if (string.IsNullOrEmpty(requestType.FullName)) continue;
 				requestsMetadata.Add((requestType.FullName, typeDetective.GetMetadata()));
