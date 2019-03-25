@@ -69,7 +69,7 @@ namespace Untech.AsyncCommandEngine
 
 		private async Task Do()
 		{
-			var requests = await _transport.GetRequestsAsync(10);
+			var requests = await _transport.GetRequestsAsync(_options.RequestsPerWarp);
 
 			UpdateSlidingCoefficient();
 
