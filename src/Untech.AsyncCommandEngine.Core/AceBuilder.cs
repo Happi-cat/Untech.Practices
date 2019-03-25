@@ -21,13 +21,11 @@ namespace Untech.AsyncCommandEngine
 			return this;
 		}
 
-		public RequestProcessor BuildService(IRequestTypeFinder requestTypeFinder,
-			IRequestMaterializer requestMaterializer,
-			Func<Context, IDispatcher> container)
+		public IRequestProcessor BuildService(ICqrsStrategy strategy)
 		{
 			var predefinedMiddleware = new IRequestProcessorMiddleware[]
 			{
-				new CqrsMiddleware(requestTypeFinder, requestMaterializer, container),
+				new CqrsMiddleware(strategy),
 			};
 
 			return new RequestProcessor(_middlewares.Concat(predefinedMiddleware));

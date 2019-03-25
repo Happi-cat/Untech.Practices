@@ -5,19 +5,9 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 using Untech.Practices.CQRS;
-using Untech.Practices.CQRS.Dispatching;
 
 namespace Untech.AsyncCommandEngine.Processing
 {
-	public interface IRequestTypeFinder
-	{
-		TypeInfo Find(string typeName);
-	}
-
-	public interface IRequestMaterializer
-	{
-		object Materialize(Request request);
-	}
 	internal class CqrsMiddleware : IRequestProcessorMiddleware
 	{
 		private static readonly MethodInfo s_executeCommandMethodInfo;
@@ -27,9 +17,7 @@ namespace Untech.AsyncCommandEngine.Processing
 
 		private delegate Task ExecutorCallback(CqrsMiddleware middleware, Context context);
 
-		private readonly IRequestTypeFinder _requestTypeFinder;
-		private readonly IRequestMaterializer _materializer;
-		private readonly Func<Context, IDispatcher> _dispatcherSelector;
+		private readonly ICqrsStrategy _strategy;
 
 		static CqrsMiddleware()
 		{
@@ -45,13 +33,9 @@ namespace Untech.AsyncCommandEngine.Processing
 			}
 		}
 
-		public CqrsMiddleware(IRequestTypeFinder requestTypeFinder,
-			IRequestMaterializer materializer,
-			Func<Context, IDispatcher> dispatcherSelector)
+		public CqrsMiddleware(ICqrsStrategy strategy)
 		{
-			_requestTypeFinder = requestTypeFinder;
-			_materializer = materializer;
-			_dispatcherSelector = dispatcherSelector;
+			_strategy = strategy;
 		}
 
 		public Task InvokeAsync(Context context, RequestProcessorCallback next)
@@ -65,7 +49,7 @@ namespace Untech.AsyncCommandEngine.Processing
 
 		private ExecutorCallback BuildExecutor(string requestName)
 		{
-			var requestType = _requestTypeFinder.Find(requestName);
+			var requestType = _strategy.FindRequestType(requestName);
 
 			return BuildExecutor(requestType);
 		}
@@ -127,8 +111,8 @@ namespace Untech.AsyncCommandEngine.Processing
 		private static Task ExecuteCommandAsync<TRequest, TResult>(CqrsMiddleware middleware, Context context)
 			where TRequest: ICommand<TResult>
 		{
-			var dispatcher = middleware._dispatcherSelector(context);
-			var command = middleware._materializer.Materialize(context.Request);
+			var dispatcher = middleware._strategy.GetDispatcher(context);
+			var command = middleware._strategy.MaterializeRequest(context.Request);
 
 			return dispatcher.ProcessAsync((TRequest)command, context.Aborted);
 		}
@@ -136,8 +120,8 @@ namespace Untech.AsyncCommandEngine.Processing
 		private static Task ExecuteNotificationAsync<TNotification>(CqrsMiddleware middleware, Context context)
 			where TNotification: INotification
 		{
-			var dispatcher = middleware._dispatcherSelector(context);
-			var notification = middleware._materializer.Materialize(context.Request);
+			var dispatcher = middleware._strategy.GetDispatcher(context);
+			var notification = middleware._strategy.MaterializeRequest(context.Request);
 
 			return dispatcher.PublishAsync((TNotification)notification, context.Aborted);
 		}

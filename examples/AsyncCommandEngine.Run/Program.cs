@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -20,7 +21,7 @@ namespace AsyncCommandEngine.Run
 {
 	class Program
 	{
-		class DemoRequestReflection : IRequestTypeFinder, IRequestMaterializer, ITypeResolver
+		class CqrsStrategy : ICqrsStrategy, ITypeResolver
 		{
 			private readonly IReadOnlyList<Type> _types = new List<Type>
 			{
@@ -28,24 +29,6 @@ namespace AsyncCommandEngine.Run
 				typeof(DelayCommand),
 				typeof(ThrowCommand)
 			};
-
-			public TypeInfo Find(string typeName)
-			{
-				return _types
-					.Where(t => t.FullName == typeName)
-					.Select(t => t.GetTypeInfo())
-					.FirstOrDefault();
-			}
-
-			public object Materialize(Request request)
-			{
-				var json = new StreamReader(request.Body).ReadToEnd();
-
-				return JsonConvert.DeserializeObject(json, new JsonSerializerSettings
-				{
-					TypeNameHandling = TypeNameHandling.All
-				});
-			}
 
 			public T ResolveOne<T>() where T : class
 			{
@@ -55,6 +38,29 @@ namespace AsyncCommandEngine.Run
 			public IEnumerable<T> ResolveMany<T>() where T : class
 			{
 				return Enumerable.Empty<T>();
+			}
+
+			public TypeInfo FindRequestType(string requestName)
+			{
+				return _types
+					.Where(t => t.FullName == requestName)
+					.Select(t => t.GetTypeInfo())
+					.FirstOrDefault();
+			}
+
+			public object MaterializeRequest(Request request)
+			{
+				var json = new StreamReader(request.Body).ReadToEnd();
+
+				return JsonConvert.DeserializeObject(json, new JsonSerializerSettings
+				{
+					TypeNameHandling = TypeNameHandling.All
+				});
+			}
+
+			public IDispatcher GetDispatcher(Context context)
+			{
+				return new Dispatcher(this);
 			}
 		}
 
@@ -96,7 +102,7 @@ namespace AsyncCommandEngine.Run
 
 			public override Stream Body { get; }
 			public override DateTimeOffset Created { get; }
-			public override IAttributesDictionary Attributes { get; }
+			public override IDictionary<string, string> Attributes { get; }
 		}
 
 		static void Main(string[] args)
@@ -118,9 +124,7 @@ namespace AsyncCommandEngine.Run
 						["Library1.Command1"] = TimeSpan.FromMinutes(10)
 					})
 				})
-				.BuildService(new DemoRequestReflection(),
-					new DemoRequestReflection(),
-					ctx => new Dispatcher(new DemoRequestReflection()));
+				.BuildService(new CqrsStrategy());
 
 
 			var contexts = new[]

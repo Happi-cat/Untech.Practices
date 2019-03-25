@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -34,11 +33,7 @@ namespace Untech.AsyncCommandEngine.Processing
 				var currentMiddleware = steps.Dequeue();
 				var next = BuildChain(steps);
 
-				return ctx =>
-				{
-					Console.WriteLine("{0}:{1}: {2}", ctx.TraceIdentifier, DateTime.UtcNow.Ticks, currentMiddleware.GetType().Name);
-					return currentMiddleware.InvokeAsync(ctx, next);
-				};
+				return ctx => currentMiddleware.InvokeAsync(ctx, next);
 			}
 
 			return s_defaultNext;
