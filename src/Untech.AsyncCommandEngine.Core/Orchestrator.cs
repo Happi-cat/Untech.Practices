@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,7 +25,7 @@ namespace Untech.AsyncCommandEngine
 		private readonly IRequestMetadataAccessors _metadataAccessors;
 		private readonly object _warpUseSyncRoot = new object();
 
-		private readonly List<Warp> _warps;
+		private readonly ReadOnlyCollection<Warp> _warps;
 
 		private CancellationTokenSource _aborted;
 		private SlidingTimer _timer;
@@ -39,7 +40,7 @@ namespace Untech.AsyncCommandEngine
 			_requestProcessor = requestProcessor;
 			_metadataAccessors = metadataAccessors;
 
-			_warps = Enumerable.Range(0, options.Warps).Select(n => new Warp()).ToList();
+			_warps = Enumerable.Range(0, options.Warps).Select(n => new Warp()).ToList().AsReadOnly();
 		}
 
 		public Task StartAsync()

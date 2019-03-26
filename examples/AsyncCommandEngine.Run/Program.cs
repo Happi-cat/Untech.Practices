@@ -40,12 +40,9 @@ namespace AsyncCommandEngine.Run
 				return Enumerable.Empty<T>();
 			}
 
-			public TypeInfo FindRequestType(string requestName)
+			public Type FindRequestType(string requestName)
 			{
-				return _types
-					.Where(t => t.FullName == requestName)
-					.Select(t => t.GetTypeInfo())
-					.FirstOrDefault();
+				return _types.FirstOrDefault(t => t.FullName == requestName);
 			}
 
 			public object MaterializeRequest(Request request)

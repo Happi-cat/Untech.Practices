@@ -1,11 +1,11 @@
-using System.Reflection;
+using System;
 using Untech.Practices.CQRS.Dispatching;
 
 namespace Untech.AsyncCommandEngine.Processing
 {
 	public interface ICqrsStrategy
 	{
-		TypeInfo FindRequestType(string requestName);
+		Type FindRequestType(string requestName);
 
 		object MaterializeRequest(Request request);
 

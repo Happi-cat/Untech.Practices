@@ -6,7 +6,7 @@ namespace Untech.AsyncCommandEngine.Metadata
 {
 	public class CompositeRequestMetadataAccessor : IRequestMetadataAccessor
 	{
-		private readonly IEnumerable<IRequestMetadataAccessor> _accessors;
+		private readonly IReadOnlyCollection<IRequestMetadataAccessor> _accessors;
 
 		public CompositeRequestMetadataAccessor(IEnumerable<IRequestMetadataAccessor> accessors)
 		{

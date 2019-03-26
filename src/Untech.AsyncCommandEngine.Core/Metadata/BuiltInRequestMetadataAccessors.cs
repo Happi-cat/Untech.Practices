@@ -16,6 +16,13 @@ namespace Untech.AsyncCommandEngine.Metadata
 			_requestsMetadata = CollectRequestsMetadata(assemblies);
 		}
 
+		public IRequestMetadataAccessor GetMetadata(string requestName)
+		{
+			return _requestsMetadata.TryGetValue(requestName, out var requestMetadata)
+				? requestMetadata
+				: NullRequestMetadataAccessor.Default;
+		}
+
 		private static Dictionary<string, IRequestMetadataAccessor> CollectRequestsMetadata(Assembly[] assemblies)
 		{
 			var typeDetectives = assemblies
@@ -32,42 +39,31 @@ namespace Untech.AsyncCommandEngine.Metadata
 			}
 
 			return requestsMetadata
-				.GroupBy(n => n.FullName, n=> n.Accessor)
+				.GroupBy(n => n.FullName, n => n.Accessor)
 				.ToDictionary(n => n.Key, n => (IRequestMetadataAccessor)new CompositeRequestMetadataAccessor(n));
-		}
-
-		public IRequestMetadataAccessor GetMetadata(string requestName)
-		{
-			return _requestsMetadata.TryGetValue(requestName, out var requestMetadata)
-				? requestMetadata
-				: NullRequestMetadataAccessor.Default;
 		}
 
 		private class TypeDetective
 		{
-			private static readonly Type s_genericCommandHandlerType = typeof(ICommandHandler<,>);
-			private static readonly Type s_genericRequestMetadataType = typeof(IRequestMetadataSource<>);
+			private static readonly IReadOnlyList<Type> s_matchableGenericTypes = new List<Type>
+			{
+				typeof(ICommandHandler<,>),
+				typeof(IRequestMetadataSource<>)
+			};
 
 			private readonly TypeInfo _suspectedType;
-			private readonly Type[] _supportableRequests;
+			private readonly IReadOnlyList<Type> _supportableRequests;
 
 			private IRequestMetadataAccessor _metadataAccessor;
 
 			public TypeDetective(TypeInfo suspectedType)
 			{
-				var matchableGenericTypes = new[]
-				{
-					s_genericCommandHandlerType,
-					s_genericRequestMetadataType
-				};
-
 				_suspectedType = suspectedType;
-				_supportableRequests = _suspectedType
-					.ImplementedInterfaces
+				_supportableRequests = _suspectedType.ImplementedInterfaces
 					.Where(ifType => ifType.IsConstructedGenericType
-						&& matchableGenericTypes.Contains(ifType.GetGenericTypeDefinition()))
+						&& s_matchableGenericTypes.Contains(ifType.GetGenericTypeDefinition()))
 					.Select(ifType => ifType.GenericTypeArguments[0])
-					.ToArray();
+					.ToList();
 			}
 
 			public IEnumerable<Type> GetSupportableRequestTypes()
@@ -79,23 +75,24 @@ namespace Untech.AsyncCommandEngine.Metadata
 			{
 				if (_metadataAccessor != null) return _metadataAccessor;
 
-				if (_supportableRequests.Length == 0)
+				return _metadataAccessor = CreateMetadata();
+			}
+
+			private IRequestMetadataAccessor CreateMetadata()
+			{
+				if (_supportableRequests.Count == 0)
 				{
-					_metadataAccessor = new NullRequestMetadataAccessor();
-				}
-				else
-				{
-					var accessorType =typeof(RequestMetadataAccessor<>).MakeGenericType(_suspectedType.AsType());
-					_metadataAccessor = (IRequestMetadataAccessor)Activator.CreateInstance(accessorType);
+					return NullRequestMetadataAccessor.Default;
 				}
 
-				return _metadataAccessor;
+				var accessorType = typeof(RequestMetadataAccessor<>).MakeGenericType(_suspectedType.AsType());
+				return (IRequestMetadataAccessor)Activator.CreateInstance(accessorType);
 			}
 		}
 
 		private class RequestMetadataAccessor<TMetadataContainer> : IRequestMetadataAccessor
 		{
-			private static readonly Type s_typeMetadataContainer = typeof(TMetadataContainer);
+			private static readonly TypeInfo s_metadataContainerType = typeof(TMetadataContainer).GetTypeInfo();
 
 			public TAttr GetAttribute<TAttr>() where TAttr:Attribute
 			{
@@ -113,14 +110,9 @@ namespace Untech.AsyncCommandEngine.Metadata
 
 				static AttrCache()
 				{
-					Attributes = new ReadOnlyCollection<TAttr>(s_typeMetadataContainer
-						.GetTypeInfo()
-						.GetCustomAttributes<TAttr>()
-						.ToList());
+					Attributes = s_metadataContainerType.GetCustomAttributes<TAttr>().ToList().AsReadOnly();
 				}
 			}
 		}
-
-
 	}
 }

@@ -4,9 +4,14 @@ using System.Linq;
 
 namespace Untech.AsyncCommandEngine.Metadata
 {
-	public class NullRequestMetadataAccessor : IRequestMetadataAccessor
+	public sealed class NullRequestMetadataAccessor : IRequestMetadataAccessor
 	{
 		public static readonly IRequestMetadataAccessor Default = new NullRequestMetadataAccessor();
+
+		private NullRequestMetadataAccessor()
+		{
+
+		}
 
 		public TAttr GetAttribute<TAttr>() where TAttr : Attribute
 		{

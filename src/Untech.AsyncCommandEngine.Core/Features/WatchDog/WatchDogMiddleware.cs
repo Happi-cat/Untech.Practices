@@ -36,7 +36,9 @@ namespace Untech.AsyncCommandEngine.Features.WatchDog
 			var attr = context.RequestMetadata.GetAttribute<WatchDogTimeoutAttribute>();
 
 			if (attr != null) return attr.Timeout;
-			if (_options.RequestTimeouts.TryGetValue(context.RequestName, out var timeout)) return timeout;
+			if (_options.RequestTimeouts != null
+				&& _options.RequestTimeouts.TryGetValue(context.RequestName, out var timeout))
+				return timeout;
 			return _options.DefaultTimeout;
 		}
 	}
