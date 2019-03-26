@@ -27,7 +27,7 @@ namespace AsyncCommandEngine.Run
 
 	}
 
-	[WatchDogTimeout(0, 1, 0)]
+	[WatchDogTimeout(0, 0, 10)]
 	[ThrottleGroup("DemoHandlers")]
 	public class DemoHandlers :
 		ICommandHandler<DemoCommand, Nothing>,

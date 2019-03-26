@@ -20,7 +20,7 @@ namespace Untech.AsyncCommandEngine.Metadata
 		{
 			return _requestsMetadata.TryGetValue(requestName, out var requestMetadata)
 				? requestMetadata
-				: NullRequestMetadataAccessor.Default;
+				: NullRequestMetadataAccessor.Instance;
 		}
 
 		private static Dictionary<string, IRequestMetadataAccessor> CollectRequestsMetadata(Assembly[] assemblies)
@@ -82,7 +82,7 @@ namespace Untech.AsyncCommandEngine.Metadata
 			{
 				if (_supportableRequests.Count == 0)
 				{
-					return NullRequestMetadataAccessor.Default;
+					return NullRequestMetadataAccessor.Instance;
 				}
 
 				var accessorType = typeof(RequestMetadataAccessor<>).MakeGenericType(_suspectedType.AsType());

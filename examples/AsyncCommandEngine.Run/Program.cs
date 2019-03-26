@@ -5,10 +5,13 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using MoreLinq;
 using Newtonsoft.Json;
 using Untech.AsyncCommandEngine;
 using Untech.AsyncCommandEngine.Features.Throttling;
@@ -42,11 +45,12 @@ namespace AsyncCommandEngine.Run
 
 			public Type FindRequestType(string requestName)
 			{
-				return _types.FirstOrDefault(t => t.FullName == requestName);
+				return _types.First(t => t.FullName == requestName);
 			}
 
 			public object MaterializeRequest(Request request)
 			{
+				request.Body.Seek(0, SeekOrigin.Begin);
 				var json = new StreamReader(request.Body).ReadToEnd();
 
 				return JsonConvert.DeserializeObject(json, new JsonSerializerSettings
@@ -69,21 +73,25 @@ namespace AsyncCommandEngine.Run
 			{
 				context.TraceIdentifier = Interlocked.Increment(ref _nextTraceId).ToString();
 
+				var reader = new StreamReader(context.Request.Body);
+
+				Console.WriteLine("{0}:{1}: Request {2}", context.TraceIdentifier, DateTime.UtcNow.Ticks,
+					reader.ReadToEnd());
 				try
 				{
 					await next(context);
 				}
 				catch (Exception e)
 				{
-					Console.WriteLine("{0}:{1}: crashed with {2}", context.TraceIdentifier, DateTime.UtcNow.Ticks,
-						e.Message);
-					throw;
+					Console.WriteLine("{0}:{1}: crashed with {2}", context.TraceIdentifier, DateTime.UtcNow.Ticks, e);
 				}
 			}
 		}
 
 		class DemoRequest<T> : Request
 		{
+			private byte[] _body;
+
 			public DemoRequest(T body)
 			{
 				Identifier = Guid.NewGuid().ToString("B");
@@ -92,7 +100,7 @@ namespace AsyncCommandEngine.Run
 				{
 					TypeNameHandling = TypeNameHandling.All
 				});
-				Body = new MemoryStream(Encoding.UTF8.GetBytes(jsonBody));
+				_body = Encoding.UTF8.GetBytes(jsonBody);
 
 				Name = typeof(T).FullName;
 				Created = DateTimeOffset.UtcNow;
@@ -101,20 +109,83 @@ namespace AsyncCommandEngine.Run
 			public override string Identifier { get; }
 			public override string Name { get; }
 
-			public override Stream Body { get; }
+			public override Stream Body => new MemoryStream(_body);
 			public override DateTimeOffset Created { get; }
 			public override IDictionary<string, string> Attributes { get; }
 		}
 
+
+		class DemoTransport : ITransport
+		{
+			private readonly Random _rand = new Random();
+			private readonly IReadOnlyCollection<Request> _demo;
+
+			public DemoTransport(IRequestMetadataAccessors metadataAccessors)
+			{
+				_demo = new List<Request>
+				{
+					// bare
+					Create(new DemoCommand()),
+
+					//throw
+					Create(new ThrowCommand()),
+
+					// delays
+					Create(new DelayCommand { Timeout = TimeSpan.FromSeconds(2) }),
+					Create(new DelayCommand { Timeout = TimeSpan.FromMinutes(2) }),
+
+					// combined
+					Create(new DemoCommand
+					{
+						DelayCommand = new DelayCommand { Timeout = TimeSpan.FromSeconds(2) },
+					}),
+					Create(new DemoCommand
+					{
+						DelayCommand = new DelayCommand { Timeout = TimeSpan.FromMinutes(2) },
+					}),
+					Create(new DemoCommand
+					{
+						DelayCommand = new DelayCommand { Timeout = TimeSpan.FromSeconds(2) },
+						ThrowCommand = new ThrowCommand()
+					}),
+					Create(new DemoCommand
+					{
+						DelayCommand = new DelayCommand { Timeout = TimeSpan.FromMinutes(2) },
+						ThrowCommand = new ThrowCommand()
+					}),
+				};
+			}
+
+			public Task<Request[]> GetRequestsAsync(int count)
+			{
+				count = _rand.Next(count);
+				return Task.FromResult(_demo.Shuffle(_rand).Repeat().Take(count).ToArray());
+			}
+
+			public Task CompleteRequestAsync(Request request)
+			{
+				return Task.CompletedTask;
+			}
+
+			public Task FailRequestAsync(Request request, Exception exception)
+			{
+				return Task.CompletedTask;
+			}
+
+			private static Request Create<T>(T body)
+			{
+				return new DemoRequest<T>(body);
+			}
+		}
+
 		static void Main(string[] args)
 		{
-			Test1();
-
 			var type = typeof(DemoHandlers);
 
 			var metadataAccessors = new BuiltInRequestMetadataAccessors(new[] { type.Assembly });
 
 			var service = new EngineBuilder()
+				.UseTransport(new DemoTransport(metadataAccessors))
 				.Use(() => new DemoMiddleware())
 				.UseThrottling(new ThrottleOptions { DefaultRunAtOnceInGroup = 2 })
 				.UseWatchDog(new WatchDogOptions
@@ -125,36 +196,13 @@ namespace AsyncCommandEngine.Run
 						["Library1.Command1"] = TimeSpan.FromMinutes(10)
 					})
 				})
-				.BuildService(new CqrsStrategy());
-
-
-			var contexts = new[]
-			{
-				CreateContext(new DemoCommand(), metadataAccessors),
-				CreateContext(new DemoCommand(), metadataAccessors),
-				CreateContext(new DelayCommand
+				.BuildOrchestrator(new CqrsStrategy(), new OrchestratorOptions
 				{
-					Timeout = TimeSpan.FromSeconds(20)
-				}, metadataAccessors),
-				CreateContext(new ThrowCommand(), metadataAccessors),
-				CreateContext(new DemoCommand
-				{
-					DelayCommand = new DelayCommand { Timeout = TimeSpan.FromSeconds(10) }
-				}, metadataAccessors),
-				CreateContext(new DelayCommand { Timeout = TimeSpan.FromMinutes(2) }, metadataAccessors),
-				CreateContext(new DemoCommand(), metadataAccessors),
-				CreateContext(new DemoCommand(), metadataAccessors),
-				CreateContext(new DelayCommand
-				{
-					Timeout = TimeSpan.FromSeconds(20)
-				}, metadataAccessors),
-				CreateContext(new ThrowCommand(), metadataAccessors),
-				CreateContext(new DemoCommand
-				{
-					DelayCommand = new DelayCommand { Timeout = TimeSpan.FromSeconds(10) }
-				}, metadataAccessors),
-				CreateContext(new DelayCommand { Timeout = TimeSpan.FromMinutes(2) }, metadataAccessors),
-			};
+					Warps = 10,
+					RequestsPerWarp = 10,
+					SlidingStep = TimeSpan.FromSeconds(1),
+					SlidingRadius = 5
+				});
 
 //			var tasks = contexts
 //					.Select(ctx => (ctx, Task.Run(() => service.InvokeAsync(ctx))))
@@ -162,35 +210,13 @@ namespace AsyncCommandEngine.Run
 //
 //			Task.WaitAll(tasks.Select(n => n.Item2).ToArray());
 
-			service.InvokeAsync(CreateContext(new ThrowCommand(), metadataAccessors)).GetAwaiter().GetResult();
-			;
-		}
+			var task = Task.Run(service.StartAsync);
 
-		private static Context CreateContext<T>(T body, BuiltInRequestMetadataAccessors metadataAccessors)
-		{
-			return new Context(
-				new DemoRequest<T>(body),
-				metadataAccessors.GetMetadata(typeof(T).FullName)
-			);
+			Console.ReadKey();
+
+			service.StopAsync(TimeSpan.Zero).ConfigureAwait(false).GetAwaiter().GetResult();
 		}
 
 
-		private static void Test1()
-		{
-			Func<int, Task> taskAction = async (int n) =>
-			{
-				Console.WriteLine("{0}: B in {1}", n, Thread.CurrentThread.ManagedThreadId);
-				await Task.CompletedTask;
-				Console.WriteLine("{0}: E in {1}", n, Thread.CurrentThread.ManagedThreadId);
-			};
-
-			Console.WriteLine("B in {0}", Thread.CurrentThread.ManagedThreadId);
-
-			Task.WhenAll(Enumerable.Range(0, 10).Select(taskAction))
-				.GetAwaiter()
-				.GetResult();
-
-			Console.WriteLine("E in {0}", Thread.CurrentThread.ManagedThreadId);
-		}
 	}
 }

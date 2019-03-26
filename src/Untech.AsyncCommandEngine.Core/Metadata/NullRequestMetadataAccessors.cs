@@ -2,7 +2,7 @@ namespace Untech.AsyncCommandEngine.Metadata
 {
 	public sealed class NullRequestMetadataAccessors : IRequestMetadataAccessors
 	{
-		public static readonly IRequestMetadataAccessors Default = new NullRequestMetadataAccessors();
+		public static readonly IRequestMetadataAccessors Instance = new NullRequestMetadataAccessors();
 
 		private NullRequestMetadataAccessors()
 		{
@@ -11,7 +11,7 @@ namespace Untech.AsyncCommandEngine.Metadata
 
 		public IRequestMetadataAccessor GetMetadata(string requestName)
 		{
-			return NullRequestMetadataAccessor.Default;
+			return NullRequestMetadataAccessor.Instance;
 		}
 	}
 }

@@ -4,25 +4,19 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Untech.AsyncCommandEngine.Metadata;
 using Untech.AsyncCommandEngine.Processing;
 
 namespace Untech.AsyncCommandEngine
 {
-	public class OrchestratorOptions
-	{
-		public int Warps { get; set; }
-		public int RequestsPerWarp { get; set; }
-		public int SlidingRadius { get; set; }
-		public TimeSpan SlidingStep { get; set; }
-	}
-
-	public class Orchestrator : IOrchestrator
+	public partial class Orchestrator : IOrchestrator
 	{
 		private readonly OrchestratorOptions _options;
 		private readonly ITransport _transport;
 		private readonly IRequestProcessor _requestProcessor;
 		private readonly IRequestMetadataAccessors _metadataAccessors;
+		private readonly ILogger _logger;
 		private readonly object _warpUseSyncRoot = new object();
 
 		private readonly ReadOnlyCollection<Warp> _warps;
@@ -33,19 +27,21 @@ namespace Untech.AsyncCommandEngine
 		public Orchestrator(OrchestratorOptions options,
 			ITransport transport,
 			IRequestMetadataAccessors metadataAccessors,
-			IRequestProcessor requestProcessor)
+			IRequestProcessor requestProcessor,
+			ILoggerFactory loggerFactory)
 		{
 			_options = options;
 			_transport = transport;
 			_requestProcessor = requestProcessor;
 			_metadataAccessors = metadataAccessors;
+			_logger = loggerFactory.CreateLogger<Orchestrator>();
 
 			_warps = Enumerable.Range(0, options.Warps).Select(n => new Warp()).ToList().AsReadOnly();
 		}
 
 		public Task StartAsync()
 		{
-			_timer = new SlidingTimer(OnTimer, _options.SlidingStep, _options.SlidingRadius);
+			_timer = new SlidingTimer(OnTimer, _options.SlidingStep, _options.SlidingRadius, _logger);
 			_aborted = new CancellationTokenSource();
 
 			return Task.CompletedTask;
@@ -64,7 +60,16 @@ namespace Untech.AsyncCommandEngine
 			lock (_warpUseSyncRoot)
 			{
 				var slot = _warps.FirstOrDefault(n => n.CanRun());
-				slot?.Run(ExecuteAsync);
+
+				if (slot != null)
+				{
+					_logger.IsFreeWarpAvailable();
+					slot.Run(ExecuteAsync);
+				}
+				else
+				{
+					_logger.NoFreeWarpAvailable();
+				}
 			}
 		}
 
@@ -80,8 +85,8 @@ namespace Untech.AsyncCommandEngine
 			{
 				var l = requests.Length;
 
-				if (l <= 2) _timer.SlideUp();
-				else if (l >= 8) _timer.SlideDown();
+				if (l <= 2) _timer.Increase();
+				else if (l >= 8) _timer.Decrease();
 			}
 		}
 
@@ -108,95 +113,6 @@ namespace Untech.AsyncCommandEngine
 			}
 
 			await _transport.CompleteRequestAsync(context.Request);
-		}
-
-		private class Warp
-		{
-			private readonly object _sync = new object();
-
-			private Task _task = Task.CompletedTask;
-
-			public Task Task => _task;
-
-			public bool CanRun()
-			{
-				return _task.Status == TaskStatus.RanToCompletion
-					|| _task.Status == TaskStatus.Faulted;
-			}
-
-			public void Run(Func<Task> function)
-			{
-				lock (_sync)
-				{
-					if (!CanRun()) throw new InvalidOperationException("Warp is busy");
-
-					_task = Task.Run(function);
-				}
-			}
-		}
-
-		private class SlidingTimer : IDisposable
-		{
-			private readonly Timer _timer;
-			private readonly Action _timerCallback;
-
-			private readonly int _slidingRadius;
-
-			private int _slidingCoefficient = 0;
-			private int _ticksRemain = 0;
-
-			public SlidingTimer(Action callback, TimeSpan step, int slidingRadius)
-			{
-				_timerCallback = callback;
-				_slidingRadius = slidingRadius;
-				_timer = new Timer(OnTick, null, TimeSpan.Zero, step);
-			}
-
-			public void SlideUp()
-			{
-				var c = _slidingCoefficient;
-				var r = _slidingRadius;
-
-				// 2r - adds some laziness
-				if (c < 2 * r)
-					Interlocked.Increment(ref _slidingCoefficient);
-			}
-
-			public void SlideDown()
-			{
-				var c = _slidingCoefficient;
-				var r = _slidingRadius;
-
-				// 2r - adds some laziness
-				if (-2 * r < c)
-					Interlocked.Decrement(ref _slidingCoefficient);
-			}
-
-			private void OnTick(object state)
-			{
-				if (_ticksRemain <= 0)
-				{
-					_timerCallback();
-					Interlocked.Exchange(ref _ticksRemain, GetTicksFromSlidingCoefficient());
-				}
-				else
-				{
-					Interlocked.Decrement(ref _ticksRemain);
-				}
-			}
-
-			private int GetTicksFromSlidingCoefficient()
-			{
-				var r = _slidingRadius;
-				var c = _slidingCoefficient;
-
-				return Math.Max(-r, Math.Min(c, r)) + r;
-			}
-
-			public void Dispose()
-			{
-				_timer.Dispose();
-			}
 		}
 	}
 }

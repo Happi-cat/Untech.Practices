@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Untech.AsyncCommandEngine.Metadata;
 using Untech.AsyncCommandEngine.Processing;
 
@@ -10,7 +12,14 @@ namespace Untech.AsyncCommandEngine
 	{
 		private readonly List<IRequestProcessorMiddleware> _middlewares = new List<IRequestProcessorMiddleware>();
 		private ITransport _transport;
+		private ILoggerFactory _loggerFactory = NullLoggerFactory.Instance;
 		private IRequestMetadataAccessors _requestMetadataAccessors;
+
+		public EngineBuilder UseLogger(ILoggerFactory loggerFactory)
+		{
+			_loggerFactory = loggerFactory;
+			return this;
+		}
 
 		public EngineBuilder UseTransport(ITransport transport)
 		{
@@ -44,8 +53,9 @@ namespace Untech.AsyncCommandEngine
 		{
 			return new Orchestrator(options,
 				_transport,
-				_requestMetadataAccessors ?? NullRequestMetadataAccessors.Default,
-				BuildService(strategy));
+				_requestMetadataAccessors ?? NullRequestMetadataAccessors.Instance,
+				BuildService(strategy),
+				_loggerFactory);
 		}
 	}
 }
