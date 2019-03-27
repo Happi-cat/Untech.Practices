@@ -68,7 +68,7 @@ namespace Untech.AsyncCommandEngine
 				}
 				else
 				{
-					_logger.NoFreeWarpAvailable();
+					_logger.IsNoFreeWarpAvailable();
 				}
 			}
 		}
@@ -84,9 +84,10 @@ namespace Untech.AsyncCommandEngine
 			void UpdateSlidingCoefficient()
 			{
 				var l = requests.Length;
+				var max = _options.RequestsPerWarp;
 
-				if (l <= 2) _timer.Increase();
-				else if (l >= 8) _timer.Decrease();
+				if (l <= 0.2f * max) _timer.Increase();
+				else if (l >= 0.8f * max) _timer.Decrease();
 			}
 		}
 
