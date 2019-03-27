@@ -10,6 +10,6 @@ namespace Untech.AsyncCommandEngine
 		public int SlidingRadius { get; set; }
 		public TimeSpan SlidingStep { get; set; }
 
-		public bool RunRequestsAllAtOnceInWarp { get; set; }
+		public bool RunRequestsInWarpAllAtOnce { get; set; }
 	}
 }

@@ -97,7 +97,7 @@ namespace Untech.AsyncCommandEngine
 				Aborted = _aborted.Token
 			};
 
-			return _options.RunRequestsAllAtOnceInWarp
+			return _options.RunRequestsInWarpAllAtOnce
 				? Task.Run(() => WarpExecuteAsync(context))
 				: WarpExecuteAsync(context);
 		}
