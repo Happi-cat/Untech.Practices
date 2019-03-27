@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using MoreLinq;
 using Newtonsoft.Json;
 using Untech.AsyncCommandEngine;
@@ -83,7 +78,7 @@ namespace AsyncCommandEngine.Run
 				}
 				catch (Exception e)
 				{
-					Console.WriteLine("{0}:{1}: crashed with {2}", context.TraceIdentifier, DateTime.UtcNow.Ticks, e);
+					Console.WriteLine("{0}:{1}: crashed with {2}", context.TraceIdentifier, DateTime.UtcNow.Ticks, e.Message);
 				}
 			}
 		}
@@ -92,9 +87,9 @@ namespace AsyncCommandEngine.Run
 		{
 			private byte[] _body;
 
-			public DemoRequest(T body)
+			public DemoRequest(string id, T body)
 			{
-				Identifier = Guid.NewGuid().ToString("B");
+				Identifier = id;
 
 				var jsonBody = JsonConvert.SerializeObject(body, new JsonSerializerSettings
 				{
@@ -117,6 +112,7 @@ namespace AsyncCommandEngine.Run
 
 		class DemoTransport : ITransport
 		{
+			private int _maxHandle = 1;
 			private readonly Random _rand = new Random();
 			private readonly IReadOnlyCollection<Request> _demo;
 
@@ -172,9 +168,10 @@ namespace AsyncCommandEngine.Run
 				return Task.CompletedTask;
 			}
 
-			private static Request Create<T>(T body)
+			private Request Create<T>(T body)
 			{
-				return new DemoRequest<T>(body);
+				var id = Interlocked.Increment(ref _maxHandle).ToString();
+				return new DemoRequest<T>(id, body);
 			}
 		}
 

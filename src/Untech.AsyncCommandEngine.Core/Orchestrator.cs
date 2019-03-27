@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
@@ -64,7 +63,7 @@ namespace Untech.AsyncCommandEngine
 				if (slot != null)
 				{
 					_logger.IsFreeWarpAvailable();
-					slot.Run(ExecuteAsync);
+					slot.Run(WarpStartAsync);
 				}
 				else
 				{
@@ -73,13 +72,13 @@ namespace Untech.AsyncCommandEngine
 			}
 		}
 
-		private async Task ExecuteAsync()
+		private async Task WarpStartAsync()
 		{
 			var requests = await _transport.GetRequestsAsync(_options.RequestsPerWarp);
 
 			UpdateSlidingCoefficient();
 
-			await Task.WhenAll(requests.Select(ExecuteAsync));
+			await Task.WhenAll(requests.Select(WarpExecuteAsync));
 
 			void UpdateSlidingCoefficient()
 			{
@@ -91,17 +90,19 @@ namespace Untech.AsyncCommandEngine
 			}
 		}
 
-		private Task ExecuteAsync(Request request)
+		private Task WarpExecuteAsync(Request request)
 		{
 			var context = new Context(request, _metadataAccessors.GetMetadata(request.Name))
 			{
 				Aborted = _aborted.Token
 			};
 
-			return ExecuteAsync(context);
+			return _options.RunRequestsAllAtOnceInWarp
+				? Task.Run(() => WarpExecuteAsync(context))
+				: WarpExecuteAsync(context);
 		}
 
-		private async Task ExecuteAsync(Context context)
+		private async Task WarpExecuteAsync(Context context)
 		{
 			try
 			{
