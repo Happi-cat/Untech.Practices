@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using MoreLinq;
 using Newtonsoft.Json;
 using Untech.AsyncCommandEngine;
@@ -64,13 +65,21 @@ namespace AsyncCommandEngine.Run
 		{
 			private int _nextTraceId = 0;
 
+			private readonly ILogger _logger;
+
+			public DemoMiddleware(ILoggerFactory loggerFactory)
+			{
+				_logger = loggerFactory.CreateLogger<DemoMiddleware>();
+			}
+
 			public async Task InvokeAsync(Context context, RequestProcessorCallback next)
 			{
 				context.TraceIdentifier = Interlocked.Increment(ref _nextTraceId).ToString();
 
 				var reader = new StreamReader(context.Request.Body);
 
-				Console.WriteLine("{0}:{1}: Request {2}", context.TraceIdentifier, DateTime.UtcNow.Ticks,
+				_logger.Log(LogLevel.Debug, "{0} starting: {1}",
+					context.TraceIdentifier,
 					reader.ReadToEnd());
 				try
 				{
@@ -78,7 +87,7 @@ namespace AsyncCommandEngine.Run
 				}
 				catch (Exception e)
 				{
-					Console.WriteLine("{0}:{1}: crashed with {2}", context.TraceIdentifier, DateTime.UtcNow.Ticks, e.Message);
+					_logger.Log(LogLevel.Error,e, "{0} crashed: {1}", context.TraceIdentifier, e.Message);
 				}
 			}
 		}
@@ -175,6 +184,46 @@ namespace AsyncCommandEngine.Run
 			}
 		}
 
+		class DemoLoggerFactory : ILoggerFactory
+		{
+			public void Dispose()
+			{
+			}
+
+			public ILogger CreateLogger(string categoryName)
+			{
+				return new DemoLogger(categoryName);
+			}
+
+			public void AddProvider(ILoggerProvider provider)
+			{
+			}
+		}
+
+		class DemoLogger : ILogger {
+			private readonly string _categoryName;
+
+			public DemoLogger(string categoryName)
+			{
+				_categoryName = categoryName;
+			}
+
+		public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+			{
+				Console.WriteLine("{0}: {1} {2}\n\t{3}", logLevel, _categoryName, eventId.ToString(), formatter(state, exception));
+			}
+
+			public bool IsEnabled(LogLevel logLevel)
+			{
+				return true;
+			}
+
+			public IDisposable BeginScope<TState>(TState state)
+			{
+				throw new NotImplementedException();
+			}
+		}
+
 		static void Main(string[] args)
 		{
 			var type = typeof(DemoHandlers);
@@ -182,8 +231,9 @@ namespace AsyncCommandEngine.Run
 			var metadataAccessors = new BuiltInRequestMetadataAccessors(new[] { type.Assembly });
 
 			var service = new EngineBuilder()
+				.UseLogger(new DemoLoggerFactory())
 				.UseTransport(new DemoTransport(metadataAccessors))
-				.Use(() => new DemoMiddleware())
+				.Use(() => new DemoMiddleware(new DemoLoggerFactory()))
 				.UseThrottling(new ThrottleOptions { DefaultRunAtOnceInGroup = 2 })
 				.UseWatchDog(new WatchDogOptions
 				{
