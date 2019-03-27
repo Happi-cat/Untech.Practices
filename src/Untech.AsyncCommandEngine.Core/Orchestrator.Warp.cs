@@ -16,6 +16,7 @@ namespace Untech.AsyncCommandEngine
 			public bool CanRun()
 			{
 				return _task.Status == TaskStatus.RanToCompletion
+					|| _task.Status == TaskStatus.Canceled
 					|| _task.Status == TaskStatus.Faulted;
 			}
 
