@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
@@ -18,7 +19,7 @@ namespace Untech.AsyncCommandEngine
 		private readonly ILogger _logger;
 		private readonly object _warpUseSyncRoot = new object();
 
-		private readonly ReadOnlyCollection<Warp> _warps;
+		private readonly IReadOnlyCollection<Warp> _warps;
 
 		private CancellationTokenSource _aborted;
 		private SlidingTimer _timer;
@@ -35,7 +36,7 @@ namespace Untech.AsyncCommandEngine
 			_metadataAccessors = metadataAccessors;
 			_logger = loggerFactory.CreateLogger<Orchestrator>();
 
-			_warps = Enumerable.Range(0, options.Warps).Select(n => new Warp()).ToList().AsReadOnly();
+			_warps = Enumerable.Range(0, options.Warps).Select(n => new Warp()).ToList();
 		}
 
 		public Task StartAsync()

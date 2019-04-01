@@ -1,20 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Untech.Practices.CQRS.Handlers;
 using Untech.Practices.CQRS.Pipeline;
 
-namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
+namespace Untech.Practices.CQRS.Dispatching.Processors
 {
-	internal class RequestHandlerInvoker<TIn, TOut> : IHandlerInvoker
+	internal class RequestProcessor<TIn, TOut> : IProcessor
 		where TIn : IRequest<TOut>
 	{
 		private readonly ITypeResolver _resolver;
 
-		public RequestHandlerInvoker(ITypeResolver resolver)
+		public RequestProcessor(ITypeResolver resolver)
 		{
 			_resolver = resolver;
 		}

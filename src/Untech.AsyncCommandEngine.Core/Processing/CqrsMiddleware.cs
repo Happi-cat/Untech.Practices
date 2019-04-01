@@ -69,22 +69,22 @@ namespace Untech.AsyncCommandEngine.Processing
 
 			return callbacks[0];
 
-			ExecutorCallback TryBuildCallback(Type ifType)
+			ExecutorCallback TryBuildCallback(Type implementedInterfaceType)
 			{
-				if (!ifType.IsGenericType) return null;
+				if (!implementedInterfaceType.IsGenericType) return null;
 
-				var genericTypeDef = ifType.GetGenericTypeDefinition();
+				var genericTypeDefinition = implementedInterfaceType.GetGenericTypeDefinition();
 
-				if (genericTypeDef == typeof(ICommand<>))
+				if (genericTypeDefinition == typeof(ICommand<>))
 				{
-					var resultType = ifType.GetGenericArguments()[0];
+					var resultType = implementedInterfaceType.GetGenericArguments()[0];
 
 					var method = s_executeCommandMethodInfo.MakeGenericMethod(requestType, resultType);
 
 					return BuildCallback(method);
 				}
 
-				if (genericTypeDef == typeof(INotification))
+				if (genericTypeDefinition == typeof(INotification))
 				{
 					var method = s_executeNotificationMethodInfo.MakeGenericMethod(requestType);
 
