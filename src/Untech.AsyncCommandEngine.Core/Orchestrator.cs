@@ -49,7 +49,7 @@ namespace Untech.AsyncCommandEngine
 		public Task StopAsync(TimeSpan delay)
 		{
 			_timer.Dispose();
-			_aborted.CancelAfter(delay);
+			if (delay != TimeSpan.Zero) _aborted.CancelAfter(delay);
 
 			return Task.WhenAll(_warps.Select(s => s.Task));
 		}
@@ -82,7 +82,7 @@ namespace Untech.AsyncCommandEngine
 
 			void UpdateSlidingCoefficient()
 			{
-				var l = requests.Length;
+				var l = requests.Count;
 				var max = _options.RequestsPerWarp;
 
 				if (l <= 0.2f * max) _timer.Increase();

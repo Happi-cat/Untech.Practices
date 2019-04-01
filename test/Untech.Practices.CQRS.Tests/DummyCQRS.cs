@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Untech.Practices.CQRS.Dispatching;
@@ -47,9 +49,14 @@ namespace Untech.Practices.CQRS
 				return handler as T;
 			}
 
-			public IEnumerable<T> ResolveMany<T>() where T : class
+			public ReadOnlyCollection<T> ResolveMany<T>() where T : class
 			{
-				yield return ResolveOne<T>();
+				return GetEnumerable().ToList().AsReadOnly();
+
+				IEnumerable<T> GetEnumerable()
+				{
+					yield return ResolveOne<T>();
+				}
 			}
 		}
 	}

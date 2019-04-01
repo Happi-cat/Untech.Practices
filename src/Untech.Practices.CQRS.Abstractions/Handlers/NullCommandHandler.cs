@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.ObjectModel;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Untech.Practices.CQRS.Handlers
@@ -12,7 +13,14 @@ namespace Untech.Practices.CQRS.Handlers
 		ICommandHandler<TIn, TOut>
 		where TIn : ICommand<TOut>
 	{
-		/// <inheritdoc />
+		public static readonly NullCommandHandler<TIn, TOut> Instance = new NullCommandHandler<TIn, TOut>();
+
+		private NullCommandHandler()
+		{
+
+		}
+
+			/// <inheritdoc />
 		public Task<TOut> HandleAsync(TIn command, CancellationToken cancellationToken)
 		{
 			return Task.FromResult(default(TOut));

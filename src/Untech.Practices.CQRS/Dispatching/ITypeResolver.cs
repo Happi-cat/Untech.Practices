@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 
 namespace Untech.Practices.CQRS.Dispatching
 {
@@ -20,6 +20,6 @@ namespace Untech.Practices.CQRS.Dispatching
 		/// </summary>
 		/// <typeparam name="T">The type to be resolved.</typeparam>
 		/// <returns>The collection of instantiated objects.</returns>
-		IEnumerable<T> ResolveMany<T>() where T : class;
+		ReadOnlyCollection<T> ResolveMany<T>() where T : class;
 	}
 }

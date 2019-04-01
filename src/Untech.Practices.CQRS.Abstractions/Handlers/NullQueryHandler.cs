@@ -12,6 +12,13 @@ namespace Untech.Practices.CQRS.Handlers
 		IQueryHandler<TIn, TOut>
 		where TIn : IQuery<TOut>
 	{
+		public static readonly NullQueryHandler<TIn, TOut> Instance = new NullQueryHandler<TIn, TOut>();
+
+		private NullQueryHandler()
+		{
+
+		}
+
 		/// <inheritdoc />
 		public Task<TOut> HandleAsync(TIn query, CancellationToken cancellationToken)
 		{

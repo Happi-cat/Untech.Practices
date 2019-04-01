@@ -11,7 +11,7 @@ namespace Untech.AsyncCommandEngine.Metadata
 	{
 		private readonly IReadOnlyDictionary<string, IRequestMetadataAccessor> _requestsMetadata;
 
-		public BuiltInRequestMetadataAccessors(Assembly[] assemblies)
+		public BuiltInRequestMetadataAccessors(IEnumerable<Assembly> assemblies)
 		{
 			_requestsMetadata = CollectRequestsMetadata(assemblies);
 		}
@@ -23,7 +23,7 @@ namespace Untech.AsyncCommandEngine.Metadata
 				: NullRequestMetadataAccessor.Instance;
 		}
 
-		private static Dictionary<string, IRequestMetadataAccessor> CollectRequestsMetadata(Assembly[] assemblies)
+		private static Dictionary<string, IRequestMetadataAccessor> CollectRequestsMetadata(IEnumerable<Assembly> assemblies)
 		{
 			var typeDetectives = assemblies
 				.SelectMany(a => a.DefinedTypes)
@@ -99,18 +99,21 @@ namespace Untech.AsyncCommandEngine.Metadata
 				return AttrCache<TAttr>.Attributes.SingleOrDefault();
 			}
 
-			public IEnumerable<TAttr> GetAttributes<TAttr>() where TAttr : Attribute
+			public ReadOnlyCollection<TAttr> GetAttributes<TAttr>() where TAttr : Attribute
 			{
 				return AttrCache<TAttr>.Attributes;
 			}
 
 			private struct AttrCache<TAttr> where TAttr: Attribute
 			{
-				public static readonly ReadOnlyCollection<TAttr> Attributes;
+				internal static readonly ReadOnlyCollection<TAttr> Attributes;
 
 				static AttrCache()
 				{
-					Attributes = s_metadataContainerType.GetCustomAttributes<TAttr>().ToList().AsReadOnly();
+					Attributes = s_metadataContainerType
+						.GetCustomAttributes<TAttr>()
+						.ToList()
+						.AsReadOnly();
 				}
 			}
 		}

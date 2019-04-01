@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Untech.AsyncCommandEngine.Metadata
@@ -22,9 +23,12 @@ namespace Untech.AsyncCommandEngine.Metadata
 				.SingleOrDefault(n => !ReferenceEquals(n, null));
 		}
 
-		public IEnumerable<TAttr> GetAttributes<TAttr>() where TAttr : Attribute
+		public ReadOnlyCollection<TAttr> GetAttributes<TAttr>() where TAttr : Attribute
 		{
-			return _accessors.SelectMany(n => n.GetAttributes<TAttr>());
+			return _accessors
+				.SelectMany(n => n.GetAttributes<TAttr>())
+				.ToList()
+				.AsReadOnly();
 		}
 	}
 }

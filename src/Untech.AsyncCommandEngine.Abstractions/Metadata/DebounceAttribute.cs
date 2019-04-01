@@ -6,7 +6,7 @@ namespace Untech.AsyncCommandEngine.Metadata
 	/// Sets flag for current request that it can be debounced by payload
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class)]
-	public class DebounceAttribute : Attribute
+	public sealed class DebounceAttribute : Attribute
 	{
 
 	}

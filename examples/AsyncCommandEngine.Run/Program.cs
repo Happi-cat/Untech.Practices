@@ -34,9 +34,9 @@ namespace AsyncCommandEngine.Run
 				return new AsyncCommandEngine.Run.DemoHandlers() as T;
 			}
 
-			public IEnumerable<T> ResolveMany<T>() where T : class
+			public ReadOnlyCollection<T> ResolveMany<T>() where T : class
 			{
-				return Enumerable.Empty<T>();
+				return Enumerable.Empty<T>().ToList().AsReadOnly();
 			}
 
 			public Type FindRequestType(string requestName)
@@ -161,10 +161,11 @@ namespace AsyncCommandEngine.Run
 				};
 			}
 
-			public Task<Request[]> GetRequestsAsync(int count)
+			public Task<ReadOnlyCollection<Request>> GetRequestsAsync(int count)
 			{
 				count = _rand.Next(count);
-				return Task.FromResult(_demo.Shuffle(_rand).Repeat().Take(count).ToArray());
+				var requests = _demo.Shuffle(_rand).Repeat().Take(count).ToList().AsReadOnly();
+				return Task.FromResult(requests);
 			}
 
 			public Task CompleteRequestAsync(Request request)

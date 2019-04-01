@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Untech.AsyncCommandEngine.Metadata
@@ -18,9 +19,11 @@ namespace Untech.AsyncCommandEngine.Metadata
 			return default;
 		}
 
-		public IEnumerable<TAttr> GetAttributes<TAttr>() where TAttr : Attribute
+		public ReadOnlyCollection<TAttr> GetAttributes<TAttr>() where TAttr : Attribute
 		{
-			return Enumerable.Empty<TAttr>();
+			return Enumerable.Empty<TAttr>()
+				.ToList()
+				.AsReadOnly();
 		}
 	}
 }

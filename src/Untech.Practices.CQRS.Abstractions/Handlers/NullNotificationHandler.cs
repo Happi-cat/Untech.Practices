@@ -11,6 +11,13 @@ namespace Untech.Practices.CQRS.Handlers
 		INotificationHandler<TIn>
 		where TIn : INotification
 	{
+		public static readonly NullNotificationHandler<TIn> Instance = new NullNotificationHandler<TIn>();
+
+		private NullNotificationHandler()
+		{
+
+		}
+
 		/// <inheritdoc />
 		public Task PublishAsync(TIn notification, CancellationToken cancellationToken)
 		{
