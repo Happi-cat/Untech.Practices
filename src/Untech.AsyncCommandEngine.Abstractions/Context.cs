@@ -9,7 +9,7 @@ namespace Untech.AsyncCommandEngine
 	{
 		private IDictionary<object, object> _items;
 
-		public Context(Request request, IRequestMetadataAccessor requestMetadata)
+		public Context(Request request, IRequestMetadata requestMetadata)
 		{
 			Request = request;
 			RequestName = request.Name;
@@ -21,7 +21,7 @@ namespace Untech.AsyncCommandEngine
 		public Request Request { get; private set; }
 
 		public string RequestName { get; private set; }
-		public IRequestMetadataAccessor RequestMetadata { get; private set; }
+		public IRequestMetadata RequestMetadata { get; private set; }
 
 		public CancellationToken Aborted { get; set; }
 		public string TraceIdentifier { get; set; }

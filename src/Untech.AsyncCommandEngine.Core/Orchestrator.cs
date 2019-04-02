@@ -15,7 +15,7 @@ namespace Untech.AsyncCommandEngine
 		private readonly OrchestratorOptions _options;
 		private readonly ITransport _transport;
 		private readonly IRequestProcessor _requestProcessor;
-		private readonly IRequestMetadataAccessors _metadataAccessors;
+		private readonly IRequestMetadataProvider _metadataProvider;
 		private readonly ILogger _logger;
 		private readonly object _warpUseSyncRoot = new object();
 
@@ -26,14 +26,14 @@ namespace Untech.AsyncCommandEngine
 
 		public Orchestrator(OrchestratorOptions options,
 			ITransport transport,
-			IRequestMetadataAccessors metadataAccessors,
+			IRequestMetadataProvider metadataProvider,
 			IRequestProcessor requestProcessor,
 			ILoggerFactory loggerFactory)
 		{
 			_options = options;
 			_transport = transport;
 			_requestProcessor = requestProcessor;
-			_metadataAccessors = metadataAccessors;
+			_metadataProvider = metadataProvider;
 			_logger = loggerFactory.CreateLogger<Orchestrator>();
 
 			_warps = Enumerable.Range(0, options.Warps).Select(n => new Warp()).ToList();
@@ -93,7 +93,7 @@ namespace Untech.AsyncCommandEngine
 
 		private Task WarpExecuteAsync(Request request)
 		{
-			var context = new Context(request, _metadataAccessors.GetMetadata(request.Name))
+			var context = new Context(request, _metadataProvider.GetMetadata(request.Name))
 			{
 				Aborted = _aborted.Token
 			};

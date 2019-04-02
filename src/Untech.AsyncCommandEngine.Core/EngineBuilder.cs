@@ -13,7 +13,7 @@ namespace Untech.AsyncCommandEngine
 		private readonly List<IRequestProcessorMiddleware> _middlewares = new List<IRequestProcessorMiddleware>();
 		private ITransport _transport;
 		private ILoggerFactory _loggerFactory = NullLoggerFactory.Instance;
-		private IRequestMetadataAccessors _requestMetadataAccessors;
+		private IRequestMetadataProvider _requestMetadataProvider;
 
 		public EngineBuilder UseLogger(ILoggerFactory loggerFactory)
 		{
@@ -27,9 +27,9 @@ namespace Untech.AsyncCommandEngine
 			return this;
 		}
 
-		public EngineBuilder UseMetadata(IRequestMetadataAccessors accessors)
+		public EngineBuilder UseMetadata(IRequestMetadataProvider provider)
 		{
-			_requestMetadataAccessors = accessors;
+			_requestMetadataProvider = provider;
 			return this;
 		}
 
@@ -53,7 +53,7 @@ namespace Untech.AsyncCommandEngine
 		{
 			return new Orchestrator(options,
 				_transport,
-				_requestMetadataAccessors ?? NullRequestMetadataAccessors.Instance,
+				_requestMetadataProvider ?? NullRequestMetadataProvider.Instance,
 				BuildService(strategy),
 				_loggerFactory);
 		}

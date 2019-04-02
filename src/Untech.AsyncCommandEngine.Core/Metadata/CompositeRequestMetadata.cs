@@ -5,11 +5,11 @@ using System.Linq;
 
 namespace Untech.AsyncCommandEngine.Metadata
 {
-	public class CompositeRequestMetadataAccessor : IRequestMetadataAccessor
+	public class CompositeRequestMetadata : IRequestMetadata
 	{
-		private readonly IReadOnlyCollection<IRequestMetadataAccessor> _accessors;
+		private readonly IReadOnlyCollection<IRequestMetadata> _accessors;
 
-		public CompositeRequestMetadataAccessor(IEnumerable<IRequestMetadataAccessor> accessors)
+		public CompositeRequestMetadata(IEnumerable<IRequestMetadata> accessors)
 		{
 			if (accessors == null) throw new ArgumentNullException(nameof(accessors));
 

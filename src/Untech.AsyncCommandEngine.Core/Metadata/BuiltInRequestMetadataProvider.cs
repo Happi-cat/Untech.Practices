@@ -7,30 +7,31 @@ using Untech.Practices.CQRS.Handlers;
 
 namespace Untech.AsyncCommandEngine.Metadata
 {
-	public class BuiltInRequestMetadataAccessors : IRequestMetadataAccessors
+	public class BuiltInRequestMetadataProvider : IRequestMetadataProvider
 	{
-		private readonly IReadOnlyDictionary<string, IRequestMetadataAccessor> _requestsMetadata;
+		private readonly IReadOnlyDictionary<string, IRequestMetadata> _requestsMetadata;
 
-		public BuiltInRequestMetadataAccessors(IEnumerable<Assembly> assemblies)
+		public BuiltInRequestMetadataProvider(IEnumerable<Assembly> assemblies)
 		{
 			_requestsMetadata = CollectRequestsMetadata(assemblies);
 		}
 
-		public IRequestMetadataAccessor GetMetadata(string requestName)
+		public IRequestMetadata GetMetadata(string requestName)
 		{
 			return _requestsMetadata.TryGetValue(requestName, out var requestMetadata)
 				? requestMetadata
-				: NullRequestMetadataAccessor.Instance;
+				: NullRequestMetadata.Instance;
 		}
 
-		private static Dictionary<string, IRequestMetadataAccessor> CollectRequestsMetadata(IEnumerable<Assembly> assemblies)
+		private static Dictionary<string, IRequestMetadata> CollectRequestsMetadata(
+			IEnumerable<Assembly> assemblies)
 		{
 			var typeDetectives = assemblies
 				.SelectMany(a => a.DefinedTypes)
 				.Where(a => a.IsPublic)
 				.Select(t => new TypeDetective(t));
 
-			var requestsMetadata = new List<(string FullName, IRequestMetadataAccessor Accessor)>();
+			var requestsMetadata = new List<(string FullName, IRequestMetadata Accessor)>();
 			foreach (TypeDetective typeDetective in typeDetectives)
 			foreach (Type requestType in typeDetective.GetSupportableRequestTypes())
 			{
@@ -40,21 +41,20 @@ namespace Untech.AsyncCommandEngine.Metadata
 
 			return requestsMetadata
 				.GroupBy(n => n.FullName, n => n.Accessor)
-				.ToDictionary(n => n.Key, n => (IRequestMetadataAccessor)new CompositeRequestMetadataAccessor(n));
+				.ToDictionary(n => n.Key, n => (IRequestMetadata)new CompositeRequestMetadata(n));
 		}
 
 		private class TypeDetective
 		{
 			private static readonly IReadOnlyList<Type> s_matchableGenericTypes = new List<Type>
 			{
-				typeof(ICommandHandler<,>),
-				typeof(IRequestMetadataSource<>)
+				typeof(ICommandHandler<,>), typeof(IRequestMetadataSource<>)
 			};
 
 			private readonly TypeInfo _suspectedType;
 			private readonly IReadOnlyList<Type> _supportableRequests;
 
-			private IRequestMetadataAccessor _metadataAccessor;
+			private IRequestMetadata _metadata;
 
 			public TypeDetective(TypeInfo suspectedType)
 			{
@@ -71,30 +71,28 @@ namespace Untech.AsyncCommandEngine.Metadata
 				return _supportableRequests;
 			}
 
-			public IRequestMetadataAccessor GetMetadata()
+			public IRequestMetadata GetMetadata()
 			{
-				if (_metadataAccessor != null) return _metadataAccessor;
+				if (_metadata != null) return _metadata;
 
-				return _metadataAccessor = CreateMetadata();
+				return _metadata = CreateMetadata();
 			}
 
-			private IRequestMetadataAccessor CreateMetadata()
+			private IRequestMetadata CreateMetadata()
 			{
 				if (_supportableRequests.Count == 0)
-				{
-					return NullRequestMetadataAccessor.Instance;
-				}
+					return NullRequestMetadata.Instance;
 
-				var accessorType = typeof(RequestMetadataAccessor<>).MakeGenericType(_suspectedType.AsType());
-				return (IRequestMetadataAccessor)Activator.CreateInstance(accessorType);
+				var accessorType = typeof(RequestMetadata<>).MakeGenericType(_suspectedType.AsType());
+				return (IRequestMetadata)Activator.CreateInstance(accessorType);
 			}
 		}
 
-		private class RequestMetadataAccessor<TMetadataContainer> : IRequestMetadataAccessor
+		private class RequestMetadata<TMetadataContainer> : IRequestMetadata
 		{
 			private static readonly TypeInfo s_metadataContainerType = typeof(TMetadataContainer).GetTypeInfo();
 
-			public TAttr GetAttribute<TAttr>() where TAttr:Attribute
+			public TAttr GetAttribute<TAttr>() where TAttr : Attribute
 			{
 				return AttrCache<TAttr>.Attributes.SingleOrDefault();
 			}
@@ -104,7 +102,7 @@ namespace Untech.AsyncCommandEngine.Metadata
 				return AttrCache<TAttr>.Attributes;
 			}
 
-			private struct AttrCache<TAttr> where TAttr: Attribute
+			private struct AttrCache<TAttr> where TAttr : Attribute
 			{
 				internal static readonly ReadOnlyCollection<TAttr> Attributes;
 

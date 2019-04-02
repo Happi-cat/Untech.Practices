@@ -125,7 +125,7 @@ namespace AsyncCommandEngine.Run
 			private readonly Random _rand = new Random();
 			private readonly IReadOnlyCollection<Request> _demo;
 
-			public DemoTransport(IRequestMetadataAccessors metadataAccessors)
+			public DemoTransport(IRequestMetadataProvider metadataProvider)
 			{
 				_demo = new List<Request>
 				{
@@ -229,7 +229,7 @@ namespace AsyncCommandEngine.Run
 		{
 			var type = typeof(DemoHandlers);
 
-			var metadataAccessors = new BuiltInRequestMetadataAccessors(new[] { type.Assembly });
+			var metadataAccessors = new BuiltInRequestMetadataProvider(new[] { type.Assembly });
 
 			var service = new EngineBuilder()
 				.UseLogger(new DemoLoggerFactory())
