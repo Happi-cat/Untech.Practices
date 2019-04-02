@@ -19,11 +19,9 @@ namespace Untech.AsyncCommandEngine.Metadata
 			return default;
 		}
 
-		public ReadOnlyCollection<TAttr> GetAttributes<TAttr>() where TAttr : Attribute
+		public IEnumerable<TAttr> GetAttributes<TAttr>() where TAttr : Attribute
 		{
-			return Enumerable.Empty<TAttr>()
-				.ToList()
-				.AsReadOnly();
+			return Enumerable.Empty<TAttr>();
 		}
 	}
 }

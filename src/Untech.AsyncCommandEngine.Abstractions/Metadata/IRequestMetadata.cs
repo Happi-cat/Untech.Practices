@@ -7,6 +7,6 @@ namespace Untech.AsyncCommandEngine.Metadata
 	public interface IRequestMetadata
 	{
 		TAttr GetAttribute<TAttr>() where TAttr: Attribute;
-		ReadOnlyCollection<TAttr> GetAttributes<TAttr>() where TAttr: Attribute;
+		IEnumerable<TAttr> GetAttributes<TAttr>() where TAttr: Attribute;
 	}
 }

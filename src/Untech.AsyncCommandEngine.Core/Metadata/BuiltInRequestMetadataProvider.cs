@@ -97,7 +97,7 @@ namespace Untech.AsyncCommandEngine.Metadata
 				return AttrCache<TAttr>.Attributes.SingleOrDefault();
 			}
 
-			public ReadOnlyCollection<TAttr> GetAttributes<TAttr>() where TAttr : Attribute
+			public IEnumerable<TAttr> GetAttributes<TAttr>() where TAttr : Attribute
 			{
 				return AttrCache<TAttr>.Attributes;
 			}

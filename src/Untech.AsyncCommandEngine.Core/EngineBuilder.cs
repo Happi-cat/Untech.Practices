@@ -39,7 +39,7 @@ namespace Untech.AsyncCommandEngine
 			return this;
 		}
 
-		public IRequestProcessor BuildService(ICqrsStrategy strategy)
+		public IRequestProcessor BuildProcessor(ICqrsStrategy strategy)
 		{
 			var predefinedMiddleware = new IRequestProcessorMiddleware[]
 			{
@@ -54,7 +54,7 @@ namespace Untech.AsyncCommandEngine
 			return new Orchestrator(options,
 				_transport,
 				_requestMetadataProvider ?? NullRequestMetadataProvider.Instance,
-				BuildService(strategy),
+				BuildProcessor(strategy),
 				_loggerFactory);
 		}
 	}

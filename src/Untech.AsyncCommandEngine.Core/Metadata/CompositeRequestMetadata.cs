@@ -23,12 +23,9 @@ namespace Untech.AsyncCommandEngine.Metadata
 				.SingleOrDefault(n => !ReferenceEquals(n, null));
 		}
 
-		public ReadOnlyCollection<TAttr> GetAttributes<TAttr>() where TAttr : Attribute
+		public IEnumerable<TAttr> GetAttributes<TAttr>() where TAttr : Attribute
 		{
-			return _accessors
-				.SelectMany(n => n.GetAttributes<TAttr>())
-				.ToList()
-				.AsReadOnly();
+			return _accessors.SelectMany(n => n.GetAttributes<TAttr>());
 		}
 	}
 }
