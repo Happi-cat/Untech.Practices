@@ -5,17 +5,17 @@ namespace Untech.AsyncCommandEngine.Metadata
 	[AttributeUsage(AttributeTargets.Class)]
 	public sealed class WatchDogTimeoutAttribute : Attribute
 	{
-		private readonly int _hours;
-		private readonly int _minutes;
-		private readonly int _seconds;
-
 		public WatchDogTimeoutAttribute(int hours, int minutes, int seconds)
 		{
-			_hours = hours;
-			_minutes = minutes;
-			_seconds = seconds;
+			Hours = hours;
+			Minutes = minutes;
+			Seconds = seconds;
 		}
 
-		public TimeSpan Timeout => new TimeSpan(_hours, _minutes, _seconds);
+		public int Hours { get; }
+		public int Minutes { get; }
+		public int Seconds { get; }
+
+		public TimeSpan Timeout => new TimeSpan(Hours, Minutes, Seconds);
 	}
 }
