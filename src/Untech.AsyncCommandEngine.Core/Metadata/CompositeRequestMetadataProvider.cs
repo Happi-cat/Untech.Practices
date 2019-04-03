@@ -17,6 +17,8 @@ namespace Untech.AsyncCommandEngine.Metadata
 
 		public IRequestMetadata GetMetadata(string requestName)
 		{
+			if (string.IsNullOrEmpty(requestName)) throw new ArgumentNullException(nameof(requestName));
+
 			var accessors = _accessors.Select(n => n.GetMetadata(requestName));
 
 			return new CompositeRequestMetadata(accessors);

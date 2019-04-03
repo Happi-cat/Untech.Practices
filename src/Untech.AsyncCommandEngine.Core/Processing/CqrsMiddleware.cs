@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 using Untech.Practices.CQRS;
+using Untech.Practices.CQRS.Dispatching;
 
 namespace Untech.AsyncCommandEngine.Processing
 {
@@ -35,7 +36,7 @@ namespace Untech.AsyncCommandEngine.Processing
 
 		public CqrsMiddleware(ICqrsStrategy strategy)
 		{
-			_strategy = strategy;
+			_strategy = strategy ?? throw new ArgumentNullException(nameof(strategy));
 		}
 
 		public Task InvokeAsync(Context context, RequestProcessorCallback next)
@@ -49,7 +50,7 @@ namespace Untech.AsyncCommandEngine.Processing
 
 		private ExecutorCallback BuildExecutor(string requestName)
 		{
-			var requestType = _strategy.FindRequestType(requestName);
+			var requestType = _strategy.FindRequestType(requestName) ?? throw RequestTypeNotFoundError(requestName);
 
 			return BuildExecutor(requestType);
 		}
@@ -62,10 +63,8 @@ namespace Untech.AsyncCommandEngine.Processing
 				.Where(callback => callback != null)
 				.ToList();
 
-			if (callbacks.Count > 1)
-				throw new InvalidOperationException($"Request type {requestType} has multiple interfaces of type ICommand<> and INotification)");
-			if (callbacks.Count == 0)
-				throw new InvalidOperationException($"Request type {requestType} doesn't implements ICommand<> or INotification");
+			if (callbacks.Count > 1) throw RequestTypeHasMultipleInterfacesError(requestType);
+			if (callbacks.Count == 0) throw RequestTypeHasNoInterfacesError(requestType);
 
 			return callbacks[0];
 
@@ -111,8 +110,8 @@ namespace Untech.AsyncCommandEngine.Processing
 		private static Task ExecuteCommandAsync<TRequest, TResult>(CqrsMiddleware middleware, Context context)
 			where TRequest: ICommand<TResult>
 		{
-			var dispatcher = middleware._strategy.GetDispatcher(context);
-			var command = middleware._strategy.MaterializeRequest(context.Request);
+			var dispatcher = middleware._strategy.GetDispatcher(context) ?? throw NoDispatcherError();
+			var command = middleware._strategy.MaterializeRequest(context.Request) ?? throw NoRequestError();
 
 			return dispatcher.ProcessAsync((TRequest)command, context.Aborted);
 		}
@@ -120,10 +119,35 @@ namespace Untech.AsyncCommandEngine.Processing
 		private static Task ExecuteNotificationAsync<TNotification>(CqrsMiddleware middleware, Context context)
 			where TNotification: INotification
 		{
-			var dispatcher = middleware._strategy.GetDispatcher(context);
-			var notification = middleware._strategy.MaterializeRequest(context.Request);
+			var dispatcher = middleware._strategy.GetDispatcher(context) ?? throw NoDispatcherError();
+			var notification = middleware._strategy.MaterializeRequest(context.Request) ?? throw NoRequestError();
 
 			return dispatcher.PublishAsync((TNotification)notification, context.Aborted);
+		}
+
+		private static Exception RequestTypeNotFoundError(string requestName)
+		{
+			return new InvalidOperationException($"Request type {requestName} was not found");
+		}
+
+		private static Exception RequestTypeHasNoInterfacesError(Type requestType)
+		{
+			return new InvalidOperationException($"Request type {requestType} doesn't implements ICommand<> or INotification");
+		}
+
+		private static Exception RequestTypeHasMultipleInterfacesError(Type requestType)
+		{
+			return new InvalidOperationException($"Request type {requestType} has multiple interfaces of type ICommand<> and INotification)");
+		}
+
+		private static Exception NoDispatcherError()
+		{
+			return new InvalidOperationException("Dispatcher is missing");
+		}
+
+		private static Exception NoRequestError()
+		{
+			return new InvalidOperationException("Request wasn't parsed and null was returned");
 		}
 	}
 }

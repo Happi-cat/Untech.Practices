@@ -13,11 +13,15 @@ namespace Untech.AsyncCommandEngine.Metadata
 
 		public BuiltInRequestMetadataProvider(IEnumerable<Assembly> assemblies)
 		{
+			if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
+
 			_requestsMetadata = CollectRequestsMetadata(assemblies);
 		}
 
 		public IRequestMetadata GetMetadata(string requestName)
 		{
+			if (string.IsNullOrEmpty(requestName)) throw new ArgumentNullException(nameof(requestName));
+
 			return _requestsMetadata.TryGetValue(requestName, out var requestMetadata)
 				? requestMetadata
 				: NullRequestMetadata.Instance;

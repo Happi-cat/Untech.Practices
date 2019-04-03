@@ -28,13 +28,13 @@ namespace Untech.AsyncCommandEngine
 			ITransport transport,
 			IRequestMetadataProvider metadataProvider,
 			IRequestProcessor requestProcessor,
-			ILoggerFactory loggerFactory)
+			ILogger<Orchestrator> logger)
 		{
-			_options = options;
-			_transport = transport;
-			_requestProcessor = requestProcessor;
-			_metadataProvider = metadataProvider;
-			_logger = loggerFactory.CreateLogger<Orchestrator>();
+			_options = options ?? throw new ArgumentNullException(nameof(options));
+			_transport = transport ?? throw new ArgumentNullException(nameof(transport));
+			_requestProcessor = requestProcessor ?? throw new ArgumentNullException(nameof(requestProcessor));
+			_metadataProvider = metadataProvider ?? throw new ArgumentNullException(nameof(metadataProvider));
+			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
 			_warps = Enumerable.Range(0, options.Warps).Select(n => new Warp()).ToList();
 		}

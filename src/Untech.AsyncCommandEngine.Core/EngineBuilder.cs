@@ -55,7 +55,7 @@ namespace Untech.AsyncCommandEngine
 				_transport,
 				_requestMetadataProvider ?? NullRequestMetadataProvider.Instance,
 				BuildProcessor(strategy),
-				_loggerFactory);
+				_loggerFactory.CreateLogger<Orchestrator>());
 		}
 	}
 }

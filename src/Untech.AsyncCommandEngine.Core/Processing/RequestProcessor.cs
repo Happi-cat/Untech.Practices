@@ -1,10 +1,10 @@
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Untech.AsyncCommandEngine.Processing
 {
-	public class RequestProcessor : IRequestProcessor
+	internal class RequestProcessor : IRequestProcessor
 	{
 		private static readonly RequestProcessorCallback s_defaultNext = ctx => Task.FromResult(0);
 
@@ -12,7 +12,9 @@ namespace Untech.AsyncCommandEngine.Processing
 
 		public RequestProcessor(IEnumerable<IRequestProcessorMiddleware> steps)
 		{
-			_next = BuildChain(steps);
+			if (steps == null) throw new ArgumentNullException(nameof(steps));
+
+			_next = BuildChain(new Queue<IRequestProcessorMiddleware>(steps));
 		}
 
 		public Task InvokeAsync(Context context)
@@ -20,23 +22,16 @@ namespace Untech.AsyncCommandEngine.Processing
 			return _next(context);
 		}
 
-		private static RequestProcessorCallback BuildChain(IEnumerable<IRequestProcessorMiddleware> steps)
-		{
-			steps = steps ?? Enumerable.Empty<IRequestProcessorMiddleware>();
-			return BuildChain(new Queue<IRequestProcessorMiddleware>(steps));
-		}
-
 		private static RequestProcessorCallback BuildChain(Queue<IRequestProcessorMiddleware> steps)
 		{
-			if (steps.Count > 0)
-			{
-				var currentMiddleware = steps.Dequeue();
-				var next = BuildChain(steps);
+			if (steps.Count <= 0) return s_defaultNext;
 
-				return ctx => currentMiddleware.InvokeAsync(ctx, next);
-			}
+			var currentMiddleware = steps.Dequeue();
+			var next = BuildChain(steps);
 
-			return s_defaultNext;
+			return currentMiddleware != null
+				? ctx => currentMiddleware.InvokeAsync(ctx, next)
+				: next;
 		}
 	}
 }
