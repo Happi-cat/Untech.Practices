@@ -10,7 +10,7 @@ using Untech.AsyncCommandEngine.Processing;
 
 namespace Untech.AsyncCommandEngine
 {
-	public partial class Orchestrator : IOrchestrator
+	internal partial class Orchestrator : IOrchestrator
 	{
 		private readonly OrchestratorOptions _options;
 		private readonly ITransport _transport;
@@ -75,15 +75,23 @@ namespace Untech.AsyncCommandEngine
 
 		private async Task WarpStartAsync()
 		{
-			var requests = await _transport.GetRequestsAsync(_options.RequestsPerWarp);
-
-			UpdateSlidingCoefficient();
-
-			await Task.WhenAll(requests.Select(WarpExecuteAsync));
-
-			void UpdateSlidingCoefficient()
+			try
 			{
-				var l = requests.Count;
+				var requests = await _transport.GetRequestsAsync(_options.RequestsPerWarp);
+
+				UpdateSlidingCoefficient(requests.Count);
+
+				await Task.WhenAll(requests.Select(WarpExecuteAsync));
+			}
+			catch (Exception e)
+			{
+				_logger.WarpCrashed(e);
+				throw;
+			}
+
+			void UpdateSlidingCoefficient(int requestCount)
+			{
+				var l = requestCount;
 				var max = _options.RequestsPerWarp;
 
 				if (l <= 0.2f * max) _timer.Increase();

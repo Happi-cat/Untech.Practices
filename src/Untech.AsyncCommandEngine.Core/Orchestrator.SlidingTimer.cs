@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Untech.AsyncCommandEngine
 {
-	public partial class Orchestrator
+	internal partial class Orchestrator
 	{
 		private class SlidingTimer : IDisposable
 		{

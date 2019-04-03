@@ -10,6 +10,7 @@ namespace Untech.AsyncCommandEngine
 		private static readonly Action<ILogger, int, Exception> s_slidingCoefficientDecreased;
 		private static readonly Action<ILogger, Exception> s_freeWarpAvailable;
 		private static readonly Action<ILogger, Exception> s_noFreeWarpAvailable;
+		private static readonly Action<ILogger, Exception> s_warpCrashed;
 
 		static OrchestratorLoggerExtensions()
 		{
@@ -32,6 +33,10 @@ namespace Untech.AsyncCommandEngine
 			s_noFreeWarpAvailable = LoggerMessage.Define(LogLevel.Debug,
 				new EventId(5, nameof(IsNoFreeWarpAvailable)),
 				"No available warps");
+
+			s_warpCrashed = LoggerMessage.Define(LogLevel.Warning,
+				new EventId(6, "Warp Crashed"),
+				"Error occured during warp execution");
 		}
 
 		public static void TickSkipped(this ILogger logger, int ticksRemain)
@@ -58,5 +63,11 @@ namespace Untech.AsyncCommandEngine
 		{
 			s_noFreeWarpAvailable(logger, null);
 		}
+
+		public static void WarpCrashed(this ILogger logger, Exception e)
+		{
+			s_warpCrashed(logger, e);
+		}
+
 	}
 }

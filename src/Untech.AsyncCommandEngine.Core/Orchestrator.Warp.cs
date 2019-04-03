@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Untech.AsyncCommandEngine
 {
-	public partial class Orchestrator
+	internal partial class Orchestrator
 	{
 		private class Warp
 		{

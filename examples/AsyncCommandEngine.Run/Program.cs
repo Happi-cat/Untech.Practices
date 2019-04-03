@@ -9,12 +9,14 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MoreLinq;
 using Newtonsoft.Json;
+using Serilog;
 using Untech.AsyncCommandEngine;
 using Untech.AsyncCommandEngine.Features.Throttling;
 using Untech.AsyncCommandEngine.Features.WatchDog;
 using Untech.AsyncCommandEngine.Metadata;
 using Untech.AsyncCommandEngine.Processing;
 using Untech.Practices.CQRS.Dispatching;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace AsyncCommandEngine.Run
 {
@@ -185,56 +187,25 @@ namespace AsyncCommandEngine.Run
 			}
 		}
 
-		class DemoLoggerFactory : ILoggerFactory
-		{
-			public void Dispose()
-			{
-			}
-
-			public ILogger CreateLogger(string categoryName)
-			{
-				return new DemoLogger(categoryName);
-			}
-
-			public void AddProvider(ILoggerProvider provider)
-			{
-			}
-		}
-
-		class DemoLogger : ILogger {
-			private readonly string _categoryName;
-
-			public DemoLogger(string categoryName)
-			{
-				_categoryName = categoryName;
-			}
-
-		public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
-			{
-				Console.WriteLine("{0}: {1} {2}\n\t{3}", logLevel, _categoryName, eventId.ToString(), formatter(state, exception));
-			}
-
-			public bool IsEnabled(LogLevel logLevel)
-			{
-				return true;
-			}
-
-			public IDisposable BeginScope<TState>(TState state)
-			{
-				throw new NotImplementedException();
-			}
-		}
-
 		static void Main(string[] args)
 		{
+			var logger = new LoggerConfiguration()
+				.Enrich.FromLogContext()
+				.MinimumLevel.Debug()
+				.WriteTo.ColoredConsole(outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3} {Properties} {Message}{NewLine}{Exception}")
+				.CreateLogger();
+
+			var loggerFactory = new LoggerFactory()
+				.AddSerilog(logger);
+
 			var type = typeof(DemoHandlers);
 
 			var metadataAccessors = new BuiltInRequestMetadataProvider(new[] { type.Assembly });
 
 			var service = new EngineBuilder()
-				.UseLogger(new DemoLoggerFactory())
+				.UseLogger(loggerFactory)
 				.UseTransport(new DemoTransport(metadataAccessors))
-				.Use(() => new DemoMiddleware(new DemoLoggerFactory()))
+				.Use(() => new DemoMiddleware(loggerFactory))
 				.UseThrottling(new ThrottleOptions { DefaultRunAtOnceInGroup = 2 })
 				.UseWatchDog(new WatchDogOptions
 				{
