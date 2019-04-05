@@ -23,18 +23,21 @@ namespace AsyncCommandEngine.Run
 		{
 			context.TraceIdentifier = Interlocked.Increment(ref s_nextTraceId).ToString();
 
-			_logger.Log(LogLevel.Debug, "{0} starting: {1}", context.TraceIdentifier, GetBodyAsJson(context.Request));
+			var body = GetBodyAsJson(context.Request);
+			var request = $"{context.TraceIdentifier}|{context.RequestName}|{body}";
+
+			_logger.Log(LogLevel.Debug, "{0} starting", request);
 			try
 			{
 				await next(context);
 			}
 			catch (OperationCanceledException e)
 			{
-				_logger.Log(LogLevel.Warning, e, "{0} was canceled", context.TraceIdentifier, e.Message);
+				_logger.Log(LogLevel.Warning, e, "{0} was canceled", request);
 			}
 			catch (Exception e)
 			{
-				_logger.Log(LogLevel.Error, e, "{0} crashed: {1}", context.TraceIdentifier, e.Message);
+				_logger.Log(LogLevel.Error, e, "{0} crashed with message: {1}", request, e.Message);
 			}
 		}
 
