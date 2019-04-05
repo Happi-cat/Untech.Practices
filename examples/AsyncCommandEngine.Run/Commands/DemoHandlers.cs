@@ -1,32 +1,12 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Untech.AsyncCommandEngine;
-using Untech.AsyncCommandEngine.Features.Throttling;
-using Untech.AsyncCommandEngine.Features.WatchDog;
 using Untech.AsyncCommandEngine.Metadata;
 using Untech.Practices;
-using Untech.Practices.CQRS;
 using Untech.Practices.CQRS.Handlers;
 
-namespace AsyncCommandEngine.Run
+namespace AsyncCommandEngine.Run.Commands
 {
-	public class DemoCommand : ICommand
-	{
-		public DelayCommand DelayCommand { get; set; }
-		public ThrowCommand ThrowCommand { get; set; }
-	}
-
-	public class DelayCommand : ICommand
-	{
-		public TimeSpan Timeout { get; set; }
-	}
-
-	public class ThrowCommand : ICommand
-	{
-
-	}
-
 	[WatchDogTimeout(0, 0, 10)]
 	[ThrottleGroup("DemoHandlers")]
 	public class DemoHandlers :

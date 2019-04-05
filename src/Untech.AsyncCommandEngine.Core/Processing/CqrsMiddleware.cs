@@ -111,7 +111,7 @@ namespace Untech.AsyncCommandEngine.Processing
 			where TRequest: ICommand<TResult>
 		{
 			var dispatcher = middleware._strategy.GetDispatcher(context) ?? throw NoDispatcherError();
-			var command = middleware._strategy.MaterializeRequest(context.Request) ?? throw NoRequestError();
+			var command = context.Request.GetBody(typeof(TRequest)) ?? throw NoRequestError();
 
 			return dispatcher.ProcessAsync((TRequest)command, context.Aborted);
 		}
@@ -120,7 +120,7 @@ namespace Untech.AsyncCommandEngine.Processing
 			where TNotification: INotification
 		{
 			var dispatcher = middleware._strategy.GetDispatcher(context) ?? throw NoDispatcherError();
-			var notification = middleware._strategy.MaterializeRequest(context.Request) ?? throw NoRequestError();
+			var notification = context.Request.GetBody(typeof(TNotification)) ?? throw NoRequestError();
 
 			return dispatcher.PublishAsync((TNotification)notification, context.Aborted);
 		}

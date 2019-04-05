@@ -7,8 +7,6 @@ namespace Untech.AsyncCommandEngine.Processing
 	{
 		Type FindRequestType(string requestName);
 
-		object MaterializeRequest(Request request);
-
 		IDispatcher GetDispatcher(Context context);
 	}
 }

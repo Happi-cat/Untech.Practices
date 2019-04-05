@@ -8,8 +8,10 @@ namespace Untech.AsyncCommandEngine
 	{
 		public abstract string Identifier { get; }
 		public abstract string Name { get; }
-		public abstract Stream Body { get; }
 		public abstract DateTimeOffset Created { get; }
 		public abstract IDictionary<string, string> Attributes { get; }
+
+		public abstract object GetBody(Type requestType);
+		public abstract Stream GetRawBody();
 	}
 }
