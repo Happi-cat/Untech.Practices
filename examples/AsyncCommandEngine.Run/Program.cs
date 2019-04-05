@@ -36,9 +36,9 @@ namespace AsyncCommandEngine.Run
 				return new AsyncCommandEngine.Run.DemoHandlers() as T;
 			}
 
-			public ReadOnlyCollection<T> ResolveMany<T>() where T : class
+			public IEnumerable<T> ResolveMany<T>() where T : class
 			{
-				return Enumerable.Empty<T>().ToList().AsReadOnly();
+				return Enumerable.Empty<T>();
 			}
 
 			public Type FindRequestType(string requestName)

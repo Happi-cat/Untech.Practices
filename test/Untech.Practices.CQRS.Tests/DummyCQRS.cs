@@ -49,9 +49,9 @@ namespace Untech.Practices.CQRS
 				return handler as T;
 			}
 
-			public ReadOnlyCollection<T> ResolveMany<T>() where T : class
+			public IEnumerable<T> ResolveMany<T>() where T : class
 			{
-				return GetEnumerable().ToList().AsReadOnly();
+				return GetEnumerable().Where(n => n != null);
 
 				IEnumerable<T> GetEnumerable()
 				{
