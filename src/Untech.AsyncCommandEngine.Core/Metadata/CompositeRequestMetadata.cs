@@ -18,9 +18,7 @@ namespace Untech.AsyncCommandEngine.Metadata
 
 		public TAttr GetAttribute<TAttr>() where TAttr : Attribute
 		{
-			return _accessors
-				.Select(n => n.GetAttribute<TAttr>())
-				.SingleOrDefault(n => !ReferenceEquals(n, null));
+			return GetAttributes<TAttr>().SingleOrDefault();
 		}
 
 		public IEnumerable<TAttr> GetAttributes<TAttr>() where TAttr : Attribute

@@ -4,10 +4,8 @@ using System.Threading.Tasks;
 
 namespace Untech.AsyncCommandEngine.Processing
 {
-	internal class RequestProcessor : IRequestProcessor
+	public class RequestProcessor : IRequestProcessor
 	{
-		private static readonly RequestProcessorCallback s_defaultNext = ctx => Task.FromResult(0);
-
 		private readonly RequestProcessorCallback _next;
 
 		public RequestProcessor(IEnumerable<IRequestProcessorMiddleware> steps)
@@ -19,12 +17,14 @@ namespace Untech.AsyncCommandEngine.Processing
 
 		public Task InvokeAsync(Context context)
 		{
+			if (context == null) throw new ArgumentNullException(nameof(context));
+
 			return _next(context);
 		}
 
 		private static RequestProcessorCallback BuildChain(Queue<IRequestProcessorMiddleware> steps)
 		{
-			if (steps.Count <= 0) return s_defaultNext;
+			if (steps.Count <= 0) return DefaultDelegate;
 
 			var currentMiddleware = steps.Dequeue();
 			var next = BuildChain(steps);
@@ -32,6 +32,11 @@ namespace Untech.AsyncCommandEngine.Processing
 			return currentMiddleware != null
 				? ctx => currentMiddleware.InvokeAsync(ctx, next)
 				: next;
+		}
+
+		private static Task DefaultDelegate(Context ctx)
+		{
+			throw new NotSupportedException();
 		}
 	}
 }
