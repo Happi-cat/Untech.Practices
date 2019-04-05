@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AsyncCommandEngine.Run.Commands;
+using Microsoft.Extensions.Logging;
 using Untech.AsyncCommandEngine;
 using Untech.AsyncCommandEngine.Processing;
 using Untech.Practices.CQRS.Dispatching;
@@ -10,14 +11,21 @@ namespace AsyncCommandEngine.Run
 {
 	internal class CqrsStrategy : ICqrsStrategy, ITypeResolver
 	{
+		private readonly ILogger _logger;
+
 		private readonly IReadOnlyList<Type> _types = new List<Type>
 		{
 			typeof(DemoCommand), typeof(DelayCommand), typeof(ThrowCommand)
 		};
 
+		public CqrsStrategy(ILogger logger)
+		{
+			_logger = logger;
+		}
+
 		public T ResolveOne<T>() where T : class
 		{
-			return new DemoHandlers() as T;
+			return new DemoHandlers(_logger) as T;
 		}
 
 		public IEnumerable<T> ResolveMany<T>() where T : class

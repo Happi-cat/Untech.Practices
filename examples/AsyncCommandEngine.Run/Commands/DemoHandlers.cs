@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Untech.AsyncCommandEngine.Metadata;
 using Untech.Practices;
 using Untech.Practices.CQRS.Handlers;
@@ -14,8 +15,16 @@ namespace AsyncCommandEngine.Run.Commands
 		ICommandHandler<DelayCommand, Nothing>,
 		ICommandHandler<ThrowCommand, Nothing>
 	{
+		private readonly ILogger _logger;
+
+		public DemoHandlers(ILogger logger)
+		{
+			_logger = logger;
+		}
+
 		public async Task<Nothing> HandleAsync(DemoCommand request, CancellationToken cancellationToken)
 		{
+			_logger.LogInformation("Demo in progress");
 			if (request.DelayCommand != null)
 			{
 				await HandleAsync(request.DelayCommand, cancellationToken);
@@ -26,6 +35,7 @@ namespace AsyncCommandEngine.Run.Commands
 				await HandleAsync(request.ThrowCommand, cancellationToken);
 			}
 
+			_logger.LogInformation("Demo completed");
 			return Nothing.AtAll;
 		}
 

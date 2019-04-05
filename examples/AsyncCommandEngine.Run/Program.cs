@@ -28,7 +28,7 @@ namespace AsyncCommandEngine.Run
 				{
 					DefaultTimeout = TimeSpan.FromMinutes(1),
 				})
-				.BuildOrchestrator(new CqrsStrategy(),
+				.BuildOrchestrator(new CqrsStrategy(loggerFactory.CreateLogger("Handlers")),
 					new OrchestratorOptions
 					{
 						Warps = 10, RequestsPerWarp = 10, SlidingStep = TimeSpan.FromSeconds(1), SlidingRadius = 5
