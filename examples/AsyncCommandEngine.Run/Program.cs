@@ -48,7 +48,7 @@ namespace AsyncCommandEngine.Run
 				.MinimumLevel.Debug()
 				.WriteTo.ColoredConsole(
 					outputTemplate:
-					"{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3} {Properties} {Message}{NewLine}{Exception}")
+					"{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3} {Properties} {Message}{NewLine}")
 				.CreateLogger();
 
 			return new LoggerFactory().AddSerilog(logger);

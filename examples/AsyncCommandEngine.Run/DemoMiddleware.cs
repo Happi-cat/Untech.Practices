@@ -28,6 +28,10 @@ namespace AsyncCommandEngine.Run
 			{
 				await next(context);
 			}
+			catch (OperationCanceledException e)
+			{
+				_logger.Log(LogLevel.Warning, e, "{0} was canceled", context.TraceIdentifier, e.Message);
+			}
 			catch (Exception e)
 			{
 				_logger.Log(LogLevel.Error, e, "{0} crashed: {1}", context.TraceIdentifier, e.Message);
