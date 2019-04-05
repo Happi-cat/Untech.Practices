@@ -24,7 +24,7 @@ namespace Untech.AsyncCommandEngine.Processing
 
 		private static RequestProcessorCallback BuildChain(Queue<IRequestProcessorMiddleware> steps)
 		{
-			if (steps.Count <= 0) return DefaultDelegate;
+			if (steps.Count <= 0) return DoFinally;
 
 			var currentMiddleware = steps.Dequeue();
 			var next = BuildChain(steps);
@@ -34,7 +34,7 @@ namespace Untech.AsyncCommandEngine.Processing
 				: next;
 		}
 
-		private static Task DefaultDelegate(Context ctx)
+		private static Task DoFinally(Context ctx)
 		{
 			throw new NotSupportedException();
 		}
