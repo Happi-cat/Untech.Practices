@@ -94,8 +94,8 @@ namespace Untech.AsyncCommandEngine
 				var l = requestCount;
 				var max = _options.RequestsPerWarp;
 
-				if (l <= 0.2f * max) _timer.Increase();
-				else if (l >= 0.8f * max) _timer.Decrease();
+				if (l <= 0.3f * max) _timer.Increase();
+				else if (l >= 0.7f * max) _timer.Decrease();
 			}
 		}
 
