@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+    <RootNamespace>Untech.AsyncCommandEngine</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Untech.AsyncCommandEngine.Core\Untech.AsyncCommandEngine.Core.csproj" />
+  </ItemGroup>
+
+</Project>
