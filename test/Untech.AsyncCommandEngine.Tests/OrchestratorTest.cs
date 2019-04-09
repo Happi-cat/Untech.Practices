@@ -18,8 +18,9 @@ namespace Untech.AsyncCommandEngine
 		[Fact]
 		public async Task DoAsync_ConsumesRequests_WhenRequestsAvailable()
 		{
-			var transport = new FakeTransport();
-			var orcherstator = new EngineBuilder().UseTransport(transport).BuildOrchestrator(new FakeCqrs(), new OrchestratorOptions
+			var transport = new FakeTransport(100);
+			var cqrs = new FakeCqrs();
+			var orcherstator = new EngineBuilder().UseTransport(transport).BuildOrchestrator(cqrs, new OrchestratorOptions
 			{
 				Warps = 5,
 				RequestsPerWarp = 5,
@@ -28,8 +29,11 @@ namespace Untech.AsyncCommandEngine
 			});
 
 			await orcherstator.StartAsync();
-			await transport.Complete();
+			var completed = await transport.Complete();
 			await orcherstator.StopAsync(TimeSpan.Zero);
+
+			Assert.Equal(100, cqrs.CallCounter);
+			Assert.Equal(100, completed);
 		}
 
 		private class FakeTransport : ITransport
@@ -39,9 +43,9 @@ namespace Untech.AsyncCommandEngine
 			private readonly ConcurrentBag<Request> _outbound;
 			private readonly TaskCompletionSource<int> _completionSource;
 
-			public FakeTransport()
+			public FakeTransport(int total)
 			{
-				_total = 100;
+				_total = total;
 				_inbound = new ConcurrentBag<Request>(Enumerable.Repeat(new FakeRequest(), _total));
 				_outbound = new ConcurrentBag<Request>();
 				_completionSource = new TaskCompletionSource<int>();
@@ -68,7 +72,7 @@ namespace Untech.AsyncCommandEngine
 				return CompleteRequestAsync(request);
 			}
 
-			public Task Complete()
+			public Task<int> Complete()
 			{
 				return _completionSource.Task;
 			}
@@ -77,7 +81,7 @@ namespace Untech.AsyncCommandEngine
 		private class FakeRequest : Request
 		{
 			public override string Identifier { get; }
-			public override string Name { get; }
+			public override string Name { get; } = "FakeCommand";
 			public override DateTimeOffset Created { get; }
 			public override IDictionary<string, string> Attributes { get; }
 			public override object GetBody(Type requestType)
@@ -93,6 +97,10 @@ namespace Untech.AsyncCommandEngine
 
 		private class FakeCqrs : ICqrsStrategy, IDispatcher
 		{
+			private int _callCounter = 0;
+
+			public int CallCounter => _callCounter;
+
 			public Type FindRequestType(string requestName)
 			{
 				return typeof(FakeCommand);
@@ -105,16 +113,19 @@ namespace Untech.AsyncCommandEngine
 
 			public Task<TResult> FetchAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken)
 			{
+				Interlocked.Increment(ref _callCounter);
 				return Task.FromResult(default(TResult));
 			}
 
 			public Task PublishAsync(INotification notification, CancellationToken cancellationToken)
 			{
+				Interlocked.Increment(ref _callCounter);
 				return Task.CompletedTask;
 			}
 
 			public Task<TResult> ProcessAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken)
 			{
+				Interlocked.Increment(ref _callCounter);
 				return Task.FromResult(default(TResult));
 			}
 		}

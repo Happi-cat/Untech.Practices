@@ -41,6 +41,8 @@ namespace Untech.AsyncCommandEngine.Processing
 
 		public Task InvokeAsync(Context context, RequestProcessorCallback next)
 		{
+			if (string.IsNullOrEmpty(context.RequestName)) throw new ArgumentException(nameof(context.RequestName));
+
 			context.Aborted.ThrowIfCancellationRequested();
 
 			return s_executors
