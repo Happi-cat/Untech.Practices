@@ -91,6 +91,8 @@ namespace Untech.AsyncCommandEngine
 
 			void UpdateSlidingCoefficient(int requestCount)
 			{
+				if (_options.RequestsPerWarp < 2) return;
+
 				var l = requestCount;
 				var max = _options.RequestsPerWarp;
 
