@@ -129,27 +129,27 @@ namespace Untech.AsyncCommandEngine.Processing
 
 		private static Exception RequestTypeNotFoundError(string requestName)
 		{
-			return new InvalidOperationException($"Request type {requestName} was not found");
+			return new InvalidOperationException($"Request type {requestName} was not found.");
 		}
 
 		private static Exception RequestTypeHasNoInterfacesError(Type requestType)
 		{
-			return new InvalidOperationException($"Request type {requestType} doesn't implements ICommand<> or INotification");
+			return new InvalidOperationException($"Request type {requestType} doesn't implements ICommand<> or INotification.");
 		}
 
 		private static Exception RequestTypeHasMultipleInterfacesError(Type requestType)
 		{
-			return new InvalidOperationException($"Request type {requestType} has multiple interfaces of type ICommand<> and INotification)");
+			return new InvalidOperationException($"Request type {requestType} has multiple interfaces of type ICommand<> and INotification).");
 		}
 
 		private static Exception NoDispatcherError()
 		{
-			return new InvalidOperationException("Dispatcher is missing");
+			return new InvalidOperationException("Dispatcher is missing.");
 		}
 
 		private static Exception NoRequestError()
 		{
-			return new InvalidOperationException("Request wasn't parsed and null was returned");
+			return new InvalidOperationException("Request wasn't parsed and null was returned.");
 		}
 	}
 }
