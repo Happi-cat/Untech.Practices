@@ -6,14 +6,12 @@ namespace Untech.AsyncCommandEngine.Features.Debounce
 	public static class EngineBuilderExtensions
 	{
 		public static EngineBuilder UseDebounce(this EngineBuilder builder,
-			ILastRunStore lastRunStore,
-			ILoggerFactory loggerFactory)
+			ILastRunStore lastRunStore)
 		{
 			if (builder == null) throw new ArgumentNullException(nameof(builder));
 			if (lastRunStore == null) throw new ArgumentNullException(nameof(lastRunStore));
-			if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
 
-			return builder.Use(() => new DebounceMiddleware(lastRunStore, loggerFactory));
+			return builder.Use(ctx => new DebounceMiddleware(lastRunStore, ctx.GetLogger()));
 		}
 	}
 }

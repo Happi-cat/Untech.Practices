@@ -31,23 +31,14 @@ namespace Untech.AsyncCommandEngine.Features.Throttling
 			{
 				await semaphore.WaitAsync(context.Aborted);
 
-				try
-				{
-					await next(context);
-				}
-				finally
-				{
-					semaphore.Release();
-				}
+				try { await next(context); }
+				finally { semaphore.Release(); }
 			}
 		}
 
 		private string GetGroupKey(Context context)
 		{
-			return GetEnumerable()
-				.Where(n => !string.IsNullOrEmpty(n))
-				.OrderBy(n => n)
-				.FirstOrDefault();
+			return GetEnumerable().FirstOrDefault(n => !string.IsNullOrEmpty(n));
 
 			IEnumerable<string> GetEnumerable()
 			{

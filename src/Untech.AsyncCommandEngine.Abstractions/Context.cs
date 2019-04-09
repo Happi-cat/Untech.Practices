@@ -11,9 +11,11 @@ namespace Untech.AsyncCommandEngine
 
 		public Context(Request request, IRequestMetadata requestMetadata)
 		{
-			Request = request;
-			RequestName = request.Name;
-			RequestMetadata = requestMetadata;
+			TraceIdentifier = Guid.NewGuid().ToString();
+
+			Request = request ?? throw new ArgumentNullException(nameof(request));
+			RequestName = request.Name ?? throw new ArgumentNullException(nameof(request.Name));
+			RequestMetadata = requestMetadata ?? throw new ArgumentNullException(nameof(requestMetadata));
 
 			_items = new Dictionary<object, object>();
 		}

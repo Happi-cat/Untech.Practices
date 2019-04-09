@@ -8,9 +8,14 @@ using Untech.AsyncCommandEngine.Processing;
 
 namespace Untech.AsyncCommandEngine
 {
-	public class EngineBuilder
+	public interface IBuilderContext
 	{
-		private readonly List<IRequestProcessorMiddleware> _middlewares = new List<IRequestProcessorMiddleware>();
+		ILoggerFactory GetLogger();
+	}
+
+	public class EngineBuilder : IBuilderContext
+	{
+		private readonly List<Func<IBuilderContext, IRequestProcessorMiddleware>> _middlewares = new List<Func<IBuilderContext, IRequestProcessorMiddleware>>();
 		private ITransport _transport;
 		private ILoggerFactory _loggerFactory = NullLoggerFactory.Instance;
 		private IRequestMetadataProvider _requestMetadataProvider;
@@ -33,20 +38,37 @@ namespace Untech.AsyncCommandEngine
 			return this;
 		}
 
-		public EngineBuilder Use(Func<IRequestProcessorMiddleware> creator)
+		public EngineBuilder Use(Func<IBuilderContext, IRequestProcessorMiddleware> creator)
 		{
-			_middlewares.Add(creator());
+			_middlewares.Add(creator);
 			return this;
+		}
+
+		public ILoggerFactory GetLogger()
+		{
+			return _loggerFactory;
+		}
+
+		public ITransport GetTransport()
+		{
+			return _transport;
+		}
+
+		public IRequestMetadataProvider GetMetadataProvider()
+		{
+			return _requestMetadataProvider;
 		}
 
 		public IRequestProcessor BuildProcessor(ICqrsStrategy strategy)
 		{
-			var predefinedMiddleware = new IRequestProcessorMiddleware[]
-			{
-				new CqrsMiddleware(strategy),
-			};
+			var middlewares = _middlewares
+				.Select(n => n.Invoke(this))
+				.Concat(new IRequestProcessorMiddleware[]
+				{
+					new CqrsMiddleware(strategy),
+				});
 
-			return new RequestProcessor(_middlewares.Concat(predefinedMiddleware));
+			return new RequestProcessor(middlewares);
 		}
 
 		public IOrchestrator BuildOrchestrator(ICqrsStrategy strategy, OrchestratorOptions options)

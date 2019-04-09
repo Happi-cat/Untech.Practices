@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Untech.AsyncCommandEngine.Metadata;
 using Untech.AsyncCommandEngine.Processing;
 
@@ -9,10 +10,12 @@ namespace Untech.AsyncCommandEngine.Features.WatchDog
 	internal class WatchDogMiddleware : IRequestProcessorMiddleware
 	{
 		private readonly WatchDogOptions _options;
+		private readonly ILogger _logger;
 
-		public WatchDogMiddleware(WatchDogOptions options)
+		public WatchDogMiddleware(WatchDogOptions options, ILoggerFactory loggerFactory)
 		{
 			_options = options;
+			_logger = loggerFactory.CreateLogger<WatchDogMiddleware>();
 		}
 
 		public async Task InvokeAsync(Context context, RequestProcessorCallback next)
@@ -26,6 +29,7 @@ namespace Untech.AsyncCommandEngine.Features.WatchDog
 					context.Aborted);
 
 				context.Aborted = linkedTokenSource.Token;
+				_logger.TimeoutConfigured(context, timeout.Value);
 			}
 
 			await next(context);

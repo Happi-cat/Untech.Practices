@@ -14,7 +14,7 @@ namespace Untech.AsyncCommandEngine.Features.WatchDog
 			if (builder == null) throw new ArgumentNullException(nameof(builder));
 			if (options == null) throw new ArgumentNullException(nameof(options));
 
-			return builder.Use(() => new WatchDogMiddleware(options));
+			return builder.Use(ctx => new WatchDogMiddleware(options, ctx.GetLogger()));
 		}
 	}
 }

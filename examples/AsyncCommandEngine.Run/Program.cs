@@ -22,7 +22,7 @@ namespace AsyncCommandEngine.Run
 			var service = new EngineBuilder()
 				.UseLogger(loggerFactory)
 				.UseTransport(new DemoTransport())
-				.Use(() => new DemoMiddleware(loggerFactory))
+				.Use(ctx => new DemoMiddleware(ctx.GetLogger()))
 				.UseThrottling(new ThrottleOptions { DefaultRunAtOnceInGroup = 2 })
 				.UseWatchDog(new WatchDogOptions
 				{

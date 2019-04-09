@@ -14,7 +14,7 @@ namespace Untech.AsyncCommandEngine.Features.Throttling
 			if (builder == null) throw new ArgumentNullException(nameof(builder));
 			if (options == null) throw new ArgumentNullException(nameof(options));
 
-			return builder.Use(() => new ThrottleMiddleware(options));
+			return builder.Use(ctx => new ThrottleMiddleware(options));
 		}
 	}
 }
