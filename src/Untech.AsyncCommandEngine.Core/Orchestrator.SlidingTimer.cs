@@ -14,8 +14,8 @@ namespace Untech.AsyncCommandEngine
 			private readonly int _slidingRadius;
 			private readonly ILogger _logger;
 
-			private int _slidingCoefficient = 0;
-			private int _ticksRemain = 0;
+			private int _slidingCoefficient;
+			private int _ticksRemain;
 
 			public SlidingTimer(Action callback, TimeSpan step, int slidingRadius, ILogger logger)
 			{
@@ -30,11 +30,11 @@ namespace Untech.AsyncCommandEngine
 
 			public void Increase()
 			{
-				var c = _slidingCoefficient;
 				var r = _slidingRadius;
+				var c = _slidingCoefficient;
 
 				// 2r - adds some laziness
-				if (c >= 2 * r) return;
+				if (r == 0 || 2 * r <= c) return;
 
 				Interlocked.Increment(ref _slidingCoefficient);
 				_logger.SlidingCoefficientIncreased(_slidingCoefficient);
@@ -42,11 +42,11 @@ namespace Untech.AsyncCommandEngine
 
 			public void Decrease()
 			{
-				var c = _slidingCoefficient;
 				var r = _slidingRadius;
+				var c = _slidingCoefficient;
 
 				// 2r - adds some laziness
-				if (c <= -2 * r) return;
+				if (r == 0 || c <= -2 * r) return;
 
 				Interlocked.Decrement(ref _slidingCoefficient);
 				_logger.SlidingCoefficientDecreased(_slidingCoefficient);
@@ -70,6 +70,8 @@ namespace Untech.AsyncCommandEngine
 			{
 				var r = _slidingRadius;
 				var c = _slidingCoefficient;
+
+				if (r == 0) return 0;
 
 				return Math.Max(-r, Math.Min(c, r)) + r;
 			}
