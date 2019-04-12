@@ -19,8 +19,8 @@ namespace Untech.AsyncCommandEngine
 
 			public SlidingTimer(Action callback, TimeSpan step, int slidingRadius, ILogger logger)
 			{
-				if (step <= TimeSpan.Zero || step > TimeSpan.FromHours(1)) throw new ArgumentOutOfRangeException(nameof(step));
-				if (_slidingRadius < 0) throw new ArgumentOutOfRangeException(nameof(slidingRadius));
+				if (step <= TimeSpan.Zero || TimeSpan.FromHours(1) < step) throw new ArgumentOutOfRangeException(nameof(step));
+				if (_slidingRadius < 0 || 1_000 < _slidingRadius) throw new ArgumentOutOfRangeException(nameof(slidingRadius));
 
 				_timerCallback = callback;
 				_slidingRadius = slidingRadius;
