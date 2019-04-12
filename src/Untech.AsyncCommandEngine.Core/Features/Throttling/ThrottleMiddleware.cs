@@ -9,6 +9,8 @@ namespace Untech.AsyncCommandEngine.Features.Throttling
 {
 	internal class ThrottleMiddleware : IRequestProcessorMiddleware
 	{
+		private const string AllGroupKey = "*";
+
 		private readonly ThrottleOptions _options;
 		private readonly Dictionary<string, SemaphoreSlim> _semaphores;
 		private readonly object _semaphoresWriteSyncRoot = new object();
@@ -21,40 +23,53 @@ namespace Untech.AsyncCommandEngine.Features.Throttling
 
 		public async Task InvokeAsync(Context context, RequestProcessorCallback next)
 		{
-			var semaphore = TryGetOrAddSemaphore(GetGroupKey(context));
+			var semaphores = GetSemaphoresOrdered(context).ToArray();
 
-			if (semaphore == null)
+			if (semaphores.Length == 0)
 			{
 				await next(context);
 			}
 			else
 			{
-				await semaphore.WaitAsync(context.Aborted);
+				foreach (var semaphore in semaphores) await semaphore.WaitAsync();
 
-				try { await next(context); }
-				finally { semaphore.Release(); }
+				try
+				{
+					await next(context);
+				}
+				finally
+				{
+					foreach (var semaphore in semaphores.Reverse()) semaphore.Release();
+				}
 			}
 		}
 
-		private string GetGroupKey(Context context)
+		private IEnumerable<SemaphoreSlim> GetSemaphoresOrdered(Context context)
 		{
-			return GetEnumerable().FirstOrDefault(n => !string.IsNullOrEmpty(n));
-
-			IEnumerable<string> GetEnumerable()
+			var groupKeys = GetGroupKeysOrdered(context);
+			foreach (var groupKey in groupKeys)
 			{
-				var attr = context.RequestMetadata.GetAttribute<ThrottleGroupAttribute>();
-				if (attr != null)
-					yield return attr.Group;
-
-				yield return context.RequestName;
+				var semaphore = TryGetOrAddSemaphore(context, groupKey);
+				if (semaphore != null) yield return semaphore;
 			}
 		}
 
-		private SemaphoreSlim TryGetOrAddSemaphore(string groupKey)
+		private IEnumerable<string> GetGroupKeysOrdered(Context context)
+		{
+			yield return AllGroupKey;
+
+			var attr = context.RequestMetadata.GetAttribute<ThrottleGroupAttribute>();
+			if (attr != null)
+				yield return attr.Group ?? string.Empty;
+
+			yield return context.RequestName;
+		}
+
+		private SemaphoreSlim TryGetOrAddSemaphore(Context context, string groupKey)
 		{
 			if (_semaphores.TryGetValue(groupKey, out var semaphore)) return semaphore;
 
-			var maxCount = GetMaxCount(groupKey);
+			var maxCount = GetRunAtOnce(context, groupKey);
 			if (maxCount == null) return null;
 
 			lock (_semaphoresWriteSyncRoot)
@@ -68,14 +83,21 @@ namespace Untech.AsyncCommandEngine.Features.Throttling
 			}
 		}
 
-		private int? GetMaxCount(string groupKey)
+		private int? GetRunAtOnce(Context context, string groupKey)
 		{
-			if (string.IsNullOrEmpty(groupKey)) return null;
+			if (groupKey == AllGroupKey) return _options.RunAtOnce;
 
-			if (_options.Groups != null && _options.Groups.TryGetValue(groupKey, out var options))
-				return options.RunAtOnce ?? _options.DefaultRunAtOnceInGroup;
+			if (groupKey != context.RequestName) return GetRunAtOnceForGroupFromOptions(groupKey);
 
-			return _options.DefaultRunAtOnceInGroup;
+			var attr = context.RequestMetadata.GetAttribute<ThrottleAttribute>();
+			return attr?.RunAtOnce ?? GetRunAtOnceForGroupFromOptions(groupKey);
+		}
+
+		private int? GetRunAtOnceForGroupFromOptions(string groupKey)
+		{
+			return _options.Groups != null && _options.Groups.TryGetValue(groupKey, out var options)
+				? options.RunAtOnce ?? _options.DefaultRunAtOnceInGroup
+				: _options.DefaultRunAtOnceInGroup;
 		}
 	}
 }

@@ -18,7 +18,7 @@ namespace Untech.AsyncCommandEngine
 		private readonly List<Func<IBuilderContext, IRequestProcessorMiddleware>> _middlewares = new List<Func<IBuilderContext, IRequestProcessorMiddleware>>();
 		private ITransport _transport;
 		private ILoggerFactory _loggerFactory = NullLoggerFactory.Instance;
-		private IRequestMetadataProvider _requestMetadataProvider;
+		private IRequestMetadataProvider _requestMetadataProvider = NullRequestMetadataProvider.Instance;
 
 		public EngineBuilder UseLogger(ILoggerFactory loggerFactory)
 		{

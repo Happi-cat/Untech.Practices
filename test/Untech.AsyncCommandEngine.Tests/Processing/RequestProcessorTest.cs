@@ -25,7 +25,7 @@ namespace Untech.AsyncCommandEngine.Processing
 		[Fact]
 		public async Task InvokeAsync_Returns_WhenFinalMiddlewareEnds()
 		{
-			var processor = new RequestProcessor(new[]{ new FakeMiddleware() });
+			var processor = new RequestProcessor(new[]{ NullRequestProcessorMiddleware.Instance });
 			var context = new Context(new FakeRequest(), NullRequestMetadata.Instance);
 
 			await processor.InvokeAsync(context);
@@ -75,14 +75,6 @@ namespace Untech.AsyncCommandEngine.Processing
 		private static Context BuildContextForCqrsMiddlewareTest(object command)
 		{
 			return new Context(new FakeRequest(command), NullRequestMetadata.Instance);
-		}
-
-		private class FakeMiddleware : IRequestProcessorMiddleware
-		{
-			public Task InvokeAsync(Context context, RequestProcessorCallback next)
-			{
-				return Task.CompletedTask;
-			}
 		}
 
 		private class FakeCqrsStrategy : ICqrsStrategy, IDispatcher

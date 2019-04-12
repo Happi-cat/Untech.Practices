@@ -9,11 +9,6 @@ namespace Untech.AsyncCommandEngine.Metadata
 	{
 		public static readonly IRequestMetadata Instance = new NullRequestMetadata();
 
-		private NullRequestMetadata()
-		{
-
-		}
-
 		public TAttr GetAttribute<TAttr>() where TAttr : Attribute
 		{
 			return default;
