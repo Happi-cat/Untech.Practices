@@ -33,14 +33,14 @@ namespace Untech.AsyncCommandEngine.Metadata
 			var typeDetectives = assemblies
 				.SelectMany(a => a.DefinedTypes)
 				.Where(a => a.IsPublic)
-				.Select(t => new TypeDetective(t));
+				.Select(t => new TypeExplorer(t));
 
 			var requestsMetadata = new List<(string FullName, IRequestMetadata Accessor)>();
-			foreach (TypeDetective typeDetective in typeDetectives)
-			foreach (Type requestType in typeDetective.GetSupportableRequestTypes())
+			foreach (TypeExplorer typeExplorer in typeDetectives)
+			foreach (Type requestType in typeExplorer.GetSupportableRequestTypes())
 			{
 				if (string.IsNullOrEmpty(requestType.FullName)) continue;
-				requestsMetadata.Add((requestType.FullName, typeDetective.GetMetadata()));
+				requestsMetadata.Add((requestType.FullName, typeExplorer.GetMetadata()));
 			}
 
 			return requestsMetadata
@@ -48,7 +48,7 @@ namespace Untech.AsyncCommandEngine.Metadata
 				.ToDictionary(n => n.Key, n => (IRequestMetadata)new CompositeRequestMetadata(n));
 		}
 
-		private class TypeDetective
+		private class TypeExplorer
 		{
 			private static readonly IReadOnlyList<Type> s_matchableGenericTypes = new List<Type>
 			{
@@ -60,7 +60,7 @@ namespace Untech.AsyncCommandEngine.Metadata
 
 			private IRequestMetadata _metadata;
 
-			public TypeDetective(TypeInfo suspectedType)
+			public TypeExplorer(TypeInfo suspectedType)
 			{
 				_suspectedType = suspectedType;
 				_supportableRequests = _suspectedType.ImplementedInterfaces
@@ -87,32 +87,32 @@ namespace Untech.AsyncCommandEngine.Metadata
 				if (_supportableRequests.Count == 0)
 					return NullRequestMetadata.Instance;
 
-				var accessorType = typeof(RequestMetadata<>).MakeGenericType(_suspectedType.AsType());
+				var accessorType = typeof(Metadata<>).MakeGenericType(_suspectedType.AsType());
 				return (IRequestMetadata)Activator.CreateInstance(accessorType);
 			}
 		}
 
-		private class RequestMetadata<TMetadataContainer> : IRequestMetadata
+		private class Metadata<TContainer> : IRequestMetadata
 		{
-			private static readonly TypeInfo s_metadataContainerType = typeof(TMetadataContainer).GetTypeInfo();
+			private static readonly TypeInfo s_metadataContainerType = typeof(TContainer).GetTypeInfo();
 
 			public TAttr GetAttribute<TAttr>() where TAttr : Attribute
 			{
-				return AttrCache<TAttr>.Attributes.SingleOrDefault();
+				return Attributes<TAttr>.All.SingleOrDefault();
 			}
 
 			public IEnumerable<TAttr> GetAttributes<TAttr>() where TAttr : Attribute
 			{
-				return AttrCache<TAttr>.Attributes;
+				return Attributes<TAttr>.All;
 			}
 
-			private struct AttrCache<TAttr> where TAttr : Attribute
+			private struct Attributes<TAttr> where TAttr : Attribute
 			{
-				internal static readonly ReadOnlyCollection<TAttr> Attributes;
+				internal static readonly ReadOnlyCollection<TAttr> All;
 
-				static AttrCache()
+				static Attributes()
 				{
-					Attributes = s_metadataContainerType
+					All = s_metadataContainerType
 						.GetCustomAttributes<TAttr>()
 						.ToList()
 						.AsReadOnly();
