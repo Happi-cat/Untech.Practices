@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Untech.AsyncCommandEngine.Metadata;
@@ -42,6 +43,16 @@ namespace Untech.AsyncCommandEngine
 		{
 			_middlewares.Add(creator);
 			return this;
+		}
+
+		public EngineBuilder Use(Func<Context, RequestProcessorCallback, Task> middleware)
+		{
+			return Use(ctx => new AdHocRequestProcessorMiddleware(middleware));
+		}
+
+		public EngineBuilder Use(Func<IBuilderContext, Func<Context, RequestProcessorCallback, Task>> creator)
+		{
+			return Use(ctx => new AdHocRequestProcessorMiddleware(creator(ctx)));
 		}
 
 		public ILoggerFactory GetLogger()

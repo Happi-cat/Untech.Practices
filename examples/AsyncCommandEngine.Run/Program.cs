@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using AsyncCommandEngine.Run.Commands;
 using Microsoft.Extensions.Logging;
@@ -23,6 +24,21 @@ namespace AsyncCommandEngine.Run
 				.UseLogger(loggerFactory)
 				.UseTransport(new DemoTransport())
 				.Use(ctx => new DemoMiddleware(ctx.GetLogger()))
+				.Use(builder =>
+				{
+					var logger = builder.GetLogger().CreateLogger("Metrics");
+					return async (ctx, next) =>
+					{
+						var sw = new Stopwatch();
+						sw.Start();
+						try { await next(ctx); }
+						finally
+						{
+							sw.Stop();
+							logger.LogInformation("Elapsed: {0}", sw.Elapsed);
+						}
+					};
+				})
 				.UseThrottling(new ThrottleOptions { DefaultRunAtOnceInGroup = 2 })
 				.UseWatchDog(new WatchDogOptions
 				{

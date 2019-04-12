@@ -5,16 +5,16 @@ namespace Untech.AsyncCommandEngine.Processing
 {
 	public sealed class AdHocRequestProcessorMiddleware : IRequestProcessorMiddleware
 	{
-		private readonly Func<Context,RequestProcessorCallback, Task> _middleware;
+		private readonly Func<Context,RequestProcessorCallback, Task> _func;
 
-		public AdHocRequestProcessorMiddleware(Func<Context, RequestProcessorCallback, Task> middleware)
+		public AdHocRequestProcessorMiddleware(Func<Context, RequestProcessorCallback, Task> func)
 		{
-			_middleware = middleware;
+			_func = func ?? throw new ArgumentNullException(nameof(func));
 		}
 
 		public Task InvokeAsync(Context context, RequestProcessorCallback next)
 		{
-			return _middleware(context, next);
+			return _func(context, next);
 		}
 	}
 }
