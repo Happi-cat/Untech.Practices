@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using Microsoft.Extensions.Logging;
+using static System.Math;
 
 namespace Untech.AsyncCommandEngine
 {
@@ -73,7 +74,7 @@ namespace Untech.AsyncCommandEngine
 
 				if (r == 0) return 0;
 
-				return Math.Max(-r, Math.Min(c, r)) + r;
+				return Max(-r, Min(c, r)) + r;
 			}
 
 			public void Dispose()
