@@ -54,15 +54,23 @@ namespace Untech.AsyncCommandEngine.Features.Throttling
 			}
 		}
 
+		// await for request semaphore first and in the end AllGroup semaphore
+		// in theory:
+		// case: take Request -> Group -> AllGroup semaphore
+		// 	awaiting for request/group semaphore won't affect AllGroup semaphore
+		// 	so other requests can take allgroup semaphore and do all the things
+		// case: take AllGroup -> Group -> Request semaphore
+		// 	in that case request can wait for group/request semaphore and waste AllGroup semaphore
+		//  so other requests will wait not only for AllGroup but for request/group indirectly
 		private IEnumerable<string> GetGroupKeysOrdered(Context context)
 		{
-			yield return AllGroupKey;
+			yield return context.RequestName;
 
 			var attr = context.RequestMetadata.GetAttribute<ThrottleGroupAttribute>();
 			if (attr != null)
 				yield return attr.Group ?? string.Empty;
 
-			yield return context.RequestName;
+			yield return AllGroupKey;
 		}
 
 		private SemaphoreSlim TryGetOrAddSemaphore(Context context, string groupKey)
