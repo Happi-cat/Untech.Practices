@@ -2,7 +2,7 @@ using System;
 
 namespace Untech.AsyncCommandEngine.Metadata
 {
-	[AttributeUsage(AttributeTargets.Class)]
+	[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 	public sealed class OptionAttribute : Attribute
 	{
 		public OptionAttribute(string key, object value)
