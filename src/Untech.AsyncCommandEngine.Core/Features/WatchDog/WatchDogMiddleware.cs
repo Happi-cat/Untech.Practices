@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Untech.AsyncCommandEngine.Metadata;
+using Untech.AsyncCommandEngine.Metadata.Annotations;
 using Untech.AsyncCommandEngine.Processing;
 
 namespace Untech.AsyncCommandEngine.Features.WatchDog

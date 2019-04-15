@@ -1,4 +1,4 @@
-using Untech.AsyncCommandEngine.Metadata;
+using Untech.AsyncCommandEngine.Metadata.Annotations;
 using Untech.Practices.CQRS;
 
 namespace AsyncCommandEngine.Run.Commands

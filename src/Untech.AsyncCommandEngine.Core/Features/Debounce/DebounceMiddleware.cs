@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Untech.AsyncCommandEngine.Metadata;
+using Untech.AsyncCommandEngine.Metadata.Annotations;
 using Untech.AsyncCommandEngine.Processing;
 
 namespace Untech.AsyncCommandEngine.Features.Debounce

@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using Untech.AsyncCommandEngine.Metadata.Annotations;
 using Xunit;
 
 namespace Untech.AsyncCommandEngine.Metadata
