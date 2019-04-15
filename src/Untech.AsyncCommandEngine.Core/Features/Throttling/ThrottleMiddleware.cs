@@ -1,8 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Untech.AsyncCommandEngine.Metadata;
 using Untech.AsyncCommandEngine.Metadata.Annotations;
 using Untech.AsyncCommandEngine.Processing;
 
@@ -80,6 +80,7 @@ namespace Untech.AsyncCommandEngine.Features.Throttling
 
 			var maxCount = GetRunAtOnce(context, groupKey);
 			if (maxCount == null) return null;
+			if (maxCount < 1 || maxCount > 100) throw RunAtOnceInvalidError(maxCount);
 
 			lock (_semaphoresWriteSyncRoot)
 			{
@@ -90,6 +91,11 @@ namespace Untech.AsyncCommandEngine.Features.Throttling
 
 				return semaphore;
 			}
+		}
+
+		private static InvalidOperationException RunAtOnceInvalidError(int? maxCount)
+		{
+			return new InvalidOperationException($"Run At Once is out of range: {maxCount}");
 		}
 
 		private int? GetRunAtOnce(Context context, string groupKey)
