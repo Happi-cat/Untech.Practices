@@ -63,7 +63,7 @@ namespace Untech.AsyncCommandEngine
 			public Task CompleteRequestAsync(Request request)
 			{
 				_outbound.Add(request);
-				if (_outbound.Count == _total) _completionSource.SetResult(_outbound.Count);
+				if (_outbound.Count == _total) _completionSource.TrySetResult(_outbound.Count);
 				return Task.CompletedTask;
 			}
 

@@ -84,8 +84,7 @@ namespace Untech.AsyncCommandEngine.Metadata
 
 			private IRequestMetadata CreateMetadata()
 			{
-				if (_supportableRequests.Count == 0)
-					return NullRequestMetadata.Instance;
+				if (_supportableRequests.Count == 0) return NullRequestMetadata.Instance;
 
 				var accessorType = typeof(Metadata<>).MakeGenericType(_suspectedType.AsType());
 				return (IRequestMetadata)Activator.CreateInstance(accessorType);
