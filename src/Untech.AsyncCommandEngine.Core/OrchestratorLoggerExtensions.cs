@@ -14,23 +14,23 @@ namespace Untech.AsyncCommandEngine
 
 		static OrchestratorLoggerExtensions()
 		{
-			s_tickSkipped = LoggerMessage.Define<int>(LogLevel.Debug,
+			s_tickSkipped = LoggerMessage.Define<int>(LogLevel.Information,
 				new EventId(1, nameof(TickSkipped)),
 				"Tick skipped, will be reached after {ticksRemain}");
 
-			s_slidingCoefficientIncreased = LoggerMessage.Define<int>(LogLevel.Debug,
+			s_slidingCoefficientIncreased = LoggerMessage.Define<int>(LogLevel.Information,
 				new EventId(2, nameof(SlidingCoefficientIncreased)),
 				"Sliding coefficient was increased to {coefficient}");
 
-			s_slidingCoefficientDecreased = LoggerMessage.Define<int>(LogLevel.Debug,
+			s_slidingCoefficientDecreased = LoggerMessage.Define<int>(LogLevel.Information,
 				new EventId(3, nameof(SlidingCoefficientDecreased)),
 				"Sliding coefficient was decreased to {coefficient}");
 
-			s_freeWarpAvailable = LoggerMessage.Define(LogLevel.Debug,
+			s_freeWarpAvailable = LoggerMessage.Define(LogLevel.Information,
 				new EventId(4, nameof(IsFreeWarpAvailable)),
 				"One of warps is available");
 
-			s_noFreeWarpAvailable = LoggerMessage.Define(LogLevel.Debug,
+			s_noFreeWarpAvailable = LoggerMessage.Define(LogLevel.Information,
 				new EventId(5, nameof(IsNoFreeWarpAvailable)),
 				"No available warps");
 

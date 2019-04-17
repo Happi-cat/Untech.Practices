@@ -9,7 +9,7 @@ namespace Untech.AsyncCommandEngine.Features.Debounce
 
 		static DebounceMiddlewareLoggerExtensions()
 		{
-			s_requestDebounced = LoggerMessage.Define<string, string>(LogLevel.Debug,
+			s_requestDebounced = LoggerMessage.Define<string, string>(LogLevel.Information,
 				new EventId(1, "RequestDebounced"),
 				"Request with trace-id {traceId} and handle {handle} was debounced");
 		}

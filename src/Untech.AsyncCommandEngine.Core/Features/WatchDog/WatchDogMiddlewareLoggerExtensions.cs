@@ -9,7 +9,7 @@ namespace Untech.AsyncCommandEngine.Features.WatchDog
 
 		static WatchDogMiddlewareLoggerExtensions()
 		{
-			s_timeoutConfigured = LoggerMessage.Define<string, string, TimeSpan>(LogLevel.Debug,
+			s_timeoutConfigured = LoggerMessage.Define<string, string, TimeSpan>(LogLevel.Information,
 				new EventId(1, "TimeoutConfigured"),
 				"Timeout configured for request with trace-id {traceId} and handle {handle} and set to {timeout}");
 		}
