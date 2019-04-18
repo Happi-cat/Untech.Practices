@@ -15,6 +15,10 @@ namespace Untech.AsyncCommandEngine
 		/// <returns>Task to await</returns>
 		Task StartAsync();
 
+		/// <summary>
+		/// Gets a key/value collection that describes state of this service.
+		/// </summary>
+		/// <returns>The key/value collection that describes state of this service.</returns>
 		IReadOnlyDictionary<string, object> GetState();
 
 		/// <summary>
