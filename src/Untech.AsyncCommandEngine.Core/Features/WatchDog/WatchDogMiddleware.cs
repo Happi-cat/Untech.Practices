@@ -22,7 +22,7 @@ namespace Untech.AsyncCommandEngine.Features.WatchDog
 		public async Task InvokeAsync(Context context, RequestProcessorCallback next)
 		{
 			var timeout = GetTimeout(context);
-			if (timeout != null)
+			if (timeout != null && timeout > TimeSpan.Zero)
 			{
 				var watchdogTokenSource = new CancellationTokenSource(timeout.Value);
 				var linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(
