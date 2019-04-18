@@ -36,7 +36,7 @@ namespace Untech.AsyncCommandEngine.Processing
 
 		private static Task DoFinally(Context ctx)
 		{
-			throw new NotSupportedException();
+			throw new InvalidOperationException("Request wasn't handled in previous middleware.");
 		}
 	}
 }
