@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Untech.AsyncCommandEngine
 {
@@ -13,5 +14,10 @@ namespace Untech.AsyncCommandEngine
 
 		public abstract object GetBody(Type requestType);
 		public abstract Stream GetRawBody();
+
+		public virtual IEnumerable<Attribute> GetMetadata()
+		{
+			return Enumerable.Empty<Attribute>();
+		}
 	}
 }
