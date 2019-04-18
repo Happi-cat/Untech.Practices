@@ -14,12 +14,12 @@ namespace Untech.AsyncCommandEngine.Processing
 	public class RequestProcessorTest
 	{
 		[Fact]
-		public async Task InvokeAsync_ThrowsNotSupported_WhenNextCalledFromFinalMiddleware()
+		public async Task InvokeAsync_ThrowsInvalidOperation_WhenNextCalledFromFinalMiddleware()
 		{
 			var processor = new RequestProcessor(Enumerable.Empty<IRequestProcessorMiddleware>());
 			var context = new Context(new FakeRequest(), NullRequestMetadata.Instance);
 
-			await Assert.ThrowsAsync<NotSupportedException>(() => processor.InvokeAsync(context));
+			await Assert.ThrowsAsync<InvalidOperationException>(() => processor.InvokeAsync(context));
 		}
 
 		[Fact]
