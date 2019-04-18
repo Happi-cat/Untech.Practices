@@ -132,7 +132,7 @@ namespace Untech.AsyncCommandEngine
 		{
 			var metadata = new CompositeRequestMetadata(new[]
 			{
-				new RequestMetadata(request.GetMetadata()),
+				new RequestMetadata(request.GetAttachedMetadata()),
 				_metadataProvider.GetMetadata(request.Name)
 			});
 
