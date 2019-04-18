@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Untech.AsyncCommandEngine.Processing
 {
-	public class RequestProcessor : IRequestProcessor
+	internal class RequestProcessor : IRequestProcessor
 	{
 		private readonly RequestProcessorCallback _next;
 
