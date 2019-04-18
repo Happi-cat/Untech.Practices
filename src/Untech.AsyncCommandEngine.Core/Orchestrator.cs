@@ -10,7 +10,7 @@ using Untech.AsyncCommandEngine.Processing;
 
 namespace Untech.AsyncCommandEngine
 {
-	internal partial class Orchestrator : IOrchestrator
+	internal partial class Orchestrator : IOrchestrator, IDisposable
 	{
 		private readonly OrchestratorOptions _options;
 		private readonly ITransport _transport;
@@ -47,10 +47,37 @@ namespace Untech.AsyncCommandEngine
 			return Task.CompletedTask;
 		}
 
+		public IReadOnlyDictionary<string, object> GetState()
+		{
+			return new Dictionary<string, object>
+			{
+				["Started"] = _timer != null,
+				["Aborted"] = _aborted.IsCancellationRequested,
+				["Warps"] = _warps.Count.ToString(),
+				["WarpsFree"] = _warps.Count(w => w.CanRun()),
+				["SlidingPercentage"] = _timer?.GetSlidingPercentage()
+			};
+		}
+
+		public Task StopAsync()
+		{
+			return StopAsync(false,  null);
+		}
+
 		public Task StopAsync(TimeSpan delay)
 		{
+			return StopAsync(true, delay);
+		}
+
+		private Task StopAsync(bool cancel, TimeSpan? delay)
+		{
 			_timer.Dispose();
-			if (delay != TimeSpan.Zero) _aborted.CancelAfter(delay);
+			_timer = null;
+			if (cancel)
+			{
+				if (delay > TimeSpan.Zero) _aborted.CancelAfter(delay.Value);
+				else _aborted.Cancel();
+			}
 
 			return Task.WhenAll(_warps.Select(s => s.Task));
 		}
@@ -126,6 +153,14 @@ namespace Untech.AsyncCommandEngine
 			}
 
 			await _transport.CompleteRequestAsync(context.Request);
+		}
+
+		public void Dispose()
+		{
+			_aborted?.Dispose();
+			_aborted = null;
+			_timer?.Dispose();
+			_timer = null;
 		}
 	}
 }

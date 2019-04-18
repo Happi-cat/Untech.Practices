@@ -29,6 +29,14 @@ namespace Untech.AsyncCommandEngine
 				_timer = new Timer(OnTick, null, TimeSpan.Zero, step);
 			}
 
+			public float GetSlidingPercentage()
+			{
+				var r = _slidingRadius;
+				var c = _slidingCoefficient;
+
+				return (float)(c + r) / (2 * r);
+			}
+
 			public void Increase()
 			{
 				var r = _slidingRadius;
