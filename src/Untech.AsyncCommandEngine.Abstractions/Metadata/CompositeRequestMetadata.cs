@@ -4,25 +4,35 @@ using System.Linq;
 
 namespace Untech.AsyncCommandEngine.Metadata
 {
+	/// <summary>
+	/// Represents <see cref="IRequestMetadata"/> that aggregates multiple instances of the <see cref="IRequestMetadata"/>.
+	/// </summary>
 	public class CompositeRequestMetadata : IRequestMetadata
 	{
-		private readonly IReadOnlyCollection<IRequestMetadata> _accessors;
+		private readonly IReadOnlyCollection<IRequestMetadata> _metadata;
 
-		public CompositeRequestMetadata(IEnumerable<IRequestMetadata> accessors)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CompositeRequestMetadata"/> with the collection of <see cref="IRequestMetadata"/>.
+		/// </summary>
+		/// <param name="metadata">The collection of metadatas.</param>
+		/// <exception cref="ArgumentNullException"><paramref name="metadata"/> is null.</exception>
+		public CompositeRequestMetadata(IEnumerable<IRequestMetadata> metadata)
 		{
-			if (accessors == null) throw new ArgumentNullException(nameof(accessors));
+			if (metadata == null) throw new ArgumentNullException(nameof(metadata));
 
-			_accessors = accessors.ToList();
+			_metadata = metadata.ToList();
 		}
 
+		/// <inheritdoc />
 		public TAttr GetAttribute<TAttr>() where TAttr : Attribute
 		{
 			return GetAttributes<TAttr>().SingleOrDefault();
 		}
 
+		/// <inheritdoc />
 		public IEnumerable<TAttr> GetAttributes<TAttr>() where TAttr : Attribute
 		{
-			return _accessors.SelectMany(n => n.GetAttributes<TAttr>());
+			return _metadata.SelectMany(n => n.GetAttributes<TAttr>());
 		}
 	}
 }
