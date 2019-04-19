@@ -34,7 +34,7 @@ namespace Untech.AsyncCommandEngine
 				new EventId(5, nameof(IsNoFreeWarpAvailable)),
 				"No available warps");
 
-			s_warpCrashed = LoggerMessage.Define(LogLevel.Warning,
+			s_warpCrashed = LoggerMessage.Define(LogLevel.Error,
 				new EventId(6, "Warp Crashed"),
 				"Error occured during warp execution");
 		}
