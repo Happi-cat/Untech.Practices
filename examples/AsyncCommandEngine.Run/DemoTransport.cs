@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AsyncCommandEngine.Run.Commands;
 using MoreLinq;
 using Untech.AsyncCommandEngine;
+using Untech.AsyncCommandEngine.Metadata.Annotations;
 
 namespace AsyncCommandEngine.Run
 {
@@ -15,33 +16,37 @@ namespace AsyncCommandEngine.Run
 		private static int s_nextIdentifier = 1;
 
 		private readonly Random _rand = new Random();
-		private readonly IReadOnlyCollection<object> _requestTemplates;
+		private readonly IReadOnlyCollection<DemoCommandBase> _requestTemplates;
 
 		public DemoTransport()
 		{
-			_requestTemplates = new List<object>
+			_requestTemplates = new List<DemoCommandBase>
 			{
 				// bare
-				new DemoCommand(),
+				new CompositeCommand(),
 
 				//throw
 				new ThrowCommand(),
 
 				// delays
-				new DelayCommand { Timeout = TimeSpan.FromSeconds(2) },
-				new DelayCommand { Timeout = TimeSpan.FromMinutes(2) },
+				new DelayCommand(TimeSpan.FromSeconds(2)),
+				new DelayCommand(TimeSpan.FromMinutes(2)),
+				new DelayCommand(TimeSpan.FromSeconds(20))
+				{
+					AttachedMetadata = new List<Attribute> { new WatchDogTimeoutAttribute(30) }
+				},
 
 				// combined
-				new DemoCommand { DelayCommand = new DelayCommand { Timeout = TimeSpan.FromSeconds(2) }, },
-				new DemoCommand { DelayCommand = new DelayCommand { Timeout = TimeSpan.FromMinutes(2) }, },
-				new DemoCommand
+				new CompositeCommand { DelayCommand = new DelayCommand(TimeSpan.FromSeconds(2)), },
+				new CompositeCommand { DelayCommand = new DelayCommand(TimeSpan.FromMinutes(2)), },
+				new CompositeCommand
 				{
-					DelayCommand = new DelayCommand { Timeout = TimeSpan.FromSeconds(2) },
+					DelayCommand = new DelayCommand(TimeSpan.FromSeconds(2)),
 					ThrowCommand = new ThrowCommand()
 				},
-				new DemoCommand
+				new CompositeCommand
 				{
-					DelayCommand = new DelayCommand { Timeout = TimeSpan.FromMinutes(2) },
+					DelayCommand = new DelayCommand(TimeSpan.FromMinutes(2)),
 					ThrowCommand = new ThrowCommand()
 				},
 			};
@@ -71,10 +76,13 @@ namespace AsyncCommandEngine.Run
 			return Task.CompletedTask;
 		}
 
-		private static Request Create<T>(T body)
+		private static Request Create(DemoCommandBase body)
 		{
 			var id = Interlocked.Increment(ref s_nextIdentifier).ToString();
-			return new DemoRequest(id, body);
+			return new DemoRequest(id, body)
+			{
+				AttachedMetadata = body.AttachedMetadata?.AsReadOnly()
+			};
 		}
 	}
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using Newtonsoft.Json;
@@ -27,6 +28,8 @@ namespace AsyncCommandEngine.Run
 		public override DateTimeOffset Created { get; }
 		public override IDictionary<string, string> Attributes { get; }
 
+		public ReadOnlyCollection<Attribute> AttachedMetadata { get; set; }
+
 		public override object GetBody(Type requestType)
 		{
 			return _body;
@@ -36,6 +39,11 @@ namespace AsyncCommandEngine.Run
 		{
 			var body = JsonConvert.SerializeObject(_body);
 			return new MemoryStream(Encoding.UTF8.GetBytes(body));
+		}
+
+		public override IEnumerable<Attribute> GetAttachedMetadata()
+		{
+			return AttachedMetadata ?? base.GetAttachedMetadata();
 		}
 	}
 }

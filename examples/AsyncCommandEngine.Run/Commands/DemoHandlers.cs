@@ -12,7 +12,7 @@ namespace AsyncCommandEngine.Run.Commands
 	[WatchDogTimeout(0, 0, 10)]
 	[ThrottleGroup("DemoHandlers")]
 	public class DemoHandlers :
-		ICommandHandler<DemoCommand, Nothing>,
+		ICommandHandler<CompositeCommand, Nothing>,
 		ICommandHandler<DelayCommand, Nothing>,
 		ICommandHandler<ThrowCommand, Nothing>
 	{
@@ -23,7 +23,7 @@ namespace AsyncCommandEngine.Run.Commands
 			_logger = logger;
 		}
 
-		public async Task<Nothing> HandleAsync(DemoCommand request, CancellationToken cancellationToken)
+		public async Task<Nothing> HandleAsync(CompositeCommand request, CancellationToken cancellationToken)
 		{
 			_logger.LogInformation("Demo in progress");
 			if (request.DelayCommand != null)

@@ -4,7 +4,7 @@ using Untech.Practices.CQRS;
 namespace AsyncCommandEngine.Run.Commands
 {
 	[Debounce]
-	public class ThrowCommand : ICommand
+	public class ThrowCommand : DemoCommandBase, ICommand
 	{
 
 	}

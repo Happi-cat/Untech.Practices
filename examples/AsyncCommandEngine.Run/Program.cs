@@ -42,7 +42,7 @@ namespace AsyncCommandEngine.Run
 				.UseThrottling(new ThrottleOptions { DefaultRunAtOnceInGroup = 2 })
 				.UseWatchDog(new WatchDogOptions
 				{
-					DefaultTimeout = TimeSpan.FromMinutes(1),
+					DefaultTimeout = TimeSpan.FromSeconds(10),
 				})
 				.BuildOrchestrator(new CqrsStrategy(loggerFactory.CreateLogger("Handlers")),
 					new OrchestratorOptions
