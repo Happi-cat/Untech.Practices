@@ -6,25 +6,45 @@ using Untech.AsyncCommandEngine.Metadata;
 namespace Untech.AsyncCommandEngine
 {
 	/// <summary>
-	/// Represents context of the current request to be processed.
+	/// Represents context for the current request that should be processed.
 	/// </summary>
 	public class Context
 	{
 		private IDictionary<object, object> _items;
 
-		public Context(Request request, IRequestMetadata requestMetadata)
+		public Context(Request request)
+			: this(request, NullRequestMetadataProvider.Instance)
 		{
+
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Context"/>
+		/// with the specified <paramref name="request"/> and <paramref name="metadataProvider"/>.
+		/// </summary>
+		/// <param name="request">The request to handle.</param>
+		/// <param name="metadataProvider">The request metadata provider.</param>
+		public Context(Request request, IRequestMetadataProvider metadataProvider)
+		{
+			if (request == null)throw new ArgumentNullException(nameof(request));
+			if (request.Name == null) throw new ArgumentNullException(nameof(request.Name));
+			if (metadataProvider == null) throw new ArgumentNullException(nameof(metadataProvider));
+
 			TraceIdentifier = Guid.NewGuid().ToString();
 
-			Request = request ?? throw new ArgumentNullException(nameof(request));
-			RequestName = request.Name ?? throw new ArgumentNullException(nameof(request.Name));
-			RequestMetadata = requestMetadata ?? throw new ArgumentNullException(nameof(requestMetadata));
+			Request = request;
+			RequestName = request.Name;
+			RequestMetadata = new CompositeRequestMetadata(new[]
+			{
+				new RequestMetadata(request.GetAttachedMetadata()),
+				metadataProvider.GetMetadata(request.Name)
+			});
 
 			_items = new Dictionary<object, object>();
 		}
 
 		/// <summary>
-		/// Gets the current <see cref="Request"/>.
+		/// Gets the current <see cref="Request"/> that should be processed.
 		/// </summary>
 		public Request Request { get; private set; }
 
@@ -34,7 +54,7 @@ namespace Untech.AsyncCommandEngine
 		public string RequestName { get; private set; }
 
 		/// <summary>
-		/// Gets the metadata of the current <see cref="Request"/>.
+		/// Gets the metadata that is associated with the current <see cref="Request"/>.
 		/// </summary>
 		public IRequestMetadata RequestMetadata { get; private set; }
 

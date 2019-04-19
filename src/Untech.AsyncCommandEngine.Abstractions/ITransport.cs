@@ -22,7 +22,7 @@ namespace Untech.AsyncCommandEngine
 		/// <summary>
 		/// Marks the specified <paramref name="request"/> as a completed in the current store.
 		/// </summary>
-		/// <param name="request">The request that was completed without errors.</param>
+		/// <param name="request">The request that was completed without any errors.</param>
 		/// <returns>Task to await.</returns>
 		Task CompleteRequestAsync(Request request);
 

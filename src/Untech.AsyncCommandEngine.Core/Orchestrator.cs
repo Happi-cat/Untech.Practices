@@ -130,13 +130,7 @@ namespace Untech.AsyncCommandEngine
 
 		private Task WarpExecuteAsync(Request request)
 		{
-			var metadata = new CompositeRequestMetadata(new[]
-			{
-				new RequestMetadata(request.GetAttachedMetadata()),
-				_metadataProvider.GetMetadata(request.Name)
-			});
-
-			var context = new Context(request, metadata)
+			var context = new Context(request, _metadataProvider)
 			{
 				Aborted = _aborted.Token
 			};

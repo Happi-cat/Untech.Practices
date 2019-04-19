@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace Untech.AsyncCommandEngine
 {
 	/// <summary>
-	/// Represents interfaces that defines methods that can be used for start/stop service.
+	/// Represents interfaces that defines methods that can be used for service management.
 	/// </summary>
 	public interface IOrchestrator
 	{
