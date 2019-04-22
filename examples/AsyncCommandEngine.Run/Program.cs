@@ -40,17 +40,17 @@ namespace AsyncCommandEngine.Run
 					};
 				})
 				.UseThrottling(new ThrottleOptions { DefaultRunAtOnceInGroup = 2 })
-				.UseWatchDog(new WatchDogOptions
-				{
-					DefaultTimeout = TimeSpan.FromSeconds(10),
-				})
+				.UseWatchDog(new WatchDogOptions { DefaultTimeout = TimeSpan.FromSeconds(10) })
 				.BuildOrchestrator(new CqrsStrategy(loggerFactory.CreateLogger("Handlers")),
 					new OrchestratorOptions
 					{
-						Warps = 10, RequestsPerWarp = 10, SlidingStep = TimeSpan.FromSeconds(1), SlidingRadius = 5
+						Warps = 10,
+						RequestsPerWarp = 10,
+						SlidingStep = TimeSpan.FromSeconds(1),
+						SlidingRadius = 5
 					});
 
-			var task = Task.Run(service.StartAsync);
+			service.StartAsync();
 
 			Console.ReadKey();
 
