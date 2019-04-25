@@ -37,12 +37,17 @@ namespace Untech.AsyncCommandEngine.Transports
 
 		public async Task CompleteRequestAsync(Request request)
 		{
-			await ((ITransport)request.Items[this]).CompleteRequestAsync(request);
+			await GetUnderlyingTransport(request).CompleteRequestAsync(request);
 		}
 
 		public async Task FailRequestAsync(Request request, Exception exception)
 		{
-			await ((ITransport)request.Items[this]).FailRequestAsync(request, exception);
+			await GetUnderlyingTransport(request).FailRequestAsync(request, exception);
+		}
+
+		private ITransport GetUnderlyingTransport(Request request)
+		{
+			return (ITransport)request.Items[this];
 		}
 
 		private IEnumerable<ITransport> GetTransportsAsRoundRobin()
