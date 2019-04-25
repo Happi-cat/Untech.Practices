@@ -4,17 +4,17 @@ namespace Untech.AsyncCommandEngine.Features.Throttling
 {
 	public static class EngineBuilderExtensions
 	{
-		public static EngineBuilder UseThrottling(this EngineBuilder builder)
+		public static EngineBuilder ThenThrottling(this EngineBuilder builder)
 		{
-			return UseThrottling(builder, new ThrottleOptions());
+			return ThenThrottling(builder, new ThrottleOptions());
 		}
 
-		public static EngineBuilder UseThrottling(this EngineBuilder builder, ThrottleOptions options)
+		public static EngineBuilder ThenThrottling(this EngineBuilder builder, ThrottleOptions options)
 		{
 			if (builder == null) throw new ArgumentNullException(nameof(builder));
 			if (options == null) throw new ArgumentNullException(nameof(options));
 
-			return builder.Use(ctx => new ThrottleMiddleware(options));
+			return builder.Then(ctx => new ThrottleMiddleware(options));
 		}
 	}
 }

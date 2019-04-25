@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Core;
 using Untech.AsyncCommandEngine;
+using Untech.AsyncCommandEngine.Features.Debounce;
 using Untech.AsyncCommandEngine.Features.Throttling;
 using Untech.AsyncCommandEngine.Features.WatchDog;
 using Untech.AsyncCommandEngine.Metadata;
@@ -21,10 +22,10 @@ namespace AsyncCommandEngine.Run
 			var loggerFactory = CreateLogger();
 
 			var service = new EngineBuilder()
-				.UseLogger(loggerFactory)
-				.UseTransport(new DemoTransport())
-				.Use(ctx => new DemoMiddleware(ctx.GetLogger()))
-				.Use(builder =>
+				.LogTo(loggerFactory)
+				.ReceiveRequestsFrom(new DemoTransport())
+				.Then(ctx => new DemoMiddleware(ctx.GetLogger()))
+				.Then(builder =>
 				{
 					var logger = builder.GetLogger().CreateLogger("Metrics");
 					return async (ctx, next) =>
@@ -39,8 +40,8 @@ namespace AsyncCommandEngine.Run
 						}
 					};
 				})
-				.UseThrottling(new ThrottleOptions { DefaultRunAtOnceInGroup = 2 })
-				.UseWatchDog(new WatchDogOptions { DefaultTimeout = TimeSpan.FromSeconds(10) })
+				.ThenThrottling(new ThrottleOptions { DefaultRunAtOnceInGroup = 2 })
+				.ThenWatchDog(new WatchDogOptions { DefaultTimeout = TimeSpan.FromSeconds(10) })
 				.BuildOrchestrator(new CqrsStrategy(loggerFactory.CreateLogger("Handlers")),
 					new OrchestratorOptions
 					{

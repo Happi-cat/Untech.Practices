@@ -9,49 +9,49 @@ namespace Untech.AsyncCommandEngine
 {
 	public static class EngineBuilderExtensions
 	{
-		public static EngineBuilder UseTransport(this EngineBuilder builder,
+		public static EngineBuilder ReceiveRequestsFrom(this EngineBuilder builder,
 			IEnumerable<ITransport> transports)
 		{
 			if (builder == null) throw new ArgumentNullException(nameof(builder));
 			if (transports == null) throw new ArgumentNullException(nameof(transports));
 
-			return builder.UseTransport(new CompositeTransport(transports));
+			return builder.ReceiveRequestsFrom(new CompositeTransport(transports));
 		}
 
-		public static EngineBuilder UseMetadata(this EngineBuilder builder,
+		public static EngineBuilder ReadMetadataFrom(this EngineBuilder builder,
 			IEnumerable<IRequestMetadataProvider> metadata)
 		{
 			if (builder == null) throw new ArgumentNullException(nameof(builder));
 			if (metadata == null) throw new ArgumentNullException(nameof(metadata));
 
-			return builder.UseMetadata(new CompositeRequestMetadataProvider(metadata));
+			return builder.ReadMetadataFrom(new CompositeRequestMetadataProvider(metadata));
 		}
 
-		public static EngineBuilder Use(this EngineBuilder builder,
+		public static EngineBuilder Then(this EngineBuilder builder,
 			IRequestProcessorMiddleware middleware)
 		{
 			if (builder == null) throw new ArgumentNullException(nameof(builder));
 			if (middleware == null) throw new ArgumentNullException(nameof(middleware));
 
-			return builder.Use(ctx => middleware);
+			return builder.Then(ctx => middleware);
 		}
 
-		public static EngineBuilder Use(this EngineBuilder builder,
+		public static EngineBuilder Then(this EngineBuilder builder,
 			Func<Context, RequestProcessorCallback, Task> middleware)
 		{
 			if (builder == null) throw new ArgumentNullException(nameof(builder));
 			if (middleware == null) throw new ArgumentNullException(nameof(middleware));
 
-			return builder.Use(ctx => new AdHocRequestProcessorMiddleware(middleware));
+			return builder.Then(ctx => new AdHocRequestProcessorMiddleware(middleware));
 		}
 
-		public static EngineBuilder Use(this EngineBuilder builder,
+		public static EngineBuilder Then(this EngineBuilder builder,
 			Func<IEngineBuilderContext, Func<Context, RequestProcessorCallback, Task>> creator)
 		{
 			if (builder == null) throw new ArgumentNullException(nameof(builder));
 			if (creator == null) throw new ArgumentNullException(nameof(creator));
 
-			return builder.Use(ctx => new AdHocRequestProcessorMiddleware(creator(ctx)));
+			return builder.Then(ctx => new AdHocRequestProcessorMiddleware(creator(ctx)));
 		}
 	}
 }

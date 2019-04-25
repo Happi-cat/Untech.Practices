@@ -21,7 +21,7 @@ namespace Untech.AsyncCommandEngine
 		{
 			var transport = new FakeTransport(100);
 			var cqrs = new FakeCqrs();
-			var orcherstator = new EngineBuilder().UseTransport(transport).BuildOrchestrator(cqrs, new OrchestratorOptions
+			var orcherstator = new EngineBuilder().ReceiveRequestsFrom(transport).BuildOrchestrator(cqrs, new OrchestratorOptions
 			{
 				Warps = 5,
 				RequestsPerWarp = 5,

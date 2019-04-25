@@ -20,25 +20,25 @@ namespace Untech.AsyncCommandEngine
 		private ILoggerFactory _loggerFactory;
 		private IRequestMetadataProvider _requestMetadataProvider;
 
-		public EngineBuilder UseLogger(ILoggerFactory loggerFactory)
+		public EngineBuilder LogTo(ILoggerFactory loggerFactory)
 		{
 			_loggerFactory = loggerFactory;
 			return this;
 		}
 
-		public EngineBuilder UseTransport(ITransport transport)
+		public EngineBuilder ReceiveRequestsFrom(ITransport transport)
 		{
 			_transport = transport;
 			return this;
 		}
 
-		public EngineBuilder UseMetadata(IRequestMetadataProvider provider)
+		public EngineBuilder ReadMetadataFrom(IRequestMetadataProvider provider)
 		{
 			_requestMetadataProvider = provider;
 			return this;
 		}
 
-		public EngineBuilder Use(Func<IEngineBuilderContext, IRequestProcessorMiddleware> creator)
+		public EngineBuilder Then(Func<IEngineBuilderContext, IRequestProcessorMiddleware> creator)
 		{
 			_middlewareCreators.Add(creator);
 			return this;
