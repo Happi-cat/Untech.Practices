@@ -9,19 +9,19 @@ namespace Untech.AsyncCommandEngine.Metadata
 	/// </summary>
 	public class CompositeRequestMetadataProvider : IRequestMetadataProvider
 	{
-		private readonly IReadOnlyCollection<IRequestMetadataProvider> _accessors;
+		private readonly IReadOnlyCollection<IRequestMetadataProvider> _providers;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CompositeRequestMetadataProvider"/>
 		/// with the collection of <see cref="IRequestMetadataProvider"/>.
 		/// </summary>
-		/// <param name="accessors">The collection of metadata providers.</param>
-		/// <exception cref="ArgumentNullException"><paramref name="accessors"/> is null.</exception>
-		public CompositeRequestMetadataProvider(IEnumerable<IRequestMetadataProvider> accessors)
+		/// <param name="providers">The collection of metadata providers.</param>
+		/// <exception cref="ArgumentNullException"><paramref name="providers"/> is null.</exception>
+		public CompositeRequestMetadataProvider(IEnumerable<IRequestMetadataProvider> providers)
 		{
-			if (accessors == null) throw new ArgumentNullException(nameof(accessors));
+			if (providers == null) throw new ArgumentNullException(nameof(providers));
 
-			_accessors = accessors.ToList();
+			_providers = providers.ToList();
 		}
 
 		/// <inheritdoc />
@@ -29,7 +29,7 @@ namespace Untech.AsyncCommandEngine.Metadata
 		{
 			if (string.IsNullOrEmpty(requestName)) throw new ArgumentNullException(nameof(requestName));
 
-			var accessors = _accessors.Select(n => n.GetMetadata(requestName));
+			var accessors = _providers.Select(n => n.GetMetadata(requestName));
 
 			return new CompositeRequestMetadata(accessors);
 		}
