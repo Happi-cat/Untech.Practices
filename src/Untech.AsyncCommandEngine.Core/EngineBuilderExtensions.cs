@@ -1,11 +1,32 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Untech.AsyncCommandEngine.Metadata;
 using Untech.AsyncCommandEngine.Processing;
+using Untech.AsyncCommandEngine.Transports;
 
 namespace Untech.AsyncCommandEngine
 {
 	public static class EngineBuilderExtensions
 	{
+		public static EngineBuilder UseTransport(this EngineBuilder builder,
+			IEnumerable<ITransport> transports)
+		{
+			if (builder == null) throw new ArgumentNullException(nameof(builder));
+			if (transports == null) throw new ArgumentNullException(nameof(transports));
+
+			return builder.UseTransport(new CompositeTransport(transports));
+		}
+
+		public static EngineBuilder UseMetadata(this EngineBuilder builder,
+			IEnumerable<IRequestMetadataProvider> metadata)
+		{
+			if (builder == null) throw new ArgumentNullException(nameof(builder));
+			if (metadata == null) throw new ArgumentNullException(nameof(metadata));
+
+			return builder.UseMetadata(new CompositeRequestMetadataProvider(metadata));
+		}
+
 		public static EngineBuilder Use(this EngineBuilder builder,
 			IRequestProcessorMiddleware middleware)
 		{
