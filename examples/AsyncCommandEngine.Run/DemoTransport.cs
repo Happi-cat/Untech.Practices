@@ -8,6 +8,7 @@ using AsyncCommandEngine.Run.Commands;
 using MoreLinq;
 using Untech.AsyncCommandEngine;
 using Untech.AsyncCommandEngine.Metadata.Annotations;
+using Untech.AsyncCommandEngine.Transports;
 
 namespace AsyncCommandEngine.Run
 {
@@ -41,13 +42,11 @@ namespace AsyncCommandEngine.Run
 				new CompositeCommand { DelayCommand = new DelayCommand(TimeSpan.FromMinutes(2)), },
 				new CompositeCommand
 				{
-					DelayCommand = new DelayCommand(TimeSpan.FromSeconds(2)),
-					ThrowCommand = new ThrowCommand()
+					DelayCommand = new DelayCommand(TimeSpan.FromSeconds(2)), ThrowCommand = new ThrowCommand()
 				},
 				new CompositeCommand
 				{
-					DelayCommand = new DelayCommand(TimeSpan.FromMinutes(2)),
-					ThrowCommand = new ThrowCommand()
+					DelayCommand = new DelayCommand(TimeSpan.FromMinutes(2)), ThrowCommand = new ThrowCommand()
 				},
 			};
 		}
@@ -79,10 +78,7 @@ namespace AsyncCommandEngine.Run
 		private static Request Create(DemoCommandBase body)
 		{
 			var id = Interlocked.Increment(ref s_nextIdentifier).ToString();
-			return new DemoRequest(id, body)
-			{
-				AttachedMetadata = body.AttachedMetadata?.AsReadOnly()
-			};
+			return new DemoRequest(id, body) { AttachedMetadata = body.AttachedMetadata?.AsReadOnly() };
 		}
 	}
 }

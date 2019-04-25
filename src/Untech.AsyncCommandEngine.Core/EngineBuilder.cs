@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Untech.AsyncCommandEngine.Metadata;
 using Untech.AsyncCommandEngine.Processing;
+using Untech.AsyncCommandEngine.Transports;
 
 namespace Untech.AsyncCommandEngine
 {

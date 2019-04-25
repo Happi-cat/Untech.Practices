@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Untech.AsyncCommandEngine.Transports;
 
 namespace Untech.AsyncCommandEngine
 {
@@ -10,6 +11,11 @@ namespace Untech.AsyncCommandEngine
 	/// </summary>
 	public abstract class Request
 	{
+		protected Request()
+		{
+			Items = new Dictionary<object, object>();
+		}
+
 		/// <summary>
 		/// Gets the request identifier that can be used for request identification and tracking.
 		/// </summary>
@@ -29,6 +35,12 @@ namespace Untech.AsyncCommandEngine
 		/// Gets a key/value collection that contains request attributes and can be used for sharing attributes.
 		/// </summary>
 		public abstract IDictionary<string, string> Attributes { get; }
+
+		/// <summary>
+		/// Gets key/value collection that can be used to share data between different <see cref="ITransport"/> instances
+		/// if composition of transports is being used or between different methods of <see cref="ITransport"/> like Get/Complete.
+		/// </summary>
+		public IDictionary<object, object> Items { get; }
 
 		/// <summary>
 		/// Gets a request payload that was deserialized and converted to <paramref name="requestType"/>.

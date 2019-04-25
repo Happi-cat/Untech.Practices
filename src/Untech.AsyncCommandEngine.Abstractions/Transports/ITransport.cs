@@ -1,11 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Threading;
 using System.Threading.Tasks;
-using Untech.AsyncCommandEngine.Processing;
 
-namespace Untech.AsyncCommandEngine
+namespace Untech.AsyncCommandEngine.Transports
 {
 	/// <summary>
 	/// Represents interfaces that defines methods for work with requests store.

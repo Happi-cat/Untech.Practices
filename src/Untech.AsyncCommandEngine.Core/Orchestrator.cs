@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Untech.AsyncCommandEngine.Metadata;
 using Untech.AsyncCommandEngine.Processing;
+using Untech.AsyncCommandEngine.Transports;
 
 namespace Untech.AsyncCommandEngine
 {

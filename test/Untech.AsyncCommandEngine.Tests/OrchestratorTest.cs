@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Untech.AsyncCommandEngine.Processing;
+using Untech.AsyncCommandEngine.Transports;
 using Untech.Practices.CQRS;
 using Untech.Practices.CQRS.Dispatching;
 using Xunit;
