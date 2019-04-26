@@ -5,6 +5,6 @@ namespace AsyncCommandEngine.Run.Commands
 {
 	public class DemoCommandBase
 	{
-		public List<Attribute> AttachedMetadata { get; set; }
+		public List<Attribute> Meta { get; set; }
 	}
 }

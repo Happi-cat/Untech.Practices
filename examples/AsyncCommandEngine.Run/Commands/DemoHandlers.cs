@@ -26,14 +26,14 @@ namespace AsyncCommandEngine.Run.Commands
 		public async Task<Nothing> HandleAsync(CompositeCommand request, CancellationToken cancellationToken)
 		{
 			_logger.LogInformation("Demo in progress");
-			if (request.DelayCommand != null)
+			if (request.Delay != null)
 			{
-				await HandleAsync(request.DelayCommand, cancellationToken);
+				await HandleAsync(request.Delay, cancellationToken);
 			}
 
-			if (request.ThrowCommand != null)
+			if (request.Throw != null)
 			{
-				await HandleAsync(request.ThrowCommand, cancellationToken);
+				await HandleAsync(request.Throw, cancellationToken);
 			}
 
 			_logger.LogInformation("Demo completed");

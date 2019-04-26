@@ -78,21 +78,21 @@ namespace AsyncCommandEngine.Run
 				new DelayCommand(TimeSpan.FromSeconds(2)), new DelayCommand(TimeSpan.FromMinutes(2)),
 				new DelayCommand(TimeSpan.FromSeconds(20))
 				{
-					AttachedMetadata = new List<Attribute> { new WatchDogTimeoutAttribute(30) }
+					Meta = new List<Attribute> { new WatchDogTimeoutAttribute(30) }
 				},
 			});
 			// combined
 			yield return new DemoTransport(new[]
 			{
-				new CompositeCommand { DelayCommand = new DelayCommand(TimeSpan.FromSeconds(2)), },
-				new CompositeCommand { DelayCommand = new DelayCommand(TimeSpan.FromMinutes(2)), },
+				new CompositeCommand { Delay = new DelayCommand(TimeSpan.FromSeconds(2)), },
+				new CompositeCommand { Delay = new DelayCommand(TimeSpan.FromMinutes(2)), },
 				new CompositeCommand
 				{
-					DelayCommand = new DelayCommand(TimeSpan.FromSeconds(2)), ThrowCommand = new ThrowCommand()
+					Delay = new DelayCommand(TimeSpan.FromSeconds(2)), Throw = new ThrowCommand()
 				},
 				new CompositeCommand
 				{
-					DelayCommand = new DelayCommand(TimeSpan.FromMinutes(2)), ThrowCommand = new ThrowCommand()
+					Delay = new DelayCommand(TimeSpan.FromMinutes(2)), Throw = new ThrowCommand()
 				}
 			});
 		}

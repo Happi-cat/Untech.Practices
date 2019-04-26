@@ -9,7 +9,7 @@ namespace AsyncCommandEngine.Run.Commands
 	[Option("d", new [] { 1, 2, 3, 4 })]
 	public class CompositeCommand : DemoCommandBase, ICommand
 	{
-		public DelayCommand DelayCommand { get; set; }
-		public ThrowCommand ThrowCommand { get; set; }
+		public DelayCommand Delay { get; set; }
+		public ThrowCommand Throw { get; set; }
 	}
 }
