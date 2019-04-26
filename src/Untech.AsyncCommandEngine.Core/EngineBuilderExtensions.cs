@@ -8,13 +8,28 @@ using Untech.AsyncCommandEngine.Transports;
 
 namespace Untech.AsyncCommandEngine
 {
+	/// <summary>
+	/// Contains set of methods that can be used during work with <see cref="EngineBuilder"/>.
+	/// </summary>
 	public static class EngineBuilderExtensions
 	{
+		/// <summary>
+		/// Gets instance of the <see cref="ILogger{TCategoryName}"/>
+		/// </summary>
+		/// <param name="builderContext"></param>
+		/// <typeparam name="T"></typeparam>
+		/// <returns></returns>
 		public static ILogger<T> GetLogger<T>(this IEngineBuilderContext builderContext)
 		{
 			return builderContext.GetLogger().CreateLogger<T>();
 		}
 
+		/// <summary>
+		/// Gets instance of the <see cref="ILogger"/> for the specified <paramref name="categoryName"/>.
+		/// </summary>
+		/// <param name="builderContext"></param>
+		/// <param name="categoryName"></param>
+		/// <returns></returns>
 		public static ILogger GetLogger(this IEngineBuilderContext builderContext, string categoryName)
 		{
 			return builderContext.GetLogger().CreateLogger(categoryName);

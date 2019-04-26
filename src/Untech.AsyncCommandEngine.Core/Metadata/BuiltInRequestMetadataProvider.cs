@@ -7,6 +7,11 @@ using Untech.Practices.CQRS.Handlers;
 
 namespace Untech.AsyncCommandEngine.Metadata
 {
+	/// <summary>
+	/// Implements <see cref="IRequestMetadataProvider"/> and can be used for getting builtin attributes.
+	/// This attributes can be defined on <see cref="IRequestMetadataSource{TRequest}"/>
+	/// and <see cref="ICommandHandler{TIn,TOut}"/>.
+	/// </summary>
 	public class BuiltInRequestMetadataProvider : IRequestMetadataProvider
 	{
 		private readonly IReadOnlyDictionary<string, IRequestMetadata> _requestsMetadata;
@@ -18,6 +23,7 @@ namespace Untech.AsyncCommandEngine.Metadata
 			_requestsMetadata = CollectRequestsMetadata(assemblies);
 		}
 
+		/// <inheritdoc />
 		public IRequestMetadata GetMetadata(string requestName)
 		{
 			if (string.IsNullOrEmpty(requestName)) throw new ArgumentNullException(nameof(requestName));
@@ -86,12 +92,12 @@ namespace Untech.AsyncCommandEngine.Metadata
 			{
 				if (_supportableRequests.Count == 0) return NullRequestMetadata.Instance;
 
-				var accessorType = typeof(Metadata<>).MakeGenericType(_suspectedType.AsType());
+				var accessorType = typeof(TypeMetadata<>).MakeGenericType(_suspectedType.AsType());
 				return (IRequestMetadata)Activator.CreateInstance(accessorType);
 			}
 		}
 
-		private class Metadata<TContainer> : IRequestMetadata
+		private class TypeMetadata<TContainer> : IRequestMetadata
 		{
 			private static readonly TypeInfo s_metadataContainerType = typeof(TContainer).GetTypeInfo();
 
