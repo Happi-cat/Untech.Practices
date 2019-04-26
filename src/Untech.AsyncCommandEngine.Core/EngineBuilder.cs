@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -78,6 +79,8 @@ namespace Untech.AsyncCommandEngine
 
 		public IOrchestrator BuildOrchestrator(ICqrsStrategy strategy, OrchestratorOptions options)
 		{
+			EnsureOptionsValid(options);
+
 			return new Orchestrator(options,
 				GetTransport(),
 				GetMetadata(),
@@ -89,6 +92,12 @@ namespace Untech.AsyncCommandEngine
 			OrchestratorOptions options)
 		{
 			return BuildOrchestrator(strategy(this), options);
+		}
+
+		public void EnsureOptionsValid(object options)
+		{
+			var validationContext = new ValidationContext(options);
+			Validator.ValidateObject(options, validationContext, true);
 		}
 	}
 }
