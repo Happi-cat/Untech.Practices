@@ -110,8 +110,8 @@ namespace Untech.AsyncCommandEngine.Features.Throttling
 
 		private int? GetRunAtOnceForGroupFromOptions(string groupKey)
 		{
-			return _options.Groups != null && _options.Groups.TryGetValue(groupKey, out var options)
-				? options.RunAtOnce ?? _options.DefaultRunAtOnceInGroup
+			return _options.RunAtOncePerGroups != null && _options.RunAtOncePerGroups.TryGetValue(groupKey, out var runAtOnce)
+				? runAtOnce
 				: _options.DefaultRunAtOnceInGroup;
 		}
 	}
