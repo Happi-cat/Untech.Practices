@@ -19,36 +19,9 @@ namespace AsyncCommandEngine.Run
 		private readonly Random _rand = new Random();
 		private readonly IReadOnlyCollection<DemoCommandBase> _requestTemplates;
 
-		public DemoTransport()
+		public DemoTransport(IEnumerable<DemoCommandBase> commands)
 		{
-			_requestTemplates = new List<DemoCommandBase>
-			{
-				// bare
-				new CompositeCommand(),
-
-				//throw
-				new ThrowCommand(),
-
-				// delays
-				new DelayCommand(TimeSpan.FromSeconds(2)),
-				new DelayCommand(TimeSpan.FromMinutes(2)),
-				new DelayCommand(TimeSpan.FromSeconds(20))
-				{
-					AttachedMetadata = new List<Attribute> { new WatchDogTimeoutAttribute(30) }
-				},
-
-				// combined
-				new CompositeCommand { DelayCommand = new DelayCommand(TimeSpan.FromSeconds(2)), },
-				new CompositeCommand { DelayCommand = new DelayCommand(TimeSpan.FromMinutes(2)), },
-				new CompositeCommand
-				{
-					DelayCommand = new DelayCommand(TimeSpan.FromSeconds(2)), ThrowCommand = new ThrowCommand()
-				},
-				new CompositeCommand
-				{
-					DelayCommand = new DelayCommand(TimeSpan.FromMinutes(2)), ThrowCommand = new ThrowCommand()
-				},
-			};
+			_requestTemplates = commands.ToList();
 		}
 
 		public Task<ReadOnlyCollection<Request>> GetRequestsAsync(int count)

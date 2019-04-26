@@ -71,6 +71,11 @@ namespace Untech.AsyncCommandEngine
 			return new RequestProcessor(steps);
 		}
 
+		public IRequestProcessor BuildProcessor(Func<IEngineBuilderContext, ICqrsStrategy> strategy)
+		{
+			return BuildProcessor(strategy(this));
+		}
+
 		public IOrchestrator BuildOrchestrator(ICqrsStrategy strategy, OrchestratorOptions options)
 		{
 			return new Orchestrator(options,
@@ -78,6 +83,12 @@ namespace Untech.AsyncCommandEngine
 				GetMetadata(),
 				BuildProcessor(strategy),
 				GetLogger().CreateLogger<Orchestrator>());
+		}
+
+		public IOrchestrator BuildOrchestrator(Func<IEngineBuilderContext, ICqrsStrategy> strategy,
+			OrchestratorOptions options)
+		{
+			return BuildOrchestrator(strategy(this), options);
 		}
 	}
 }

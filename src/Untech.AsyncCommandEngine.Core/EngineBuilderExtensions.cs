@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Untech.AsyncCommandEngine.Metadata;
 using Untech.AsyncCommandEngine.Processing;
 using Untech.AsyncCommandEngine.Transports;
@@ -9,6 +10,16 @@ namespace Untech.AsyncCommandEngine
 {
 	public static class EngineBuilderExtensions
 	{
+		public static ILogger<T> GetLogger<T>(this IEngineBuilderContext builderContext)
+		{
+			return builderContext.GetLogger().CreateLogger<T>();
+		}
+
+		public static ILogger GetLogger(this IEngineBuilderContext builderContext, string categoryName)
+		{
+			return builderContext.GetLogger().CreateLogger(categoryName);
+		}
+
 		public static EngineBuilder ReceiveRequestsFrom(this EngineBuilder builder,
 			IEnumerable<ITransport> transports)
 		{
