@@ -26,13 +26,20 @@ namespace Untech.AsyncCommandEngine.Metadata
 		/// <inheritdoc />
 		public TAttr GetAttribute<TAttr>() where TAttr : Attribute
 		{
-			return GetAttributes<TAttr>().SingleOrDefault();
+			return _metadata
+				.Select(n => n.GetAttribute<TAttr>())
+				.FirstOrDefault(NotNull);
 		}
 
 		/// <inheritdoc />
 		public IEnumerable<TAttr> GetAttributes<TAttr>() where TAttr : Attribute
 		{
 			return _metadata.SelectMany(n => n.GetAttributes<TAttr>());
+		}
+
+		private static bool NotNull<TAttr>(TAttr obj)
+		{
+			return !ReferenceEquals(obj, null);
 		}
 	}
 }
