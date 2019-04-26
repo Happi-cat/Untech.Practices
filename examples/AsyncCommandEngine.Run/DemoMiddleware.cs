@@ -1,9 +1,11 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Untech.AsyncCommandEngine;
+using Untech.AsyncCommandEngine.Metadata.Annotations;
 using Untech.AsyncCommandEngine.Processing;
 
 namespace AsyncCommandEngine.Run
@@ -32,7 +34,11 @@ namespace AsyncCommandEngine.Run
 
 			using (_logger.BeginScope(requestScope))
 			{
-				_logger.Log(LogLevel.Debug, "starting");
+				var opts = context.RequestMetadata.GetAttributes<OptionAttribute>()
+					.Select(attr => (attr.Key, attr.Value))
+					.ToList();
+
+				_logger.Log(LogLevel.Debug, "starting with opts: {0}", opts);
 				try
 				{
 					await next(context);
