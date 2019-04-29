@@ -15,30 +15,29 @@ namespace Untech.AsyncCommandEngine.Features.Retrying
 			_retryPolicy = retryPolicy;
 			_logger = loggerFactory.CreateLogger<RetryingMiddleware>();
 		}
+
 		public async Task InvokeAsync(Context context, RequestProcessorCallback next)
 		{
-			bool retry;
 			int attempt = 0;
 
 			do
 			{
-				retry = false;
-
-				try { await next(context); }
+				try
+				{
+					await next(context);
+					break;
+				}
+				catch (TaskCanceledException) { throw; }
+				catch (OperationCanceledException) { throw; }
 				catch (Exception e)
 				{
-					retry = _retryPolicy.RetryOnError(attempt, e) && attempt < _retryPolicy.RetryCount;
+					if (attempt++ >= _retryPolicy.RetryCount) throw;
+					if (!_retryPolicy.RetryOnError(attempt, e)) throw;
 
-					if (retry)
-					{
-						_logger.WillRetry(context, attempt, e);
-						await Task.Delay(_retryPolicy.GetSleepDuration(attempt, e));
-					}
-					else throw;
+					_logger.WillRetry(context, attempt, e);
+					await Task.Delay(_retryPolicy.GetSleepDuration(attempt, e));
 				}
-
-				attempt++;
-			} while (retry);
+			} while (true);
 		}
 	}
 }

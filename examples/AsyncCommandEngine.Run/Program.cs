@@ -6,6 +6,7 @@ using AsyncCommandEngine.Run.Commands;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Untech.AsyncCommandEngine;
+using Untech.AsyncCommandEngine.Features.Retrying;
 using Untech.AsyncCommandEngine.Features.Throttling;
 using Untech.AsyncCommandEngine.Features.WatchDog;
 using Untech.AsyncCommandEngine.Metadata;
@@ -31,6 +32,7 @@ namespace AsyncCommandEngine.Run
 					var logger = builder.GetLogger("Metrics");
 					return (ctx, next) => MetricsMiddleware(ctx, next, logger);
 				})
+				.ThenRetry(new RetryPolicy(new [] { typeof(TimeoutException) }))
 				.ThenThrottling(new ThrottleOptions { DefaultRunAtOnceInGroup = 2 })
 				.ThenWatchDog(new WatchDogOptions { DefaultTimeout = TimeSpan.FromSeconds(10) })
 				.BuildOrchestrator(
@@ -71,6 +73,7 @@ namespace AsyncCommandEngine.Run
 			yield return new DemoTransport(new[]
 			{
 				new ThrowCommand(),
+				new ThrowCommand { Error = new TimeoutException() },
 			});
 			// delays
 			yield return new DemoTransport(new[]

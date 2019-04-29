@@ -48,7 +48,7 @@ namespace AsyncCommandEngine.Run.Commands
 
 		public Task<Nothing> HandleAsync(ThrowCommand request, CancellationToken cancellationToken)
 		{
-			throw new InvalidOperationException("Ooops");
+			throw request.Error ?? new InvalidOperationException("Thrown");
 		}
 	}
 }
