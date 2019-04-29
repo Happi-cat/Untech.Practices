@@ -18,23 +18,26 @@ namespace Untech.AsyncCommandEngine.Features.Retrying
 		public async Task InvokeAsync(Context context, RequestProcessorCallback next)
 		{
 			bool retry;
-			int remainingAttempts = _retryPolicy.RetryCount;
+			int attempt = 0;
 
 			do
 			{
 				retry = false;
+
 				try { await next(context); }
 				catch (Exception e)
 				{
-					retry = _retryPolicy.RetryOnError(e) && remainingAttempts-- > 0;
+					retry = _retryPolicy.RetryOnError(attempt, e) && attempt < _retryPolicy.RetryCount;
 
 					if (retry)
 					{
-						_logger.WillRetry(context, _retryPolicy.RetryCount - remainingAttempts, e);
-						await Task.Delay(_retryPolicy.GetSleepDuration(e));
+						_logger.WillRetry(context, attempt, e);
+						await Task.Delay(_retryPolicy.GetSleepDuration(attempt, e));
 					}
 					else throw;
 				}
+
+				attempt++;
 			} while (retry);
 		}
 	}

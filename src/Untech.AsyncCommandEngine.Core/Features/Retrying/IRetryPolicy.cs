@@ -6,8 +6,8 @@ namespace Untech.AsyncCommandEngine.Features.Retrying
 	{
 		int RetryCount { get; }
 
-		TimeSpan GetSleepDuration(Exception e);
+		TimeSpan GetSleepDuration(int attempt, Exception e);
 
-		bool RetryOnError(Exception e);
+		bool RetryOnError(int attempt, Exception e);
 	}
 }

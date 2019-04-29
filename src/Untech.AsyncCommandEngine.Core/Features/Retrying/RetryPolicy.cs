@@ -38,12 +38,12 @@ namespace Untech.AsyncCommandEngine.Features.Retrying
 
 		public int RetryCount => _retryCount;
 
-		public TimeSpan GetSleepDuration(Exception e)
+		public TimeSpan GetSleepDuration(int attempt, Exception e)
 		{
 			return _sleepDuration;
 		}
 
-		public bool RetryOnError(Exception e)
+		public bool RetryOnError(int attempt, Exception e)
 		{
 			var type = e.GetType();
 
