@@ -2,7 +2,7 @@ using Untech.Practices.CQRS;
 
 namespace Untech.AsyncCommandEngine.Metadata
 {
-	public class FakeRequest : ICommand<int>
+	public class FakeCommand : ICommand<int>
 	{
 
 	}

@@ -3,7 +3,7 @@ using Untech.AsyncCommandEngine.Metadata.Annotations;
 namespace Untech.AsyncCommandEngine.Metadata
 {
 	[WatchDogTimeout(0, 0, 10)]
-	public class FakeRequestMetadata : IRequestMetadataSource<FakeRequest>
+	public class FakeCommandMetadata : IRequestMetadataSource<FakeCommand>
 	{
 
 	}

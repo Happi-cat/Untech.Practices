@@ -7,9 +7,9 @@ using Untech.Practices.CQRS.Handlers;
 namespace Untech.AsyncCommandEngine.Metadata
 {
 	[ThrottleGroup("SomeResource")]
-	public class FakeRequestHandler : ICommandHandler<FakeRequest, int>
+	public class FakeCommandHandler : ICommandHandler<FakeCommand, int>
 	{
-		public async Task<int> HandleAsync(FakeRequest request, CancellationToken cancellationToken)
+		public async Task<int> HandleAsync(FakeCommand command, CancellationToken cancellationToken)
 		{
 			throw new NotImplementedException();
 		}

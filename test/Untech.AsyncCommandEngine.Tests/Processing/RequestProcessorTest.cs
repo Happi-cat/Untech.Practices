@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Untech.AsyncCommandEngine.Fakes;
 using Untech.AsyncCommandEngine.Metadata;
 using Untech.Practices.CQRS;
 using Untech.Practices.CQRS.Dispatching;
@@ -74,7 +75,7 @@ namespace Untech.AsyncCommandEngine.Processing
 
 		private static Context BuildContextForCqrsMiddlewareTest(object command)
 		{
-			return new Context(new FakeRequest(command));
+			return new Context(new FakeRequest(body: command));
 		}
 
 		private class FakeCqrsStrategy : ICqrsStrategy, IDispatcher
@@ -107,38 +108,6 @@ namespace Untech.AsyncCommandEngine.Processing
 			public Task<TResult> ProcessAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken)
 			{
 				return Task.FromResult(default(TResult));
-			}
-		}
-
-		private class FakeRequest : Request
-		{
-			private readonly object _body;
-
-			public FakeRequest() : this(new FakeCommand())
-			{
-			}
-
-			public FakeRequest(object body)
-			{
-				Identifier = Guid.NewGuid().ToString();
-				Name = body.GetType().FullName;
-				Created = DateTimeOffset.Now;
-				_body = body;
-			}
-
-			public override string Identifier { get; }
-			public override string Name { get; }
-			public override DateTimeOffset Created { get; }
-			public override IDictionary<string, string> Attributes { get; }
-
-			public override object GetBody(Type requestType)
-			{
-				return _body;
-			}
-
-			public override Stream GetRawBody()
-			{
-				throw new NotImplementedException();
 			}
 		}
 

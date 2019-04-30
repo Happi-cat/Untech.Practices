@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Untech.AsyncCommandEngine.Fakes;
 using Untech.AsyncCommandEngine.Processing;
 using Untech.AsyncCommandEngine.Transports;
 using Untech.Practices.CQRS;
@@ -47,7 +48,7 @@ namespace Untech.AsyncCommandEngine
 			public FakeTransport(int total)
 			{
 				_total = total;
-				_inbound = new ConcurrentBag<Request>(Enumerable.Repeat(new FakeRequest(), _total));
+				_inbound = new ConcurrentBag<Request>(Enumerable.Repeat(new FakeRequest(body: new FakeCommand()), _total));
 				_outbound = new ConcurrentBag<Request>();
 				_completionSource = new TaskCompletionSource<int>();
 			}
@@ -76,23 +77,6 @@ namespace Untech.AsyncCommandEngine
 			public Task<int> Complete()
 			{
 				return _completionSource.Task;
-			}
-		}
-
-		private class FakeRequest : Request
-		{
-			public override string Identifier { get; }
-			public override string Name { get; } = "FakeCommand";
-			public override DateTimeOffset Created { get; }
-			public override IDictionary<string, string> Attributes { get; }
-			public override object GetBody(Type requestType)
-			{
-				return new FakeCommand();
-			}
-
-			public override Stream GetRawBody()
-			{
-				throw new NotImplementedException();
 			}
 		}
 

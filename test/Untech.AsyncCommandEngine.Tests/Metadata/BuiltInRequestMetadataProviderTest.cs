@@ -8,6 +8,7 @@ namespace Untech.AsyncCommandEngine.Metadata
 {
 	public class BuiltInRequestMetadataProviderTest
 	{
+		private readonly string _commandName = typeof(FakeCommand).FullName;
 		private readonly IRequestMetadataProvider _provider;
 
 		public BuiltInRequestMetadataProviderTest()
@@ -47,7 +48,7 @@ namespace Untech.AsyncCommandEngine.Metadata
 		[Fact]
 		public void GetMetadata_ReturnsMetadata_WhenRequestFound()
 		{
-			var metadata = _provider.GetMetadata("Untech.AsyncCommandEngine.Metadata.FakeRequest");
+			var metadata = _provider.GetMetadata(_commandName);
 
 			Assert.NotNull(metadata);
 			Assert.NotEqual(NullRequestMetadata.Instance, metadata);
@@ -56,7 +57,7 @@ namespace Untech.AsyncCommandEngine.Metadata
 		[Fact]
 		public void GetAttribute_ReturnsNull_WhenAttributeNotFound()
 		{
-			var metadata = _provider.GetMetadata("Untech.AsyncCommandEngine.Metadata.FakeRequest");
+			var metadata = _provider.GetMetadata(_commandName);
 
 			Assert.Null(metadata.GetAttribute<ObsoleteAttribute>());
 		}
@@ -64,7 +65,7 @@ namespace Untech.AsyncCommandEngine.Metadata
 		[Fact]
 		public void GetAttribute_ReturnsAttribute_WhenAttributeFoundOnRequestMetadataSource()
 		{
-			var metadata = _provider.GetMetadata("Untech.AsyncCommandEngine.Metadata.FakeRequest");
+			var metadata = _provider.GetMetadata(_commandName);
 
 			var attribute = metadata.GetAttribute<WatchDogTimeoutAttribute>();
 
@@ -74,7 +75,7 @@ namespace Untech.AsyncCommandEngine.Metadata
 		[Fact]
 		public void GetAttribute_ReturnsAttribute_WhenAttributeFoundOnHandler()
 		{
-			var metadata = _provider.GetMetadata("Untech.AsyncCommandEngine.Metadata.FakeRequest");
+			var metadata = _provider.GetMetadata(_commandName);
 
 			var attribute = metadata.GetAttribute<ThrottleGroupAttribute>();
 
