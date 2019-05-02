@@ -2,7 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
-using Untech.Practices.CQRS.Dispatching.RequestExecutors;
+using Untech.Practices.CQRS.Dispatching.Processors;
 
 namespace Untech.Practices.CQRS.Dispatching
 {
@@ -12,7 +12,7 @@ namespace Untech.Practices.CQRS.Dispatching
 	/// </summary>
 	public sealed class Dispatcher : IDispatcher
 	{
-		private readonly ConcurrentDictionary<Type, IHandlerInvoker> _handlerRunners;
+		private readonly ConcurrentDictionary<Type, IProcessor> _processors;
 		private readonly ITypeResolver _typeResolver;
 
 		/// <summary>
@@ -23,7 +23,7 @@ namespace Untech.Practices.CQRS.Dispatching
 		public Dispatcher(ITypeResolver typeResolver)
 		{
 			_typeResolver = typeResolver ?? throw new ArgumentNullException(nameof(typeResolver));
-			_handlerRunners = new ConcurrentDictionary<Type, IHandlerInvoker>();
+			_processors = new ConcurrentDictionary<Type, IProcessor>();
 		}
 
 		/// <inheritdoc />
@@ -31,8 +31,8 @@ namespace Untech.Practices.CQRS.Dispatching
 		{
 			query = query ?? throw new ArgumentNullException(nameof(query));
 
-			return (Task<TResponse>)_handlerRunners
-				.GetOrAdd(query.GetType(), MakeFetch<TResponse>)
+			return (Task<TResponse>)_processors
+				.GetOrAdd(query.GetType(), CreateForFetch<TResponse>)
 				.InvokeAsync(query, cancellationToken);
 		}
 
@@ -41,8 +41,8 @@ namespace Untech.Practices.CQRS.Dispatching
 		{
 			command = command ?? throw new ArgumentNullException(nameof(command));
 
-			return (Task<TResponse>)_handlerRunners
-				.GetOrAdd(command.GetType(), MakeProcess<TResponse>)
+			return (Task<TResponse>)_processors
+				.GetOrAdd(command.GetType(), CreateForProcess<TResponse>)
 				.InvokeAsync(command, cancellationToken);
 		}
 
@@ -51,38 +51,40 @@ namespace Untech.Practices.CQRS.Dispatching
 		{
 			notification = notification ?? throw new ArgumentNullException(nameof(notification));
 
-			return _handlerRunners
-				.GetOrAdd(notification.GetType(), MakePublish)
+			return _processors
+				.GetOrAdd(notification.GetType(), CreateForPublish)
 				.InvokeAsync(notification, cancellationToken);
 		}
 
 		#region [Private Methods]
 
-		private IHandlerInvoker MakeFetch<TResponse>(Type type)
+		private IProcessor CreateForFetch<TResponse>(Type requestType)
 		{
-			return (IHandlerInvoker)CreateHandlerRunner(typeof(RequestHandlerInvoker<,>), type, typeof(TResponse));
+			return (IProcessor)CreateProcessor(
+				typeof(RequestProcessor<,>),
+				requestType,
+				typeof(TResponse));
 		}
 
-		private IHandlerInvoker MakeProcess<TResponse>(Type type)
+		private IProcessor CreateForProcess<TResponse>(Type requestType)
 		{
-			return (IHandlerInvoker)CreateHandlerRunner(typeof(RequestHandlerInvoker<,>), type, typeof(TResponse));
+			return (IProcessor)CreateProcessor(
+				typeof(RequestProcessor<,>),
+				requestType,
+				typeof(TResponse));
 		}
 
-		private IHandlerInvoker MakePublish(Type type)
+		private IProcessor CreateForPublish(Type requestType)
 		{
-			return (IHandlerInvoker)CreateHandlerRunner(typeof(NotificationHandlerInvoker<>), type);
+			return (IProcessor)CreateProcessor(
+				typeof(NotificationProcessor<>),
+				requestType);
 		}
 
-		private object CreateHandlerRunner(Type genericExecutorType, Type requestType, Type responseType)
+		private object CreateProcessor(Type genericTypeDefinition, params Type[] typeArguments)
 		{
-			Type executorType = genericExecutorType.MakeGenericType(requestType, responseType);
-			return Activator.CreateInstance(executorType, new object[] { _typeResolver }, null);
-		}
-
-		private object CreateHandlerRunner(Type genericExecutorType, Type requestType)
-		{
-			Type executorType = genericExecutorType.MakeGenericType(requestType);
-			return Activator.CreateInstance(executorType, new object[] { _typeResolver }, null);
+			Type genericType = genericTypeDefinition.MakeGenericType(typeArguments);
+			return Activator.CreateInstance(genericType, new object[] { _typeResolver }, null);
 		}
 
 		#endregion

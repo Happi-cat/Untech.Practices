@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Untech.Practices.CQRS.Dispatching;
@@ -49,7 +51,12 @@ namespace Untech.Practices.CQRS
 
 			public IEnumerable<T> ResolveMany<T>() where T : class
 			{
-				yield return ResolveOne<T>();
+				return GetEnumerable().Where(n => n != null);
+
+				IEnumerable<T> GetEnumerable()
+				{
+					yield return ResolveOne<T>();
+				}
 			}
 		}
 	}

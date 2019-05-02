@@ -1,26 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Untech.Practices.CQRS.Handlers;
 using Untech.Practices.CQRS.Pipeline;
 
-namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
+namespace Untech.Practices.CQRS.Dispatching.Processors
 {
-	internal class RequestHandlerInvoker<TIn, TOut> : IHandlerInvoker
+	internal class RequestProcessor<TIn, TOut> : IProcessor
 		where TIn : IRequest<TOut>
 	{
 		private readonly ITypeResolver _resolver;
 
-		public RequestHandlerInvoker(ITypeResolver resolver)
+		public RequestProcessor(ITypeResolver resolver)
 		{
 			_resolver = resolver;
 		}
 
 		public Task InvokeAsync(object args, CancellationToken cancellationToken)
 		{
-			return new RunHandler(_resolver)
+			return new RequestHandler(_resolver)
 				.HandleAsync((TIn)args, cancellationToken);
 		}
 
@@ -31,28 +29,23 @@ namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
 
 		private static void PreProcess(ITypeResolver typeResolver, TIn request)
 		{
-			foreach (IPipelinePreProcessor<TIn> preProcessor in ResolveMany<IPipelinePreProcessor<TIn>>(typeResolver))
+			var preProcessors = typeResolver.ResolveMany<IPipelinePreProcessor<TIn>>();
+			foreach (IPipelinePreProcessor<TIn> preProcessor in preProcessors)
 				preProcessor.Process(request);
 		}
 
 		private static void PostProcess(ITypeResolver typeResolver, TIn request, TOut result)
 		{
-			foreach (IPipelinePostProcessor<TIn, TOut> postProcessor in
-				ResolveMany<IPipelinePostProcessor<TIn, TOut>>(typeResolver)) postProcessor.Process(request, result);
+			var postProcessors = typeResolver.ResolveMany<IPipelinePostProcessor<TIn, TOut>>();
+			foreach (IPipelinePostProcessor<TIn, TOut> postProcessor in postProcessors)
+				postProcessor.Process(request, result);
 		}
 
-		private static IEnumerable<T> ResolveMany<T>(ITypeResolver resolver)
-			where T : class
-		{
-			return (resolver.ResolveMany<T>() ?? Enumerable.Empty<T>())
-				.Where(n => n != null);
-		}
-
-		private class RunHandler : IRequestHandler<TIn, TOut>
+		private class RequestHandler : IRequestHandler<TIn, TOut>
 		{
 			private readonly ITypeResolver _resolver;
 
-			public RunHandler(ITypeResolver resolver)
+			public RequestHandler(ITypeResolver resolver)
 			{
 				_resolver = resolver;
 			}

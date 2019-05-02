@@ -4,14 +4,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using Untech.Practices.CQRS.Handlers;
 
-namespace Untech.Practices.CQRS.Dispatching.RequestExecutors
+namespace Untech.Practices.CQRS.Dispatching.Processors
 {
-	internal class NotificationHandlerInvoker<TIn> : IHandlerInvoker
+	internal class NotificationProcessor<TIn> : IProcessor
 		where TIn : INotification
 	{
 		private readonly ITypeResolver _resolver;
 
-		public NotificationHandlerInvoker(ITypeResolver resolver)
+		public NotificationProcessor(ITypeResolver resolver)
 		{
 			_resolver = resolver;
 		}
