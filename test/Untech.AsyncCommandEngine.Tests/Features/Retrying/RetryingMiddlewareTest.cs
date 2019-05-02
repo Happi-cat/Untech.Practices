@@ -74,10 +74,7 @@ namespace Untech.AsyncCommandEngine.Features.Retrying
 					throw new TimeoutException();
 				});
 			}
-			catch (TimeoutException)
-			{
-
-			}
+			catch (TimeoutException) { }
 
 			return invoked;
 		}
