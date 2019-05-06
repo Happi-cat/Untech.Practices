@@ -25,7 +25,7 @@ namespace Untech.AsyncCommandEngine.Features.Debounce
 			if (debounceAttribute != null)
 			{
 				var lastRun = await _lastRunStore.GetLastRunAsync(context.Request, context.Aborted);
-				if (lastRun != null && context.Request.Created < lastRun)
+				if (context.Request.Created < lastRun)
 				{
 					_logger.RequestDebounced(context);
 					return;

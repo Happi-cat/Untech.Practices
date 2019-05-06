@@ -14,7 +14,7 @@ namespace Untech.AsyncCommandEngine.Features.Debounce
 		public async Task InvokeAsync_NonDebounced_WhenFirstRunAndDebounceEnabled()
 		{
 			var created = DateTimeOffset.Now;
-			var invoked = await InvokeAsync(created, null, true);
+			var invoked = await InvokeAsync(created, DateTimeOffset.MinValue, true);
 
 			Assert.True(invoked);
 		}
@@ -46,7 +46,7 @@ namespace Untech.AsyncCommandEngine.Features.Debounce
 			Assert.False(invoked);
 		}
 
-		private async Task<bool> InvokeAsync(DateTimeOffset created, DateTimeOffset? lastRun, bool debounce)
+		private async Task<bool> InvokeAsync(DateTimeOffset created, DateTimeOffset lastRun, bool debounce)
 		{
 			var lastRunStore = new FakeLastRunStore(lastRun);
 			var middleware = new DebounceMiddleware(lastRunStore, NullLoggerFactory.Instance);
@@ -66,14 +66,14 @@ namespace Untech.AsyncCommandEngine.Features.Debounce
 
 		private class FakeLastRunStore : ILastRunStore
 		{
-			private DateTimeOffset? _lastRun;
+			private DateTimeOffset _lastRun;
 
-			public FakeLastRunStore(DateTimeOffset? lastRun)
+			public FakeLastRunStore(DateTimeOffset lastRun)
 			{
 				_lastRun = lastRun;
 			}
 
-			public Task<DateTimeOffset?> GetLastRunAsync(Request request, CancellationToken cancellationToken)
+			public Task<DateTimeOffset> GetLastRunAsync(Request request, CancellationToken cancellationToken)
 			{
 				return Task.FromResult(_lastRun);
 			}
