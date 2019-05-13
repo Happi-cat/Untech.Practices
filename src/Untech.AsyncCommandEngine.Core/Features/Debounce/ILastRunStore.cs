@@ -15,7 +15,7 @@ namespace Untech.AsyncCommandEngine.Features.Debounce
 		/// <param name="request">The request to get last run datetime.</param>
 		/// <param name="cancellationToken">The cancellation token.</param>
 		/// <returns>Last run datetime or null.</returns>
-		Task<DateTimeOffset?> GetLastRunAsync(Request request, CancellationToken cancellationToken);
+		Task<DateTimeOffset> GetLastRunAsync(Request request, CancellationToken cancellationToken);
 
 		/// <summary>
 		/// Saves last run datetime of the <paramref name="request"/>.

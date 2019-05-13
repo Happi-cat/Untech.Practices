@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,9 +8,14 @@ namespace Untech.AsyncCommandEngine.Metadata
 	/// <summary>
 	/// Represents <see cref="IRequestMetadata"/> that's decorates <see cref="IEnumerable{Attribute}"/>.
 	/// </summary>
-	public class RequestMetadata : IRequestMetadata
+	public class RequestMetadata : IRequestMetadata, IEnumerable<Attribute>
 	{
-		private readonly IReadOnlyCollection<Attribute> _attributes;
+		private readonly ICollection<Attribute> _attributes;
+
+		public RequestMetadata()
+		{
+			_attributes = new List<Attribute>();
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="RequestMetadata"/>
@@ -34,6 +40,25 @@ namespace Untech.AsyncCommandEngine.Metadata
 		public IEnumerable<TAttr> GetAttributes<TAttr>() where TAttr : Attribute
 		{
 			return _attributes.OfType<TAttr>();
+		}
+
+		public RequestMetadata Add(Attribute attribute)
+		{
+			if (attribute == null) throw new ArgumentNullException(nameof(attribute));
+
+			_attributes.Add(attribute);
+
+			return this;
+		}
+
+		public IEnumerator<Attribute> GetEnumerator()
+		{
+			return _attributes.GetEnumerator();
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
 		}
 	}
 }
