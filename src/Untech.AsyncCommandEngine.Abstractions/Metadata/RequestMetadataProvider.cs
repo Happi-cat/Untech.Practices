@@ -7,31 +7,37 @@ namespace Untech.AsyncCommandEngine.Metadata
 {
 	public class RequestMetadataProvider : IRequestMetadataProvider, IEnumerable<IRequestMetadata>
 	{
-		private readonly IDictionary<string, IRequestMetadata> _metadata;
-		private IRequestMetadata _defaultMetadata;
+		private readonly IDictionary<string, List<IRequestMetadata>> _metadata;
+		private readonly IList<IRequestMetadata> _defaultMetadata;
 
-		public RequestMetadataProvider() : this(NullRequestMetadata.Instance)
+		public RequestMetadataProvider()
 		{
+			_metadata = new Dictionary<string, List<IRequestMetadata>>();
+			_defaultMetadata = new List<IRequestMetadata>();
 		}
 
 		public RequestMetadataProvider(IRequestMetadata defaultMetadata)
 		{
-			_metadata = new Dictionary<string, IRequestMetadata>();
-			_defaultMetadata = defaultMetadata;
+			_metadata = new Dictionary<string, List<IRequestMetadata>>();
+			_defaultMetadata = new List<IRequestMetadata> { defaultMetadata };
 		}
 
-
 		public RequestMetadataProvider(IEnumerable<KeyValuePair<string, IRequestMetadata>> metadata)
-			:this(metadata, NullRequestMetadata.Instance)
 		{
+			_metadata = metadata
+				.GroupBy(n => n.Key, n => n.Value)
+				.ToDictionary(n => n.Key, n => n.ToList());
+			_defaultMetadata = new List<IRequestMetadata>();
 		}
 
 		public RequestMetadataProvider(
 			IEnumerable<KeyValuePair<string, IRequestMetadata>> metadata,
 			IRequestMetadata defaultMetadata)
 		{
-			_metadata = metadata.ToDictionary(n => n.Key, n => n.Value);
-			_defaultMetadata = defaultMetadata;
+			_metadata = metadata
+				.GroupBy(n => n.Key, n => n.Value)
+				.ToDictionary(n => n.Key, n => n.ToList());
+			_defaultMetadata = new List<IRequestMetadata>{ defaultMetadata };
 		}
 
 
@@ -42,9 +48,9 @@ namespace Untech.AsyncCommandEngine.Metadata
 			IEnumerable<IRequestMetadata> GetItems()
 			{
 				if (_metadata.TryGetValue(requestName, out var metadata))
-					yield return metadata;
+					foreach (var meta in metadata) yield return meta;
 
-				yield return _defaultMetadata;
+				foreach (var meta in _defaultMetadata) yield return meta;
 			}
 		}
 
@@ -53,7 +59,10 @@ namespace Untech.AsyncCommandEngine.Metadata
 			if (requestName == null) throw new ArgumentNullException(nameof(requestName));
 			if (metadata == null) throw new ArgumentNullException(nameof(metadata));
 
-			_metadata.Add(requestName, metadata);
+			if (!_metadata.ContainsKey(requestName))
+				_metadata.Add(requestName, new List<IRequestMetadata>());
+			
+			_metadata[requestName].Add(metadata);
 
 			return this;
 		}
@@ -62,7 +71,7 @@ namespace Untech.AsyncCommandEngine.Metadata
 		{
 			if (defaultMetadata == null) throw new ArgumentNullException(nameof(defaultMetadata));
 
-			_defaultMetadata = defaultMetadata;
+			_defaultMetadata.Add(defaultMetadata);
 
 			return this;
 		}
@@ -70,8 +79,8 @@ namespace Untech.AsyncCommandEngine.Metadata
 		public IEnumerator<IRequestMetadata> GetEnumerator()
 		{
 			return _metadata
-				.Select(n => n.Value)
-				.Concat(new[] {_defaultMetadata})
+				.SelectMany(n => n.Value)
+				.Concat(_defaultMetadata)
 				.GetEnumerator();
 		}
 
