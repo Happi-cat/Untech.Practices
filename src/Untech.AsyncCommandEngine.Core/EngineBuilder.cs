@@ -13,16 +13,66 @@ namespace Untech.AsyncCommandEngine
 {
 	using MiddlewareCreator = Func<IEngineBuilderContext, IRequestProcessorMiddleware>;
 
+	public class MiddlewareCollection
+	{
+		private readonly List<MiddlewareCreator> _middlewareCreators = new List<MiddlewareCreator>();
+		private MiddlewareCreator _finalMiddlewareCreator;
+
+		/// <summary>
+		/// Registers middleware.
+		/// </summary>
+		/// <param name="creator">The function that creates <see cref="IRequestProcessorMiddleware"/>.</param>
+		/// <returns></returns>
+		public MiddlewareCollection Then(Func<IEngineBuilderContext, IRequestProcessorMiddleware> creator)
+		{
+			_middlewareCreators.Add(creator);
+			return this;
+		}
+
+		public MiddlewareCollection Final(ICqrsStrategy strategy)
+		{
+			_finalMiddlewareCreator = ctx => new CqrsMiddleware(strategy);
+
+			return this;
+		}
+
+		public MiddlewareCollection Final(Func<IEngineBuilderContext, ICqrsStrategy> strategy)
+		{
+			_finalMiddlewareCreator = ctx => new CqrsMiddleware(strategy(ctx));
+
+			return this;
+		}
+
+		internal IEnumerable<IRequestProcessorMiddleware> GetMiddlewares(IEngineBuilderContext context)
+		{
+			if (_finalMiddlewareCreator == null) throw NoFinalStepError();
+
+			return _middlewareCreators
+				.Concat(new[] { _finalMiddlewareCreator })
+				.Select(n => n.Invoke(context));
+		}
+
+		private static InvalidOperationException NoFinalStepError()
+		{
+			return new InvalidOperationException("Final middleware wasn't configured");
+		}
+	}
+
 	/// <summary>
 	/// Used for <see cref="IOrchestrator"/> and <see cref="IRequestProcessor"/> configuration.
 	/// </summary>
 	public class EngineBuilder : IEngineBuilderContext
 	{
-		private readonly List<MiddlewareCreator> _middlewareCreators = new List<MiddlewareCreator>();
+		private readonly MiddlewareCollection _middlewareCollection;
 
 		private ITransport _transport;
 		private ILoggerFactory _loggerFactory;
 		private IRequestMetadataProvider _requestMetadataProvider;
+
+		public EngineBuilder()
+		{
+			_middlewareCollection = new MiddlewareCollection();
+		}
 
 		/// <summary>
 		/// Sets <see cref="ILoggerFactory"/> that will be used for logging.
@@ -57,17 +107,12 @@ namespace Untech.AsyncCommandEngine
 			return this;
 		}
 
-		/// <summary>
-		/// Registers middleware.
-		/// </summary>
-		/// <param name="creator">The function that creates <see cref="IRequestProcessorMiddleware"/>.</param>
-		/// <returns></returns>
-		public EngineBuilder Then(Func<IEngineBuilderContext, IRequestProcessorMiddleware> creator)
+		public EngineBuilder DoSteps(Action<MiddlewareCollection> configureProcessor)
 		{
-			_middlewareCreators.Add(creator);
+			configureProcessor(_middlewareCollection);
+
 			return this;
 		}
-
 
 		/// <inheritdoc />
 		public ILoggerFactory GetLogger()
@@ -92,26 +137,9 @@ namespace Untech.AsyncCommandEngine
 		/// </summary>
 		/// <param name="strategy">The CQRS strategy that will be used during request execution.</param>
 		/// <returns></returns>
-		public IRequestProcessor BuildProcessor(ICqrsStrategy strategy)
+		public IRequestProcessor BuildProcessor()
 		{
-			var steps = _middlewareCreators
-				.Select(n => n.Invoke(this))
-				.Concat(new IRequestProcessorMiddleware[]
-				{
-					new CqrsMiddleware(strategy)
-				});
-
-			return new RequestProcessor(steps);
-		}
-
-		/// <summary>
-		/// Returns constructed instance of the <see cref="IRequestProcessor"/>.
-		/// </summary>
-		/// <param name="strategy">The CQRS strategy that will be used during request execution.</param>
-		/// <returns></returns>
-		public IRequestProcessor BuildProcessor(Func<IEngineBuilderContext, ICqrsStrategy> strategy)
-		{
-			return BuildProcessor(strategy(this));
+			return new RequestProcessor(_middlewareCollection.GetMiddlewares(this));
 		}
 
 		/// <summary>
@@ -120,27 +148,17 @@ namespace Untech.AsyncCommandEngine
 		/// <param name="strategy">The CQRS strategy that will be used during request execution.</param>
 		/// <param name="options">The options for orchestrator configuration.</param>
 		/// <returns></returns>
-		public IOrchestrator BuildOrchestrator(ICqrsStrategy strategy, OrchestratorOptions options)
+		public IOrchestrator BuildOrchestrator(Action<OrchestratorOptions> configureOptions)
 		{
+			var options = new OrchestratorOptions();
+			configureOptions(options);
 			EnsureOptionsValid(options);
 
 			return new Orchestrator(options,
 				GetTransport(),
 				GetMetadata(),
-				BuildProcessor(strategy),
+				BuildProcessor(),
 				GetLogger().CreateLogger<Orchestrator>());
-		}
-
-		/// <summary>
-		/// Returns constructed instance of the <see cref="IOrchestrator"/>.
-		/// </summary>
-		/// <param name="strategy">The CQRS strategy that will be used during request execution.</param>
-		/// <param name="options">The options for orchestrator configuration.</param>
-		/// <returns></returns>
-		public IOrchestrator BuildOrchestrator(Func<IEngineBuilderContext, ICqrsStrategy> strategy,
-			OrchestratorOptions options)
-		{
-			return BuildOrchestrator(strategy(this), options);
 		}
 
 		/// <summary>

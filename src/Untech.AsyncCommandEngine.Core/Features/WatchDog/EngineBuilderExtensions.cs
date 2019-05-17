@@ -15,9 +15,9 @@ namespace Untech.AsyncCommandEngine.Features.WatchDog
 		/// <exception cref="ArgumentNullException">
 		/// 	<paramref name="builder"/> is null.
 		/// </exception>
-		public static EngineBuilder ThenWatchDog(this EngineBuilder builder)
+		public static MiddlewareCollection ThenWatchDog(this MiddlewareCollection builder)
 		{
-			return ThenWatchDog(builder, new WatchDogOptions());
+			return ThenWatchDog(builder, _ => {});
 		}
 
 		/// <summary>
@@ -29,12 +29,14 @@ namespace Untech.AsyncCommandEngine.Features.WatchDog
 		/// <exception cref="ArgumentNullException">
 		/// 	<paramref name="builder"/> or <paramref name="options"/> is null.
 		/// </exception>
-		public static EngineBuilder ThenWatchDog(this EngineBuilder builder, WatchDogOptions options)
+		public static MiddlewareCollection ThenWatchDog(this MiddlewareCollection builder, Action<WatchDogOptions> configureOptions)
 		{
 			if (builder == null) throw new ArgumentNullException(nameof(builder));
-			if (options == null) throw new ArgumentNullException(nameof(options));
+			if (configureOptions == null) throw new ArgumentNullException(nameof(configureOptions));
 
-			builder.EnsureOptionsValid(options);
+			var options = new WatchDogOptions();
+			configureOptions(options);
+			//builder.EnsureOptionsValid(options);
 
 			return builder.Then(ctx => new WatchDogMiddleware(options, ctx.GetLogger()));
 		}

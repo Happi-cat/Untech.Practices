@@ -22,13 +22,16 @@ namespace Untech.AsyncCommandEngine
 		{
 			var transport = new FakeTransport(100);
 			var cqrs = new FakeCqrs();
-			var orcherstator = new EngineBuilder().ReceiveRequestsFrom(transport).BuildOrchestrator(cqrs, new OrchestratorOptions
-			{
-				Warps = 5,
-				RequestsPerWarp = 5,
-				RunRequestsInWarpAllAtOnce = true,
-				SlidingStep = TimeSpan.FromMilliseconds(10)
-			});
+			var orcherstator = new EngineBuilder()
+				.ReceiveRequestsFrom(transport)
+				.DoSteps(s => s.Final(cqrs))
+				.BuildOrchestrator(options =>
+				{
+					options.Warps = 5;
+					options.RequestsPerWarp = 5;
+					options.RunRequestsInWarpAllAtOnce = true;
+					options.SlidingStep = TimeSpan.FromMilliseconds(10);
+				});
 
 			await orcherstator.StartAsync();
 			var completed = await transport.Complete();

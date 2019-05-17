@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Untech.AsyncCommandEngine.Metadata;
@@ -35,6 +36,12 @@ namespace Untech.AsyncCommandEngine
 			return builder.GetLogger().CreateLogger(categoryName);
 		}
 
+		public static EngineBuilder ReceiveRequestsFrom(this EngineBuilder builder,
+			params ITransport[] transports)
+		{
+			return builder.ReceiveRequestsFrom(transports.AsEnumerable());
+		}
+
 		/// <summary>
 		/// Sets a collection of <see cref="ITransport"/> that will be used as a request store.
 		/// </summary>
@@ -48,6 +55,12 @@ namespace Untech.AsyncCommandEngine
 			if (transports == null) throw new ArgumentNullException(nameof(transports));
 
 			return builder.ReceiveRequestsFrom(new CompositeTransport(transports));
+		}
+
+		public static EngineBuilder ReadMetadataFrom(this EngineBuilder builder,
+			params IRequestMetadataProvider[] providers)
+		{
+			return builder.ReadMetadataFrom(providers.AsEnumerable());
 		}
 
 		/// <summary>
@@ -71,7 +84,7 @@ namespace Untech.AsyncCommandEngine
 		/// <param name="builder">The builder to use for middleware registration.</param>
 		/// <param name="middleware">The instance of the <see cref="IRequestProcessorMiddleware"/>.</param>
 		/// <returns></returns>
-		public static EngineBuilder Then(this EngineBuilder builder,
+		public static MiddlewareCollection Then(this MiddlewareCollection builder,
 			IRequestProcessorMiddleware middleware)
 		{
 			if (builder == null) throw new ArgumentNullException(nameof(builder));
@@ -86,7 +99,7 @@ namespace Untech.AsyncCommandEngine
 		/// <param name="builder">The builder to use for middleware registration.</param>
 		/// <param name="middleware">The <see cref="IRequestProcessor"/> middleware.</param>
 		/// <returns></returns>
-		public static EngineBuilder Then(this EngineBuilder builder,
+		public static MiddlewareCollection Then(this MiddlewareCollection builder,
 			Func<Context, RequestProcessorCallback, Task> middleware)
 		{
 			if (builder == null) throw new ArgumentNullException(nameof(builder));
@@ -101,7 +114,7 @@ namespace Untech.AsyncCommandEngine
 		/// <param name="builder">The builder to use for middleware registration.</param>
 		/// <param name="creator">The function that creates <see cref="IRequestProcessorMiddleware"/>.</param>
 		/// <returns></returns>
-		public static EngineBuilder Then(this EngineBuilder builder,
+		public static MiddlewareCollection Then(this MiddlewareCollection builder,
 			Func<IEngineBuilderContext, Func<Context, RequestProcessorCallback, Task>> creator)
 		{
 			if (builder == null) throw new ArgumentNullException(nameof(builder));
