@@ -29,21 +29,17 @@ namespace Untech.AsyncCommandEngine
 			return this;
 		}
 
-		public MiddlewareCollection Final(ICqrsStrategy strategy)
+		public void Final(ICqrsStrategy strategy)
 		{
 			_finalMiddlewareCreator = ctx => new CqrsMiddleware(strategy);
-
-			return this;
 		}
 
-		public MiddlewareCollection Final(Func<IEngineBuilderContext, ICqrsStrategy> strategy)
+		public void Final(Func<IEngineBuilderContext, ICqrsStrategy> strategy)
 		{
 			_finalMiddlewareCreator = ctx => new CqrsMiddleware(strategy(ctx));
-
-			return this;
 		}
 
-		internal IEnumerable<IRequestProcessorMiddleware> GetMiddlewares(IEngineBuilderContext context)
+		internal IEnumerable<IRequestProcessorMiddleware> BuildSteps(IEngineBuilderContext context)
 		{
 			if (_finalMiddlewareCreator == null) throw NoFinalStepError();
 
@@ -139,7 +135,7 @@ namespace Untech.AsyncCommandEngine
 		/// <returns></returns>
 		public IRequestProcessor BuildProcessor()
 		{
-			return new RequestProcessor(_middlewareCollection.GetMiddlewares(this));
+			return new RequestProcessor(_middlewareCollection.BuildSteps(this));
 		}
 
 		/// <summary>
