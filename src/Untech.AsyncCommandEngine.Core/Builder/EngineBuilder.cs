@@ -1,63 +1,16 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Untech.AsyncCommandEngine.Metadata;
 using Untech.AsyncCommandEngine.Processing;
 using Untech.AsyncCommandEngine.Transports;
 
-
-namespace Untech.AsyncCommandEngine
+namespace Untech.AsyncCommandEngine.Builder
 {
-	using MiddlewareCreator = Func<IEngineBuilderContext, IRequestProcessorMiddleware>;
-
-	public class MiddlewareCollection
-	{
-		private readonly List<MiddlewareCreator> _middlewareCreators = new List<MiddlewareCreator>();
-		private MiddlewareCreator _finalMiddlewareCreator;
-
-		/// <summary>
-		/// Registers middleware.
-		/// </summary>
-		/// <param name="creator">The function that creates <see cref="IRequestProcessorMiddleware"/>.</param>
-		/// <returns></returns>
-		public MiddlewareCollection Then(Func<IEngineBuilderContext, IRequestProcessorMiddleware> creator)
-		{
-			_middlewareCreators.Add(creator);
-			return this;
-		}
-
-		public void Final(ICqrsStrategy strategy)
-		{
-			_finalMiddlewareCreator = ctx => new CqrsMiddleware(strategy);
-		}
-
-		public void Final(Func<IEngineBuilderContext, ICqrsStrategy> strategy)
-		{
-			_finalMiddlewareCreator = ctx => new CqrsMiddleware(strategy(ctx));
-		}
-
-		internal IEnumerable<IRequestProcessorMiddleware> BuildSteps(IEngineBuilderContext context)
-		{
-			if (_finalMiddlewareCreator == null) throw NoFinalStepError();
-
-			return _middlewareCreators
-				.Concat(new[] { _finalMiddlewareCreator })
-				.Select(n => n.Invoke(context));
-		}
-
-		private static InvalidOperationException NoFinalStepError()
-		{
-			return new InvalidOperationException("Final middleware wasn't configured");
-		}
-	}
-
 	/// <summary>
 	/// Used for <see cref="IOrchestrator"/> and <see cref="IRequestProcessor"/> configuration.
 	/// </summary>
-	public class EngineBuilder : IEngineBuilderContext
+	public class EngineBuilder : IBuilderContext
 	{
 		private readonly MiddlewareCollection _middlewareCollection;
 
@@ -119,7 +72,7 @@ namespace Untech.AsyncCommandEngine
 		/// <inheritdoc />
 		public ITransport GetTransport()
 		{
-			return _transport;
+			return _transport ?? throw new InvalidOperationException("Transport wasn't configured");
 		}
 
 		/// <inheritdoc />
@@ -146,25 +99,13 @@ namespace Untech.AsyncCommandEngine
 		/// <returns></returns>
 		public IOrchestrator BuildOrchestrator(Action<OrchestratorOptions> configureOptions)
 		{
-			var options = new OrchestratorOptions();
-			configureOptions(options);
-			EnsureOptionsValid(options);
-
-			return new Orchestrator(options,
+			return new Orchestrator(
+				OptionsBuilder.Configure(configureOptions),
 				GetTransport(),
 				GetMetadata(),
 				BuildProcessor(),
-				GetLogger().CreateLogger<Orchestrator>());
-		}
-
-		/// <summary>
-		/// Ensures that options valid. Uses <see cref="Validator"/> for validation.
-		/// </summary>
-		/// <param name="options"></param>
-		public void EnsureOptionsValid(object options)
-		{
-			var validationContext = new ValidationContext(options);
-			Validator.ValidateObject(options, validationContext, true);
+				GetLogger().CreateLogger<Orchestrator>()
+			);
 		}
 	}
 }

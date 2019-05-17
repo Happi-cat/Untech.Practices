@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Untech.AsyncCommandEngine.Builder;
 using Untech.AsyncCommandEngine.Fakes;
 using Untech.AsyncCommandEngine.Processing;
 using Untech.AsyncCommandEngine.Transports;

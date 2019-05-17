@@ -1,4 +1,5 @@
 using System;
+using Untech.AsyncCommandEngine.Builder;
 
 namespace Untech.AsyncCommandEngine.Features.WatchDog
 {
@@ -32,11 +33,8 @@ namespace Untech.AsyncCommandEngine.Features.WatchDog
 		public static MiddlewareCollection ThenWatchDog(this MiddlewareCollection builder, Action<WatchDogOptions> configureOptions)
 		{
 			if (builder == null) throw new ArgumentNullException(nameof(builder));
-			if (configureOptions == null) throw new ArgumentNullException(nameof(configureOptions));
 
-			var options = new WatchDogOptions();
-			configureOptions(options);
-			//builder.EnsureOptionsValid(options);
+			var options = OptionsBuilder.Configure(configureOptions);
 
 			return builder.Then(ctx => new WatchDogMiddleware(options, ctx.GetLogger()));
 		}

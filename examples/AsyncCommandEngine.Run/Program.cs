@@ -6,6 +6,7 @@ using AsyncCommandEngine.Run.Commands;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Untech.AsyncCommandEngine;
+using Untech.AsyncCommandEngine.Builder;
 using Untech.AsyncCommandEngine.Features.Retrying;
 using Untech.AsyncCommandEngine.Features.Throttling;
 using Untech.AsyncCommandEngine.Features.WatchDog;

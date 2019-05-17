@@ -1,4 +1,5 @@
 using System;
+using Untech.AsyncCommandEngine.Builder;
 
 namespace Untech.AsyncCommandEngine.Features.Throttling
 {
@@ -34,9 +35,7 @@ namespace Untech.AsyncCommandEngine.Features.Throttling
 			if (builder == null) throw new ArgumentNullException(nameof(builder));
 			if (configureOptions == null) throw new ArgumentNullException(nameof(configureOptions));
 
-			var options = new ThrottleOptions();
-			configureOptions(options);
-//			builder.EnsureOptionsValid(options);
+			var options = OptionsBuilder.Configure(configureOptions);
 
 			return builder.Then(ctx => new ThrottleMiddleware(options));
 		}

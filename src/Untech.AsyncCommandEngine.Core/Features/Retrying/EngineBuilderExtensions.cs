@@ -1,4 +1,5 @@
 using System;
+using Untech.AsyncCommandEngine.Builder;
 
 namespace Untech.AsyncCommandEngine.Features.Retrying
 {
