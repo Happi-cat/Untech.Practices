@@ -84,7 +84,6 @@ namespace Untech.AsyncCommandEngine.Builder
 		/// <summary>
 		/// Returns constructed instance of the <see cref="IRequestProcessor"/>.
 		/// </summary>
-		/// <param name="strategy">The CQRS strategy that will be used during request execution.</param>
 		/// <returns></returns>
 		public IRequestProcessor BuildProcessor()
 		{
@@ -94,8 +93,7 @@ namespace Untech.AsyncCommandEngine.Builder
 		/// <summary>
 		/// Returns constructed instance of the <see cref="IOrchestrator"/>.
 		/// </summary>
-		/// <param name="strategy">The CQRS strategy that will be used during request execution.</param>
-		/// <param name="options">The options for orchestrator configuration.</param>
+		/// <param name="configureOptions">The action for orchestrator options configuration.</param>
 		/// <returns></returns>
 		public IOrchestrator BuildOrchestrator(Action<OrchestratorOptions> configureOptions)
 		{
