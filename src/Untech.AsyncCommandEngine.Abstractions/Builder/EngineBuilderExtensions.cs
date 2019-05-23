@@ -8,7 +8,7 @@ using Untech.AsyncCommandEngine.Transports;
 namespace Untech.AsyncCommandEngine.Builder
 {
 	/// <summary>
-	/// Contains set of methods that can be used during work with <see cref="EngineBuilder"/>.
+	/// Contains set of methods that can be used during work with <see cref="IEngineBuilder"/>.
 	/// </summary>
 	public static class EngineBuilderExtensions
 	{
@@ -40,7 +40,7 @@ namespace Untech.AsyncCommandEngine.Builder
 		/// <param name="builder"></param>
 		/// <param name="transports">The collection of transport to use.</param>
 		/// <returns></returns>
-		public static EngineBuilder ReceiveRequestsFrom(this EngineBuilder builder,
+		public static IEngineBuilder ReceiveRequestsFrom(this IEngineBuilder builder,
 			params ITransport[] transports)
 		{
 			return builder.ReceiveRequestsFrom(transports.AsEnumerable());
@@ -52,7 +52,7 @@ namespace Untech.AsyncCommandEngine.Builder
 		/// <param name="builder"></param>
 		/// <param name="transports">The collection of transport to use.</param>
 		/// <returns></returns>
-		public static EngineBuilder ReceiveRequestsFrom(this EngineBuilder builder,
+		public static IEngineBuilder ReceiveRequestsFrom(this IEngineBuilder builder,
 			IEnumerable<ITransport> transports)
 		{
 			if (builder == null) throw new ArgumentNullException(nameof(builder));
@@ -67,7 +67,7 @@ namespace Untech.AsyncCommandEngine.Builder
 		/// <param name="builder"></param>
 		/// <param name="providers">The collection of providers to use.</param>
 		/// <returns></returns>
-		public static EngineBuilder ReadMetadataFrom(this EngineBuilder builder,
+		public static IEngineBuilder ReadMetadataFrom(this IEngineBuilder builder,
 			params IRequestMetadataProvider[] providers)
 		{
 			return builder.ReadMetadataFrom(providers.AsEnumerable());
@@ -79,7 +79,7 @@ namespace Untech.AsyncCommandEngine.Builder
 		/// <param name="builder"></param>
 		/// <param name="providers">The collection of providers to use.</param>
 		/// <returns></returns>
-		public static EngineBuilder ReadMetadataFrom(this EngineBuilder builder,
+		public static IEngineBuilder ReadMetadataFrom(this IEngineBuilder builder,
 			IEnumerable<IRequestMetadataProvider> providers)
 		{
 			if (builder == null) throw new ArgumentNullException(nameof(builder));

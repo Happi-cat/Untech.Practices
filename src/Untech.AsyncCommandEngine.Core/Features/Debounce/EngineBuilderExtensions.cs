@@ -18,7 +18,7 @@ namespace Untech.AsyncCommandEngine.Features.Debounce
 		/// <exception cref="ArgumentNullException">
 		/// 	<paramref name="builder"/> or <paramref name="lastRunStore"/> is null.
 		/// </exception>
-		public static MiddlewareCollection ThenDebounce(this MiddlewareCollection builder,
+		public static PipelineBuilder ThenDebounce(this PipelineBuilder builder,
 			ILastRunStore lastRunStore)
 		{
 			if (builder == null) throw new ArgumentNullException(nameof(builder));
