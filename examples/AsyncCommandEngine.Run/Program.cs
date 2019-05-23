@@ -21,18 +21,18 @@ namespace AsyncCommandEngine.Run
 	{
 		private static void Main(string[] args)
 		{
-			var service = new EngineBuilder()
-				.LogTo(Logger())
-				.ReceiveRequestsFrom(Transports())
-				.ReadMetadataFrom(MetadataProviders())
-				.DoSteps(Steps)
-				.BuildOrchestrator(options =>
+			var service = new EngineBuilder(options =>
 				{
 					options.Warps = 10;
 					options.RequestsPerWarp = 10;
 					options.SlidingStep = TimeSpan.FromSeconds(1);
 					options.SlidingRadius = 5;
-				});
+				})
+				.LogTo(Logger())
+				.ReceiveRequestsFrom(Transports())
+				.ReadMetadataFrom(MetadataProviders())
+				.DoSteps(Steps)
+				.BuildOrchestrator();
 
 			service.StartAsync();
 

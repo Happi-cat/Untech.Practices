@@ -8,7 +8,6 @@ namespace Untech.AsyncCommandEngine.Builder
 	public class MiddlewareCollection
 	{
 		private readonly List<Func<IBuilderContext, IRequestProcessorMiddleware>> _middlewareCreators = new List<Func<IBuilderContext, IRequestProcessorMiddleware>>();
-		private Func<IBuilderContext, IRequestProcessorMiddleware> _finalMiddlewareCreator;
 
 		/// <summary>
 		/// Registers middleware.
@@ -21,28 +20,10 @@ namespace Untech.AsyncCommandEngine.Builder
 			return this;
 		}
 
-		public void Final(ICqrsStrategy strategy)
+		public IEnumerable<IRequestProcessorMiddleware> BuildAll(IBuilderContext context)
 		{
-			_finalMiddlewareCreator = ctx => new CqrsMiddleware(strategy);
-		}
-
-		public void Final(Func<IBuilderContext, ICqrsStrategy> strategy)
-		{
-			_finalMiddlewareCreator = ctx => new CqrsMiddleware(strategy(ctx));
-		}
-
-		internal IEnumerable<IRequestProcessorMiddleware> BuildSteps(IBuilderContext context)
-		{
-			if (_finalMiddlewareCreator == null) throw NoFinalStepError();
-
 			return _middlewareCreators
-				.Concat(new[] { _finalMiddlewareCreator })
 				.Select(n => n.Invoke(context));
-		}
-
-		private static InvalidOperationException NoFinalStepError()
-		{
-			return new InvalidOperationException("Final middleware wasn't configured");
 		}
 	}
 }

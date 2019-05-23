@@ -10,8 +10,9 @@ namespace Untech.AsyncCommandEngine.Builder
 	/// <summary>
 	/// Used for <see cref="IOrchestrator"/> and <see cref="IRequestProcessor"/> configuration.
 	/// </summary>
-	public class EngineBuilder : IBuilderContext
+	public class EngineBuilder : IBuilderContext, IEngineBuilder
 	{
+		private readonly Action<OrchestratorOptions> _configureOptions;
 		private readonly MiddlewareCollection _middlewareCollection;
 
 		private ITransport _transport;
@@ -19,8 +20,15 @@ namespace Untech.AsyncCommandEngine.Builder
 		private IRequestMetadataProvider _requestMetadataProvider;
 
 		public EngineBuilder()
+			:this(_ => {})
+		{
+
+		}
+
+		public EngineBuilder(Action<OrchestratorOptions> configureOptions)
 		{
 			_middlewareCollection = new MiddlewareCollection();
+			_configureOptions = configureOptions;
 		}
 
 		/// <summary>
@@ -28,7 +36,7 @@ namespace Untech.AsyncCommandEngine.Builder
 		/// </summary>
 		/// <param name="loggerFactory">The logger factory.</param>
 		/// <returns></returns>
-		public EngineBuilder LogTo(ILoggerFactory loggerFactory)
+		public IEngineBuilder LogTo(ILoggerFactory loggerFactory)
 		{
 			_loggerFactory = loggerFactory;
 			return this;
@@ -39,7 +47,7 @@ namespace Untech.AsyncCommandEngine.Builder
 		/// </summary>
 		/// <param name="transport">The transport to use.</param>
 		/// <returns></returns>
-		public EngineBuilder ReceiveRequestsFrom(ITransport transport)
+		public IEngineBuilder ReceiveRequestsFrom(ITransport transport)
 		{
 			_transport = transport;
 			return this;
@@ -50,13 +58,13 @@ namespace Untech.AsyncCommandEngine.Builder
 		/// </summary>
 		/// <param name="provider">The provider to use.</param>
 		/// <returns></returns>
-		public EngineBuilder ReadMetadataFrom(IRequestMetadataProvider provider)
+		public IEngineBuilder ReadMetadataFrom(IRequestMetadataProvider provider)
 		{
 			_requestMetadataProvider = provider;
 			return this;
 		}
 
-		public EngineBuilder DoSteps(Action<MiddlewareCollection> configureProcessor)
+		public IEngineBuilder DoSteps(Action<MiddlewareCollection> configureProcessor)
 		{
 			configureProcessor(_middlewareCollection);
 
@@ -69,14 +77,12 @@ namespace Untech.AsyncCommandEngine.Builder
 			return _loggerFactory ?? NullLoggerFactory.Instance;
 		}
 
-		/// <inheritdoc />
-		public ITransport GetTransport()
+		private ITransport GetTransport()
 		{
 			return _transport ?? throw new InvalidOperationException("Transport wasn't configured");
 		}
 
-		/// <inheritdoc />
-		public IRequestMetadataProvider GetMetadata()
+		private IRequestMetadataProvider GetMetadata()
 		{
 			return _requestMetadataProvider ?? NullRequestMetadataProvider.Instance;
 		}
@@ -87,7 +93,7 @@ namespace Untech.AsyncCommandEngine.Builder
 		/// <returns></returns>
 		public IRequestProcessor BuildProcessor()
 		{
-			return new RequestProcessor(_middlewareCollection.BuildSteps(this));
+			return new RequestProcessor(_middlewareCollection.BuildAll(this));
 		}
 
 		/// <summary>
@@ -95,10 +101,10 @@ namespace Untech.AsyncCommandEngine.Builder
 		/// </summary>
 		/// <param name="configureOptions">The action for orchestrator options configuration.</param>
 		/// <returns></returns>
-		public IOrchestrator BuildOrchestrator(Action<OrchestratorOptions> configureOptions)
+		public IOrchestrator BuildOrchestrator()
 		{
 			return new Orchestrator(
-				OptionsBuilder.ConfigureAndValidate(configureOptions),
+				OptionsBuilder.ConfigureAndValidate(_configureOptions),
 				GetTransport(),
 				GetMetadata(),
 				BuildProcessor(),
