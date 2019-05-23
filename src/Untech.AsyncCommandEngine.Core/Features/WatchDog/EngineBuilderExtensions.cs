@@ -34,7 +34,7 @@ namespace Untech.AsyncCommandEngine.Features.WatchDog
 		{
 			if (builder == null) throw new ArgumentNullException(nameof(builder));
 
-			var options = OptionsBuilder.Configure(configureOptions);
+			var options = OptionsBuilder.ConfigureAndValidate(configureOptions);
 
 			return builder.Then(ctx => new WatchDogMiddleware(options, ctx.GetLogger()));
 		}

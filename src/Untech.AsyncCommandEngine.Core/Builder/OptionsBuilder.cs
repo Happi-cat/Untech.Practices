@@ -5,13 +5,13 @@ namespace Untech.AsyncCommandEngine.Builder
 {
 	public static class OptionsBuilder
 	{
-		public static T Configure<T>(Action<T> configureOptions)
+		public static T ConfigureAndValidate<T>(Action<T> configureOptions)
 			where T : class, new()
 		{
-			return Configure(new T(), configureOptions);
+			return ConfigureAndValidate(new T(), configureOptions);
 		}
 
-		private static T Configure<T>(T initialValue, Action<T> configureOptions)
+		private static T ConfigureAndValidate<T>(T initialValue, Action<T> configureOptions)
 		{
 			if (initialValue == null) throw new ArgumentNullException(nameof(initialValue));
 			if (configureOptions == null) throw new ArgumentNullException(nameof(configureOptions));

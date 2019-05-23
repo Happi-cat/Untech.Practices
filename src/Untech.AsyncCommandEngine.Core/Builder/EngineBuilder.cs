@@ -98,7 +98,7 @@ namespace Untech.AsyncCommandEngine.Builder
 		public IOrchestrator BuildOrchestrator(Action<OrchestratorOptions> configureOptions)
 		{
 			return new Orchestrator(
-				OptionsBuilder.Configure(configureOptions),
+				OptionsBuilder.ConfigureAndValidate(configureOptions),
 				GetTransport(),
 				GetMetadata(),
 				BuildProcessor(),

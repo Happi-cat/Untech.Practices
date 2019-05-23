@@ -35,7 +35,7 @@ namespace Untech.AsyncCommandEngine.Features.Throttling
 			if (builder == null) throw new ArgumentNullException(nameof(builder));
 			if (configureOptions == null) throw new ArgumentNullException(nameof(configureOptions));
 
-			var options = OptionsBuilder.Configure(configureOptions);
+			var options = OptionsBuilder.ConfigureAndValidate(configureOptions);
 
 			return builder.Then(ctx => new ThrottleMiddleware(options));
 		}
