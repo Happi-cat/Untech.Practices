@@ -6,6 +6,7 @@ using AsyncCommandEngine.Run.Commands;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Untech.AsyncCommandEngine;
+using Untech.AsyncCommandEngine.Builder;
 using Untech.AsyncCommandEngine.Features.Retrying;
 using Untech.AsyncCommandEngine.Features.Throttling;
 using Untech.AsyncCommandEngine.Features.WatchDog;
@@ -23,36 +24,52 @@ namespace AsyncCommandEngine.Run
 			var service = new EngineBuilder()
 				.LogTo(Logger())
 				.ReceiveRequestsFrom(Transports())
-				.ReadMetadataFrom(new IRequestMetadataProvider[]
+				.ReadMetadataFrom(MetadataProviders())
+				.DoSteps(Steps)
+				.BuildOrchestrator(options =>
 				{
-					new BuiltInRequestMetadataProvider(new[] {typeof(Program).Assembly}),
-					new RequestMetadataProvider
-					{
-						{"SomeRequest", new RequestMetadata {new ThrottleAttribute(2)}},
-						new RequestMetadata {new WatchDogTimeoutAttribute(2, 0, 0)}
-					}
-				})
-				.Then(builder => new DemoMiddleware(builder.GetLogger()))
-				.Then(builder =>
-				{
-					var logger = builder.GetLogger("Metrics");
-					return (ctx, next) => MetricsMiddleware(ctx, next, logger);
-				})
-				.ThenRetry(new RetryPolicy(new[] {typeof(TimeoutException)}))
-				.ThenThrottling(new ThrottleOptions {DefaultRunAtOnceInGroup = 2})
-				.ThenWatchDog(new WatchDogOptions {DefaultTimeout = TimeSpan.FromSeconds(10)})
-				.BuildOrchestrator(
-					builder => new CqrsStrategy(builder.GetLogger("Handlers")),
-					new OrchestratorOptions
-					{
-						Warps = 10, RequestsPerWarp = 10, SlidingStep = TimeSpan.FromSeconds(1), SlidingRadius = 5
-					});
+					options.Warps = 10;
+					options.RequestsPerWarp = 10;
+					options.SlidingStep = TimeSpan.FromSeconds(1);
+					options.SlidingRadius = 5;
+				});
 
 			service.StartAsync();
 
 			Console.ReadKey();
 
 			service.StopAsync(TimeSpan.Zero).ConfigureAwait(false).GetAwaiter().GetResult();
+		}
+
+		private static void Steps(MiddlewareCollection steps)
+		{
+			steps
+				.Then(builder => new DemoMiddleware(builder.GetLogger()))
+				.Then(builder =>
+				{
+					var logger = builder.GetLogger("Metrics");
+					return (ctx, next) => MetricsMiddleware(ctx, next, logger);
+				})
+				.ThenRetry(new RetryPolicy(new[] { typeof(TimeoutException) }))
+				.ThenThrottling(options =>
+				{
+					options.DefaultRunAtOnceInGroup = 2;
+				})
+				.ThenWatchDog(options =>
+				{
+					options.DefaultTimeout = TimeSpan.FromSeconds(10);
+				})
+				.Final(builder => new CqrsStrategy(builder.GetLogger("Handlers")));
+		}
+
+		private static IEnumerable<IRequestMetadataProvider> MetadataProviders()
+		{
+			yield return new BuiltInRequestMetadataProvider(typeof(Program).Assembly);
+			yield return new RequestMetadataProvider
+			{
+				{ "SomeRequest", new RequestMetadata { new ThrottleAttribute(2) } },
+				new RequestMetadata { new WatchDogTimeoutAttribute(2, 0, 0) }
+			};
 		}
 
 		private static ILoggerFactory Logger()
@@ -71,11 +88,11 @@ namespace AsyncCommandEngine.Run
 		private static IEnumerable<DemoTransport> Transports()
 		{
 			// bare
-			yield return new DemoTransport(new[] {new CompositeCommand(),});
+			yield return new DemoTransport(new[] { new CompositeCommand(), });
 			//throw
 			yield return new DemoTransport(new[]
 			{
-				new ThrowCommand(), new ThrowCommand {Error = new TimeoutException()},
+				new ThrowCommand(), new ThrowCommand { Error = new TimeoutException() },
 			});
 			// delays
 			yield return new DemoTransport(new[]
@@ -83,19 +100,22 @@ namespace AsyncCommandEngine.Run
 				new DelayCommand(TimeSpan.FromSeconds(2)), new DelayCommand(TimeSpan.FromMinutes(2)),
 				new DelayCommand(TimeSpan.FromSeconds(20))
 				{
-					Meta = new List<Attribute> {new WatchDogTimeoutAttribute(30)}
+					Meta = new List<Attribute> { new WatchDogTimeoutAttribute(30) }
 				},
 			});
 			// combined
 			yield return new DemoTransport(new[]
 			{
-				new CompositeCommand {Delay = new DelayCommand(TimeSpan.FromSeconds(2)),},
-				new CompositeCommand {Delay = new DelayCommand(TimeSpan.FromMinutes(2)),},
+				new CompositeCommand { Delay = new DelayCommand(TimeSpan.FromSeconds(2)), },
+				new CompositeCommand { Delay = new DelayCommand(TimeSpan.FromMinutes(2)), },
 				new CompositeCommand
 				{
 					Delay = new DelayCommand(TimeSpan.FromSeconds(2)), Throw = new ThrowCommand()
 				},
-				new CompositeCommand {Delay = new DelayCommand(TimeSpan.FromMinutes(2)), Throw = new ThrowCommand()}
+				new CompositeCommand
+				{
+					Delay = new DelayCommand(TimeSpan.FromMinutes(2)), Throw = new ThrowCommand()
+				}
 			});
 		}
 

@@ -9,6 +9,11 @@ namespace Untech.AsyncCommandEngine.Features.Throttling
 	/// </summary>
 	public class ThrottleOptions : IValidatableObject
 	{
+		public ThrottleOptions()
+		{
+			RunAtOncePerGroups = new Dictionary<string, int>();
+		}
+
 		/// <summary>
 		/// Gets or sets amount of requests that can be run at the same time.
 		/// </summary>
@@ -24,7 +29,7 @@ namespace Untech.AsyncCommandEngine.Features.Throttling
 		/// Gets or sets key/value collection that contains information about requests that can be run at once in group.
 		/// Group is a throttling group or request.
 		/// </summary>
-		public ReadOnlyDictionary<string, int> RunAtOncePerGroups { get; set; }
+		public IDictionary<string, int> RunAtOncePerGroups { get; private set; }
 
 		public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
 		{

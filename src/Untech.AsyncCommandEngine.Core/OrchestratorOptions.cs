@@ -6,6 +6,14 @@ namespace Untech.AsyncCommandEngine
 {
 	public class OrchestratorOptions : IValidatableObject
 	{
+		public OrchestratorOptions()
+		{
+			Warps = 5;
+			RequestsPerWarp = 5;
+			SlidingRadius = 6;
+			SlidingStep = TimeSpan.FromSeconds(10);
+		}
+
 		[Range(1, 50)]
 		public int Warps { get; set; }
 

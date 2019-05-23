@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Untech.AsyncCommandEngine.Builder;
 using Untech.AsyncCommandEngine.Fakes;
 using Untech.AsyncCommandEngine.Metadata;
 using Untech.Practices.CQRS;
@@ -70,7 +71,9 @@ namespace Untech.AsyncCommandEngine.Processing
 
 		private static IRequestProcessor BuildProcessorForCqrsMiddlewareTest()
 		{
-			return new EngineBuilder().BuildProcessor(new FakeCqrsStrategy());
+			return new EngineBuilder()
+				.DoSteps(s => s.Final(new FakeCqrsStrategy()))
+				.BuildProcessor();
 		}
 
 		private static Context BuildContextForCqrsMiddlewareTest(object command)

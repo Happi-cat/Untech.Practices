@@ -1,5 +1,6 @@
 using System;
 using Microsoft.Extensions.Logging;
+using Untech.AsyncCommandEngine.Builder;
 
 namespace Untech.AsyncCommandEngine.Features.Debounce
 {
@@ -17,7 +18,7 @@ namespace Untech.AsyncCommandEngine.Features.Debounce
 		/// <exception cref="ArgumentNullException">
 		/// 	<paramref name="builder"/> or <paramref name="lastRunStore"/> is null.
 		/// </exception>
-		public static EngineBuilder ThenDebounce(this EngineBuilder builder,
+		public static MiddlewareCollection ThenDebounce(this MiddlewareCollection builder,
 			ILastRunStore lastRunStore)
 		{
 			if (builder == null) throw new ArgumentNullException(nameof(builder));

@@ -1,4 +1,5 @@
 using System;
+using Untech.AsyncCommandEngine.Builder;
 
 namespace Untech.AsyncCommandEngine.Features.Throttling
 {
@@ -15,9 +16,9 @@ namespace Untech.AsyncCommandEngine.Features.Throttling
 		/// <exception cref="ArgumentNullException">
 		/// 	<paramref name="builder"/> is null.
 		/// </exception>
-		public static EngineBuilder ThenThrottling(this EngineBuilder builder)
+		public static MiddlewareCollection ThenThrottling(this MiddlewareCollection builder)
 		{
-			return ThenThrottling(builder, new ThrottleOptions());
+			return ThenThrottling(builder, _ => {});
 		}
 
 		/// <summary>
@@ -29,12 +30,12 @@ namespace Untech.AsyncCommandEngine.Features.Throttling
 		/// <exception cref="ArgumentNullException">
 		/// 	<paramref name="builder"/> or <paramref name="options"/> is null.
 		/// </exception>
-		public static EngineBuilder ThenThrottling(this EngineBuilder builder, ThrottleOptions options)
+		public static MiddlewareCollection ThenThrottling(this MiddlewareCollection builder, Action<ThrottleOptions> configureOptions)
 		{
 			if (builder == null) throw new ArgumentNullException(nameof(builder));
-			if (options == null) throw new ArgumentNullException(nameof(options));
+			if (configureOptions == null) throw new ArgumentNullException(nameof(configureOptions));
 
-			builder.EnsureOptionsValid(options);
+			var options = OptionsBuilder.ConfigureAndValidate(configureOptions);
 
 			return builder.Then(ctx => new ThrottleMiddleware(options));
 		}

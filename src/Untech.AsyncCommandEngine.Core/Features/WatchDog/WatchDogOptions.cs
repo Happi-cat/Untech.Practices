@@ -10,6 +10,11 @@ namespace Untech.AsyncCommandEngine.Features.WatchDog
 	/// </summary>
 	public class WatchDogOptions : IValidatableObject
 	{
+		public WatchDogOptions()
+		{
+			TimeoutPerRequests = new Dictionary<string, TimeSpan>();
+		}
+
 		/// <summary>
 		/// Default timeout after which request should be cancelled.
 		/// Null is for disabled default timeout
@@ -19,7 +24,7 @@ namespace Untech.AsyncCommandEngine.Features.WatchDog
 		/// <summary>
 		/// Gets or sets key/values collection that contains custom timeouts for defined requests names.
 		/// </summary>
-		public ReadOnlyDictionary<string, TimeSpan> TimeoutPerRequests { get; set; }
+		public IDictionary<string, TimeSpan> TimeoutPerRequests { get; private set; }
 
 		public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
 		{

@@ -2,9 +2,9 @@ using Microsoft.Extensions.Logging;
 using Untech.AsyncCommandEngine.Metadata;
 using Untech.AsyncCommandEngine.Transports;
 
-namespace Untech.AsyncCommandEngine
+namespace Untech.AsyncCommandEngine.Builder
 {
-	public interface IEngineBuilderContext
+	public interface IBuilderContext
 	{
 		/// <summary>
 		/// Gets the instance of <see cref="ILoggerFactory"/> that was registered.
