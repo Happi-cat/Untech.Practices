@@ -9,7 +9,7 @@ namespace Untech.AsyncCommandEngine.Features.SimpleInjector
 {
 	public static class BuilderExtensions
 	{
-		public static MiddlewareCollection ThenSimpleInjector(this MiddlewareCollection collection, Container container)
+		public static PipelineBuilder ThenSimpleInjector(this PipelineBuilder collection, Container container)
 		{
 			return collection.Then(async (ctx, next) =>
 			{
@@ -21,7 +21,7 @@ namespace Untech.AsyncCommandEngine.Features.SimpleInjector
 			});
 		}
 
-		public static void FinalSimpleInjector(this MiddlewareCollection collection, Func<string, Type> requestFinder)
+		public static void FinalSimpleInjector(this PipelineBuilder collection, Func<string, Type> requestFinder)
 		{
 			collection.Final(new CqrsStrategy(requestFinder));
 		}

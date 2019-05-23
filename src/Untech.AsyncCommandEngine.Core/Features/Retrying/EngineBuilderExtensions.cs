@@ -5,7 +5,7 @@ namespace Untech.AsyncCommandEngine.Features.Retrying
 {
 	public static class EngineBuilderExtensions
 	{
-		public static MiddlewareCollection ThenRetry(this MiddlewareCollection builder, IRetryPolicy retryPolicy)
+		public static PipelineBuilder ThenRetry(this PipelineBuilder builder, IRetryPolicy retryPolicy)
 		{
 			if (builder == null) throw new ArgumentNullException(nameof(builder));
 			if (retryPolicy == null ) throw new ArgumentNullException(nameof(retryPolicy));

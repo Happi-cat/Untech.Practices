@@ -72,7 +72,7 @@ namespace Untech.AsyncCommandEngine.Processing
 		private static IRequestProcessor BuildProcessorForCqrsMiddlewareTest()
 		{
 			return new EngineBuilder()
-				.DoSteps(s => s.Final(new FakeCqrsStrategy()))
+				.Do(s => s.Final(new FakeCqrsStrategy()))
 				.BuildProcessor();
 		}
 

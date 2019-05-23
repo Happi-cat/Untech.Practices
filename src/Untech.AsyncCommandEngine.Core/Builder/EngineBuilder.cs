@@ -13,7 +13,7 @@ namespace Untech.AsyncCommandEngine.Builder
 	public class EngineBuilder : IBuilderContext, IEngineBuilder
 	{
 		private readonly Action<OrchestratorOptions> _configureOptions;
-		private readonly MiddlewareCollection _middlewareCollection;
+		private readonly PipelineBuilder _pipelineBuilder;
 
 		private ITransport _transport;
 		private ILoggerFactory _loggerFactory;
@@ -27,7 +27,7 @@ namespace Untech.AsyncCommandEngine.Builder
 
 		public EngineBuilder(Action<OrchestratorOptions> configureOptions)
 		{
-			_middlewareCollection = new MiddlewareCollection();
+			_pipelineBuilder = new PipelineBuilder();
 			_configureOptions = configureOptions;
 		}
 
@@ -64,9 +64,9 @@ namespace Untech.AsyncCommandEngine.Builder
 			return this;
 		}
 
-		public IEngineBuilder DoSteps(Action<MiddlewareCollection> configureProcessor)
+		public IEngineBuilder Do(Action<PipelineBuilder> configureProcessor)
 		{
-			configureProcessor(_middlewareCollection);
+			configureProcessor(_pipelineBuilder);
 
 			return this;
 		}
@@ -93,7 +93,7 @@ namespace Untech.AsyncCommandEngine.Builder
 		/// <returns></returns>
 		public IRequestProcessor BuildProcessor()
 		{
-			return new RequestProcessor(_middlewareCollection.BuildAll(this));
+			return new RequestProcessor(_pipelineBuilder.BuildAll(this));
 		}
 
 		/// <summary>

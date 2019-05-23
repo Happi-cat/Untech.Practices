@@ -16,7 +16,7 @@ namespace Untech.AsyncCommandEngine.Features.Throttling
 		/// <exception cref="ArgumentNullException">
 		/// 	<paramref name="builder"/> is null.
 		/// </exception>
-		public static MiddlewareCollection ThenThrottling(this MiddlewareCollection builder)
+		public static PipelineBuilder ThenThrottling(this PipelineBuilder builder)
 		{
 			return ThenThrottling(builder, _ => {});
 		}
@@ -30,7 +30,7 @@ namespace Untech.AsyncCommandEngine.Features.Throttling
 		/// <exception cref="ArgumentNullException">
 		/// 	<paramref name="builder"/> or <paramref name="options"/> is null.
 		/// </exception>
-		public static MiddlewareCollection ThenThrottling(this MiddlewareCollection builder, Action<ThrottleOptions> configureOptions)
+		public static PipelineBuilder ThenThrottling(this PipelineBuilder builder, Action<ThrottleOptions> configureOptions)
 		{
 			if (builder == null) throw new ArgumentNullException(nameof(builder));
 			if (configureOptions == null) throw new ArgumentNullException(nameof(configureOptions));

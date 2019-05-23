@@ -31,7 +31,7 @@ namespace AsyncCommandEngine.Run
 				.LogTo(Logger())
 				.ReceiveRequestsFrom(Transports())
 				.ReadMetadataFrom(MetadataProviders())
-				.DoSteps(Steps)
+				.Do(Steps)
 				.BuildOrchestrator();
 
 			service.StartAsync();
@@ -41,7 +41,7 @@ namespace AsyncCommandEngine.Run
 			service.StopAsync(TimeSpan.Zero).ConfigureAwait(false).GetAwaiter().GetResult();
 		}
 
-		private static void Steps(MiddlewareCollection steps)
+		private static void Steps(PipelineBuilder steps)
 		{
 			steps
 				.Then(builder => new DemoMiddleware(builder.GetLogger()))

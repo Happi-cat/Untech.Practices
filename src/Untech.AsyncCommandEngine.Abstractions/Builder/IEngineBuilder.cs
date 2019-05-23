@@ -29,7 +29,7 @@ namespace Untech.AsyncCommandEngine.Builder
 		/// <returns></returns>
 		IEngineBuilder ReadMetadataFrom(IRequestMetadataProvider provider);
 
-		IEngineBuilder DoSteps(Action<MiddlewareCollection> configureProcessor);
+		IEngineBuilder Do(Action<PipelineBuilder> configureProcessor);
 
 		/// <summary>
 		/// Returns constructed instance of the <see cref="IRequestProcessor"/>.

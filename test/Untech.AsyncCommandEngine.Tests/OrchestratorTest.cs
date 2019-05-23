@@ -31,7 +31,7 @@ namespace Untech.AsyncCommandEngine
 					options.SlidingStep = TimeSpan.FromMilliseconds(10);
 				})
 				.ReceiveRequestsFrom(transport)
-				.DoSteps(s => s.Final(cqrs))
+				.Do(s => s.Final(cqrs))
 				.BuildOrchestrator();
 
 			await orcherstator.StartAsync();

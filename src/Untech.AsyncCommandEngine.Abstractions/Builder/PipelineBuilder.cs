@@ -5,25 +5,26 @@ using Untech.AsyncCommandEngine.Processing;
 
 namespace Untech.AsyncCommandEngine.Builder
 {
-	public class MiddlewareCollection
+	public class PipelineBuilder
 	{
-		private readonly List<Func<IBuilderContext, IRequestProcessorMiddleware>> _middlewareCreators = new List<Func<IBuilderContext, IRequestProcessorMiddleware>>();
+		private readonly List<Func<IBuilderContext, IRequestProcessorMiddleware>> _creators = new List<Func<IBuilderContext, IRequestProcessorMiddleware>>();
 
 		/// <summary>
 		/// Registers middleware.
 		/// </summary>
 		/// <param name="creator">The function that creates <see cref="IRequestProcessorMiddleware"/>.</param>
 		/// <returns></returns>
-		public MiddlewareCollection Then(Func<IBuilderContext, IRequestProcessorMiddleware> creator)
+		public PipelineBuilder Then(Func<IBuilderContext, IRequestProcessorMiddleware> creator)
 		{
-			_middlewareCreators.Add(creator);
+			if (creator == null) throw new ArgumentNullException(nameof(creator));
+
+			_creators.Add(creator);
 			return this;
 		}
 
 		public IEnumerable<IRequestProcessorMiddleware> BuildAll(IBuilderContext context)
 		{
-			return _middlewareCreators
-				.Select(n => n.Invoke(context));
+			return _creators.Select(n => n.Invoke(context));
 		}
 	}
 }
