@@ -17,12 +17,6 @@ namespace Untech.AsyncCommandEngine.Metadata
 		}
 
 		[Fact]
-		public void Ctor_Fails_WhenArgumentIsNull()
-		{
-			Assert.Throws<ArgumentNullException>(() => new BuiltInRequestMetadataProvider(null));
-		}
-
-		[Fact]
 		public void Ctor_Completes_WhenArgumentIsEmpty()
 		{
 			var provider = new BuiltInRequestMetadataProvider(Enumerable.Empty<Assembly>());

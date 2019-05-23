@@ -64,7 +64,7 @@ namespace AsyncCommandEngine.Run
 
 		private static IEnumerable<IRequestMetadataProvider> MetadataProviders()
 		{
-			yield return new BuiltInRequestMetadataProvider(new[] { typeof(Program).Assembly });
+			yield return new BuiltInRequestMetadataProvider(typeof(Program).Assembly);
 			yield return new RequestMetadataProvider
 			{
 				{ "SomeRequest", new RequestMetadata { new ThrottleAttribute(2) } },

@@ -16,6 +16,11 @@ namespace Untech.AsyncCommandEngine.Metadata
 	{
 		private readonly IReadOnlyDictionary<string, IRequestMetadata> _requestsMetadata;
 
+		public BuiltInRequestMetadataProvider(Assembly assembly)
+			: this(new [] { assembly })
+		{
+		}
+
 		public BuiltInRequestMetadataProvider(IEnumerable<Assembly> assemblies)
 		{
 			if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
