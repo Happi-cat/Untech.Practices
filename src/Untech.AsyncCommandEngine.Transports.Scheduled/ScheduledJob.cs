@@ -42,12 +42,15 @@ namespace Untech.AsyncCommandEngine.Transports.Scheduled
 			return NextRun == null || NextRun <= DateTime.UtcNow;
 		}
 
-		public void UpdateNextRun()
+		public DateTime GetNewNextRun()
 		{
-			if (!IsEnabled()) return;
-
 			var now = DateTime.UtcNow;
-			while (NextRun == null || NextRun <= now) NextRun += Definition.Interval;
+			var nextRun = NextRun ?? now;
+
+			if (!IsEnabled()) return nextRun;
+
+			while (nextRun <= now) nextRun += Definition.Interval;
+			return nextRun;
 		}
 	}
 }

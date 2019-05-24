@@ -44,8 +44,7 @@ namespace Untech.AsyncCommandEngine.Transports.Scheduled
 			if (jobRequest == null) return;
 
 			var job = jobRequest.Job;
-			job.UpdateNextRun();
-			await _scheduledJobStore.SaveNextRun(job);
+			await _scheduledJobStore.SaveNextRun(job, job.GetNewNextRun());
 			await _scheduledJobStore.TrackResult(job, exception);
 		}
 	}
