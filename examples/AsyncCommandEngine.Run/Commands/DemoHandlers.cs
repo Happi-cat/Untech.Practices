@@ -14,7 +14,8 @@ namespace AsyncCommandEngine.Run.Commands
 	public class DemoHandlers :
 		ICommandHandler<CompositeCommand, Nothing>,
 		ICommandHandler<DelayCommand, Nothing>,
-		ICommandHandler<ThrowCommand, Nothing>
+		ICommandHandler<ThrowCommand, Nothing>,
+		ICommandHandler<HelloCommand, Nothing>
 	{
 		private readonly ILogger _logger;
 
@@ -36,6 +37,11 @@ namespace AsyncCommandEngine.Run.Commands
 				await HandleAsync(request.Throw, cancellationToken);
 			}
 
+			if (request.Hello != null)
+			{
+				await HandleAsync(request.Hello, cancellationToken);
+			}
+
 			_logger.LogInformation("Demo completed");
 			return Nothing.AtAll;
 		}
@@ -49,6 +55,13 @@ namespace AsyncCommandEngine.Run.Commands
 		public Task<Nothing> HandleAsync(ThrowCommand request, CancellationToken cancellationToken)
 		{
 			throw request.Error ?? new InvalidOperationException("Thrown");
+		}
+
+		public async Task<Nothing> HandleAsync(HelloCommand request, CancellationToken cancellationToken)
+		{
+			_logger.Log(LogLevel.Information, request.Message);
+
+			return Nothing.AtAll;
 		}
 	}
 }

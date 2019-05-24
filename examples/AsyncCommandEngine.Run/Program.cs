@@ -13,6 +13,8 @@ using Untech.AsyncCommandEngine.Features.WatchDog;
 using Untech.AsyncCommandEngine.Metadata;
 using Untech.AsyncCommandEngine.Metadata.Annotations;
 using Untech.AsyncCommandEngine.Processing;
+using Untech.AsyncCommandEngine.Transports;
+using Untech.AsyncCommandEngine.Transports.Scheduled;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace AsyncCommandEngine.Run
@@ -85,7 +87,7 @@ namespace AsyncCommandEngine.Run
 			return new LoggerFactory().AddSerilog(logger);
 		}
 
-		private static IEnumerable<DemoTransport> Transports()
+		private static IEnumerable<ITransport> Transports()
 		{
 			// bare
 			yield return new DemoTransport(new[] { new CompositeCommand(), });
@@ -117,6 +119,15 @@ namespace AsyncCommandEngine.Run
 					Delay = new DelayCommand(TimeSpan.FromMinutes(2)), Throw = new ThrowCommand()
 				}
 			});
+			yield return new ScheduledTransport(new InMemoryScheduledJobStore(new[]
+			{
+				new ScheduledJobDefinition
+				{
+					Interval = TimeSpan.FromMinutes(1),
+					Name = typeof(HelloCommand).FullName,
+					Body = "{\"Message\":\"Holla\"}"
+				}
+			}));
 		}
 
 		private static async Task MetricsMiddleware(Context ctx, RequestProcessorCallback next, ILogger logger)
