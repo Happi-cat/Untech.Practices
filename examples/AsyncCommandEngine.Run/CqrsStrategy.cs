@@ -15,7 +15,7 @@ namespace AsyncCommandEngine.Run
 
 		private readonly IReadOnlyList<Type> _types = new List<Type>
 		{
-			typeof(CompositeCommand), typeof(DelayCommand), typeof(ThrowCommand)
+			typeof(CompositeCommand), typeof(DelayCommand), typeof(ThrowCommand),typeof(HelloCommand)
 		};
 
 		public CqrsStrategy(ILogger logger)

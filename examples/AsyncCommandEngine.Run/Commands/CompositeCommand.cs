@@ -6,5 +6,6 @@ namespace AsyncCommandEngine.Run.Commands
 	{
 		public DelayCommand Delay { get; set; }
 		public ThrowCommand Throw { get; set; }
+		public HelloCommand Hello { get; set; }
 	}
 }
