@@ -8,12 +8,14 @@ namespace Untech.AsyncCommandEngine.Transports.Scheduled
 {
 	public class InMemoryScheduledJobStore : IScheduledJobStore
 	{
-		private readonly IReadOnlyCollection<ScheduledJobDefinition> _jobDefinitions;
+		private readonly IReadOnlyDictionary<string, ScheduledJobDefinition> _jobDefinitions;
 		private readonly ConcurrentDictionary<string, DateTime> _nextRuns;
 
 		public InMemoryScheduledJobStore(IEnumerable<ScheduledJobDefinition> jobDefinitions)
 		{
-			_jobDefinitions = jobDefinitions.ToList();
+			_jobDefinitions = jobDefinitions
+				.Select((n, i) => (item: n, id: i))
+				.ToDictionary(n => n.id.ToString(), n => n.item);
 			_nextRuns = new ConcurrentDictionary<string, DateTime>();
 		}
 
@@ -21,14 +23,14 @@ namespace Untech.AsyncCommandEngine.Transports.Scheduled
 		{
 			return Task.FromResult<IEnumerable<ScheduledJob>>(
 				_jobDefinitions
-					.Select(jd => new ScheduledJob(jd, GetNextRun(jd)))
+					.Select(jd => new ScheduledJob(jd.Key, jd.Value, GetNextRun(jd.Key)))
 					.ToList()
 			);
 		}
 
 		public Task SaveNextRun(ScheduledJob job, DateTime nextRun)
 		{
-			_nextRuns.AddOrUpdate(job.Definition.Name, nextRun, (s, time) => nextRun);
+			_nextRuns.AddOrUpdate(job.Id, nextRun, (s, time) => nextRun);
 
 			return Task.CompletedTask;
 		}
@@ -38,9 +40,9 @@ namespace Untech.AsyncCommandEngine.Transports.Scheduled
 			return Task.CompletedTask;
 		}
 
-		private DateTime GetNextRun(ScheduledJobDefinition jobDefinition)
+		private DateTime GetNextRun(string id)
 		{
-			return _nextRuns.GetOrAdd(jobDefinition.Name, DateTime.UtcNow);
+			return _nextRuns.GetOrAdd(id, DateTime.UtcNow);
 		}
 	}
 }

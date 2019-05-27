@@ -8,11 +8,14 @@ namespace Untech.AsyncCommandEngine.Transports.Scheduled
 		{
 		}
 
-		public ScheduledJob(ScheduledJobDefinition definition, DateTime? nextRun = null)
+		public ScheduledJob(string id, ScheduledJobDefinition definition, DateTime? nextRun = null)
 		{
+			Id = id;
 			Definition = definition;
 			NextRun = nextRun;
 		}
+
+		public string Id { get; private set; }
 
 		public ScheduledJobDefinition Definition { get; private set; }
 

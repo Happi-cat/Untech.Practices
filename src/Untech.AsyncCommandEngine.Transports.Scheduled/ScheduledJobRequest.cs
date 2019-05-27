@@ -14,7 +14,7 @@ namespace Untech.AsyncCommandEngine.Transports.Scheduled
 			Definition = job.Definition ?? throw new ArgumentNullException(nameof(job.Definition));
 			Name = job.Definition.Name ?? throw new ArgumentNullException(nameof(job.Definition.Name));
 
-			Identifier = job.Definition.Name + ":" + job.NextRun;
+			Identifier = job.Id + ":" + job.Definition.Name + ":" + job.NextRun;
 			Created = job.NextRun ?? DateTime.UtcNow;
 			Attributes = Definition.Attributes ?? new Dictionary<string, string>();
 		}
