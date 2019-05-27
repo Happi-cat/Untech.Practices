@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
+using Untech.AsyncCommandEngine.Metadata.Annotations;
 using Untech.Practices.CQRS.Handlers;
 
 namespace Untech.AsyncCommandEngine.Metadata
@@ -106,12 +107,12 @@ namespace Untech.AsyncCommandEngine.Metadata
 		{
 			private static readonly TypeInfo s_metadataContainerType = typeof(TContainer).GetTypeInfo();
 
-			public TAttr GetAttribute<TAttr>() where TAttr : Attribute
+			public TAttr GetAttribute<TAttr>() where TAttr : MetadataAttribute
 			{
 				return Attributes<TAttr>.All.SingleOrDefault();
 			}
 
-			public IEnumerable<TAttr> GetAttributes<TAttr>() where TAttr : Attribute
+			public IEnumerable<TAttr> GetAttributes<TAttr>() where TAttr : MetadataAttribute
 			{
 				return Attributes<TAttr>.All;
 			}

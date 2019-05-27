@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Untech.AsyncCommandEngine.Metadata.Annotations;
 
 namespace Untech.AsyncCommandEngine.Metadata
 {
@@ -16,13 +17,13 @@ namespace Untech.AsyncCommandEngine.Metadata
 		public static readonly IRequestMetadata Instance = new NullRequestMetadata();
 
 		/// <inheritdoc />
-		public TAttr GetAttribute<TAttr>() where TAttr : Attribute
+		public TAttr GetAttribute<TAttr>() where TAttr : MetadataAttribute
 		{
 			return default;
 		}
 
 		/// <inheritdoc />
-		public IEnumerable<TAttr> GetAttributes<TAttr>() where TAttr : Attribute
+		public IEnumerable<TAttr> GetAttributes<TAttr>() where TAttr : MetadataAttribute
 		{
 			return Enumerable.Empty<TAttr>();
 		}

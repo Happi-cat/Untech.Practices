@@ -1,15 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Untech.AsyncCommandEngine.Metadata.Annotations;
 
 namespace Untech.AsyncCommandEngine.Fakes
 {
 	public class FakeRequest : Request
 	{
 		private readonly object _body;
-		private readonly IEnumerable<Attribute> _meta;
+		private readonly IEnumerable<MetadataAttribute> _meta;
 
-		public FakeRequest(string name = null, object body = null, DateTimeOffset? created = null, IEnumerable<Attribute> meta = null)
+		public FakeRequest(string name = null, object body = null, DateTimeOffset? created = null, IEnumerable<MetadataAttribute> meta = null)
 		{
 			_body = body;
 			_meta = meta;
@@ -34,7 +35,7 @@ namespace Untech.AsyncCommandEngine.Fakes
 			throw new NotImplementedException();
 		}
 
-		public override IEnumerable<Attribute> GetAttachedMetadata()
+		public override IEnumerable<MetadataAttribute> GetAttachedMetadata()
 		{
 			return _meta ?? base.GetAttachedMetadata();
 		}

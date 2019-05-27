@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.Serialization;
 
 namespace Untech.AsyncCommandEngine.Metadata.Annotations
 {
@@ -6,8 +7,13 @@ namespace Untech.AsyncCommandEngine.Metadata.Annotations
 	/// Sets the flag that current requests belongs to the specified throttle group.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class)]
-	public sealed class ThrottleGroupAttribute : Attribute
+	[DataContract]
+	public sealed class ThrottleGroupAttribute : MetadataAttribute
 	{
+		private ThrottleGroupAttribute()
+		{
+		}
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ThrottleGroupAttribute" /> with the predefined <paramref name="group"/>.
 		/// </summary>
@@ -20,6 +26,7 @@ namespace Untech.AsyncCommandEngine.Metadata.Annotations
 		/// <summary>
 		/// Gets the name of throttle group.
 		/// </summary>
+		[DataMember]
 		public string Group { get; private set; }
 	}
 }

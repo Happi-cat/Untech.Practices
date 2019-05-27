@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.Serialization;
 
 namespace Untech.AsyncCommandEngine.Metadata.Annotations
 {
@@ -6,8 +7,14 @@ namespace Untech.AsyncCommandEngine.Metadata.Annotations
 	/// Represents attribute for custom options.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-	public sealed class OptionAttribute : Attribute
+	[DataContract]
+	public sealed class OptionAttribute : MetadataAttribute
 	{
+		private OptionAttribute()
+		{
+
+		}
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OptionAttribute"/>
 		/// with the specified <paramref name="key"/> and <paramref name="value"/>
@@ -23,11 +30,14 @@ namespace Untech.AsyncCommandEngine.Metadata.Annotations
 		/// <summary>
 		/// Gets the specified option key.
 		/// </summary>
+		[DataMember]
 		public string Key { get; private set; }
 
 		/// <summary>
 		/// Gets the specified option value.
 		/// </summary>
+
+		[DataMember]
 		public object Value { get; private set; }
 	}
 }

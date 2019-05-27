@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Untech.AsyncCommandEngine.Metadata.Annotations;
 
 namespace Untech.AsyncCommandEngine.Metadata
 {
@@ -31,13 +32,13 @@ namespace Untech.AsyncCommandEngine.Metadata
 		}
 
 		/// <inheritdoc />
-		public TAttr GetAttribute<TAttr>() where TAttr : Attribute
+		public TAttr GetAttribute<TAttr>() where TAttr : MetadataAttribute
 		{
 			return GetAttributes<TAttr>().SingleOrDefault();
 		}
 
 		/// <inheritdoc />
-		public IEnumerable<TAttr> GetAttributes<TAttr>() where TAttr : Attribute
+		public IEnumerable<TAttr> GetAttributes<TAttr>() where TAttr : MetadataAttribute
 		{
 			return _attributes.OfType<TAttr>();
 		}

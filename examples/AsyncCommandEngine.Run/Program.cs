@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using AsyncCommandEngine.Run.Commands;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Serilog;
 using Untech.AsyncCommandEngine;
 using Untech.AsyncCommandEngine.Builder;
@@ -102,7 +103,7 @@ namespace AsyncCommandEngine.Run
 				new DelayCommand(TimeSpan.FromSeconds(2)), new DelayCommand(TimeSpan.FromMinutes(2)),
 				new DelayCommand(TimeSpan.FromSeconds(20))
 				{
-					Meta = new List<Attribute> { new WatchDogTimeoutAttribute(30) }
+					Meta = new List<MetadataAttribute> { new WatchDogTimeoutAttribute(30) }
 				},
 			});
 			// combined

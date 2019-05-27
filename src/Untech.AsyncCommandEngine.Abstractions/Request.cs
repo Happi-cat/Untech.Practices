@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Untech.AsyncCommandEngine.Metadata.Annotations;
 using Untech.AsyncCommandEngine.Transports;
 
 namespace Untech.AsyncCommandEngine
@@ -59,9 +60,9 @@ namespace Untech.AsyncCommandEngine
 		/// Gets metadata attributes that were attached directly to that request.
 		/// </summary>
 		/// <returns>The collection of metadata attributes.</returns>
-		public virtual IEnumerable<Attribute> GetAttachedMetadata()
+		public virtual IEnumerable<MetadataAttribute> GetAttachedMetadata()
 		{
-			return Enumerable.Empty<Attribute>();
+			return Enumerable.Empty<MetadataAttribute>();
 		}
 	}
 }

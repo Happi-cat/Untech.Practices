@@ -53,7 +53,7 @@ namespace Untech.AsyncCommandEngine.Metadata
 		{
 			var metadata = _provider.GetMetadata(_commandName);
 
-			Assert.Null(metadata.GetAttribute<ObsoleteAttribute>());
+			Assert.Null(metadata.GetAttribute<FakeAttribute>());
 		}
 
 		[Fact]
@@ -75,5 +75,7 @@ namespace Untech.AsyncCommandEngine.Metadata
 
 			Assert.NotNull(attribute);
 		}
+
+		private class FakeAttribute : MetadataAttribute { }
 	}
 }

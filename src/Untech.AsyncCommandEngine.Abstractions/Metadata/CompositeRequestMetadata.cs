@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Untech.AsyncCommandEngine.Metadata.Annotations;
 
 namespace Untech.AsyncCommandEngine.Metadata
 {
@@ -24,7 +25,7 @@ namespace Untech.AsyncCommandEngine.Metadata
 		}
 
 		/// <inheritdoc />
-		public TAttr GetAttribute<TAttr>() where TAttr : Attribute
+		public TAttr GetAttribute<TAttr>() where TAttr : MetadataAttribute
 		{
 			return _metadata
 				.Select(n => n.GetAttribute<TAttr>())
@@ -32,7 +33,7 @@ namespace Untech.AsyncCommandEngine.Metadata
 		}
 
 		/// <inheritdoc />
-		public IEnumerable<TAttr> GetAttributes<TAttr>() where TAttr : Attribute
+		public IEnumerable<TAttr> GetAttributes<TAttr>() where TAttr : MetadataAttribute
 		{
 			return _metadata.SelectMany(n => n.GetAttributes<TAttr>());
 		}

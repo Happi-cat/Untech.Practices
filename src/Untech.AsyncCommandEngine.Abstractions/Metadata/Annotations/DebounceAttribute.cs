@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.Serialization;
 
 namespace Untech.AsyncCommandEngine.Metadata.Annotations
 {
@@ -6,7 +7,8 @@ namespace Untech.AsyncCommandEngine.Metadata.Annotations
 	/// Sets flag for current request that it can be debounced.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class)]
-	public sealed class DebounceAttribute : Attribute
+	[DataContract]
+	public sealed class DebounceAttribute : MetadataAttribute
 	{
 	}
 }
