@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.Serialization;
 
 namespace Untech.AsyncCommandEngine.Metadata.Annotations
 {
@@ -6,8 +7,13 @@ namespace Untech.AsyncCommandEngine.Metadata.Annotations
 	/// Sets the flag that current request should be controlled by WatchDog and should be cancel after <see cref="Timeout"/>.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class)]
-	public sealed class WatchDogTimeoutAttribute : Attribute
+	[DataContract]
+	public sealed class WatchDogTimeoutAttribute : MetadataAttribute
 	{
+		private WatchDogTimeoutAttribute()
+		{
+		}
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="WatchDogTimeoutAttribute"/> with the defined seconds.
 		/// </summary>
@@ -41,15 +47,18 @@ namespace Untech.AsyncCommandEngine.Metadata.Annotations
 		/// <summary>
 		/// Gets the amount of hours.
 		/// </summary>
+		[DataMember]
 		public int Hours { get; private set; }
 		/// <summary>
 		/// Gets the amount of minutes.
 		/// </summary>
+		[DataMember]
 		public int Minutes { get; private set; }
 
 		/// <summary>
 		/// Gets the amount of seconds.
 		/// </summary>
+		[DataMember]
 		public int Seconds { get; private set; }
 
 		/// <summary>

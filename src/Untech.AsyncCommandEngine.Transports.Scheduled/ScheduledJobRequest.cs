@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Newtonsoft.Json;
+using Untech.AsyncCommandEngine.Metadata.Annotations;
 
 namespace Untech.AsyncCommandEngine.Transports.Scheduled
 {
@@ -37,7 +38,7 @@ namespace Untech.AsyncCommandEngine.Transports.Scheduled
 			return Definition.GetRawBody();
 		}
 
-		public override IEnumerable<Attribute> GetAttachedMetadata()
+		public override IEnumerable<MetadataAttribute> GetAttachedMetadata()
 		{
 			return Definition.Metadata ?? base.GetAttachedMetadata();
 		}

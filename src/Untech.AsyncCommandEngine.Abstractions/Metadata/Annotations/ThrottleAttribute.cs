@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.Serialization;
 
 namespace Untech.AsyncCommandEngine.Metadata.Annotations
 {
@@ -6,8 +7,14 @@ namespace Untech.AsyncCommandEngine.Metadata.Annotations
 	/// Sets flag that current request should be throttled and cannot be run more than <see cref="RunAtOnce"/>.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class)]
-	public sealed class ThrottleAttribute : Attribute
+	[DataContract]
+	public sealed class ThrottleAttribute : MetadataAttribute
 	{
+		private ThrottleAttribute()
+		{
+
+		}
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ThrottleAttribute"/> with the specified <paramref name="runAtOnce"/>.
 		/// </summary>
@@ -20,6 +27,7 @@ namespace Untech.AsyncCommandEngine.Metadata.Annotations
 		/// <summary>
 		/// Gets the number of max concurrent requests that can be run at once.
 		/// </summary>
+		[DataMember]
 		public int RunAtOnce { get; private set; }
 	}
 }

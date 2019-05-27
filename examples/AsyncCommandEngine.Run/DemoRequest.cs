@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using Newtonsoft.Json;
 using Untech.AsyncCommandEngine;
+using Untech.AsyncCommandEngine.Metadata.Annotations;
 
 namespace AsyncCommandEngine.Run
 {
@@ -28,7 +29,7 @@ namespace AsyncCommandEngine.Run
 		public override DateTimeOffset Created { get; }
 		public override IDictionary<string, string> Attributes { get; }
 
-		public ReadOnlyCollection<Attribute> AttachedMetadata { get; set; }
+		public ReadOnlyCollection<MetadataAttribute> AttachedMetadata { get; set; }
 
 		public override object GetBody(Type requestType)
 		{
@@ -41,7 +42,7 @@ namespace AsyncCommandEngine.Run
 			return new MemoryStream(Encoding.UTF8.GetBytes(body));
 		}
 
-		public override IEnumerable<Attribute> GetAttachedMetadata()
+		public override IEnumerable<MetadataAttribute> GetAttachedMetadata()
 		{
 			return AttachedMetadata ?? base.GetAttachedMetadata();
 		}

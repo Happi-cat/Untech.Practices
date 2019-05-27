@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
 using Newtonsoft.Json;
+using Untech.AsyncCommandEngine.Metadata.Annotations;
 
 namespace Untech.AsyncCommandEngine.Transports.Scheduled
 {
@@ -17,7 +18,7 @@ namespace Untech.AsyncCommandEngine.Transports.Scheduled
 		public IDictionary<string, string> Attributes { get; set; }
 
 		[DataMember]
-		public IEnumerable<Attribute> Metadata { get; set; }
+		public IEnumerable<MetadataAttribute> Metadata { get; set; }
 
 		[DataMember]
 		public TimeSpan Interval { get; set; }
