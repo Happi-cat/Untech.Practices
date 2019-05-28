@@ -5,7 +5,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 using Untech.Practices.CQRS;
-using Untech.Practices.CQRS.Dispatching;
 
 namespace Untech.AsyncCommandEngine.Processing
 {

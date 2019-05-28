@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using AsyncCommandEngine.Run.Commands;
 using Microsoft.Extensions.Logging;
 using Untech.AsyncCommandEngine;
@@ -13,14 +14,15 @@ namespace AsyncCommandEngine.Run
 	{
 		private readonly ILogger _logger;
 
-		private readonly IReadOnlyList<Type> _types = new List<Type>
-		{
-			typeof(CompositeCommand), typeof(DelayCommand), typeof(ThrowCommand),typeof(HelloCommand)
-		};
+		private readonly IReadOnlyList<Type> _types;
 
 		public CqrsStrategy(ILogger logger)
 		{
+			var demoType = typeof(DemoCommandBase);
 			_logger = logger;
+			_types = typeof(CqrsStrategy).Assembly.GetTypes()
+				.Where(t => demoType.IsAssignableFrom(t))
+				.ToList();
 		}
 
 		public T ResolveOne<T>() where T : class
@@ -35,7 +37,8 @@ namespace AsyncCommandEngine.Run
 
 		public Type FindRequestType(string requestName)
 		{
-			return _types.FirstOrDefault(t => t.FullName == requestName) ?? throw new ArgumentException($"There is no {requestName}");
+			return _types.FirstOrDefault(t => t.FullName == requestName)
+				?? throw new ArgumentException($"There is no {requestName}");
 		}
 
 		public IDispatcher GetDispatcher(Context context)
