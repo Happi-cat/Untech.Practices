@@ -94,7 +94,7 @@ namespace AsyncCommandEngine.Run
 			//throw
 			yield return new DemoTransport(new[]
 			{
-				new ThrowCommand(), new ThrowCommand { Error = new TimeoutException() },
+				new ThrowCommand(), new ThrowCommand { Type = nameof(TimeoutException) }
 			});
 			// delays
 			yield return new DemoTransport(new[]
