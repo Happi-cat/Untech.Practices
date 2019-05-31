@@ -11,7 +11,7 @@ using Untech.Practices.CQRS.Handlers;
 
 namespace MyBudgetPlan.Infrastructure
 {
-	public class MonthLogQueryService : IQueryAsyncHandler<MonthLogQuery, MonthLog>
+	public class MonthLogQueryService : IQueryHandler<MonthLogQuery, MonthLog>
 	{
 		private readonly IMoneyCalculator _moneyCalculator;
 		private readonly IQueryDispatcher _queryDispatcher;

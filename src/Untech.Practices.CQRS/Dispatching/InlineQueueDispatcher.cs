@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Untech.Practices.CQRS.Dispatching
 {
@@ -15,19 +17,21 @@ namespace Untech.Practices.CQRS.Dispatching
 		}
 
 		/// <inheritdoc />
-		public void Enqueue<TResponse>(ICommand<TResponse> command, QueueOptions options = null)
+		public Task EnqueueAsync<TResponse>(ICommand<TResponse> command, CancellationToken cancellationToken = default,
+			QueueOptions options = null)
 		{
 			if (command == null) throw new ArgumentNullException(nameof(command));
 
-			_parent.Process(command);
+			return _parent.ProcessAsync(command, cancellationToken);
 		}
 
 		/// <inheritdoc />
-		public void Enqueue(INotification notification, QueueOptions options = null)
+		public Task EnqueueAsync(INotification notification, CancellationToken cancellationToken,
+			QueueOptions options = null)
 		{
 			if (notification == null) throw new ArgumentNullException(nameof(notification));
 
-			_parent.Publish(notification);
+			return _parent.PublishAsync(notification, cancellationToken);
 		}
 	}
 }

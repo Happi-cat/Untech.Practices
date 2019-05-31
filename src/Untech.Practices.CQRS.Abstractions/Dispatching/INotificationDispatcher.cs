@@ -14,12 +14,6 @@ namespace Untech.Practices.CQRS.Dispatching
 	public interface INotificationDispatcher
 	{
 		/// <summary>
-		///     Publishes the incoming <paramref name="notification" />.
-		/// </summary>
-		/// <param name="notification">The command to be published.</param>
-		void Publish(INotification notification);
-
-		/// <summary>
 		///     Publishes asynchronously the incoming <paramref name="notification" />.
 		/// </summary>
 		/// <param name="notification">The command to be published.</param>

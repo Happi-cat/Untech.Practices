@@ -16,19 +16,19 @@ using Untech.Practices.UserContext;
 
 namespace MyBudgetPlan.Infrastructure
 {
-	public class ReportsQueryService : IQueryAsyncHandler<MonthlyBudgetReportQuery, MonthlyBudgetReport>,
-		IQueryAsyncHandler<AnnualBudgetReportQuery, AnnualBudgetReport>,
-		INotificationAsyncHandler<MonthLogChanged>
+	public class ReportsQueryService : IQueryHandler<MonthlyBudgetReportQuery, MonthlyBudgetReport>,
+		IQueryHandler<AnnualBudgetReportQuery, AnnualBudgetReport>,
+		INotificationHandler<MonthLogChanged>
 	{
 		private readonly IUserContext _userContext;
 		private readonly IMoneyCalculator _moneyCalculator;
 		private readonly IQueryDispatcher _queryDispatcher;
-		private readonly IAsyncCacheStorage _cacheStorage;
+		private readonly ICacheStorage _cacheStorage;
 
 		public ReportsQueryService(IUserContext userContext,
 			IMoneyCalculator moneyCalculator,
 			IQueryDispatcher queryDispatcher,
-			IAsyncCacheStorage cacheStorage)
+			ICacheStorage cacheStorage)
 		{
 			_userContext = userContext;
 			_moneyCalculator = moneyCalculator;

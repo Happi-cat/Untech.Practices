@@ -8,14 +8,14 @@ using Untech.Practices.DataStorage;
 
 namespace MyBudgetPlan.Infrastructure
 {
-	public class TransactionService : ICommandAsyncHandler<CreateTransaction, Transaction>,
-		ICommandAsyncHandler<UpdateTransaction, Transaction>,
-		ICommandAsyncHandler<DeleteTransaction, Nothing>
+	public class TransactionService : ICommandHandler<CreateTransaction, Transaction>,
+		ICommandHandler<UpdateTransaction, Transaction>,
+		ICommandHandler<DeleteTransaction, Nothing>
 	{
-		private readonly IAsyncDataStorage<Transaction> _dataStorage;
+		private readonly IDataStorage<Transaction> _dataStorage;
 		private readonly INotificationDispatcher _notificationDispatcher;
 
-		public TransactionService(IAsyncDataStorage<Transaction> dataStorage,
+		public TransactionService(IDataStorage<Transaction> dataStorage,
 			INotificationDispatcher notificationDispatcher)
 		{
 			_dataStorage = dataStorage;
@@ -34,7 +34,7 @@ namespace MyBudgetPlan.Infrastructure
 
 		public async Task<Transaction> HandleAsync(UpdateTransaction request, CancellationToken cancellationToken)
 		{
-			var item = await _dataStorage.FindAsync(request.Key, cancellationToken);
+			var item = await _dataStorage.GetAsync(request.Key, cancellationToken);
 
 			item.Update(request);
 
@@ -46,7 +46,7 @@ namespace MyBudgetPlan.Infrastructure
 
 		public async Task<Nothing> HandleAsync(DeleteTransaction request, CancellationToken cancellationToken)
 		{
-			var item = await _dataStorage.FindAsync(request.Key, cancellationToken);
+			var item = await _dataStorage.GetAsync(request.Key, cancellationToken);
 
 			await _dataStorage.DeleteAsync(item, cancellationToken);
 

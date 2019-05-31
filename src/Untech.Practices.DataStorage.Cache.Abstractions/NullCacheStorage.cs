@@ -6,7 +6,7 @@ namespace Untech.Practices.DataStorage.Cache
 	/// <summary>
 	///     Represents dummy cache storage.
 	/// </summary>
-	public sealed class NullCacheStorage : ICacheStorage, IAsyncCacheStorage
+	public sealed class NullCacheStorage : ICacheStorage
 	{
 		/// <inheritdoc />
 		public Task<CacheValue<T>> GetAsync<T>(string key,
@@ -25,22 +25,6 @@ namespace Untech.Practices.DataStorage.Cache
 		public Task DropAsync(string key, CancellationToken cancellationToken = default)
 		{
 			return Task.FromResult(0);
-		}
-
-		/// <inheritdoc />
-		public CacheValue<T> Get<T>(string key)
-		{
-			return default;
-		}
-
-		/// <inheritdoc />
-		public void Set(string key, object value)
-		{
-		}
-
-		/// <inheritdoc />
-		public void Drop(string key)
-		{
 		}
 	}
 }

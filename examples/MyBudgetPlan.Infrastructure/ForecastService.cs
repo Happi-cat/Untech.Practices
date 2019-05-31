@@ -8,14 +8,14 @@ using Untech.Practices.DataStorage;
 
 namespace MyBudgetPlan.Infrastructure
 {
-	public class ForecastService : ICommandAsyncHandler<CreateForecast, Forecast>,
-		ICommandAsyncHandler<UpdateForecast, Forecast>,
-		ICommandAsyncHandler<DeleteForecast, Nothing>
+	public class ForecastService : ICommandHandler<CreateForecast, Forecast>,
+		ICommandHandler<UpdateForecast, Forecast>,
+		ICommandHandler<DeleteForecast, Nothing>
 	{
-		private readonly IAsyncDataStorage<Forecast> _dataStorage;
+		private readonly IDataStorage<Forecast> _dataStorage;
 		private readonly INotificationDispatcher _notificationDispatcher;
 
-		public ForecastService(IAsyncDataStorage<Forecast> dataStorage,
+		public ForecastService(IDataStorage<Forecast> dataStorage,
 			INotificationDispatcher notificationDispatcher)
 		{
 			_dataStorage = dataStorage;
@@ -34,7 +34,7 @@ namespace MyBudgetPlan.Infrastructure
 
 		public async Task<Forecast> HandleAsync(UpdateForecast request, CancellationToken cancellationToken)
 		{
-			var item = await _dataStorage.FindAsync(request.Key, cancellationToken);
+			var item = await _dataStorage.GetAsync(request.Key, cancellationToken);
 
 			item.Update(request);
 
@@ -46,7 +46,7 @@ namespace MyBudgetPlan.Infrastructure
 
 		public async Task<Nothing> HandleAsync(DeleteForecast request, CancellationToken cancellationToken)
 		{
-			var item = await _dataStorage.FindAsync(request.Key, cancellationToken);
+			var item = await _dataStorage.GetAsync(request.Key, cancellationToken);
 
 			await _dataStorage.DeleteAsync(item, cancellationToken);
 

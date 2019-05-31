@@ -1,4 +1,6 @@
-﻿namespace Untech.Practices.Notifications.Sms
+﻿using System.Threading.Tasks;
+
+namespace Untech.Practices.Notifications.Sms
 {
 	/// <summary>
 	///     Represents dummy sms queue.
@@ -6,8 +8,9 @@
 	public class NullSmsQueue : ISmsQueue
 	{
 		/// <inheritdoc />
-		public void Enqueue(Sms sms)
+		public Task EnqueueAsync(Sms sms)
 		{
+			return Task.FromResult(0);
 		}
 	}
 }

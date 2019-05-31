@@ -8,18 +8,20 @@ namespace Untech.Practices.CQRS.Handlers
 	/// </summary>
 	/// <typeparam name="TIn">The type of notification to be handled.</typeparam>
 	public sealed class NullNotificationHandler<TIn> :
-		INotificationHandler<TIn>, INotificationAsyncHandler<TIn>
+		INotificationHandler<TIn>
 		where TIn : INotification
 	{
+		public static readonly NullNotificationHandler<TIn> Instance = new NullNotificationHandler<TIn>();
+
+		private NullNotificationHandler()
+		{
+
+		}
+
 		/// <inheritdoc />
 		public Task PublishAsync(TIn notification, CancellationToken cancellationToken)
 		{
 			return Task.FromResult(0);
-		}
-
-		/// <inheritdoc />
-		public void Publish(TIn notification)
-		{
 		}
 	}
 }

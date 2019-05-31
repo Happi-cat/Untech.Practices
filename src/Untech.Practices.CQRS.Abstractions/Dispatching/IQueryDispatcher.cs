@@ -12,14 +12,6 @@ namespace Untech.Practices.CQRS.Dispatching
 	public interface IQueryDispatcher
 	{
 		/// <summary>
-		///     Fetches data of type <typeparamref name="TResult" /> for the specified <paramref name="query" />.
-		/// </summary>
-		/// <typeparam name="TResult">The type of result.</typeparam>
-		/// <param name="query">The query to be processed.</param>
-		/// <returns>Matching data.</returns>
-		TResult Fetch<TResult>(IQuery<TResult> query);
-
-		/// <summary>
 		///     Fetches asynchronously data of type <typeparamref name="TResult" /> for the specified <paramref name="query" />.
 		/// </summary>
 		/// <typeparam name="TResult">The type of result.</typeparam>

@@ -1,4 +1,7 @@
-﻿namespace Untech.Practices.CQRS.Dispatching
+﻿using System.Threading;
+using System.Threading.Tasks;
+
+namespace Untech.Practices.CQRS.Dispatching
 {
 	/// <summary>
 	///     Represents interface of a dispatcher class that can put CQRS requests in execution queue.
@@ -14,7 +17,8 @@
 		/// <typeparam name="TResult">The type of result.</typeparam>
 		/// <param name="command">The command to be enqueued.</param>
 		/// <param name="options">The options that can be used for operation execution scheduling.</param>
-		void Enqueue<TResult>(ICommand<TResult> command, QueueOptions options = null);
+		Task EnqueueAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default,
+			QueueOptions options = null);
 
 		/// <summary>
 		///     Puts the incoming <paramref name="notification" /> in execution queue and schedules execution using
@@ -24,6 +28,7 @@
 		/// </summary>
 		/// <param name="notification">The notification  to be enqueued.</param>
 		/// <param name="options">The options that can be used for operation execution scheduling.</param>
-		void Enqueue(INotification notification, QueueOptions options = null);
+		Task EnqueueAsync(INotification notification, CancellationToken cancellationToken = default,
+			QueueOptions options = null);
 	}
 }

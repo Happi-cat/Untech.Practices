@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Untech.Practices.CQRS.Dispatching;
@@ -25,22 +27,13 @@ namespace Untech.Practices.CQRS
 		}
 
 		public class Handler :
-			IQueryHandler<Query, int>, IQueryAsyncHandler<Query, int>,
-			ICommandHandler<Command, int>, ICommandAsyncHandler<Command, int>,
-			INotificationHandler<Notification>, INotificationAsyncHandler<Notification>
-
+			IQueryHandler<Query, int>,
+			ICommandHandler<Command, int>,
+			INotificationHandler<Notification>
 		{
-			public int Handle(Query query) => 1;
-
 			public Task<int> HandleAsync(Query query, CancellationToken cancellationToken) => Task.FromResult(1);
 
-			public int Handle(Command command) => 1;
-
 			public Task<int> HandleAsync(Command command, CancellationToken cancellationToken) => Task.FromResult(1);
-
-			public void Publish(Notification notification)
-			{
-			}
 
 			public Task PublishAsync(Notification notification, CancellationToken cancellationToken)
 			{
@@ -58,7 +51,12 @@ namespace Untech.Practices.CQRS
 
 			public IEnumerable<T> ResolveMany<T>() where T : class
 			{
-				yield return ResolveOne<T>();
+				return GetEnumerable().Where(n => n != null);
+
+				IEnumerable<T> GetEnumerable()
+				{
+					yield return ResolveOne<T>();
+				}
 			}
 		}
 	}

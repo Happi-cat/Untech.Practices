@@ -22,15 +22,15 @@ namespace Untech.Practices.Notifications.Mail
 			_options = options ?? throw new ArgumentNullException(nameof(options));
 		}
 
-		public void Enqueue(Mail mail)
+		public async Task EnqueueAsync(Mail mail)
 		{
 			var message = CreateMimeMessage(mail);
 
 			using (var client = new SmtpClient())
 			{
-				client.Connect(_options.Host, _options.Port, _options.UseSsl);
-				client.Send(message);
-				client.Disconnect(true);
+				await  client.ConnectAsync(_options.Host, _options.Port, _options.UseSsl);
+				await client.SendAsync(message);
+				await client.DisconnectAsync(true);
 			}
 		}
 
