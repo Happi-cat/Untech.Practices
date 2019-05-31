@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using AsyncCommandEngine.Run.Commands;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Serilog;
 using Untech.AsyncCommandEngine;
 using Untech.AsyncCommandEngine.Builder;
@@ -31,9 +30,9 @@ namespace AsyncCommandEngine.Run
 					options.SlidingStep = TimeSpan.FromSeconds(1);
 					options.SlidingRadius = 5;
 				})
-				.LogTo(Logger())
-				.ReceiveRequestsFrom(Transports())
-				.ReadMetadataFrom(MetadataProviders())
+				.LogTo(Logger)
+				.ReceiveRequestsFromMultiple(Transports)
+				.ReadMetadataFromMultiple(MetadataProviders)
 				.Do(Steps)
 				.BuildOrchestrator();
 
@@ -65,7 +64,7 @@ namespace AsyncCommandEngine.Run
 				.Final(builder => new CqrsStrategy(builder.GetLogger("Handlers")));
 		}
 
-		private static IEnumerable<IRequestMetadataProvider> MetadataProviders()
+		private static IEnumerable<IRequestMetadataProvider> MetadataProviders(IBuilderContext context)
 		{
 			yield return new BuiltInRequestMetadataProvider(typeof(Program).Assembly);
 			yield return new RequestMetadataProvider
@@ -88,7 +87,7 @@ namespace AsyncCommandEngine.Run
 			return new LoggerFactory().AddSerilog(logger);
 		}
 
-		private static IEnumerable<ITransport> Transports()
+		private static IEnumerable<ITransport> Transports(IBuilderContext context)
 		{
 			// bare
 			yield return new DemoTransport(new[] { new CompositeCommand(), });

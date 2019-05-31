@@ -15,9 +15,14 @@ namespace Untech.AsyncCommandEngine.Builder
 		private readonly Action<OrchestratorOptions> _configureOptions;
 		private readonly PipelineBuilder _pipelineBuilder;
 
+		private Func<ILoggerFactory> _loggerCreator;
+		private ILoggerFactory _logger;
+
+		private Func<IBuilderContext, ITransport> _transportCreator;
 		private ITransport _transport;
-		private ILoggerFactory _loggerFactory;
-		private IRequestMetadataProvider _requestMetadataProvider;
+
+		private Func<IBuilderContext, IRequestMetadataProvider> _providerCreator;
+		private IRequestMetadataProvider _provider;
 
 		public EngineBuilder()
 			:this(_ => {})
@@ -34,33 +39,33 @@ namespace Untech.AsyncCommandEngine.Builder
 		/// <summary>
 		/// Sets <see cref="ILoggerFactory"/> that will be used for logging.
 		/// </summary>
-		/// <param name="loggerFactory">The logger factory.</param>
+		/// <param name="loggerCreator">The logger factory.</param>
 		/// <returns></returns>
-		public IEngineBuilder LogTo(ILoggerFactory loggerFactory)
+		public IEngineBuilder LogTo(Func<ILoggerFactory> loggerCreator)
 		{
-			_loggerFactory = loggerFactory;
+			_loggerCreator = loggerCreator;
 			return this;
 		}
 
 		/// <summary>
 		/// Sets <see cref="ITransport"/> that will be used as a request store.
 		/// </summary>
-		/// <param name="transport">The transport to use.</param>
+		/// <param name="transportCreator">The transport to use.</param>
 		/// <returns></returns>
-		public IEngineBuilder ReceiveRequestsFrom(ITransport transport)
+		public IEngineBuilder ReceiveRequestsFrom(Func<IBuilderContext, ITransport> transportCreator)
 		{
-			_transport = transport;
+			_transportCreator = transportCreator;
 			return this;
 		}
 
 		/// <summary>
 		/// Sets <see cref="IRequestMetadataProvider"/> that can be used for getting <see cref="IRequestMetadata"/>.
 		/// </summary>
-		/// <param name="provider">The provider to use.</param>
+		/// <param name="providerCreator">The provider to use.</param>
 		/// <returns></returns>
-		public IEngineBuilder ReadMetadataFrom(IRequestMetadataProvider provider)
+		public IEngineBuilder ReadMetadataFrom(Func<IBuilderContext, IRequestMetadataProvider> providerCreator)
 		{
-			_requestMetadataProvider = provider;
+			_providerCreator = providerCreator;
 			return this;
 		}
 
@@ -74,17 +79,25 @@ namespace Untech.AsyncCommandEngine.Builder
 		/// <inheritdoc />
 		public ILoggerFactory GetLogger()
 		{
-			return _loggerFactory ?? NullLoggerFactory.Instance;
+			if (_logger != null) return _logger;
+			return _logger = _loggerCreator?.Invoke() ?? NullLoggerFactory.Instance;
 		}
 
 		private ITransport GetTransport()
 		{
-			return _transport ?? throw new InvalidOperationException("Transport wasn't configured");
+			if (_transport != null) return _transport;
+			return _transport = _transportCreator?.Invoke(this) ?? throw NotConfigured();
+
+			Exception NotConfigured()
+			{
+				return new InvalidOperationException("Transport wasn't configured");
+			}
 		}
 
 		private IRequestMetadataProvider GetMetadata()
 		{
-			return _requestMetadataProvider ?? NullRequestMetadataProvider.Instance;
+			if (_provider != null) return _provider;
+			return _provider = _providerCreator?.Invoke(this) ?? NullRequestMetadataProvider.Instance;
 		}
 
 		/// <summary>

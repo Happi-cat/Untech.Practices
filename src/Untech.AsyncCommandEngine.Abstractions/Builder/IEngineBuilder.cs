@@ -11,23 +11,23 @@ namespace Untech.AsyncCommandEngine.Builder
 		/// <summary>
 		/// Sets <see cref="Microsoft.Extensions.Logging.ILoggerFactory"/> that will be used for logging.
 		/// </summary>
-		/// <param name="loggerFactory">The logger factory.</param>
+		/// <param name="loggerCreator">The logger factory.</param>
 		/// <returns></returns>
-		IEngineBuilder LogTo(ILoggerFactory loggerFactory);
+		IEngineBuilder LogTo(Func<ILoggerFactory> loggerCreator);
 
 		/// <summary>
 		/// Sets <see cref="ITransport"/> that will be used as a request store.
 		/// </summary>
-		/// <param name="transport">The transport to use.</param>
+		/// <param name="transportCreator">The transport to use.</param>
 		/// <returns></returns>
-		IEngineBuilder ReceiveRequestsFrom(ITransport transport);
+		IEngineBuilder ReceiveRequestsFrom(Func<IBuilderContext, ITransport> transportCreator);
 
 		/// <summary>
 		/// Sets <see cref="IRequestMetadataProvider"/> that can be used for getting <see cref="IRequestMetadata"/>.
 		/// </summary>
-		/// <param name="provider">The provider to use.</param>
+		/// <param name="providerCreator">The provider to use.</param>
 		/// <returns></returns>
-		IEngineBuilder ReadMetadataFrom(IRequestMetadataProvider provider);
+		IEngineBuilder ReadMetadataFrom(Func<IBuilderContext, IRequestMetadataProvider> providerCreator);
 
 		IEngineBuilder Do(Action<PipelineBuilder> configureProcessor);
 
