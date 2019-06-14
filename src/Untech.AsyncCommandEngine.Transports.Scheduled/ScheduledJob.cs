@@ -1,33 +1,59 @@
 using System;
+using System.Runtime.Serialization;
 
 namespace Untech.AsyncCommandEngine.Transports.Scheduled
 {
+	[DataContract]
 	public class ScheduledJob
 	{
 		private ScheduledJob()
 		{
 		}
 
-		public ScheduledJob(string id, ScheduledJobDefinition definition, DateTime? nextRun = null)
+		public ScheduledJob(string id, ScheduledJobDefinition definition, DateTimeOffset? nextRun = null)
 		{
 			Id = id;
 			Definition = definition;
 			NextRun = nextRun;
 		}
 
+		[DataMember]
 		public string Id { get; private set; }
 
+		[DataMember]
 		public ScheduledJobDefinition Definition { get; private set; }
 
-		public DateTime? NextRun { get; private set; }
+		[DataMember]
+		public DateTimeOffset? NextRun { get; private set; }
 
-		public DateTime? StartAfter { get; set; }
+		[DataMember]
+		public DateTimeOffset? StartAfter { get; set; }
 
-		public DateTime? StopAfter { get; set; }
+		[DataMember]
+		public DateTimeOffset? StopAfter { get; set; }
 
+		[DataMember]
 		public bool Disabled { get; set; }
 
-		public bool IsEnabled()
+		public bool CanRunNow()
+		{
+			if (!IsAlive()) return false;
+
+			return NextRun == null || NextRun <= DateTime.UtcNow;
+		}
+
+		public DateTimeOffset GetNewNextRun()
+		{
+			var now = DateTime.UtcNow;
+			var nextRun = NextRun ?? now;
+
+			if (!IsAlive()) return nextRun;
+
+			while (nextRun <= now) nextRun += Definition.Interval;
+			return nextRun;
+		}
+
+		private bool IsAlive()
 		{
 			if (Disabled) return false;
 
@@ -36,24 +62,6 @@ namespace Untech.AsyncCommandEngine.Transports.Scheduled
 			if (now < StartAfter) return false;
 			if (StopAfter < now) return false;
 			return true;
-		}
-
-		public bool CanRunNow()
-		{
-			if (!IsEnabled()) return false;
-
-			return NextRun == null || NextRun <= DateTime.UtcNow;
-		}
-
-		public DateTime GetNewNextRun()
-		{
-			var now = DateTime.UtcNow;
-			var nextRun = NextRun ?? now;
-
-			if (!IsEnabled()) return nextRun;
-
-			while (nextRun <= now) nextRun += Definition.Interval;
-			return nextRun;
 		}
 	}
 }

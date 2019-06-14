@@ -9,14 +9,14 @@ namespace Untech.AsyncCommandEngine.Transports.Scheduled
 	public class InMemoryScheduledJobStore : IScheduledJobStore
 	{
 		private readonly IReadOnlyDictionary<string, ScheduledJobDefinition> _jobDefinitions;
-		private readonly ConcurrentDictionary<string, DateTime> _nextRuns;
+		private readonly ConcurrentDictionary<string, DateTimeOffset> _nextRuns;
 
 		public InMemoryScheduledJobStore(IEnumerable<ScheduledJobDefinition> jobDefinitions)
 		{
 			_jobDefinitions = jobDefinitions
 				.Select((n, i) => (item: n, id: i))
 				.ToDictionary(n => n.id.ToString(), n => n.item);
-			_nextRuns = new ConcurrentDictionary<string, DateTime>();
+			_nextRuns = new ConcurrentDictionary<string, DateTimeOffset>();
 		}
 
 		public Task<IEnumerable<ScheduledJob>> GetJobsAsync()
@@ -28,7 +28,7 @@ namespace Untech.AsyncCommandEngine.Transports.Scheduled
 			);
 		}
 
-		public Task SaveNextRun(ScheduledJob job, DateTime nextRun)
+		public Task SaveNextRun(ScheduledJob job, DateTimeOffset nextRun)
 		{
 			_nextRuns.AddOrUpdate(job.Id, nextRun, (s, time) => nextRun);
 
@@ -40,9 +40,9 @@ namespace Untech.AsyncCommandEngine.Transports.Scheduled
 			return Task.CompletedTask;
 		}
 
-		private DateTime GetNextRun(string id)
+		private DateTimeOffset GetNextRun(string id)
 		{
-			return _nextRuns.GetOrAdd(id, DateTime.UtcNow);
+			return _nextRuns.GetOrAdd(id, DateTimeOffset.UtcNow);
 		}
 	}
 }

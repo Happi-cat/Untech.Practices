@@ -8,7 +8,7 @@ namespace Untech.AsyncCommandEngine.Transports.Scheduled
 	{
 		Task<IEnumerable<ScheduledJob>> GetJobsAsync();
 
-		Task SaveNextRun(ScheduledJob job, DateTime nextRun);
+		Task SaveNextRun(ScheduledJob job, DateTimeOffset nextRun);
 
 		Task TrackResult(ScheduledJob job, Exception exception);
 	}
