@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Text.Json.Serialization;
 using Untech.AsyncCommandEngine.Metadata.Annotations;
 
 namespace Untech.AsyncCommandEngine.Transports.Scheduled
@@ -25,9 +26,14 @@ namespace Untech.AsyncCommandEngine.Transports.Scheduled
 		[DataMember]
 		public string Body { get; set; }
 
+		public virtual void SetBody(object value)
+		{
+			Body = JsonSerializer.ToString(value);
+		}
+
 		public virtual object GetBody(Type requestType)
 		{
-			return System.Text.Json.Serialization.JsonSerializer.Parse(Body, requestType);
+			return JsonSerializer.Parse(Body, requestType);
 		}
 
 		public virtual Stream GetRawBody()
