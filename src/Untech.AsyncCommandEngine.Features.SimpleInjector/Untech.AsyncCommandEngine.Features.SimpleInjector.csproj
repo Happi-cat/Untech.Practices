@@ -7,6 +7,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Untech.AsyncCommandEngine.Abstractions\Untech.AsyncCommandEngine.Abstractions.csproj" />
     <ProjectReference Include="..\Untech.AsyncCommandEngine.Core\Untech.AsyncCommandEngine.Core.csproj" />
+    <ProjectReference Include="..\Untech.AsyncCommandEngine.Features.CQRS\Untech.AsyncCommandEngine.Features.CQRS.csproj" />
   </ItemGroup>
 
   <ItemGroup>

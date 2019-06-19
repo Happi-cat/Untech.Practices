@@ -4,9 +4,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
+using Untech.AsyncCommandEngine.Processing;
 using Untech.Practices.CQRS;
 
-namespace Untech.AsyncCommandEngine.Processing
+namespace Untech.AsyncCommandEngine.Features.CQRS
 {
 	internal class CqrsMiddleware : IRequestProcessorMiddleware
 	{

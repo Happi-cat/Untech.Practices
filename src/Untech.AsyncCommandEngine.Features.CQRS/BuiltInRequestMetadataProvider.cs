@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
+using Untech.AsyncCommandEngine.Metadata;
 using Untech.AsyncCommandEngine.Metadata.Annotations;
 using Untech.Practices.CQRS.Handlers;
 
-namespace Untech.AsyncCommandEngine.Metadata
+namespace Untech.AsyncCommandEngine.Features.CQRS
 {
 	/// <summary>
 	/// Implements <see cref="IRequestMetadataProvider"/> and can be used for getting builtin attributes.
@@ -64,7 +65,7 @@ namespace Untech.AsyncCommandEngine.Metadata
 		{
 			private static readonly IReadOnlyList<Type> s_matchableGenericTypes = new List<Type>
 			{
-				typeof(ICommandHandler<,>), typeof(IRequestMetadataSource<>)
+				typeof(ICommandHandler<,>)
 			};
 
 			private readonly TypeInfo _suspectedType;

@@ -2,7 +2,7 @@
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
 using Untech.AsyncCommandEngine.Builder;
-using Untech.AsyncCommandEngine.Processing;
+using Untech.AsyncCommandEngine.Features.CQRS;
 using Untech.Practices.CQRS.Dispatching;
 
 namespace Untech.AsyncCommandEngine.Features.SimpleInjector
@@ -13,31 +13,41 @@ namespace Untech.AsyncCommandEngine.Features.SimpleInjector
 		{
 			return collection.Then(async (ctx, next) =>
 			{
-				using (var scope = AsyncScopedLifestyle.BeginScope(container))
+				if (ctx.Items.ContainsKey(typeof(Scope)))
 				{
-					ctx.Items[typeof(Scope)] = scope;
 					await next(ctx);
+				}
+				else
+				{
+					using (var scope = AsyncScopedLifestyle.BeginScope(container))
+					{
+						ctx.Items[typeof(Scope)] = scope;
+						await next(ctx);
+					}
 				}
 			});
 		}
 
-		public static void FinalSimpleInjector(this PipelineBuilder collection, Func<string, Type> requestFinder)
+		public static void FinalCqrsWithSimpleInjector(this PipelineBuilder collection,
+			Container container,
+			IRequestTypeFinder requestFinder)
 		{
+			collection.ThenSimpleInjector(container);
 			collection.Final(new CqrsStrategy(requestFinder));
 		}
 
 		private class CqrsStrategy : ICqrsStrategy
 		{
-			private readonly Func<string, Type> _requestFinder;
+			private readonly IRequestTypeFinder _requestFinder;
 
-			public CqrsStrategy(Func<string, Type> requestFinder)
+			public CqrsStrategy(IRequestTypeFinder requestFinder)
 			{
 				_requestFinder = requestFinder;
 			}
 
 			public Type FindRequestType(string requestName)
 			{
-				return _requestFinder(requestName);
+				return _requestFinder.FindRequestType(requestName);
 			}
 
 			public IDispatcher GetDispatcher(Context context)

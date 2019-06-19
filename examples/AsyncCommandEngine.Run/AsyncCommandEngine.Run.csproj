@@ -17,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Untech.AsyncCommandEngine.Abstractions\Untech.AsyncCommandEngine.Abstractions.csproj" />
     <ProjectReference Include="..\..\src\Untech.AsyncCommandEngine.Core\Untech.AsyncCommandEngine.Core.csproj" />
+    <ProjectReference Include="..\..\src\Untech.AsyncCommandEngine.Features.CQRS\Untech.AsyncCommandEngine.Features.CQRS.csproj" />
     <ProjectReference Include="..\..\src\Untech.AsyncCommandEngine.Transports.Scheduled\Untech.AsyncCommandEngine.Transports.Scheduled.csproj" />
     <ProjectReference Include="..\..\src\Untech.Practices.CQRS.Abstractions\Untech.Practices.CQRS.Abstractions.csproj" />
     <ProjectReference Include="..\..\src\Untech.Practices.CQRS\Untech.Practices.CQRS.csproj" />

@@ -5,6 +5,7 @@ using System.Reflection;
 using AsyncCommandEngine.Run.Commands;
 using Microsoft.Extensions.Logging;
 using Untech.AsyncCommandEngine;
+using Untech.AsyncCommandEngine.Features.CQRS;
 using Untech.AsyncCommandEngine.Processing;
 using Untech.Practices.CQRS.Dispatching;
 
