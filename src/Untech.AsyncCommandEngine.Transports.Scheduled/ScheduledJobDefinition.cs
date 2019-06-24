@@ -21,7 +21,7 @@ namespace Untech.AsyncCommandEngine.Transports.Scheduled
 		public IEnumerable<MetadataAttribute> Metadata { get; set; }
 
 		[DataMember]
-		public TimeSpan Interval { get; set; }
+		public string Cron { get; set; }
 
 		[DataMember]
 		public string Body { get; set; }

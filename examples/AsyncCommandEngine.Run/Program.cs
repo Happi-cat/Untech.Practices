@@ -119,13 +119,20 @@ namespace AsyncCommandEngine.Run
 					Delay = new DelayCommand(TimeSpan.FromMinutes(2)), Throw = new ThrowCommand()
 				}
 			});
+			// scheduled
 			yield return new ScheduledTransport(new InMemoryScheduledJobStore(new[]
 			{
 				new ScheduledJobDefinition
 				{
-					Interval = TimeSpan.FromMinutes(1),
+					Cron = "* * * * *",
 					Name = typeof(HelloCommand).FullName,
-					Body = "{\"Message\":\"Holla\"}"
+					Body = "{\"Message\":\"Holla (every minute)\"}"
+				},
+				new ScheduledJobDefinition
+				{
+					Cron = "*/5 * * * *",
+					Name = typeof(HelloCommand).FullName,
+					Body = "{\"Message\":\"How are you (every 5 min)\"}"
 				}
 			}));
 		}

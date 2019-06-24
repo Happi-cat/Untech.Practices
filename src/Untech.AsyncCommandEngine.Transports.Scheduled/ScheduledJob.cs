@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.Serialization;
+using NCrontab;
 
 namespace Untech.AsyncCommandEngine.Transports.Scheduled
 {
@@ -45,12 +46,13 @@ namespace Untech.AsyncCommandEngine.Transports.Scheduled
 		public DateTimeOffset GetNewNextRun()
 		{
 			var now = DateTime.UtcNow;
-			var nextRun = NextRun ?? now;
+			var currentRun = NextRun ?? now;
 
-			if (!IsAlive()) return nextRun;
+			if (!IsAlive()) return currentRun;
 
-			while (nextRun <= now) nextRun += Definition.Interval;
-			return nextRun;
+			return CrontabSchedule
+				.Parse(Definition.Cron)
+				.GetNextOccurrence(currentRun.UtcDateTime);
 		}
 
 		private bool IsAlive()
