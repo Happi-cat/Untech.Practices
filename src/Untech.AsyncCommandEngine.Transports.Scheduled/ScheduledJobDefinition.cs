@@ -11,6 +11,24 @@ namespace Untech.AsyncCommandEngine.Transports.Scheduled
 	[DataContract]
 	public class ScheduledJobDefinition
 	{
+		public static ScheduledJobDefinition Create<T>(string cron,
+			T body = default,
+			IDictionary<string, string> attributes = null,
+			IEnumerable<MetadataAttribute> metadata = null)
+		{
+			var definition = new ScheduledJobDefinition
+			{
+				Cron = cron,
+				Name = typeof(T).FullName,
+				Attributes = attributes,
+				Metadata = metadata
+			};
+
+			definition.SetBody(body);
+
+			return definition;
+		}
+
 		[DataMember]
 		public string Name { get; set; }
 

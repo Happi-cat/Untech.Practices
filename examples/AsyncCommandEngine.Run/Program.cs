@@ -81,7 +81,7 @@ namespace AsyncCommandEngine.Run
 				.MinimumLevel.Debug()
 				.WriteTo.ColoredConsole(
 					outputTemplate:
-					"{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3} {Properties} {Message}{NewLine}")
+					"[{Timestamp:HH:mm:ss} {Level:u3}] {Properties} {Message}{NewLine}")
 				.CreateLogger();
 
 			return new LoggerFactory().AddSerilog(logger);
@@ -122,12 +122,7 @@ namespace AsyncCommandEngine.Run
 			// scheduled
 			yield return new ScheduledTransport(new InMemoryScheduledJobStore(new[]
 			{
-				new ScheduledJobDefinition
-				{
-					Cron = "* * * * *",
-					Name = typeof(HelloCommand).FullName,
-					Body = "{\"Message\":\"Holla (every minute)\"}"
-				},
+				ScheduledJobDefinition.Create("* * * * *", new HelloCommand { Message = "Holla (every min)" }),
 				new ScheduledJobDefinition
 				{
 					Cron = "*/5 * * * *",
