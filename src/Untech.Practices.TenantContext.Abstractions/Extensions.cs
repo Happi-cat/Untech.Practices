@@ -20,15 +20,14 @@ namespace Untech.Practices.TenantContext
 		/// <exception cref="ArgumentNullException">
 		///     Thrown when <paramref name="source" /> or <paramref name="tenantContext" /> is null.
 		/// </exception>
-		public static IQueryable<TElem> TakeTenantSpecific<TElem, TTenantKey>(this IQueryable<TElem> source,
-			ITenantContext<TTenantKey> tenantContext)
-			where TElem : IHaveTenantKey<TTenantKey>
-			where TTenantKey : IEquatable<TTenantKey>
+		public static IQueryable<TElem> TakeTenantSpecific<TElem>(this IQueryable<TElem> source,
+			ITenantContext tenantContext)
+			where TElem : IHaveTenantKey
 		{
 			if (source == null) throw new ArgumentNullException(nameof(source));
 			if (tenantContext == null) throw new ArgumentNullException(nameof(tenantContext));
 
-			TTenantKey tenantKeyToMatch = tenantContext.TenantKey;
+			string tenantKeyToMatch = tenantContext.TenantKey;
 
 			return source.Where(n => tenantKeyToMatch.Equals(n.TenantKey));
 		}
@@ -44,15 +43,14 @@ namespace Untech.Practices.TenantContext
 		/// <exception cref="ArgumentNullException">
 		///     Thrown when <paramref name="source" /> or <paramref name="tenantContext" /> is null.
 		/// </exception>
-		public static IEnumerable<TElem> TakeTenantSpecific<TElem, TTenantKey>(this IEnumerable<TElem> source,
-			ITenantContext<TTenantKey> tenantContext)
-			where TElem : IHaveTenantKey<TTenantKey>
-			where TTenantKey : IEquatable<TTenantKey>
+		public static IEnumerable<TElem> TakeTenantSpecific<TElem>(this IEnumerable<TElem> source,
+			ITenantContext tenantContext)
+			where TElem : IHaveTenantKey
 		{
 			if (source == null) throw new ArgumentNullException(nameof(source));
 			if (tenantContext == null) throw new ArgumentNullException(nameof(tenantContext));
 
-			TTenantKey tenantKeyToMatch = tenantContext.TenantKey;
+			string tenantKeyToMatch = tenantContext.TenantKey;
 
 			return source.Where(n => tenantKeyToMatch.Equals(n.TenantKey));
 		}
