@@ -53,5 +53,19 @@ namespace Untech.Practices.CQRS.Dispatching
 		{
 			await _dispatcher.PublishAsync(new DummyCQRS.Notification(), CancellationToken.None);
 		}
+
+		[Fact]
+		public async Task ProcessAsync_Throw_WhenHandlerNotResolved()
+		{
+			await Assert.ThrowsAsync<InvalidOperationException>(() =>
+				_dispatcher.ProcessAsync(new DummyCQRS.CommandWithUnknownHandler(), CancellationToken.None));
+		}
+
+		[Fact]
+		public async Task ProcessAsync_ThrowException_WhenCommandFails()
+		{
+			await Assert.ThrowsAsync<NotImplementedException>(() =>
+				_dispatcher.ProcessAsync(new DummyCQRS.CommandWithError(), CancellationToken.None));
+		}
 	}
 }
