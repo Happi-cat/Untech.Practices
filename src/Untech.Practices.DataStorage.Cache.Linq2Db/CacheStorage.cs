@@ -9,10 +9,12 @@ namespace Untech.Practices.DataStorage.Cache.Linq2Db
 	public class CacheStorage : ICacheStorage
 	{
 		private readonly Func<IDataContext> _contextFactory;
+		private readonly ICacheFormatter _formatter;
 
-		public CacheStorage(Func<IDataContext> contextFactory)
+		public CacheStorage(Func<IDataContext> contextFactory, ICacheFormatter formatter)
 		{
 			_contextFactory = contextFactory;
+			_formatter = formatter;
 		}
 
 		public async Task DropAsync(string key, CancellationToken cancellationToken = default)
@@ -31,9 +33,9 @@ namespace Untech.Practices.DataStorage.Cache.Linq2Db
 			{
 				CacheEntry entry = await Find(context, key).SingleOrDefaultAsync(cancellationToken);
 
-				return entry == null
+				return entry?.Value == null
 					? new CacheValue<T>()
-					: new CacheValue<T>(entry.GetValue<T>());
+					: new CacheValue<T>(_formatter.Deserialize<T>(entry.Value));
 			}
 		}
 
@@ -46,7 +48,7 @@ namespace Untech.Practices.DataStorage.Cache.Linq2Db
 
 				if (value == null) return;
 
-				CacheEntry entity = new CacheEntry(key, value);
+				CacheEntry entity = new CacheEntry(key, _formatter.Serialize(value));
 
 				await context.InsertAsync(entity, token: cancellationToken);
 			}

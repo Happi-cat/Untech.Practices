@@ -11,10 +11,10 @@ namespace Untech.Practices.DataStorage.Cache.Linq2Db
 		{
 		}
 
-		public CacheEntry(string key, object value)
+		public CacheEntry(string key, string value)
 		{
 			Key = key ?? throw new ArgumentNullException(nameof(key));
-			Json = JsonSerializer.ToString(value);
+			Value = value;
 			When = DateTime.UtcNow;
 		}
 
@@ -22,14 +22,9 @@ namespace Untech.Practices.DataStorage.Cache.Linq2Db
 		public string Key { get; private set; }
 
 		[Column(CanBeNull = true)]
-		public string Json { get; private set; }
+		public string Value { get; private set; }
 
 		[Column(CanBeNull = false)]
 		public DateTime When { get; private set; }
-
-		public T GetValue<T>()
-		{
-			return JsonSerializer.Parse<T>(Json);
-		}
 	}
 }
