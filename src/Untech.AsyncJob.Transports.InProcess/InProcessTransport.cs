@@ -15,10 +15,9 @@ namespace Untech.AsyncJob.Transports.InProcess
 		private readonly IDictionary<int, Queue> _queues;
 		public InProcessTransport()
 		{
-			_queues = new Dictionary<int, Queue>(new PriorityComparer(10))
-			{
-				{ -1, new Queue() }, { 0, new Queue() }, { 1, new Queue() }
-			};
+			var scaleFactor = 10;
+			_queues = new [] { -1, 0, 1}
+				.ToDictionary(n => n * scaleFactor, n => new Queue(), new PriorityComparer(scaleFactor));
 		}
 
 		public Task<ReadOnlyCollection<Request>> GetRequestsAsync(int count)

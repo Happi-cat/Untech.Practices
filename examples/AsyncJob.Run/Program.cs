@@ -15,6 +15,7 @@ using Untech.AsyncJob.Metadata;
 using Untech.AsyncJob.Metadata.Annotations;
 using Untech.AsyncJob.Processing;
 using Untech.AsyncJob.Transports;
+using Untech.AsyncJob.Transports.InProcess;
 using Untech.AsyncJob.Transports.Scheduled;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 
@@ -124,6 +125,7 @@ namespace AsyncJob.Run
 			yield return new ScheduledTransport(new InMemoryScheduledJobStore(new[]
 			{
 				ScheduledJobDefinition.Create("* * * * *", new HelloCommand { Message = "Hi (every min)" }),
+				ScheduledJobDefinition.Create("*/2 * * * *", new ProduceInProcess()),
 				new ScheduledJobDefinition
 				{
 					Cron = "*/5 * * * *",
@@ -131,6 +133,8 @@ namespace AsyncJob.Run
 					Body = "{\"Message\":\"How are you (every 5 min)\"}"
 				}
 			}));
+			// in process
+			yield return InProcess.Instance;
 		}
 
 		private static async Task MetricsMiddleware(Context ctx, RequestProcessorCallback next, ILogger logger)
@@ -147,5 +151,12 @@ namespace AsyncJob.Run
 				logger.LogInformation("Elapsed: {0}", sw.Elapsed);
 			}
 		}
+
+
+	}
+
+	internal static class InProcess
+	{
+		public static readonly InProcessTransport Instance = new InProcessTransport();
 	}
 }
