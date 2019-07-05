@@ -65,19 +65,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyParcels.Infrastructure", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Infrastructure", "examples\Shared.Infrastructure\Shared.Infrastructure.csproj", "{CB441B0E-395C-44AF-8D96-C2238F319545}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncCommandEngine.Run", "examples\AsyncCommandEngine.Run\AsyncCommandEngine.Run.csproj", "{CC4AA812-99B7-4056-8505-0EC2E5728C7B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncJob.Run", "examples\AsyncJob.Run\AsyncJob.Run.csproj", "{CC4AA812-99B7-4056-8505-0EC2E5728C7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.AsyncCommandEngine.Abstractions", "src\Untech.AsyncCommandEngine.Abstractions\Untech.AsyncCommandEngine.Abstractions.csproj", "{825CCB7E-12B7-4F50-87FD-89C22A4F1DDA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.AsyncJob.Abstractions", "src\Untech.AsyncJob.Abstractions\Untech.AsyncJob.Abstractions.csproj", "{825CCB7E-12B7-4F50-87FD-89C22A4F1DDA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.AsyncCommandEngine.Core", "src\Untech.AsyncCommandEngine.Core\Untech.AsyncCommandEngine.Core.csproj", "{32F3CB58-04D3-4398-B449-47512D139972}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.AsyncJob.Engine", "src\Untech.AsyncJob.Engine\Untech.AsyncJob.Engine.csproj", "{32F3CB58-04D3-4398-B449-47512D139972}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.AsyncCommandEngine.Tests", "test\Untech.AsyncCommandEngine.Tests\Untech.AsyncCommandEngine.Tests.csproj", "{322D4D45-E3FA-4EED-8076-0C87E07B3DE0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.AsyncJob.Tests", "test\Untech.AsyncJob.Tests\Untech.AsyncJob.Tests.csproj", "{322D4D45-E3FA-4EED-8076-0C87E07B3DE0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.AsyncCommandEngine.Features.SimpleInjector", "src\Untech.AsyncCommandEngine.Features.SimpleInjector\Untech.AsyncCommandEngine.Features.SimpleInjector.csproj", "{2E8C8794-A757-4A97-9418-20A03A13DB8C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.AsyncJob.Features.SimpleInjector", "src\Untech.AsyncJob.Features.SimpleInjector\Untech.AsyncJob.Features.SimpleInjector.csproj", "{2E8C8794-A757-4A97-9418-20A03A13DB8C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.AsyncCommandEngine.Transports.Scheduled", "src\Untech.AsyncCommandEngine.Transports.Scheduled\Untech.AsyncCommandEngine.Transports.Scheduled.csproj", "{0470D5CE-DB71-4077-943A-7DE31F697039}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.AsyncJob.Transports.Scheduled", "src\Untech.AsyncJob.Transports.Scheduled\Untech.AsyncJob.Transports.Scheduled.csproj", "{0470D5CE-DB71-4077-943A-7DE31F697039}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.AsyncCommandEngine.Features.CQRS", "src\Untech.AsyncCommandEngine.Features.CQRS\Untech.AsyncCommandEngine.Features.CQRS.csproj", "{F12AB52C-60F3-416A-BA03-E3628FBDB69F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.AsyncJob.Features.CQRS", "src\Untech.AsyncJob.Features.CQRS\Untech.AsyncJob.Features.CQRS.csproj", "{F12AB52C-60F3-416A-BA03-E3628FBDB69F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.DataStorage.Linq2Db", "src\Untech.Practices.DataStorage.Linq2Db\Untech.Practices.DataStorage.Linq2Db.csproj", "{D1FE84C1-85F0-4CBB-B7C4-B3CBD2B49822}"
 EndProject
