@@ -81,6 +81,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.DataStorag
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.DataStorage.Cache.Linq2Db", "src\Untech.Practices.DataStorage.Cache.Linq2Db\Untech.Practices.DataStorage.Cache.Linq2Db.csproj", "{B434456D-7A68-4197-955A-64C26836F270}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.DataStorage.Tests", "test\Untech.Practices.DataStorage.Tests\Untech.Practices.DataStorage.Tests.csproj", "{14462AA0-6140-45DB-B2D4-70EEE35CB661}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -439,6 +441,18 @@ Global
 		{B434456D-7A68-4197-955A-64C26836F270}.Release|x64.Build.0 = Release|Any CPU
 		{B434456D-7A68-4197-955A-64C26836F270}.Release|x86.ActiveCfg = Release|Any CPU
 		{B434456D-7A68-4197-955A-64C26836F270}.Release|x86.Build.0 = Release|Any CPU
+		{14462AA0-6140-45DB-B2D4-70EEE35CB661}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14462AA0-6140-45DB-B2D4-70EEE35CB661}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14462AA0-6140-45DB-B2D4-70EEE35CB661}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{14462AA0-6140-45DB-B2D4-70EEE35CB661}.Debug|x64.Build.0 = Debug|Any CPU
+		{14462AA0-6140-45DB-B2D4-70EEE35CB661}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{14462AA0-6140-45DB-B2D4-70EEE35CB661}.Debug|x86.Build.0 = Debug|Any CPU
+		{14462AA0-6140-45DB-B2D4-70EEE35CB661}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14462AA0-6140-45DB-B2D4-70EEE35CB661}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14462AA0-6140-45DB-B2D4-70EEE35CB661}.Release|x64.ActiveCfg = Release|Any CPU
+		{14462AA0-6140-45DB-B2D4-70EEE35CB661}.Release|x64.Build.0 = Release|Any CPU
+		{14462AA0-6140-45DB-B2D4-70EEE35CB661}.Release|x86.ActiveCfg = Release|Any CPU
+		{14462AA0-6140-45DB-B2D4-70EEE35CB661}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -477,6 +491,7 @@ Global
 		{0470D5CE-DB71-4077-943A-7DE31F697039} = {42CBEFB1-3495-4210-84AE-9568A1FA9F7C}
 		{D1FE84C1-85F0-4CBB-B7C4-B3CBD2B49822} = {42CBEFB1-3495-4210-84AE-9568A1FA9F7C}
 		{B434456D-7A68-4197-955A-64C26836F270} = {42CBEFB1-3495-4210-84AE-9568A1FA9F7C}
+		{14462AA0-6140-45DB-B2D4-70EEE35CB661} = {65F2AE98-A9A2-472C-BD22-A58DBD451E12}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7828FC24-7B46-4846-AF7D-B7EB0C01D942}
