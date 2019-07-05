@@ -26,7 +26,7 @@ namespace Untech.Practices.DataStorage
 		private static string GetMessage(object key, string message = null)
 		{
 			return string.IsNullOrEmpty(message)
-				? $"Aggregate root with '{key}' was not found."
+				? $"Item with '{key}' was not found."
 				: message;
 		}
 	}
