@@ -3,32 +3,46 @@ param(
 	[string]$with
 )
 
+$entryDir = pwd
+
 function Replace-InFile($file) {
-	$content = (gc $file); 
-	$content | %{ $_ -replace $what, $with } | out-file $file -Encoding UTF8
+	$content = (gc $file);
+	$hasMatches = $content | ?{ $_.Contains($what) }
+	if ($hasMatches) {
+		write-host "Replacing in file $_" -ForegroundColor Green
+		$content | %{ $_ -replace $what, $with } | out-file $file -Encoding UTF8
+	}
 }
 
-gci *.csproj,*.sln,*.cs -Recurse | ?{ 
-    (gc $_) | ?{ $_.Contains($what) } 
-} | %{
-    write-host "Replacing in file $_" -ForegroundColor Green
-    Replace-InFile -file $_  -what $what -with $with
+function Replace-InFileName($file) {
+	$file = gi $file;
+	if ($file.Name.Contains($what)) {
+		cd $file.Directory
+		$newFile = ($file.Name -replace $what, $with)
+		write-host "Renaming $($file.Name) into $newFile"  -ForegroundColor Green
+		mv $file.Name $newFile
+	}
 }
 
-gci src -Directory | ?{
-    $_.Name.Contains($what)
-} | %{
-    cd "$($_.FullName)\.."
-    $newDir = ($_.Name -replace $what, $with)
-    write-host "Moving dir $($_.Name) to $newDir"  -ForegroundColor Green
-    mv $_.Name $newDir
+function Replace-InCodeFiles {
+	gci *.csproj,*.sln,*.cs -Recurse | %{
+		Replace-InFile -file $_
+		Replace-InFileName -file $_
+	}
 }
 
-gci *.csproj,*.sln,*.cs -Recurse | ?{
-    $_.Name.Contains($what)
-} | %{ 
-    cd $_.Directory
-    $newFile = ($_.Name -replace $what, $with)
-    write-host "Renaming $($_.Name) into $newFile"  -ForegroundColor Green
-    mv $_.Name $newFile
+function Replace-InSubFolderNames($dir) {
+	gci $dir -Directory | ?{ $_.Name.Contains($what) } | %{
+		cd "$($_.FullName)\.."
+		$newDir = ($_.Name -replace $what, $with)
+		write-host "Moving dir $($_.Name) to $newDir"  -ForegroundColor Green
+		mv $_.Name $newDir
+	}
 }
+
+
+cd $entryDir; Replace-InSubFolderNames src
+cd $entryDir; Replace-InSubFolderNames test
+cd $entryDir; Replace-InSubFolderNames examples
+cd $entryDir; Replace-InCodeFiles
+cd $entryDir
