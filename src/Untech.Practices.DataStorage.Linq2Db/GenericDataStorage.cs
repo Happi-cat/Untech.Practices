@@ -1,7 +1,9 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using LinqToDB;
+using LinqToDB.Mapping;
 
 namespace Untech.Practices.DataStorage.Linq2Db
 {
@@ -30,9 +32,26 @@ namespace Untech.Practices.DataStorage.Linq2Db
 		{
 			using (IDataContext context = GetContext())
 			{
-				await context.InsertWithIdentityAsync(entity, token: cancellationToken);
+				var key = TableHasIdentity(context) ? await InsertWithIdentity(context) : await Insert(context);
 
-				return await Table(context).SingleAsync(n => n.Key.Equals(entity.Key), cancellationToken);
+				return await Table(context).SingleAsync(n => n.Key.Equals(key), cancellationToken);
+			}
+
+			bool TableHasIdentity(IDataContext context)
+			{
+				return EntityDescriptor(context).Columns.Any(c => c.IsIdentity);
+			}
+
+			async Task<TKey> InsertWithIdentity(IDataContext context)
+			{
+				var identityObj = await context.InsertWithIdentityAsync(entity, token: cancellationToken);
+				return context.MappingSchema.ChangeTypeTo<TKey>(identityObj);
+			}
+
+			async Task<TKey> Insert(IDataContext context)
+			{
+				await context.InsertAsync(entity, token: cancellationToken);
+				return entity.Key;
 			}
 		}
 
@@ -63,6 +82,11 @@ namespace Untech.Practices.DataStorage.Linq2Db
 		protected ITable<T> Table(IDataContext context)
 		{
 			return context.GetTable<T>();
+		}
+
+		protected EntityDescriptor EntityDescriptor(IDataContext context)
+		{
+			return context.MappingSchema.GetEntityDescriptor(typeof(T));
 		}
 	}
 
