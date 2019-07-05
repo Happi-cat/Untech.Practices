@@ -9,7 +9,7 @@ using Untech.Practices.DataStorage;
 namespace MyBudgetPlan.Domain
 {
 	[DataContract]
-	public abstract class BudgetLogEntry : IAggregateRoot
+	public abstract class BudgetLogEntry : IHasKey
 	{
 		private readonly List<INotification> _notifications = new List<INotification>();
 

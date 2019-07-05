@@ -4,7 +4,7 @@ using Untech.Practices.DataStorage;
 namespace MyParcels.Domain
 {
 	[DataContract]
-	public class Parcel : IAggregateRoot<string>
+	public class Parcel : IHasKey<string>
 	{
 		private Parcel()
 		{

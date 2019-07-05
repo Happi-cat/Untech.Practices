@@ -6,7 +6,7 @@ using LinqToDB;
 namespace Untech.Practices.DataStorage.Linq2Db
 {
 	public class GenericDataStorage<T, TKey> : IDataStorage<T, TKey>
-		where T : class, IAggregateRoot<TKey>
+		where T : class, IHasKey<TKey>
 	{
 		private readonly Func<IDataContext> _contextFactory;
 
@@ -21,7 +21,7 @@ namespace Untech.Practices.DataStorage.Linq2Db
 			using (IDataContext context = GetContext())
 			{
 				return await Table(context).SingleOrDefaultAsync(n => n.Key.Equals(key), cancellationToken)
-					?? throw new AggregateRootNotFoundException(key);
+					?? throw new ItemNotFoundException(key);
 			}
 		}
 
@@ -67,8 +67,8 @@ namespace Untech.Practices.DataStorage.Linq2Db
 	}
 
 	public class GenericDataStorage<T, TDao, TKey> : IDataStorage<T, TKey>
-		where T : IAggregateRoot<TKey>
-		where TDao : class, IAggregateRoot<TKey>
+		where T : IHasKey<TKey>
+		where TDao : class, IHasKey<TKey>
 	{
 		private readonly Func<IDataContext> _contextFactory;
 		private readonly GenericDataStorage<TDao, TKey> _innerDataStorage;

@@ -8,7 +8,7 @@ using Untech.Practices.DataStorage;
 namespace MyBookList.Domain.BookLists.Shared
 {
 	[DataContract]
-	public class SharedBookList : IAggregateRoot
+	public class SharedBookList : IHasKey
 	{
 		private SharedBookList()
 		{
