@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Untech.AsyncCommandEngine.Builder;
 using Untech.AsyncCommandEngine.Fakes;
+using Untech.AsyncCommandEngine.Features.CQRS;
 using Untech.AsyncCommandEngine.Metadata;
 using Untech.Practices.CQRS;
 using Untech.Practices.CQRS.Dispatching;

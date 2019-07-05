@@ -1,7 +1,7 @@
 using System;
 using Untech.AsyncCommandEngine.Builder;
 
-namespace Untech.AsyncCommandEngine.Processing
+namespace Untech.AsyncCommandEngine.Features.CQRS
 {
 	public static class MiddlewareCollectionExtensions
 	{

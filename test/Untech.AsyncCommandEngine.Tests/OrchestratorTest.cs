@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Untech.AsyncCommandEngine.Builder;
 using Untech.AsyncCommandEngine.Fakes;
+using Untech.AsyncCommandEngine.Features.CQRS;
 using Untech.AsyncCommandEngine.Processing;
 using Untech.AsyncCommandEngine.Transports;
 using Untech.Practices.CQRS;

@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using Untech.AsyncCommandEngine.Features.CQRS;
 using Untech.AsyncCommandEngine.Metadata.Annotations;
 using Xunit;
 
@@ -54,16 +55,6 @@ namespace Untech.AsyncCommandEngine.Metadata
 			var metadata = _provider.GetMetadata(_commandName);
 
 			Assert.Null(metadata.GetAttribute<FakeAttribute>());
-		}
-
-		[Fact]
-		public void GetAttribute_ReturnsAttribute_WhenAttributeFoundOnRequestMetadataSource()
-		{
-			var metadata = _provider.GetMetadata(_commandName);
-
-			var attribute = metadata.GetAttribute<WatchDogTimeoutAttribute>();
-
-			Assert.NotNull(attribute);
 		}
 
 		[Fact]
