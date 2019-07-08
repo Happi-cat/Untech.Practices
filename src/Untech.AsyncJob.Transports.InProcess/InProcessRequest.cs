@@ -20,7 +20,7 @@ namespace Untech.AsyncJob.Transports.InProcess
 			_payload = JsonSerializer.ToString(payload);
 
 			QueueOptions = options;
-			Attributes = options?.Advanced?.ToDictionary(n => n.Key, n => Convert.ToString((object)n.Value));
+			Attributes = options?.Advanced?.ToDictionary(n => n.Key, n => Convert.ToString(n.Value));
 		}
 
 		public override string Identifier { get; }
