@@ -130,17 +130,10 @@ namespace Untech.AsyncJob.Transports.InProcess
 					if (!queue.TryDequeue(out var request)) break;
 
 					if (request.IsExpired()) continue;
-					if (request.IsExecuteAfterReached())
-					{
-						yield return request;
-					}
-					else
-					{
-						delayQueue.Enqueue(request);
-					}
+					if (request.IsExecuteAfterReached()) yield return request;
+					else delayQueue.Enqueue(request);
 				}
 			}
-
 		}
 	}
 }
