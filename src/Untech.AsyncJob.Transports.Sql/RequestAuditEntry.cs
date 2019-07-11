@@ -12,24 +12,21 @@ namespace Untech.AsyncJob.Transports.Sql
 			RequestKey = request.Key;
 			Name = request.Name;
 			Attributes = request.Attributes;
-			Metadata = request.Metadata;
 			Body = request.Body;
 			Created = request.Created;
 		}
 
-		public int Key { get; set; }
+		public int Key { get; private set; }
 
-		public string RequestKey { get; set; }
+		public string RequestKey { get; private set; }
 
-		public string Name { get; set; }
+		public string Name { get; private set; }
 
-		public string Body { get; set; }
+		public string Body { get; private set; }
 
-		public string Attributes { get; set; }
+		public string Attributes { get; private set; }
 
-		public string Metadata { get; set; }
-
-		public DateTimeOffset Created { get; set; }
+		public DateTimeOffset Created { get; private set; }
 
 		public DateTimeOffset Executed { get; set; }
 

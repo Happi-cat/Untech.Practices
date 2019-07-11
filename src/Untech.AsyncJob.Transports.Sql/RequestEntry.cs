@@ -24,26 +24,20 @@ namespace Untech.AsyncJob.Transports.Sql
 			Body = JsonSerializer.ToString(payload);
 		}
 
-		public string Key { get; set; }
+		public string Key { get; private set; }
 
-		public string Name { get; set; }
+		public string Name { get; private set; }
 
-		public string Body { get; set; }
+		public string Body { get; private set; }
 
-		public string Attributes { get; set; }
+		public string Attributes { get; private set; }
 
-		public string Metadata { get; set; }
+		public DateTimeOffset Created { get; private set; }
 
-		public DateTimeOffset Created { get; set; }
+		public int Priority { get; private set; }
 
-		public int Priority { get; set; }
+		public DateTimeOffset? ExpiresAfter { get; private set; }
 
-		public DateTimeOffset? ExpiresAfter { get; set; }
-
-		public DateTimeOffset? ExecuteAfter { get; set; }
-
-		public bool Completed { get; set; }
-
-		public string Error { get; set; }
+		public DateTimeOffset? ExecuteAfter { get; private set; }
 	}
 }
