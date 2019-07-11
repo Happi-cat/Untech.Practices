@@ -7,6 +7,14 @@ using LinqToDB.Mapping;
 
 namespace Untech.Practices.DataStorage.Linq2Db
 {
+	public class GenericDataStorage<T> : GenericDataStorage<T, int>, IDataStorage<T>
+		where T : class, IHasKey
+	{
+		public GenericDataStorage(Func<IDataContext> contextFactory) : base(contextFactory)
+		{
+		}
+	}
+
 	public class GenericDataStorage<T, TKey> : IDataStorage<T, TKey>
 		where T : class, IHasKey<TKey>
 	{
