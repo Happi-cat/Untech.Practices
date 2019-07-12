@@ -7,22 +7,27 @@ using System.Threading;
 using System.Threading.Tasks;
 using Untech.Practices.CQRS;
 using Untech.Practices.CQRS.Dispatching;
+using static System.Math;
 
 namespace Untech.AsyncJob.Transports.InProcess
 {
 	public class InProcessTransport : ITransport, IQueueDispatcher
 	{
 		private readonly IDictionary<int, Queue> _queues;
-		public InProcessTransport()
+
+		public InProcessTransport() : this(10, 1)
 		{
-			var scaleFactor = 10;
-			_queues = new [] { -1, 0, 1}
-				.ToDictionary(n => n * scaleFactor, n => new Queue(), new PriorityComparer(scaleFactor));
+		}
+
+		private InProcessTransport(int scale, int radius)
+		{
+			_queues = Enumerable.Range(-radius, radius * 2 | 1)
+				.ToDictionary(n => n << scale, n => new Queue(), new PriorityComparer(scale, radius));
 		}
 
 		public Task<ReadOnlyCollection<Request>> GetRequestsAsync(int count)
 		{
-			var maxCountPerPriorityQueue = Math.Max(count - 2, 1);
+			var maxCountPerPriorityQueue = Max(count - 2, 1);
 			var requests = _queues
 				.OrderByDescending(n => n.Key)
 				.SelectMany(n => n.Value.Dequeue(maxCountPerPriorityQueue))
@@ -34,12 +39,14 @@ namespace Untech.AsyncJob.Transports.InProcess
 			return Task.FromResult(requests);
 		}
 
-		public async Task CompleteRequestAsync(Request request)
+		public Task CompleteRequestAsync(Request request)
 		{
+			return Task.CompletedTask;
 		}
 
-		public async Task FailRequestAsync(Request request, Exception exception)
+		public Task FailRequestAsync(Request request, Exception exception)
 		{
+			return Task.CompletedTask;
 		}
 
 		public Task EnqueueAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default,
@@ -59,33 +66,24 @@ namespace Untech.AsyncJob.Transports.InProcess
 		}
 
 		/// <summary>
-		/// Assumes 3 priority groups: -1, 0, 1. Divides numbers into groups according to scale factor.
+		/// Assumes we have priority groups: -r..r. Where group size is 1 &lt;&lt; scale
 		/// </summary>
 		private class PriorityComparer : IEqualityComparer<int>
 		{
-			private readonly int _factor;
+			private readonly int _radius;
+			private readonly int _scale;
 
-			public PriorityComparer(int scaleFactor = 1)
+			public PriorityComparer(int scale = 0, int radius = 0)
 			{
-				_factor = Math.Max(scaleFactor, 1);
+				_radius = Max(radius, 0);
+				_scale = Max(scale, 0);
 			}
 
-			public bool Equals(int x, int y)
-			{
-				return Normalize(x) == Normalize(y);
-			}
+			public bool Equals(int x, int y) => Normalize(x) == Normalize(y);
 
-			public int GetHashCode(int obj)
-			{
-				return Normalize(obj).GetHashCode();
-			}
+			public int GetHashCode(int obj) => Normalize(obj).GetHashCode();
 
-			private int Normalize(int value)
-			{
-				value /= _factor;
-				value = Math.Max(value, -1);
-				return Math.Min(value, 1);
-			}
+			private int Normalize(int value) => Max(-_radius, Min(value >> _scale, _radius));
 		}
 
 		private class Queue
@@ -111,13 +109,13 @@ namespace Untech.AsyncJob.Transports.InProcess
 
 			private IEnumerable<InProcessRequest> Delayed(int count)
 			{
-				count = Math.Max(count / 2, 1);
+				count = Max(count >> 1, 1);
 				return TryDeque(_delayQueue, _delayQueue, count);
 			}
 
 			private IEnumerable<InProcessRequest> Main(int count)
 			{
-				return TryDeque(_queue, _delayQueue, count * 2);
+				return TryDeque(_queue, _delayQueue, count << 1);
 			}
 
 			private static IEnumerable<InProcessRequest> TryDeque(
