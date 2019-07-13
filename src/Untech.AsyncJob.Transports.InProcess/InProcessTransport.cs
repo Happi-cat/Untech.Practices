@@ -21,7 +21,7 @@ namespace Untech.AsyncJob.Transports.InProcess
 
 		private InProcessTransport(int scale, int radius)
 		{
-			_queues = Enumerable.Range(-radius, radius * 2 | 1)
+			_queues = Enumerable.Range(-radius, (radius << 1) | 1)
 				.ToDictionary(n => n << scale, n => new Queue(), new PriorityComparer(scale, radius));
 		}
 

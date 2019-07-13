@@ -10,14 +10,17 @@ namespace Untech.AsyncJob.Transports.InProcess
 {
 	internal class InProcessRequest:  Request
 	{
-		private readonly string _payload;
+		private readonly object _payload;
+		private string _serializedPayload;
 
 		public InProcessRequest(object payload, QueueOptions options)
 		{
+			if (payload == null) throw new ArgumentNullException(nameof(payload));
+
 			Identifier = Guid.NewGuid().ToString("B");
 			Name = payload.GetType().FullName;
 			Created = DateTimeOffset.Now;
-			_payload = JsonSerializer.ToString(payload);
+			_payload = payload;
 
 			QueueOptions = options;
 			Attributes = options?.Advanced?.ToDictionary(n => n.Key, n => Convert.ToString(n.Value));
@@ -50,12 +53,16 @@ namespace Untech.AsyncJob.Transports.InProcess
 
 		public override object GetBody(Type requestType)
 		{
-			return JsonSerializer.Parse(_payload, requestType);
+			if (requestType.IsInstanceOfType(_payload)) return _payload;
+
+			throw new ArgumentException($"Payload type is {_payload.GetType()} when request is {requestType}");
 		}
 
 		public override Stream GetRawBody()
 		{
-			return new MemoryStream(Encoding.UTF8.GetBytes(_payload));
+			if (_serializedPayload == null) _serializedPayload = JsonSerializer.ToString(_payload);
+
+			return new MemoryStream(Encoding.UTF8.GetBytes(_serializedPayload));
 		}
 	}
 }
