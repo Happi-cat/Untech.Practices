@@ -13,6 +13,10 @@ namespace Untech.AsyncJob.Transports.InProcess
 		private readonly object _payload;
 		private string _serializedPayload;
 
+		private readonly int _priority;
+		private readonly TimeSpan? _expiresAfter;
+		private readonly TimeSpan? _executeAfter;
+
 		public InProcessRequest(object payload, QueueOptions options)
 		{
 			if (payload == null) throw new ArgumentNullException(nameof(payload));
@@ -22,8 +26,10 @@ namespace Untech.AsyncJob.Transports.InProcess
 			Created = DateTimeOffset.Now;
 			_payload = payload;
 
-			QueueOptions = options;
 			Attributes = options?.Advanced?.ToDictionary(n => n.Key, n => Convert.ToString(n.Value));
+			_priority = options?.Priority ?? 0;
+			_expiresAfter = options?.ExpiresAfter;
+			_executeAfter = options?.ExecuteAfter;
 		}
 
 		public override string Identifier { get; }
@@ -32,23 +38,19 @@ namespace Untech.AsyncJob.Transports.InProcess
 
 		public override IDictionary<string, string> Attributes { get; }
 
-		public QueueOptions QueueOptions { get; }
-
 		public int GetPriority()
 		{
-			return QueueOptions?.Priority ?? 0;
+			return _priority;
 		}
 
 		public bool IsExpired()
 		{
-			return QueueOptions?.ExpiresAfter != null
-				&& Created + QueueOptions.ExpiresAfter <= DateTimeOffset.Now;
+			return _expiresAfter != null && Created + _expiresAfter <= DateTimeOffset.Now;
 		}
 
 		public bool IsExecuteAfterReached()
 		{
-			return QueueOptions?.ExecuteAfter == null
-				|| Created + QueueOptions.ExecuteAfter <= DateTimeOffset.Now;
+			return _executeAfter == null || Created + _executeAfter <= DateTimeOffset.Now;
 		}
 
 		public override object GetBody(Type requestType)
