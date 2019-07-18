@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Untech.Practices.Notifications
@@ -17,5 +18,13 @@ namespace Untech.Practices.Notifications
 		/// <param name="cancellationToken">Cancellation token.</param>
 		/// <returns></returns>
 		Task SendAsync(TNotification notification, CancellationToken cancellationToken = default);
+
+		/// <summary>
+		/// Sends the <paramref name="notifications"/> to clients asynchronously.
+		/// </summary>
+		/// <param name="notifications">The list of notifications to send.</param>
+		/// <param name="cancellationToken">Cancellation token.</param>
+		/// <returns></returns>
+		Task SendAsync(IEnumerable<TNotification> notifications, CancellationToken cancellationToken = default);
 	}
 }

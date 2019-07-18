@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Untech.Practices.Notifications
 {
@@ -10,6 +11,11 @@ namespace Untech.Practices.Notifications
 	{
 		/// <inheritdoc />
 		public Task EnqueueAsync(TNotification notification)
+		{
+			return Task.FromResult(0);
+		}
+
+		public Task EnqueueAsync(IEnumerable<TNotification> notifications)
 		{
 			return Task.FromResult(0);
 		}

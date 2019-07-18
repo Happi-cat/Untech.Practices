@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Untech.Practices.Notifications
 {
@@ -13,5 +14,11 @@ namespace Untech.Practices.Notifications
 		/// </summary>
 		/// <param name="notification">The notification to sent.</param>
 		Task EnqueueAsync(TNotification notification);
+
+		/// <summary>
+		/// Adds notifications for sending into queue.
+		/// </summary>
+		/// <param name="notifications">The list of notifications to sent.</param>
+		Task EnqueueAsync(IEnumerable<TNotification> notifications);
 	}
 }

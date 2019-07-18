@@ -21,9 +21,14 @@ namespace Untech.Practices.Notifications.Mail
 			_options = options ?? throw new ArgumentNullException(nameof(options));
 		}
 
-		public Task EnqueueAsync(Mail mail)
+		public Task EnqueueAsync(Mail notification)
 		{
-			return Task.Run(() => SendAsync(mail));
+			return Task.Run(() => SendAsync(notification));
+		}
+
+		public Task EnqueueAsync(IEnumerable<Mail> notifications)
+		{
+			return Task.Run(() => SendAsync(notifications));
 		}
 
 		public async Task SendAsync(Mail notification, CancellationToken cancellationToken = default)
@@ -34,6 +39,18 @@ namespace Untech.Practices.Notifications.Mail
 			{
 				await client.ConnectAsync(_options.Host, _options.Port, _options.UseSsl, cancellationToken);
 				await client.SendAsync(message, cancellationToken);
+				await client.DisconnectAsync(true, cancellationToken);
+			}
+		}
+
+		public async Task SendAsync(IEnumerable<Mail> notifications, CancellationToken cancellationToken = default)
+		{
+			var messages = notifications.Select(CreateMimeMessage).ToList();
+
+			using (var client = new SmtpClient())
+			{
+				await client.ConnectAsync(_options.Host, _options.Port, _options.UseSsl, cancellationToken);
+				foreach (MimeMessage message in messages) await client.SendAsync(message, cancellationToken);
 				await client.DisconnectAsync(true, cancellationToken);
 			}
 		}
