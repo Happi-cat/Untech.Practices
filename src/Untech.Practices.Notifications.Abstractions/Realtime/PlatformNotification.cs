@@ -5,7 +5,7 @@ namespace Untech.Practices.Notifications.Realtime
 	/// <summary>
 	/// Represents platform-wide realtime notification.
 	/// </summary>
-	public class PlatformNotification : IRealtimeNotification
+	public class PlatformNotification : INotification
 	{
 		public PlatformNotification(object payload)
 		{

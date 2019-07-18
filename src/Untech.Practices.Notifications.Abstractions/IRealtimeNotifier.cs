@@ -1,14 +1,14 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace Untech.Practices.Notifications.Realtime
+namespace Untech.Practices.Notifications
 {
 	/// <summary>
 	/// Provides methods for sending notifications asynchronously of a predefined type <typeparamref name="TNotification"/>.
 	/// </summary>
 	/// <typeparam name="TNotification"></typeparam>
 	public interface IRealtimeNotifier<in TNotification>
-		where TNotification : IRealtimeNotification
+		where TNotification : INotification
 	{
 		/// <summary>
 		/// Sends the <paramref name="notification"/> to clients asynchronously.

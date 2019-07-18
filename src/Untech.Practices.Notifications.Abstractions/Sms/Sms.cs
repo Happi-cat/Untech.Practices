@@ -7,7 +7,7 @@ namespace Untech.Practices.Notifications.Sms
 	///     Represents SMS info that can be used for rendering and sending.
 	/// </summary>
 	[DataContract]
-	public class Sms
+	public class Sms : INotification
 	{
 		/// <summary>
 		///     For serializers
@@ -20,14 +20,16 @@ namespace Untech.Practices.Notifications.Sms
 		///     Initializes a new instance of the <see cref="Sms" /> with a predefined <paramref name="toNumber" /> and arguments.
 		/// </summary>
 		/// <param name="toNumber">Recipients number</param>
-		/// <param name="arguments"></param>
+		/// <param name="templateKey"></param>
+		/// <param name="payload"></param>
 		/// <exception cref="ArgumentNullException"></exception>
-		public Sms(string toNumber, ISmsTemplateArguments arguments)
+		public Sms(string toNumber, string templateKey, object payload = null)
 		{
 			if (string.IsNullOrEmpty(toNumber)) throw new ArgumentNullException(nameof(toNumber));
 
 			ToNumber = toNumber;
-			TemplateArguments = arguments ?? throw new ArgumentNullException(nameof(arguments));
+			TemplateKey = templateKey ?? throw new ArgumentNullException(nameof(templateKey));
+			Payload = payload;
 		}
 
 		/// <summary>
@@ -40,12 +42,12 @@ namespace Untech.Practices.Notifications.Sms
 		///     Gets the template key.
 		/// </summary>
 		[DataMember]
-		public string TemplateKey => TemplateArguments.TemplateKey;
+		public string TemplateKey { get; private set; }
 
 		/// <summary>
 		///     Gets additional arguments.
 		/// </summary>
 		[DataMember]
-		public ISmsTemplateArguments TemplateArguments { get; private set; }
+		public object Payload { get; private set; }
 	}
 }

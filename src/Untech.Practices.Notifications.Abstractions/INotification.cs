@@ -1,10 +1,10 @@
-﻿namespace Untech.Practices.Notifications.Realtime
+﻿namespace Untech.Practices.Notifications
 {
 	/// <summary>
 	/// Represents a common interface for realtime notifications of different types, like:
-	/// PlatformNotification, TenantNotification, UserNotification, etc.
+	/// Mail, Sms, Realtime, etc.
 	/// </summary>
-	public interface IRealtimeNotification
+	public interface INotification
 	{
 		/// <summary>
 		/// Gets payload that should be send.
