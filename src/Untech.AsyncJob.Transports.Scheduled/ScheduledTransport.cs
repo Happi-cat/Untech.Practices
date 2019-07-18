@@ -40,8 +40,7 @@ namespace Untech.AsyncJob.Transports.Scheduled
 
 		private async Task Complete(Request request, Exception exception = null)
 		{
-			var jobRequest = request as ScheduledJobRequest;
-			if (jobRequest == null) return;
+			if (!(request is ScheduledJobRequest jobRequest)) return;
 
 			var job = jobRequest.Job;
 			await _scheduledJobStore.SaveNextRun(job, job.GetNewNextRun());

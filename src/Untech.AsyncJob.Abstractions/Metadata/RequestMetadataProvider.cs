@@ -7,7 +7,7 @@ namespace Untech.AsyncJob.Metadata
 {
 	public class RequestMetadataProvider : IRequestMetadataProvider, IEnumerable<IRequestMetadata>
 	{
-		public readonly string DefaultMetadataKey = "*";
+		public const string DefaultMetadataKey = "*";
 
 		private readonly IDictionary<string, List<IRequestMetadata>> _metadata;
 

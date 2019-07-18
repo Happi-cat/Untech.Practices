@@ -17,7 +17,7 @@ namespace Untech.Practices.Collections
 		private Node _tail;
 
 		/// <summary>
-		///     Initalizes a new instance of the <see cref="RoundRobinCollection{T}" /> class.
+		///     Initializes a new instance of the <see cref="RoundRobinCollection{T}" /> class.
 		/// </summary>
 		public RoundRobinCollection()
 		{

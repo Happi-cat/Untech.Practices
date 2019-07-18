@@ -31,7 +31,7 @@ namespace Untech.Practices.DataStorage
 		/// <summary>
 		///     Updates <paramref name="entity" /> asynchronously in the store.
 		/// </summary>
-		/// <param name="entity">Entity to create.</param>
+		/// <param name="entity">Entity to update.</param>
 		/// <param name="cancellationToken">Task cancellation token.</param>
 		/// <returns>Entity that was created in the store.</returns>
 		/// <exception cref="ItemNotFoundException">Entity with <paramref name="key" /> cannot be found.</exception>

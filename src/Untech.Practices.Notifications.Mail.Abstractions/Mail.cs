@@ -19,9 +19,9 @@ namespace Untech.Practices.Notifications.Mail
 		}
 
 		/// <summary>
-		///     Initializes a new isntance of the <see cref="Mail" /> with a predefined recepient address and arguments.
+		///     Initializes a new instance of the <see cref="Mail" /> with a predefined recipient address and arguments.
 		/// </summary>
-		/// <param name="to">The recepient address.</param>
+		/// <param name="to">The recipient address.</param>
 		/// <param name="templateArguments">The mail arguments.</param>
 		/// <exception cref="ArgumentNullException">
 		///     <paramref name="to" /> or <paramref name="templateArguments" /> is null.
@@ -36,9 +36,9 @@ namespace Untech.Practices.Notifications.Mail
 		}
 
 		/// <summary>
-		///     Initializes a new isntance of the <see cref="Mail" /> with a predefined recepients addresses and arguments.
+		///     Initializes a new instance of the <see cref="Mail" /> with a predefined recipients addresses and arguments.
 		/// </summary>
-		/// <param name="to">Recepients addresses.</param>
+		/// <param name="to">Recipients addresses.</param>
 		/// <param name="templateArguments">The mail arguments.</param>
 		/// <exception cref="ArgumentNullException">
 		///     <paramref name="to" /> or <paramref name="templateArguments" /> is null.
@@ -60,13 +60,13 @@ namespace Untech.Practices.Notifications.Mail
 		public MailboxAddress From { get; set; }
 
 		/// <summary>
-		///     Gets recepients mail addresses.
+		///     Gets recipients mail addresses.
 		/// </summary>
 		[DataMember]
 		public IReadOnlyCollection<MailboxAddress> To { get; private set; }
 
 		/// <summary>
-		///     Gets or sets optional CC mail adressess.
+		///     Gets or sets optional CC mail addresses.
 		/// </summary>
 		[DataMember]
 		public IReadOnlyCollection<MailboxAddress> Cc { get; set; }

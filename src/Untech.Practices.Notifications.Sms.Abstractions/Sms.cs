@@ -19,7 +19,7 @@ namespace Untech.Practices.Notifications.Sms
 		/// <summary>
 		///     Initializes a new instance of the <see cref="Sms" /> with a predefined <paramref name="toNumber" /> and arguments.
 		/// </summary>
-		/// <param name="toNumber">Recepients number</param>
+		/// <param name="toNumber">Recipients number</param>
 		/// <param name="arguments"></param>
 		/// <exception cref="ArgumentNullException"></exception>
 		public Sms(string toNumber, ISmsTemplateArguments arguments)
@@ -31,7 +31,7 @@ namespace Untech.Practices.Notifications.Sms
 		}
 
 		/// <summary>
-		///     Gets recepients phone number.
+		///     Gets recipients phone number.
 		/// </summary>
 		[DataMember]
 		public string ToNumber { get; private set; }

@@ -29,7 +29,7 @@ namespace Untech.Practices.DataStorage
 		}
 
 		[Fact]
-		public async Task UpdateAsync_ReturnsUpdateAsyncdObject()
+		public async Task UpdateAsync_ReturnsUpdateAsyncObject()
 		{
 			var created = await _dataStorage.CreateAsync(new Entity());
 

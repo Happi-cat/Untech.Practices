@@ -3,7 +3,7 @@
 namespace Untech.Practices.CQRS.Pipeline
 {
 	/// <summary>
-	///     Defines a pipeline step that will be triggered beefore <see cref="IRequestHandler{TIn,TOut}" /> or
+	///     Defines a pipeline step that will be triggered before <see cref="IRequestHandler{TIn,TOut}" /> or
 	///     <see cref="IRequestHandler{TIn,TOut}" />
 	/// </summary>
 	/// <typeparam name="TRequest">CQRS request type.</typeparam>

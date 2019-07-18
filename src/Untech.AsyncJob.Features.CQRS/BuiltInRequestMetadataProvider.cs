@@ -50,10 +50,10 @@ namespace Untech.AsyncJob.Features.CQRS
 
 			var requestsMetadata = new List<(string FullName, IRequestMetadata Accessor)>();
 			foreach (TypeExplorer typeExplorer in typeDetectives)
-			foreach (Type requestType in typeExplorer.GetSupportableRequestTypes())
 			{
-				if (string.IsNullOrEmpty(requestType.FullName)) continue;
-				requestsMetadata.Add((requestType.FullName, typeExplorer.GetMetadata()));
+				requestsMetadata.AddRange(typeExplorer.GetSupportableRequestTypes()
+					.Where(requestType => !string.IsNullOrEmpty(requestType.FullName))
+					.Select(requestType => (requestType.FullName, typeExplorer.GetMetadata())));
 			}
 
 			return requestsMetadata

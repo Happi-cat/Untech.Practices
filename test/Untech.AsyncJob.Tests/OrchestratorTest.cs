@@ -24,7 +24,7 @@ namespace Untech.AsyncJob
 		{
 			var transport = new FakeTransport(100);
 			var cqrs = new FakeCqrs();
-			var orcherstator = new EngineBuilder(options =>
+			var orchestrator = new EngineBuilder(options =>
 				{
 					options.Warps = 5;
 					options.RequestsPerWarp = 5;
@@ -35,9 +35,9 @@ namespace Untech.AsyncJob
 				.Do(s => s.Final(cqrs))
 				.BuildOrchestrator();
 
-			await orcherstator.StartAsync();
+			await orchestrator.StartAsync();
 			var completed = await transport.Complete();
-			await orcherstator.StopAsync(TimeSpan.Zero);
+			await orchestrator.StopAsync(TimeSpan.Zero);
 
 			Assert.Equal(100, cqrs.CallCounter);
 			Assert.Equal(100, completed);

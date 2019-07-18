@@ -17,7 +17,7 @@ namespace Untech.Practices.UserContext
 		///     and optional user <paramref name="options" />.
 		/// </summary>
 		/// <param name="userKey">The current user key.</param>
-		/// <param name="culture">The cultutre of the current user.</param>
+		/// <param name="culture">The culture of the current user.</param>
 		/// <param name="options">The current user options.</param>
 		public AdHocUserContext(TKey userKey, CultureInfo culture, IReadOnlyDictionary<string, object> options = null)
 		{
@@ -55,7 +55,7 @@ namespace Untech.Practices.UserContext
 		///     and optional user <paramref name="options" />.
 		/// </summary>
 		/// <param name="userKey">The current user key.</param>
-		/// <param name="culture">The cultutre of the current user.</param>
+		/// <param name="culture">The culture of the current user.</param>
 		/// <param name="options">The current user options.</param>
 		public AdHocUserContext(int userKey, CultureInfo culture, IReadOnlyDictionary<string, object> options = null)
 			: base(userKey, culture, options)

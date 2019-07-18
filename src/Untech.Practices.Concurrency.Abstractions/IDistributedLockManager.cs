@@ -46,7 +46,7 @@ namespace Untech.Practices.Concurrency
 		/// <param name="resource">Resource name to lock.</param>
 		/// <param name="options">Lock options to use.</param>
 		/// <param name="cancellationToken">Cancellation token.</param>
-		/// <returns>Disstributed lock if was acquired; otherwise null.</returns>
+		/// <returns>Distributed lock if was acquired; otherwise null.</returns>
 		Task<IDisposable> TryAcquireAsync(string resource, LockOptions options,
 			CancellationToken cancellationToken = default);
 	}

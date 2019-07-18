@@ -10,22 +10,22 @@ namespace Untech.Practices.DataStorage.Cache
 	/// </summary>
 	public class MultiLevelCacheStorage : ICacheStorage
 	{
-		private readonly IReadOnlyCollection<ICacheStorage> _cacheStorages;
+		private readonly IReadOnlyCollection<ICacheStorage> _caches;
 
 		/// <summary>
-		///     Initializes a new instance with a list of cache storages.
+		///     Initializes a new instance with a list of caches.
 		/// </summary>
-		/// <param name="cacheStorages">The list of cache storages starting from highest priority to lowest.</param>
-		public MultiLevelCacheStorage(IEnumerable<ICacheStorage> cacheStorages)
+		/// <param name="caches">The list of caches starting from highest priority to lowest.</param>
+		public MultiLevelCacheStorage(IEnumerable<ICacheStorage> caches)
 		{
-			_cacheStorages = new List<ICacheStorage>(cacheStorages);
+			_caches = new List<ICacheStorage>(caches);
 		}
 
 		/// <inheritdoc />
 		public async Task<CacheValue<T>> GetAsync<T>(string key,
 			CancellationToken cancellationToken = default)
 		{
-			foreach (ICacheStorage cacheStorage in _cacheStorages)
+			foreach (ICacheStorage cacheStorage in _caches)
 			{
 				CacheValue<T> value = await cacheStorage.GetAsync<T>(key, cancellationToken);
 
@@ -38,7 +38,7 @@ namespace Untech.Practices.DataStorage.Cache
 		/// <inheritdoc />
 		public Task SetAsync(string key, object value, CancellationToken cancellationToken = default)
 		{
-			return Task.WhenAll(_cacheStorages
+			return Task.WhenAll(_caches
 				.Select(cacheStorage => cacheStorage.SetAsync(key, value, cancellationToken))
 			);
 		}
@@ -46,7 +46,7 @@ namespace Untech.Practices.DataStorage.Cache
 		/// <inheritdoc />
 		public Task DropAsync(string key, CancellationToken cancellationToken = default)
 		{
-			return Task.WhenAll(_cacheStorages
+			return Task.WhenAll(_caches
 				.Select(cacheStorage => cacheStorage.DropAsync(key, cancellationToken))
 			);
 		}

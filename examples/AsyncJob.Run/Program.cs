@@ -91,7 +91,7 @@ namespace AsyncJob.Run
 		private static IEnumerable<ITransport> Transports(IBuilderContext context)
 		{
 			// bare
-			yield return new DemoTransport(new[] { new CompositeCommand(), });
+			yield return new DemoTransport(new[] { new CompositeCommand() });
 			//throw
 			yield return new DemoTransport(new[]
 			{
@@ -104,13 +104,13 @@ namespace AsyncJob.Run
 				new DelayCommand(TimeSpan.FromSeconds(20))
 				{
 					Meta = new List<MetadataAttribute> { new WatchDogTimeoutAttribute(30) }
-				},
+				}
 			});
 			// combined
 			yield return new DemoTransport(new[]
 			{
-				new CompositeCommand { Delay = new DelayCommand(TimeSpan.FromSeconds(2)), },
-				new CompositeCommand { Delay = new DelayCommand(TimeSpan.FromMinutes(2)), },
+				new CompositeCommand { Delay = new DelayCommand(TimeSpan.FromSeconds(2)) },
+				new CompositeCommand { Delay = new DelayCommand(TimeSpan.FromMinutes(2)) },
 				new CompositeCommand
 				{
 					Delay = new DelayCommand(TimeSpan.FromSeconds(2)), Throw = new ThrowCommand()
@@ -123,7 +123,7 @@ namespace AsyncJob.Run
 			// scheduled
 			yield return new ScheduledTransport(new InMemoryScheduledJobStore(new[]
 			{
-				ScheduledJobDefinition.Create("* * * * *", new HelloCommand { Message = "Holla (every min)" }),
+				ScheduledJobDefinition.Create("* * * * *", new HelloCommand { Message = "Hi (every min)" }),
 				new ScheduledJobDefinition
 				{
 					Cron = "*/5 * * * *",

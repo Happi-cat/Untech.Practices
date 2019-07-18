@@ -61,9 +61,7 @@ namespace Untech.AsyncJob.Transports.Scheduled
 
 			var now = DateTime.UtcNow;
 
-			if (now < StartAfter) return false;
-			if (StopAfter < now) return false;
-			return true;
+			return !(now < StartAfter || StopAfter < now);
 		}
 	}
 }

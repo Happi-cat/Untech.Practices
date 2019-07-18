@@ -101,7 +101,7 @@ namespace Untech.Practices.Linq
 				{
 					// chunk iterator starts when already moved next
 					yield return enumerator.Current;
-					// if chunk completed then exit without moving next (short curcuit)
+					// if chunk completed then exit without moving next (short circuit)
 				} while (++itemsReturned < chunkSize && enumerator.MoveNext());
 			}
 		}
@@ -194,11 +194,11 @@ namespace Untech.Practices.Linq
 				// compare by indexes
 				if (indexX > -1 && indexY > -1) return indexX.CompareTo(indexY);
 
-				// ordered elements will be less than elements not in orderedElementsColletion
+				// ordered elements will be less than elements not in orderedElementsCollection
 				if (indexX > -1) return -1; // means x < y
 				if (indexY > -1) return 1; // means x > y
 
-				// usual comapare
+				// usual compare
 				return _alternateComparer.Compare(x, y);
 			}
 
