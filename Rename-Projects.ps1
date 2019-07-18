@@ -25,7 +25,7 @@ function Replace-InFileName($file) {
 }
 
 function Replace-InCodeFiles {
-	gci *.csproj,*.sln,*.cs -Recurse | %{
+	gci . -include *.csproj,*.sln,*.cs -Recurse | %{
 		Replace-InFile -file $_
 		Replace-InFileName -file $_
 	}
