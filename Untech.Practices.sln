@@ -41,13 +41,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.UserContex
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.TenantContext.Abstractions", "src\Untech.Practices.TenantContext.Abstractions\Untech.Practices.TenantContext.Abstractions.csproj", "{19AA8B65-3898-4A6D-B679-1FAE744AD1B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.Notifications.Mail.Abstractions", "src\Untech.Practices.Notifications.Mail.Abstractions\Untech.Practices.Notifications.Mail.Abstractions.csproj", "{D8CFB459-469C-41A8-92A2-54A080A9A822}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.Notifications.Mail", "src\Untech.Practices.Notifications.Mail\Untech.Practices.Notifications.Mail.csproj", "{8D2B7C7E-2369-4617-9A42-5467FA0C10AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.Notifications.Realtime.Abstractions", "src\Untech.Practices.Notifications.Realtime.Abstractions\Untech.Practices.Notifications.Realtime.Abstractions.csproj", "{96307B56-C3EE-4904-AA01-24C313DD1148}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.Notifications.Sms.Abstractions", "src\Untech.Practices.Notifications.Sms.Abstractions\Untech.Practices.Notifications.Sms.Abstractions.csproj", "{440C518F-6C87-4268-B2FC-2ACA3E9CB1B1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.Notifications.Abstractions", "src\Untech.Practices.Notifications.Abstractions\Untech.Practices.Notifications.Abstractions.csproj", "{96307B56-C3EE-4904-AA01-24C313DD1148}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{4E99F444-23AA-49EE-AEF7-C2D11FFADD51}"
 EndProject
@@ -247,10 +243,6 @@ Global
 		{19AA8B65-3898-4A6D-B679-1FAE744AD1B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19AA8B65-3898-4A6D-B679-1FAE744AD1B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19AA8B65-3898-4A6D-B679-1FAE744AD1B3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D8CFB459-469C-41A8-92A2-54A080A9A822}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D8CFB459-469C-41A8-92A2-54A080A9A822}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D8CFB459-469C-41A8-92A2-54A080A9A822}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D8CFB459-469C-41A8-92A2-54A080A9A822}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8D2B7C7E-2369-4617-9A42-5467FA0C10AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8D2B7C7E-2369-4617-9A42-5467FA0C10AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D2B7C7E-2369-4617-9A42-5467FA0C10AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -259,10 +251,6 @@ Global
 		{96307B56-C3EE-4904-AA01-24C313DD1148}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96307B56-C3EE-4904-AA01-24C313DD1148}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{96307B56-C3EE-4904-AA01-24C313DD1148}.Release|Any CPU.Build.0 = Release|Any CPU
-		{440C518F-6C87-4268-B2FC-2ACA3E9CB1B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{440C518F-6C87-4268-B2FC-2ACA3E9CB1B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{440C518F-6C87-4268-B2FC-2ACA3E9CB1B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{440C518F-6C87-4268-B2FC-2ACA3E9CB1B1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{61DE2448-B371-4979-B896-4B13BB2FFDE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{61DE2448-B371-4979-B896-4B13BB2FFDE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61DE2448-B371-4979-B896-4B13BB2FFDE8}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -486,10 +474,8 @@ Global
 		{0CB16CFB-03FB-4C63-A3AC-C07DEE420677} = {65F2AE98-A9A2-472C-BD22-A58DBD451E12}
 		{659A4B06-328F-4D4B-983E-4D7D0E6406B7} = {42CBEFB1-3495-4210-84AE-9568A1FA9F7C}
 		{19AA8B65-3898-4A6D-B679-1FAE744AD1B3} = {42CBEFB1-3495-4210-84AE-9568A1FA9F7C}
-		{D8CFB459-469C-41A8-92A2-54A080A9A822} = {42CBEFB1-3495-4210-84AE-9568A1FA9F7C}
 		{8D2B7C7E-2369-4617-9A42-5467FA0C10AE} = {42CBEFB1-3495-4210-84AE-9568A1FA9F7C}
 		{96307B56-C3EE-4904-AA01-24C313DD1148} = {42CBEFB1-3495-4210-84AE-9568A1FA9F7C}
-		{440C518F-6C87-4268-B2FC-2ACA3E9CB1B1} = {42CBEFB1-3495-4210-84AE-9568A1FA9F7C}
 		{61DE2448-B371-4979-B896-4B13BB2FFDE8} = {4E99F444-23AA-49EE-AEF7-C2D11FFADD51}
 		{4FBCF7DB-5C77-4874-8B7A-DD6C4BD9F2EB} = {4E99F444-23AA-49EE-AEF7-C2D11FFADD51}
 		{615482AD-0E78-42B2-868C-F2EB8A91723B} = {4E99F444-23AA-49EE-AEF7-C2D11FFADD51}

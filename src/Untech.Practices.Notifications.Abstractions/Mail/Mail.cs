@@ -9,7 +9,7 @@ namespace Untech.Practices.Notifications.Mail
 	///     Represents mail information that can be used for rendering and sending.
 	/// </summary>
 	[DataContract]
-	public class Mail
+	public class Mail : INotification
 	{
 		/// <summary>
 		///     For serializers
@@ -22,35 +22,39 @@ namespace Untech.Practices.Notifications.Mail
 		///     Initializes a new instance of the <see cref="Mail" /> with a predefined recipient address and arguments.
 		/// </summary>
 		/// <param name="to">The recipient address.</param>
-		/// <param name="templateArguments">The mail arguments.</param>
+		/// <param name="templateKey">The mail template key.</param>
+		/// <param name="payload">The mail template arguments.</param>
 		/// <exception cref="ArgumentNullException">
-		///     <paramref name="to" /> or <paramref name="templateArguments" /> is null.
+		///     <paramref name="to" /> or <paramref name="templateKey" /> is null.
 		/// </exception>
-		public Mail(MailboxAddress to, IMailTemplateArguments templateArguments)
+		public Mail(MailboxAddress to, string templateKey, object payload = null)
 		{
 			To = new List<MailboxAddress>
 			{
 				to ?? throw new ArgumentNullException(nameof(to))
 			};
-			TemplateArguments = templateArguments ?? throw new ArgumentNullException(nameof(templateArguments));
+			TemplateKey = templateKey ?? throw new ArgumentNullException(nameof(templateKey));
+			Payload = payload;
 		}
 
 		/// <summary>
 		///     Initializes a new instance of the <see cref="Mail" /> with a predefined recipients addresses and arguments.
 		/// </summary>
 		/// <param name="to">Recipients addresses.</param>
-		/// <param name="templateArguments">The mail arguments.</param>
+		/// <param name="templateKey">The mail template key.</param>
+		/// <param name="payload">The mail template arguments.</param>
 		/// <exception cref="ArgumentNullException">
-		///     <paramref name="to" /> or <paramref name="templateArguments" /> is null.
+		///     <paramref name="to" /> or <paramref name="templateKey" /> is null.
 		/// </exception>
 		/// <exception cref="ArgumentException"><paramref name="to" /> is empty.</exception>
-		public Mail(IEnumerable<MailboxAddress> to, IMailTemplateArguments templateArguments)
+		public Mail(IEnumerable<MailboxAddress> to, string templateKey, object payload = null)
 		{
 			List<MailboxAddress> toList = to?.ToList() ?? throw new ArgumentNullException(nameof(to));
 			if (toList.Count == 0) throw new ArgumentException("Cannot have zero elements", nameof(to));
 
 			To = toList;
-			TemplateArguments = templateArguments ?? throw new ArgumentNullException(nameof(templateArguments));
+			TemplateKey = templateKey ?? throw new ArgumentNullException(nameof(templateKey));
+			Payload = payload;
 		}
 
 		/// <summary>
@@ -78,15 +82,15 @@ namespace Untech.Practices.Notifications.Mail
 		public IReadOnlyCollection<MailboxAddress> Bcc { get; set; }
 
 		/// <summary>
-		///     Gets mail template key (see <see cref="IMailTemplateArguments" /> for more info).
+		///     Gets mail template key.
 		/// </summary>
 		[DataMember]
-		public string TemplateKey => TemplateArguments.TemplateKey;
+		public string TemplateKey { get; private set; }
 
 		/// <summary>
 		///     Gets additional mail arguments.
 		/// </summary>
 		[DataMember]
-		public IMailTemplateArguments TemplateArguments { get; private set; }
+		public object Payload { get; private set; }
 	}
 }
