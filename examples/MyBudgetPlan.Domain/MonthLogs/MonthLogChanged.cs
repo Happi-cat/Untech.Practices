@@ -2,7 +2,7 @@ using Untech.Practices.CQRS;
 
 namespace MyBudgetPlan.Domain.MonthLogs
 {
-	public class MonthLogChanged : INotification
+	public class MonthLogChanged : IEvent
 	{
 		public MonthLogChanged(BudgetLogType log, YearMonth when)
 		{

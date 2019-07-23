@@ -27,7 +27,7 @@ namespace Untech.Practices.CQRS
 
 		}
 
-		public class Notification : INotification
+		public class Event : IEvent
 		{
 		}
 
@@ -35,13 +35,13 @@ namespace Untech.Practices.CQRS
 			IQueryHandler<Query, int>,
 			ICommandHandler<Command, int>,
 			ICommandHandler<CommandWithError, int>,
-			INotificationHandler<Notification>
+			IEventHandler<Event>
 		{
 			public Task<int> HandleAsync(Query query, CancellationToken cancellationToken) => Task.FromResult(1);
 
 			public Task<int> HandleAsync(Command command, CancellationToken cancellationToken) => Task.FromResult(1);
 
-			public Task PublishAsync(Notification notification, CancellationToken cancellationToken)
+			public Task PublishAsync(Event @event, CancellationToken cancellationToken)
 			{
 				return Task.CompletedTask;
 			}

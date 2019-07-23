@@ -13,13 +13,13 @@ namespace MyBudgetPlan.Infrastructure
 		ICommandHandler<DeleteForecast, Nothing>
 	{
 		private readonly IDataStorage<Forecast> _dataStorage;
-		private readonly INotificationDispatcher _notificationDispatcher;
+		private readonly IEventDispatcher _eventDispatcher;
 
 		public ForecastService(IDataStorage<Forecast> dataStorage,
-			INotificationDispatcher notificationDispatcher)
+			IEventDispatcher eventDispatcher)
 		{
 			_dataStorage = dataStorage;
-			_notificationDispatcher = notificationDispatcher;
+			_eventDispatcher = eventDispatcher;
 		}
 
 		public async Task<Forecast> HandleAsync(CreateForecast request, CancellationToken cancellationToken)
@@ -55,7 +55,7 @@ namespace MyBudgetPlan.Infrastructure
 
 		private Task PublishNotifications(Forecast item)
 		{
-			return _notificationDispatcher.PublishAsync(item, CancellationToken.None);
+			return _eventDispatcher.PublishAsync(item, CancellationToken.None);
 		}
 	}
 }

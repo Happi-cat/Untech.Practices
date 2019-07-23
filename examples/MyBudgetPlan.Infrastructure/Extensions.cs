@@ -8,7 +8,7 @@ namespace MyBudgetPlan.Infrastructure
 {
 	internal static class Extensions
 	{
-		public static Task PublishAsync(this INotificationDispatcher dispatcher, BudgetLogEntry item, CancellationToken cancellationToken)
+		public static Task PublishAsync(this IEventDispatcher dispatcher, BudgetLogEntry item, CancellationToken cancellationToken)
 		{
 			return Task.WhenAll(item.NotificationsToRaise.Select(n => dispatcher.PublishAsync(n, cancellationToken)));
 		}

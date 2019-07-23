@@ -47,13 +47,13 @@ namespace Untech.Practices.CQRS.Dispatching
 		}
 
 		/// <inheritdoc />
-		public Task PublishAsync(INotification notification, CancellationToken cancellationToken)
+		public Task PublishAsync(IEvent @event, CancellationToken cancellationToken)
 		{
-			notification = notification ?? throw new ArgumentNullException(nameof(notification));
+			@event = @event ?? throw new ArgumentNullException(nameof(@event));
 
 			return _processors
-				.GetOrAdd(notification.GetType(), CreateForPublish)
-				.InvokeAsync(notification, cancellationToken);
+				.GetOrAdd(@event.GetType(), CreateForPublish)
+				.InvokeAsync(@event, cancellationToken);
 		}
 
 		#region [Private Methods]
@@ -77,7 +77,7 @@ namespace Untech.Practices.CQRS.Dispatching
 		private IProcessor CreateForPublish(Type requestType)
 		{
 			return (IProcessor)CreateProcessor(
-				typeof(NotificationProcessor<>),
+				typeof(EventProcessor<>),
 				requestType);
 		}
 

@@ -26,7 +26,7 @@ namespace Untech.AsyncJob.Features.CQRS
 
 			var myType = typeof(CqrsMiddleware);
 			s_executeCommandMethodInfo = GetMethod(nameof(ExecuteCommandAsync));
-			s_executeNotificationMethodInfo = GetMethod(nameof(ExecuteNotificationAsync));
+			s_executeNotificationMethodInfo = GetMethod(nameof(ExecuteEventAsync));
 
 			MethodInfo GetMethod(string name)
 			{
@@ -85,7 +85,7 @@ namespace Untech.AsyncJob.Features.CQRS
 					return BuildCallback(method);
 				}
 
-				if (genericTypeDefinition == typeof(INotification))
+				if (genericTypeDefinition == typeof(IEvent))
 				{
 					var method = s_executeNotificationMethodInfo.MakeGenericMethod(requestType);
 
@@ -118,13 +118,13 @@ namespace Untech.AsyncJob.Features.CQRS
 			return dispatcher.ProcessAsync((TRequest)command, context.Aborted);
 		}
 
-		private static Task ExecuteNotificationAsync<TNotification>(CqrsMiddleware middleware, Context context)
-			where TNotification: INotification
+		private static Task ExecuteEventAsync<TEvent>(CqrsMiddleware middleware, Context context)
+			where TEvent: IEvent
 		{
 			var dispatcher = middleware._strategy.GetDispatcher(context) ?? throw NoDispatcherError();
-			var notification = context.Request.GetBody(typeof(TNotification)) ?? throw NoRequestError();
+			var notification = context.Request.GetBody(typeof(TEvent)) ?? throw NoRequestError();
 
-			return dispatcher.PublishAsync((TNotification)notification, context.Aborted);
+			return dispatcher.PublishAsync((TEvent)notification, context.Aborted);
 		}
 
 		private static Exception RequestTypeNotFoundError(string requestName)

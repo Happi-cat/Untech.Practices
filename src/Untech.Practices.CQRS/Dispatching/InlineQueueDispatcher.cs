@@ -27,20 +27,20 @@ namespace Untech.Practices.CQRS.Dispatching
 		}
 
 		/// <inheritdoc />
-		public Task EnqueueAsync(INotification notification, CancellationToken cancellationToken,
+		public Task EnqueueAsync(IEvent @event, CancellationToken cancellationToken,
 			QueueOptions options = null)
 		{
-			if (notification == null) throw new ArgumentNullException(nameof(notification));
+			if (@event == null) throw new ArgumentNullException(nameof(@event));
 
-			return _parent.PublishAsync(notification, cancellationToken);
+			return _parent.PublishAsync(@event, cancellationToken);
 		}
 
-		public async Task EnqueueAsync(IEnumerable<INotification> notifications, CancellationToken cancellationToken,
+		public async Task EnqueueAsync(IEnumerable<IEvent> events, CancellationToken cancellationToken,
 			QueueOptions options = null)
 		{
-			if (notifications == null) throw new ArgumentNullException(nameof(notifications));
+			if (events == null) throw new ArgumentNullException(nameof(events));
 
-			foreach (var notification in notifications) await EnqueueAsync(notification, cancellationToken, options);
+			foreach (var notification in events) await EnqueueAsync(notification, cancellationToken, options);
 		}
 	}
 }

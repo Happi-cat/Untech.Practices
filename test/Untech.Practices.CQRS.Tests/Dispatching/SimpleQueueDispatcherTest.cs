@@ -29,7 +29,7 @@ namespace Untech.Practices.CQRS.Dispatching
 		[Fact]
 		public async Task EnqueueN_ThrowArgumentNull_WhenArgIsNull()
 		{
-			INotification msg = null;
+			IEvent msg = null;
 			await Assert.ThrowsAsync<ArgumentNullException>(() =>
 				_dispatcher.EnqueueAsync(msg, CancellationToken.None));
 		}
@@ -37,7 +37,7 @@ namespace Untech.Practices.CQRS.Dispatching
 		[Fact]
 		public async Task EnqueueN_Returns_WhenHandlerResolved()
 		{
-			await _dispatcher.EnqueueAsync(new DummyCQRS.Notification(), CancellationToken.None);
+			await _dispatcher.EnqueueAsync(new DummyCQRS.Event(), CancellationToken.None);
 		}
 	}
 }

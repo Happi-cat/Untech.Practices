@@ -8,16 +8,16 @@ namespace Untech.Practices.CQRS.Dispatching
 	/// </summary>
 	/// <remarks>
 	///     <para>
-	///         Supports <see cref="INotification" /> CQRS request.
+	///         Supports <see cref="IEvent" /> CQRS request.
 	///     </para>
 	/// </remarks>
-	public interface INotificationDispatcher
+	public interface IEventDispatcher
 	{
 		/// <summary>
-		///     Publishes asynchronously the incoming <paramref name="notification" />.
+		///     Publishes asynchronously the incoming <paramref name="event" />.
 		/// </summary>
-		/// <param name="notification">The command to be published.</param>
+		/// <param name="event">The command to be published.</param>
 		/// <param name="cancellationToken">The token that used for propagation notification that task should be canceled.</param>
-		Task PublishAsync(INotification notification, CancellationToken cancellationToken);
+		Task PublishAsync(IEvent @event, CancellationToken cancellationToken);
 	}
 }

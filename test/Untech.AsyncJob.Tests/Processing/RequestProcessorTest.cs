@@ -104,7 +104,7 @@ namespace Untech.AsyncJob.Processing
 				return Task.FromResult(default(TResult));
 			}
 
-			public Task PublishAsync(INotification notification, CancellationToken cancellationToken)
+			public Task PublishAsync(IEvent @event, CancellationToken cancellationToken)
 			{
 				return Task.CompletedTask;
 			}

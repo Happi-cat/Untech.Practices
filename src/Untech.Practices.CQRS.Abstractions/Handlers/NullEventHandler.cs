@@ -7,13 +7,13 @@ namespace Untech.Practices.CQRS.Handlers
 	///     Represents dummy notification handler.
 	/// </summary>
 	/// <typeparam name="TIn">The type of notification to be handled.</typeparam>
-	public sealed class NullNotificationHandler<TIn> :
-		INotificationHandler<TIn>
-		where TIn : INotification
+	public sealed class NullEventHandler<TIn> :
+		IEventHandler<TIn>
+		where TIn : IEvent
 	{
-		public static readonly NullNotificationHandler<TIn> Instance = new NullNotificationHandler<TIn>();
+		public static readonly NullEventHandler<TIn> Instance = new NullEventHandler<TIn>();
 
-		private NullNotificationHandler()
+		private NullEventHandler()
 		{
 
 		}

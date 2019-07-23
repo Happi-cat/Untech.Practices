@@ -13,13 +13,13 @@ namespace MyBudgetPlan.Infrastructure
 		ICommandHandler<DeleteTransaction, Nothing>
 	{
 		private readonly IDataStorage<Transaction> _dataStorage;
-		private readonly INotificationDispatcher _notificationDispatcher;
+		private readonly IEventDispatcher _eventDispatcher;
 
 		public TransactionService(IDataStorage<Transaction> dataStorage,
-			INotificationDispatcher notificationDispatcher)
+			IEventDispatcher eventDispatcher)
 		{
 			_dataStorage = dataStorage;
-			_notificationDispatcher = notificationDispatcher;
+			_eventDispatcher = eventDispatcher;
 		}
 
 		public async Task<Transaction> HandleAsync(CreateTransaction request, CancellationToken cancellationToken)
@@ -55,7 +55,7 @@ namespace MyBudgetPlan.Infrastructure
 
 		private Task PublishNotifications(Transaction item)
 		{
-			return _notificationDispatcher.PublishAsync(item, CancellationToken.None);
+			return _eventDispatcher.PublishAsync(item, CancellationToken.None);
 		}
 	}
 }

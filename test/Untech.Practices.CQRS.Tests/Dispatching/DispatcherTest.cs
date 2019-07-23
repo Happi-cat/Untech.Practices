@@ -51,7 +51,7 @@ namespace Untech.Practices.CQRS.Dispatching
 		[Fact]
 		public async Task PublishAsync_Returns_WhenHandlerResolved()
 		{
-			await _dispatcher.PublishAsync(new DummyCQRS.Notification(), CancellationToken.None);
+			await _dispatcher.PublishAsync(new DummyCQRS.Event(), CancellationToken.None);
 		}
 
 		[Fact]

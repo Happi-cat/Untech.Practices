@@ -6,12 +6,12 @@ using Untech.Practices.CQRS.Handlers;
 
 namespace Untech.Practices.CQRS.Dispatching.Processors
 {
-	internal class NotificationProcessor<TIn> : IProcessor
-		where TIn : INotification
+	internal class EventProcessor<TIn> : IProcessor
+		where TIn : IEvent
 	{
 		private readonly ITypeResolver _resolver;
 
-		public NotificationProcessor(ITypeResolver resolver)
+		public EventProcessor(ITypeResolver resolver)
 		{
 			_resolver = resolver;
 		}
@@ -21,12 +21,12 @@ namespace Untech.Practices.CQRS.Dispatching.Processors
 			TIn input = (TIn)args;
 
 			IEnumerable<Task> asyncHandlers = _resolver
-				.ResolveMany<INotificationHandler<TIn>>()
+				.ResolveMany<IEventHandler<TIn>>()
 				.Select(RunAsync);
 
 			return Task.WhenAll(asyncHandlers);
 
-			Task RunAsync(INotificationHandler<TIn> handler)
+			Task RunAsync(IEventHandler<TIn> handler)
 			{
 				return handler.PublishAsync(input, cancellationToken);
 			}

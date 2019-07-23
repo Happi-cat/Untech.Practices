@@ -3,7 +3,7 @@
 	/// <summary>
 	///     Used as a marker for notifications.
 	/// </summary>
-	public interface INotification
+	public interface IEvent
 	{
 	}
 }

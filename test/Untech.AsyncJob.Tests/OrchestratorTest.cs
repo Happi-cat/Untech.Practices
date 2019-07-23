@@ -107,7 +107,7 @@ namespace Untech.AsyncJob
 				return Task.FromResult(default(TResult));
 			}
 
-			public Task PublishAsync(INotification notification, CancellationToken cancellationToken)
+			public Task PublishAsync(IEvent @event, CancellationToken cancellationToken)
 			{
 				Interlocked.Increment(ref _callCounter);
 				return Task.CompletedTask;
