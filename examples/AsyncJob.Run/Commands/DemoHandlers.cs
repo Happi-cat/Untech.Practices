@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Untech.AsyncJob.Metadata;
 using Untech.AsyncJob.Metadata.Annotations;
 using Untech.Practices;
+using Untech.Practices.CQRS.Dispatching;
 using Untech.Practices.CQRS.Handlers;
 
 namespace AsyncJob.Run.Commands
@@ -15,7 +16,8 @@ namespace AsyncJob.Run.Commands
 		ICommandHandler<CompositeCommand, Nothing>,
 		ICommandHandler<DelayCommand, Nothing>,
 		ICommandHandler<ThrowCommand, Nothing>,
-		ICommandHandler<HelloCommand, Nothing>
+		ICommandHandler<HelloCommand, Nothing>,
+		ICommandHandler<ProduceInProcess, Nothing>
 	{
 		private readonly ILogger _logger;
 
@@ -60,6 +62,19 @@ namespace AsyncJob.Run.Commands
 		public async Task<Nothing> HandleAsync(HelloCommand request, CancellationToken cancellationToken)
 		{
 			_logger.Log(LogLevel.Information, request.Message);
+
+			return Nothing.AtAll;
+		}
+
+		public async Task<Nothing> HandleAsync(ProduceInProcess request, CancellationToken cancellationToken)
+		{
+			await InProcess.Instance.EnqueueAsync(new HelloCommand { Message = "Immediate In Process" }, cancellationToken);
+			await InProcess.Instance.EnqueueAsync(new HelloCommand { Message = "Expirable In Process" },
+				cancellationToken,
+				options: new QueueOptions { ExpiresAfter = TimeSpan.FromMinutes(1) });
+			await InProcess.Instance.EnqueueAsync(new HelloCommand { Message = "Delayed In Process" },
+				cancellationToken,
+				options: new QueueOptions { ExecuteAfter = TimeSpan.FromMinutes(1) });
 
 			return Nothing.AtAll;
 		}

@@ -12,22 +12,18 @@
     <PackageReference Include="Serilog" Version="2.8.0" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.2" />
     <PackageReference Include="Serilog.Sinks.ColoredConsole" Version="3.0.1" />
+    <PackageReference Include="System.Text.Json" Version="4.6.0-preview6.19303.8" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Untech.AsyncJob.Abstractions\Untech.AsyncJob.Abstractions.csproj" />
     <ProjectReference Include="..\..\src\Untech.AsyncJob.Engine\Untech.AsyncJob.Engine.csproj" />
     <ProjectReference Include="..\..\src\Untech.AsyncJob.Features.CQRS\Untech.AsyncJob.Features.CQRS.csproj" />
+    <ProjectReference Include="..\..\src\Untech.AsyncJob.Transports.InProcess\Untech.AsyncJob.Transports.InProcess.csproj" />
     <ProjectReference Include="..\..\src\Untech.AsyncJob.Transports.Scheduled\Untech.AsyncJob.Transports.Scheduled.csproj" />
     <ProjectReference Include="..\..\src\Untech.Practices.CQRS.Abstractions\Untech.Practices.CQRS.Abstractions.csproj" />
     <ProjectReference Include="..\..\src\Untech.Practices.CQRS\Untech.Practices.CQRS.csproj" />
     <ProjectReference Include="..\..\src\Untech.Practices.DataStorage.Cache.Abstractions\Untech.Practices.DataStorage.Cache.Abstractions.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
-      <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\newtonsoft.json\9.0.1\lib\netstandard1.0\Newtonsoft.Json.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>
