@@ -57,12 +57,17 @@ namespace Untech.AsyncJob.Transports.InProcess
 			return Task.CompletedTask;
 		}
 
-		public Task EnqueueAsync(INotification notification, CancellationToken cancellationToken = default,
+		public Task EnqueueAsync(IEvent @event, CancellationToken cancellationToken = default,
 			QueueOptions options = null)
 		{
-			var request = new InProcessRequest(notification, options);
+			var request = new InProcessRequest(@event, options);
 			_queues[request.GetPriority()].Enqueue(request);
 			return Task.CompletedTask;
+		}
+
+		public async Task EnqueueAsync(IEnumerable<IEvent> events, CancellationToken cancellationToken = default, QueueOptions options = null)
+		{
+			foreach (var @event in events) await EnqueueAsync(@event, cancellationToken, options);
 		}
 
 		/// <summary>
