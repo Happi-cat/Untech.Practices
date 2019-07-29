@@ -26,9 +26,9 @@ namespace Untech.Practices.DataStorage.Cache
 		Task SetAsync(string key, object value, CancellationToken cancellationToken = default);
 
 		/// <summary>
-		/// Invalidates cache object asynchronously with defined <paramref name="key"/> or prefix if it's present in cache.
+		/// Invalidates cache object asynchronously with a defined <paramref name="key"/>.
 		/// </summary>
-		/// <param name="key">Cache key or prefix.</param>
+		/// <param name="key">Cache key.</param>
 		/// <param name="cancellationToken">Task cancellation token.</param>
 		Task DropAsync(string key, CancellationToken cancellationToken = default);
 	}
