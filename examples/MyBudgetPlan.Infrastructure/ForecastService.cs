@@ -2,6 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MyBudgetPlan.Domain.Forecasts;
 using Untech.Practices;
+using Untech.Practices.CQRS;
 using Untech.Practices.CQRS.Dispatching;
 using Untech.Practices.CQRS.Handlers;
 using Untech.Practices.DataStorage;
@@ -10,7 +11,7 @@ namespace MyBudgetPlan.Infrastructure
 {
 	public class ForecastService : ICommandHandler<CreateForecast, Forecast>,
 		ICommandHandler<UpdateForecast, Forecast>,
-		ICommandHandler<DeleteForecast, Nothing>
+		ICommandHandler<DeleteForecast, None>
 	{
 		private readonly IDataStorage<Forecast> _dataStorage;
 		private readonly IEventDispatcher _eventDispatcher;
@@ -44,13 +45,13 @@ namespace MyBudgetPlan.Infrastructure
 			return item;
 		}
 
-		public async Task<Nothing> HandleAsync(DeleteForecast request, CancellationToken cancellationToken)
+		public async Task<None> HandleAsync(DeleteForecast request, CancellationToken cancellationToken)
 		{
 			var item = await _dataStorage.GetAsync(request.Key, cancellationToken);
 
 			await _dataStorage.DeleteAsync(item, cancellationToken);
 
-			return Nothing.AtAll;
+			return None.Value;
 		}
 
 		private Task PublishNotifications(Forecast item)

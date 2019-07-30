@@ -3,6 +3,6 @@
     <RootNamespace>Untech.Practices.CQRS</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Untech.Practices.Core\Untech.Practices.Core.csproj" />
+    <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.3.0" />
   </ItemGroup>
 </Project>

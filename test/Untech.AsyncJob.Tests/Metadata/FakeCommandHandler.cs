@@ -9,7 +9,7 @@ namespace Untech.AsyncJob.Metadata
 	[ThrottleGroup("SomeResource")]
 	public class FakeCommandHandler : ICommandHandler<FakeCommand, int>
 	{
-		public async Task<int> HandleAsync(FakeCommand command, CancellationToken cancellationToken)
+		public Task<int> HandleAsync(FakeCommand command, CancellationToken cancellationToken)
 		{
 			throw new NotImplementedException();
 		}

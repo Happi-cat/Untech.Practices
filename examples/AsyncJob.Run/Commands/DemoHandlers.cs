@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Untech.AsyncJob.Metadata;
 using Untech.AsyncJob.Metadata.Annotations;
 using Untech.Practices;
+using Untech.Practices.CQRS;
 using Untech.Practices.CQRS.Dispatching;
 using Untech.Practices.CQRS.Handlers;
 
@@ -13,11 +14,11 @@ namespace AsyncJob.Run.Commands
 	[WatchDogTimeout(0, 0, 10)]
 	[ThrottleGroup("DemoHandlers")]
 	public class DemoHandlers :
-		ICommandHandler<CompositeCommand, Nothing>,
-		ICommandHandler<DelayCommand, Nothing>,
-		ICommandHandler<ThrowCommand, Nothing>,
-		ICommandHandler<HelloCommand, Nothing>,
-		ICommandHandler<ProduceInProcess, Nothing>
+		ICommandHandler<CompositeCommand, None>,
+		ICommandHandler<DelayCommand, None>,
+		ICommandHandler<ThrowCommand, None>,
+		ICommandHandler<HelloCommand, None>,
+		ICommandHandler<ProduceInProcess, None>
 	{
 		private readonly ILogger _logger;
 
@@ -26,7 +27,7 @@ namespace AsyncJob.Run.Commands
 			_logger = logger;
 		}
 
-		public async Task<Nothing> HandleAsync(CompositeCommand request, CancellationToken cancellationToken)
+		public async Task<None> HandleAsync(CompositeCommand request, CancellationToken cancellationToken)
 		{
 			_logger.LogInformation("Demo in progress");
 			if (request.Delay != null)
@@ -45,28 +46,28 @@ namespace AsyncJob.Run.Commands
 			}
 
 			_logger.LogInformation("Demo completed");
-			return Nothing.AtAll;
+			return None.Value;
 		}
 
-		public async Task<Nothing> HandleAsync(DelayCommand request, CancellationToken cancellationToken)
+		public async Task<None> HandleAsync(DelayCommand request, CancellationToken cancellationToken)
 		{
 			await Task.Delay(request.Timeout, cancellationToken);
-			return Nothing.AtAll;
+			return None.Value;
 		}
 
-		public Task<Nothing> HandleAsync(ThrowCommand request, CancellationToken cancellationToken)
+		public Task<None> HandleAsync(ThrowCommand request, CancellationToken cancellationToken)
 		{
 			throw request.GetError() ?? new InvalidOperationException("Thrown");
 		}
 
-		public async Task<Nothing> HandleAsync(HelloCommand request, CancellationToken cancellationToken)
+		public Task<None> HandleAsync(HelloCommand request, CancellationToken cancellationToken)
 		{
 			_logger.Log(LogLevel.Information, request.Message);
 
-			return Nothing.AtAll;
+			return None.AsTask;
 		}
 
-		public async Task<Nothing> HandleAsync(ProduceInProcess request, CancellationToken cancellationToken)
+		public async Task<None> HandleAsync(ProduceInProcess request, CancellationToken cancellationToken)
 		{
 			await InProcess.Instance.EnqueueAsync(new HelloCommand { Message = "Immediate In Process" }, cancellationToken);
 			await InProcess.Instance.EnqueueAsync(new HelloCommand { Message = "Expirable In Process" },
@@ -76,7 +77,7 @@ namespace AsyncJob.Run.Commands
 				cancellationToken,
 				options: new QueueOptions { ExecuteAfter = TimeSpan.FromMinutes(1) });
 
-			return Nothing.AtAll;
+			return None.Value;
 		}
 	}
 }

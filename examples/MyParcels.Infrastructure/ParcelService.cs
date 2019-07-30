@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using LinqToDB;
 using MyParcels.Domain;
 using Untech.Practices;
+using Untech.Practices.CQRS;
 using Untech.Practices.CQRS.Handlers;
 using Untech.Practices.UserContext;
 
@@ -13,7 +14,7 @@ namespace MyParcels.Infrastructure
 {
 	public class ParcelService : IQueryHandler<ParcelsQuery, IEnumerable<Parcel>>,
 		ICommandHandler<CreateOrUpdateParcel, Parcel>,
-		ICommandHandler<DeleteParcel, Nothing>
+		ICommandHandler<DeleteParcel, None>
 	{
 		private readonly IUserContext _userContext;
 		private readonly Func<IDataContext> _dataContext;
@@ -46,7 +47,7 @@ namespace MyParcels.Infrastructure
 			}
 		}
 
-		public async Task<Nothing> HandleAsync(DeleteParcel request, CancellationToken cancellationToken)
+		public async Task<None> HandleAsync(DeleteParcel request, CancellationToken cancellationToken)
 		{
 			using (var context = GetContext())
 			{
@@ -55,7 +56,7 @@ namespace MyParcels.Infrastructure
 						.DeleteAsync(cancellationToken);
 			}
 
-			return Nothing.AtAll;
+			return None.Value;
 		}
 
 		private IDataContext GetContext()
