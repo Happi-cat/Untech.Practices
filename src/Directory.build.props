@@ -12,4 +12,6 @@
     <!-- etc -->
     <LangVersion>7.2</LangVersion>
   </PropertyGroup>
+
+  <Import Project="..\build\JetBrains.Annotations.props" />
 </Project>
