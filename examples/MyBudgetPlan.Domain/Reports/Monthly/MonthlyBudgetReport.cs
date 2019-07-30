@@ -46,7 +46,7 @@ namespace MyBudgetPlan.Domain.Reports.Monthly
 		[DataMember]
 		public IEnumerable<ExpenseCategoryReport> Expenses { get; private set; }
 
-		private IEnumerable<ExpenseCategoryReport> GetExpensesReport(IMoneyCalculator calculator,
+		private static IEnumerable<ExpenseCategoryReport> GetExpensesReport(IMoneyCalculator calculator,
 			IEnumerable<Category> categories,
 			MonthLog expenseLog)
 		{

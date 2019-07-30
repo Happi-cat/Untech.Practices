@@ -63,7 +63,7 @@ namespace Untech.AsyncJob.Features.Throttling
 		// case: take AllGroup -> Group -> Request semaphore
 		// 	in that case request can wait for group/request semaphore and waste AllGroup semaphore
 		//  so other requests will wait not only for AllGroup but for request/group indirectly
-		private IEnumerable<string> GetGroupKeysOrdered(Context context)
+		private static IEnumerable<string> GetGroupKeysOrdered(Context context)
 		{
 			yield return context.RequestName;
 

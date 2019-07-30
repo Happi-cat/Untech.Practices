@@ -45,7 +45,7 @@ namespace Untech.AsyncJob.Features.WatchDog
 				TimeSpan.FromSeconds(1)));
 		}
 
-		private async Task InvokeAsync(TimeSpan commandDuration, TimeSpan? defaultTimeout, TimeSpan? requestTimeout)
+		private static async Task InvokeAsync(TimeSpan commandDuration, TimeSpan? defaultTimeout, TimeSpan? requestTimeout)
 		{
 			var middleware = new WatchDogMiddleware(new WatchDogOptions
 			{

@@ -46,7 +46,7 @@ namespace Untech.AsyncJob.Features.Debounce
 			Assert.False(invoked);
 		}
 
-		private async Task<bool> InvokeAsync(DateTimeOffset created, DateTimeOffset lastRun, bool debounce)
+		private static async Task<bool> InvokeAsync(DateTimeOffset created, DateTimeOffset lastRun, bool debounce)
 		{
 			var lastRunStore = new FakeLastRunStore(lastRun);
 			var middleware = new DebounceMiddleware(lastRunStore, NullLoggerFactory.Instance);

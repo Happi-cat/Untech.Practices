@@ -2,11 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 
 namespace Untech.AsyncJob.Metadata
 {
 	public class RequestMetadataProvider : IRequestMetadataProvider, IEnumerable<IRequestMetadata>
 	{
+		[PublicAPI]
 		public const string DefaultMetadataKey = "*";
 
 		private readonly IDictionary<string, List<IRequestMetadata>> _metadata;

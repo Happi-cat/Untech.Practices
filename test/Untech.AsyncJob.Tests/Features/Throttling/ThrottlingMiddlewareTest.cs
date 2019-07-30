@@ -40,7 +40,7 @@ namespace Untech.AsyncJob.Features.Throttling
 			await InvokeAsync(new ThrottleOptions { RunAtOnce = 2, DefaultRunAtOnceInGroup = 1 });
 		}
 
-		private async Task InvokeAsync(ThrottleOptions options)
+		private static async Task InvokeAsync(ThrottleOptions options)
 		{
 			var middleware = new ThrottleMiddleware(options);
 

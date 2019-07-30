@@ -65,9 +65,8 @@ namespace Untech.Practices
 
 		public bool Equals(TSelf other)
 		{
-			if (ReferenceEquals(this, other)) return true;
 			if (ReferenceEquals(other, null)) return false;
-			return Id.Equals(other.Id);
+			return ReferenceEquals(this, other) || Id.Equals(other.Id);
 		}
 
 		public static bool operator ==(Enumeration<TSelf> left, Enumeration<TSelf> right)
@@ -170,9 +169,8 @@ namespace Untech.Practices
 
 		public bool Equals(TSelf other)
 		{
-			if (ReferenceEquals(this, other)) return true;
 			if (ReferenceEquals(other, null)) return false;
-			return EqualityComparer<TKey>.Default.Equals(Id, other.Id);
+			return ReferenceEquals(this, other) || EqualityComparer<TKey>.Default.Equals(Id, other.Id);
 		}
 
 		public static bool operator ==(Enumeration<TSelf, TKey> left, Enumeration<TSelf, TKey> right)
@@ -193,8 +191,8 @@ namespace Untech.Practices
 
 		public override bool Equals(object obj)
 		{
-			if (ReferenceEquals(this, obj)) return true;
 			if (ReferenceEquals(obj, null)) return false;
+			if (ReferenceEquals(this, obj)) return true;
 			if (obj is TSelf self) return Equals(self);
 			return false;
 		}

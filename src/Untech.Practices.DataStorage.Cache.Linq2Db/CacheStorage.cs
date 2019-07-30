@@ -54,7 +54,7 @@ namespace Untech.Practices.DataStorage.Cache.Linq2Db
 			}
 		}
 
-		private IQueryable<CacheEntry> Find(IDataContext context, string key)
+		private static IQueryable<CacheEntry> Find(IDataContext context, string key)
 		{
 			return context
 				.GetTable<CacheEntry>()

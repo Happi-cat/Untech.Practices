@@ -20,7 +20,7 @@ namespace Untech.AsyncJob.Metadata.Annotations
 		/// <param name="group">The name of throttle group.</param>
 		public ThrottleGroupAttribute(string group)
 		{
-			Group = @group;
+			Group = group;
 		}
 
 		/// <summary>

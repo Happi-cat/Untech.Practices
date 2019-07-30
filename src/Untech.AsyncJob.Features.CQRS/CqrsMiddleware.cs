@@ -57,7 +57,7 @@ namespace Untech.AsyncJob.Features.CQRS
 			return BuildExecutor(requestType);
 		}
 
-		private ExecutorCallback BuildExecutor(Type requestType)
+		private static ExecutorCallback BuildExecutor(Type requestType)
 		{
 			var callbacks = requestType
 				.GetTypeInfo().ImplementedInterfaces

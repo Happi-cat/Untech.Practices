@@ -60,7 +60,7 @@ namespace Untech.AsyncJob.Features.Retrying
 		}
 
 
-		private async Task<int> InvokeAsync(IRetryPolicy retryPolicy)
+		private static async Task<int> InvokeAsync(IRetryPolicy retryPolicy)
 		{
 			var middleware = new RetryingMiddleware(retryPolicy, NullLoggerFactory.Instance);
 

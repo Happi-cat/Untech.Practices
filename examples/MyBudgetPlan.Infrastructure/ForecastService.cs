@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using MyBudgetPlan.Domain;
 using MyBudgetPlan.Domain.Forecasts;
 using Untech.Practices;
 using Untech.Practices.CQRS;
@@ -54,7 +55,7 @@ namespace MyBudgetPlan.Infrastructure
 			return None.Value;
 		}
 
-		private Task PublishNotifications(Forecast item)
+		private Task PublishNotifications(BudgetLogEntry item)
 		{
 			return _eventDispatcher.PublishAsync(item, CancellationToken.None);
 		}

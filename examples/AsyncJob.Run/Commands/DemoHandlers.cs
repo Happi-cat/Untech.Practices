@@ -72,10 +72,10 @@ namespace AsyncJob.Run.Commands
 			await InProcess.Instance.EnqueueAsync(new HelloCommand { Message = "Immediate In Process" }, cancellationToken);
 			await InProcess.Instance.EnqueueAsync(new HelloCommand { Message = "Expirable In Process" },
 				cancellationToken,
-				options: new QueueOptions { ExpiresAfter = TimeSpan.FromMinutes(1) });
+				new QueueOptions { ExpiresAfter = TimeSpan.FromMinutes(1) });
 			await InProcess.Instance.EnqueueAsync(new HelloCommand { Message = "Delayed In Process" },
 				cancellationToken,
-				options: new QueueOptions { ExecuteAfter = TimeSpan.FromMinutes(1) });
+				new QueueOptions { ExecuteAfter = TimeSpan.FromMinutes(1) });
 
 			return None.Value;
 		}

@@ -23,7 +23,7 @@ namespace Untech.AsyncJob.Builder
 			return option;
 		}
 
-		private static void Validate(Object value)
+		private static void Validate(object value)
 		{
 			var validationContext = new ValidationContext(value);
 			Validator.ValidateObject(value, validationContext, true);
