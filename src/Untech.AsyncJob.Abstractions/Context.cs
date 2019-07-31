@@ -10,6 +10,7 @@ namespace Untech.AsyncJob
 	/// </summary>
 	public class Context
 	{
+		private string _traceIdentifier;
 		private IDictionary<object, object> _items;
 
 		public Context(Request request)
@@ -30,7 +31,8 @@ namespace Untech.AsyncJob
 			if (request.Name == null) throw new ArgumentNullException(nameof(request.Name));
 			if (metadataProvider == null) throw new ArgumentNullException(nameof(metadataProvider));
 
-			TraceIdentifier = Guid.NewGuid().ToString();
+			_traceIdentifier = Guid.NewGuid().ToString();
+			_items = new Dictionary<object, object>();
 
 			Request = request;
 			RequestName = request.Name;
@@ -39,8 +41,6 @@ namespace Untech.AsyncJob
 				new RequestMetadata(request.GetAttachedMetadata()),
 				metadataProvider.GetMetadata(request.Name)
 			});
-
-			_items = new Dictionary<object, object>();
 		}
 
 		/// <summary>
@@ -61,17 +61,21 @@ namespace Untech.AsyncJob
 		/// <summary>
 		/// Gets or sets <see cref="CancellationToken"/> that can be used for request cancellation.
 		/// </summary>
-		public CancellationToken Aborted { get; set; }
+		public virtual CancellationToken Aborted { get; set; }
 
 		/// <summary>
 		/// Gets or sets trace identifier for current context.
 		/// </summary>
-		public string TraceIdentifier { get; set; }
+		public virtual string TraceIdentifier
+		{
+			get => _traceIdentifier;
+			set => _traceIdentifier = value;
+		}
 
 		/// <summary>
 		/// Gets or sets key/value collection that can be used to share data within the scope where context is available.
 		/// </summary>
-		public IDictionary<object, object> Items
+		public virtual IDictionary<object, object> Items
 		{
 			get => _items;
 			set => _items = value ?? throw new ArgumentNullException(nameof(value));
