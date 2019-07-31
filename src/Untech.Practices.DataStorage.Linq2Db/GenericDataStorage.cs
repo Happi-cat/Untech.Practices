@@ -2,11 +2,13 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using LinqToDB;
 using LinqToDB.Mapping;
 
 namespace Untech.Practices.DataStorage.Linq2Db
 {
+	[PublicAPI]
 	public class GenericDataStorage<T> : GenericDataStorage<T, int>, IDataStorage<T>
 		where T : class, IHasKey
 	{
@@ -15,6 +17,7 @@ namespace Untech.Practices.DataStorage.Linq2Db
 		}
 	}
 
+	[PublicAPI]
 	public class GenericDataStorage<T, TKey> : IDataStorage<T, TKey>
 		where T : class, IHasKey<TKey>
 	{
@@ -98,43 +101,44 @@ namespace Untech.Practices.DataStorage.Linq2Db
 		}
 	}
 
-	public class GenericDataStorage<T, TDao, TKey> : IDataStorage<T, TKey>
-		where T : IHasKey<TKey>
-		where TDao : class, IHasKey<TKey>
+	[PublicAPI]
+	public class GenericDataStorage<TEntity, TData, TKey> : IDataStorage<TEntity, TKey>
+		where TEntity : IHasKey<TKey>
+		where TData : class, IHasKey<TKey>
 	{
 		private readonly Func<IDataContext> _contextFactory;
-		private readonly GenericDataStorage<TDao, TKey> _innerDataStorage;
-		private readonly IEntityMapper<T, TDao, TKey> _mapper;
+		private readonly GenericDataStorage<TData, TKey> _innerDataStorage;
+		private readonly IEntityMapper<TEntity, TData, TKey> _mapper;
 
-		public GenericDataStorage(Func<IDataContext> contextFactory, IEntityMapper<T, TDao, TKey> mapper)
+		public GenericDataStorage(Func<IDataContext> contextFactory, IEntityMapper<TEntity, TData, TKey> mapper)
 		{
-			_innerDataStorage = new GenericDataStorage<TDao, TKey>(contextFactory);
+			_innerDataStorage = new GenericDataStorage<TData, TKey>(contextFactory);
 			_contextFactory = contextFactory;
 			_mapper = mapper;
 		}
 
-		public virtual async Task<T> GetAsync(TKey key,
+		public virtual async Task<TEntity> GetAsync(TKey key,
 			CancellationToken cancellationToken = default)
 		{
 			return ToEntity(await _innerDataStorage.GetAsync(key, cancellationToken));
 		}
 
-		public virtual async Task<T> CreateAsync(T entity,
+		public virtual async Task<TEntity> CreateAsync(TEntity entity,
 			CancellationToken cancellationToken = default)
 		{
-			return ToEntity(await _innerDataStorage.CreateAsync(ToDao(entity), cancellationToken));
+			return ToEntity(await _innerDataStorage.CreateAsync(ToData(entity), cancellationToken));
 		}
 
-		public virtual async Task<bool> DeleteAsync(T entity,
+		public virtual async Task<bool> DeleteAsync(TEntity entity,
 			CancellationToken cancellationToken = default)
 		{
-			return await _innerDataStorage.DeleteAsync(ToDao(entity), cancellationToken);
+			return await _innerDataStorage.DeleteAsync(ToData(entity), cancellationToken);
 		}
 
-		public virtual async Task<T> UpdateAsync(T entity,
+		public virtual async Task<TEntity> UpdateAsync(TEntity entity,
 			CancellationToken cancellationToken = default)
 		{
-			return ToEntity(await _innerDataStorage.UpdateAsync(ToDao(entity), cancellationToken));
+			return ToEntity(await _innerDataStorage.UpdateAsync(ToData(entity), cancellationToken));
 		}
 
 		protected IDataContext GetContext()
@@ -142,17 +146,17 @@ namespace Untech.Practices.DataStorage.Linq2Db
 			return _contextFactory();
 		}
 
-		protected ITable<TDao> GetTable(IDataContext context)
+		protected ITable<TData> GetTable(IDataContext context)
 		{
-			return context.GetTable<TDao>();
+			return context.GetTable<TData>();
 		}
 
-		protected T ToEntity(TDao dao)
+		protected TEntity ToEntity(TData dao)
 		{
 			return _mapper.Map(dao);
 		}
 
-		protected TDao ToDao(T entity)
+		protected TData ToData(TEntity entity)
 		{
 			return _mapper.Map(entity);
 		}

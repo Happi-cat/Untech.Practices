@@ -1,11 +1,11 @@
 namespace Untech.Practices.DataStorage.Linq2Db
 {
-	public interface IEntityMapper<T, TDao, TKey>
-		where T : IHasKey<TKey>
-		where TDao: IHasKey<TKey>
+	public interface IEntityMapper<TEntity, TData, TKey>
+		where TEntity : IHasKey<TKey>
+		where TData: IHasKey<TKey>
 	{
-		T Map(TDao value);
+		TEntity Map(TData value);
 
-		TDao Map(T value);
+		TData Map(TEntity value);
 	}
 }
