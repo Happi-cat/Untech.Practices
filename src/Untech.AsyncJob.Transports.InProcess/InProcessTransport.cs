@@ -25,7 +25,7 @@ namespace Untech.AsyncJob.Transports.InProcess
 				.ToDictionary(n => n << scale, n => new Queue(), new PriorityComparer(scale, radius));
 		}
 
-		public Task<ReadOnlyCollection<Request>> GetRequestsAsync(int count)
+		public Task<Request[]> GetRequestsAsync(int count)
 		{
 			var maxCountPerPriorityQueue = Max(count - 2, 1);
 			var requests = _queues
@@ -33,8 +33,7 @@ namespace Untech.AsyncJob.Transports.InProcess
 				.SelectMany(n => n.Value.Dequeue(maxCountPerPriorityQueue))
 				.Take(count)
 				.OrderByDescending(r => r.GetPriority())
-				.ToList<Request>()
-				.AsReadOnly();
+				.ToArray<Request>();
 
 			return Task.FromResult(requests);
 		}

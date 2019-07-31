@@ -13,8 +13,6 @@ namespace Untech.AsyncJob.Transports
 	/// </summary>
 	public class CompositeTransport : ITransport
 	{
-		private static readonly ReadOnlyCollection<Request> s_emptyRequestCollection = new List<Request>().AsReadOnly();
-
 		private readonly IReadOnlyList<ITransport> _transports;
 		private int _nextIndex;
 
@@ -32,18 +30,18 @@ namespace Untech.AsyncJob.Transports
 
 
 		/// <inheritdoc />
-		public async Task<ReadOnlyCollection<Request>> GetRequestsAsync(int count)
+		public async Task<Request[]> GetRequestsAsync(int count)
 		{
 			foreach (var transport in GetTransportsAsRoundRobin())
 			{
 				var requests = await transport.GetRequestsAsync(count);
-				if (requests.Count <= 0) continue;
+				if (requests.Length <= 0) continue;
 
 				foreach (var request in requests) request.Items[this] = transport;
 				return requests;
 			}
 
-			return s_emptyRequestCollection;
+			return new Request[0];
 		}
 
 		/// <inheritdoc />

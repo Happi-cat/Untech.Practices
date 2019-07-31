@@ -24,7 +24,7 @@ namespace AsyncJob.Run
 			_requestTemplates = commands.ToList();
 		}
 
-		public Task<ReadOnlyCollection<Request>> GetRequestsAsync(int count)
+		public Task<Request[]> GetRequestsAsync(int count)
 		{
 			count = _rand.Next(count);
 			var requests = _requestTemplates
@@ -32,8 +32,7 @@ namespace AsyncJob.Run
 				.Take(count)
 				.Shuffle(_rand)
 				.Select(Create)
-				.ToList()
-				.AsReadOnly();
+				.ToArray();
 
 			return Task.FromResult(requests);
 		}

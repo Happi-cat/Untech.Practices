@@ -107,7 +107,7 @@ namespace Untech.AsyncJob
 			{
 				var requests = await _transport.GetRequestsAsync(_options.RequestsPerWarp);
 
-				UpdateSlidingCoefficient(requests.Count);
+				UpdateSlidingCoefficient(requests.Length);
 
 				await Task.WhenAll(requests.Select(WarpExecuteAsync));
 			}

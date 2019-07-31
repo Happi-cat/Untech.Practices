@@ -14,7 +14,7 @@ namespace Untech.AsyncJob.Transports.Scheduled
 			_scheduledJobStore = scheduledJobStore;
 		}
 
-		public async Task<ReadOnlyCollection<Request>> GetRequestsAsync(int count)
+		public async Task<Request[]> GetRequestsAsync(int count)
 		{
 			var jobs = await _scheduledJobStore.GetJobsAsync();
 			var jobsToRun = jobs
@@ -22,8 +22,7 @@ namespace Untech.AsyncJob.Transports.Scheduled
 				.OrderBy(j => j.NextRun)
 				.Take(count)
 				.Select(j => new ScheduledJobRequest(j))
-				.ToList<Request>()
-				.AsReadOnly();
+				.ToArray<Request>();
 
 			return jobsToRun;
 		}

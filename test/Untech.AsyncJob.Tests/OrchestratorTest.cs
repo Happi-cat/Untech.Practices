@@ -58,13 +58,13 @@ namespace Untech.AsyncJob
 				_completionSource = new TaskCompletionSource<int>();
 			}
 
-			public Task<ReadOnlyCollection<Request>> GetRequestsAsync(int count)
+			public Task<Request[]> GetRequestsAsync(int count)
 			{
 				var requests = new List<Request>();
 
 				while (count-- > 0 && _inbound.TryTake(out var request)) requests.Add(request);
 
-				return Task.FromResult(requests.AsReadOnly());
+				return Task.FromResult(requests.ToArray());
 			}
 
 			public Task CompleteRequestAsync(Request request)

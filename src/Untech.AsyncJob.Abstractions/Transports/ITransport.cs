@@ -14,7 +14,7 @@ namespace Untech.AsyncJob.Transports
 		/// </summary>
 		/// <param name="count">The amount of requests to retrieve.</param>
 		/// <returns></returns>
-		Task<ReadOnlyCollection<Request>> GetRequestsAsync(int count);
+		Task<Request[]> GetRequestsAsync(int count);
 
 		/// <summary>
 		/// Marks the specified <paramref name="request"/> as a completed in the current store.
