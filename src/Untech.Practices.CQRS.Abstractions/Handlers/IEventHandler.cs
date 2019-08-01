@@ -7,7 +7,7 @@ namespace Untech.Practices.CQRS.Handlers
 	///     Defines an async handler for a notification.
 	/// </summary>
 	/// <typeparam name="TIn">Notification type</typeparam>
-	public interface IEventHandler<in TIn>
+	public interface IEventHandler<TIn>
 		where TIn : IEvent
 	{
 		/// <summary>

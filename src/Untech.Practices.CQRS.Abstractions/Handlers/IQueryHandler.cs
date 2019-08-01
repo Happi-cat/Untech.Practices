@@ -5,7 +5,7 @@
 	/// </summary>
 	/// <typeparam name="TIn">The type of query to be handled.</typeparam>
 	/// <typeparam name="TOut">The type of result from the handler.</typeparam>
-	public interface IQueryHandler<in TIn, TOut> : IRequestHandler<TIn, TOut>
+	public interface IQueryHandler<TIn, TOut> : IRequestHandler<TIn, TOut>
 		where TIn : IQuery<TOut>
 	{
 	}
