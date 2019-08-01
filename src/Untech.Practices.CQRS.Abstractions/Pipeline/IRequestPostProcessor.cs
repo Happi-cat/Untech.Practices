@@ -1,4 +1,5 @@
-﻿using Untech.Practices.CQRS.Handlers;
+﻿using System.Threading.Tasks;
+using Untech.Practices.CQRS.Handlers;
 
 namespace Untech.Practices.CQRS.Pipeline
 {
@@ -16,6 +17,6 @@ namespace Untech.Practices.CQRS.Pipeline
 		/// </summary>
 		/// <param name="request">CQRS request.</param>
 		/// <param name="response"><see cref="IRequest{TResult}" /> execution response.</param>
-		void PostProcess(IRequestHandler<TRequest, TResponse> handler, TRequest request, TResponse response);
+		Task PostProcessAsync(IRequestHandler<TRequest, TResponse> handler, TRequest request, TResponse response);
 	}
 }

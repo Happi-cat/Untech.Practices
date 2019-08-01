@@ -1,4 +1,5 @@
-﻿using Untech.Practices.CQRS.Handlers;
+﻿using System.Threading.Tasks;
+using Untech.Practices.CQRS.Handlers;
 
 namespace Untech.Practices.CQRS.Pipeline
 {
@@ -14,6 +15,6 @@ namespace Untech.Practices.CQRS.Pipeline
 		///     Pre process <paramref name="request" />.
 		/// </summary>
 		/// <param name="request">CQRS request.</param>
-		void PreProcess(IRequestHandler<TRequest, TResponse> handler, TRequest request);
+		Task PreProcessAsync(IRequestHandler<TRequest, TResponse> handler, TRequest request);
 	}
 }

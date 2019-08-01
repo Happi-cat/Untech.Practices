@@ -26,11 +26,11 @@ namespace Untech.Practices.CQRS.Dispatching.Processors
 		{
 			IRequestHandler<TIn, TOut> handler = ResolveHandlerOrThrow();
 
-			foreach (var step in ResolvePreProcessors()) step.PreProcess(handler, request);
+			foreach (var step in ResolvePreProcessors()) await step.PreProcessAsync(handler, request);
 
 			TOut result = await handler.HandleAsync(request, cancellationToken);
 
-			foreach (var step in ResolvePostProcessors()) step.PostProcess(handler, request, result);
+			foreach (var step in ResolvePostProcessors()) await step.PostProcessAsync(handler, request, result);
 
 			return result;
 		}
