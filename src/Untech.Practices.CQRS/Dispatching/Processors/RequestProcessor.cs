@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Untech.Practices.CQRS.Handlers;
@@ -23,15 +24,25 @@ namespace Untech.Practices.CQRS.Dispatching.Processors
 
 		private async Task<TOut> InvokeAsync(TIn request, CancellationToken cancellationToken)
 		{
-			IRequestHandler<TIn, TOut> handler = GetAsyncHandlerOrThrow();
+			IRequestHandler<TIn, TOut> handler = ResolveHandlerOrThrow();
 
-			PreProcess(_resolver, request);
+			foreach (var step in ResolvePreProcessors()) step.PreProcess(handler, request);
 
 			TOut result = await handler.HandleAsync(request, cancellationToken);
 
-			PostProcess(_resolver, request, result);
+			foreach (var step in ResolvePostProcessors()) step.PostProcess(handler, request, result);
 
 			return result;
+		}
+
+		private IEnumerable<IRequestPostProcessor<TIn, TOut>> ResolvePostProcessors()
+		{
+			return _resolver.ResolveMany<IRequestPostProcessor<TIn, TOut>>();
+		}
+
+		private IEnumerable<IRequestPreProcessor<TIn, TOut>> ResolvePreProcessors()
+		{
+			return _resolver.ResolveMany<IRequestPreProcessor<TIn, TOut>>();
 		}
 
 		private static InvalidOperationException CreateHandlerNotFoundException()
@@ -39,21 +50,7 @@ namespace Untech.Practices.CQRS.Dispatching.Processors
 			return new InvalidOperationException($"Handler wasn't found for {typeof(TIn)} request.");
 		}
 
-		private static void PreProcess(ITypeResolver typeResolver, TIn request)
-		{
-			var preProcessors = typeResolver.ResolveMany<IPipelinePreProcessor<TIn>>();
-			foreach (IPipelinePreProcessor<TIn> preProcessor in preProcessors)
-				preProcessor.Process(request);
-		}
-
-		private static void PostProcess(ITypeResolver typeResolver, TIn request, TOut result)
-		{
-			var postProcessors = typeResolver.ResolveMany<IPipelinePostProcessor<TIn, TOut>>();
-			foreach (IPipelinePostProcessor<TIn, TOut> postProcessor in postProcessors)
-				postProcessor.Process(request, result);
-		}
-
-		private IRequestHandler<TIn, TOut> GetAsyncHandlerOrThrow()
+		private IRequestHandler<TIn, TOut> ResolveHandlerOrThrow()
 		{
 			IRequestHandler<TIn, TOut> handler = _resolver.ResolveOne<IRequestHandler<TIn, TOut>>();
 			if (handler != null)

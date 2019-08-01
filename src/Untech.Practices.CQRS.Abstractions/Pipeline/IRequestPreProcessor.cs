@@ -7,12 +7,13 @@ namespace Untech.Practices.CQRS.Pipeline
 	///     <see cref="IRequestHandler{TIn,TOut}" />
 	/// </summary>
 	/// <typeparam name="TRequest">CQRS request type.</typeparam>
-	public interface IPipelinePreProcessor<in TRequest>
+	public interface IRequestPreProcessor<TRequest, TResponse>
+		where TRequest : IRequest<TResponse>
 	{
 		/// <summary>
 		///     Pre process <paramref name="request" />.
 		/// </summary>
 		/// <param name="request">CQRS request.</param>
-		void Process(TRequest request);
+		void PreProcess(IRequestHandler<TRequest, TResponse> handler, TRequest request);
 	}
 }
