@@ -146,7 +146,7 @@ namespace Untech.Practices.DataStorage.Linq2Db
 			return _contextFactory();
 		}
 
-		protected ITable<TData> GetTable(IDataContext context)
+		protected ITable<TData> Table(IDataContext context)
 		{
 			return context.GetTable<TData>();
 		}

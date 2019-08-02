@@ -21,7 +21,7 @@ namespace Untech.Practices.CQRS.Handlers
 		/// <inheritdoc />
 		public Task PublishAsync(TIn notification, CancellationToken cancellationToken)
 		{
-			return Task.FromResult(0);
+			return Task.CompletedTask;
 		}
 	}
 }

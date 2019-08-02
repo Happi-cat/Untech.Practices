@@ -15,7 +15,7 @@ namespace Untech.AsyncJob.Processing
 		/// <inheritdoc />
 		public Task InvokeAsync(Context context, RequestProcessorCallback next)
 		{
-			return Task.FromResult(0);
+			return Task.CompletedTask;
 		}
 	}
 }

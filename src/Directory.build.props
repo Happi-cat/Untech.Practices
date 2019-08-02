@@ -1,8 +1,8 @@
 <Project>
   <PropertyGroup>
     <Company>Sergey Svirsky</Company>
-    <Copyright>Copyright \u00A9 Sergey Svirsky 2018</Copyright>
-    <TargetFrameworks>netstandard1</TargetFrameworks>
+    <Copyright>Copyright \u00A9 Sergey Svirsky 2019</Copyright>
+    <TargetFrameworks>netstandard1.3</TargetFrameworks>
     <Version>1.0</Version>
     <FileVersion>1.0</FileVersion>
     <!-- Increment AssemblyVersion on MAJOR.MINOR change -->
@@ -10,7 +10,7 @@
     <InformationalVersion>1.0-rc1</InformationalVersion>
     <AssemblyVersion>1.0</AssemblyVersion>
     <!-- etc -->
-    <LangVersion>7.2</LangVersion>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
 
   <Import Project="..\build\JetBrains.Annotations.props" />

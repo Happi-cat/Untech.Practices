@@ -12,12 +12,12 @@ namespace Untech.Practices.Notifications
 		/// <inheritdoc />
 		public Task EnqueueAsync(TNotification notification)
 		{
-			return Task.FromResult(0);
+			return Task.CompletedTask;
 		}
 
 		public Task EnqueueAsync(IEnumerable<TNotification> notifications)
 		{
-			return Task.FromResult(0);
+			return Task.CompletedTask;
 		}
 	}
 }
