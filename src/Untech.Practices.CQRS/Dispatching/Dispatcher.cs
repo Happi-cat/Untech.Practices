@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Untech.Practices.CQRS.Dispatching.Processors;
@@ -12,7 +14,10 @@ namespace Untech.Practices.CQRS.Dispatching
 	/// </summary>
 	public sealed class Dispatcher : IDispatcher
 	{
-		private readonly ConcurrentDictionary<Type, IProcessor> _processors;
+		private delegate IProcessor ProcessorFactory(TypeResolver resolver);
+
+		private static readonly ConcurrentDictionary<Type, ProcessorFactory> s_processors;
+
 		private readonly TypeResolver _typeResolver;
 
 		/// <summary>
@@ -23,7 +28,11 @@ namespace Untech.Practices.CQRS.Dispatching
 		public Dispatcher(IServiceProvider typeResolver)
 		{
 			_typeResolver = new TypeResolver(typeResolver ?? throw new ArgumentNullException(nameof(typeResolver)));
-			_processors = new ConcurrentDictionary<Type, IProcessor>();
+		}
+
+		static Dispatcher()
+		{
+			s_processors = new ConcurrentDictionary<Type, ProcessorFactory>();
 		}
 
 		/// <inheritdoc />
@@ -31,9 +40,7 @@ namespace Untech.Practices.CQRS.Dispatching
 		{
 			query = query ?? throw new ArgumentNullException(nameof(query));
 
-			return (Task<TResponse>)_processors
-				.GetOrAdd(query.GetType(), CreateForFetch<TResponse>)
-				.InvokeAsync(query, cancellationToken);
+			return (Task<TResponse>)InvokeAsync(query, BuildRequestProcessorFactory<TResponse>, cancellationToken);
 		}
 
 		/// <inheritdoc />
@@ -41,9 +48,7 @@ namespace Untech.Practices.CQRS.Dispatching
 		{
 			command = command ?? throw new ArgumentNullException(nameof(command));
 
-			return (Task<TResponse>)_processors
-				.GetOrAdd(command.GetType(), CreateForProcess<TResponse>)
-				.InvokeAsync(command, cancellationToken);
+			return (Task<TResponse>)InvokeAsync(command, BuildRequestProcessorFactory<TResponse>, cancellationToken);
 		}
 
 		/// <inheritdoc />
@@ -51,40 +56,42 @@ namespace Untech.Practices.CQRS.Dispatching
 		{
 			@event = @event ?? throw new ArgumentNullException(nameof(@event));
 
-			return _processors
-				.GetOrAdd(@event.GetType(), CreateForPublish)
-				.InvokeAsync(@event, cancellationToken);
+			return InvokeAsync(@event, BuildEventProcessorFactory, cancellationToken);
 		}
 
 		#region [Private Methods]
 
-		private IProcessor CreateForFetch<TResponse>(Type requestType)
+		private Task InvokeAsync(object input, Func<Type, ProcessorFactory> createFactory,
+			CancellationToken cancellationToken)
 		{
-			return (IProcessor)CreateProcessor(
-				typeof(RequestProcessor<,>),
-				requestType,
-				typeof(TResponse));
+			return s_processors.GetOrAdd(input.GetType(), createFactory)
+				.Invoke(_typeResolver)
+				.InvokeAsync(input, cancellationToken);
 		}
 
-		private IProcessor CreateForProcess<TResponse>(Type requestType)
+		private static ProcessorFactory BuildRequestProcessorFactory<TResponse>(Type requestType) => BuildFactory(
+			typeof(RequestProcessor<,>),
+			requestType,
+			typeof(TResponse));
+
+		private static ProcessorFactory BuildEventProcessorFactory(Type requestType) => BuildFactory(
+			typeof(EventProcessor<>),
+			requestType);
+
+		private static ProcessorFactory BuildFactory(Type genericTypeDefinition, params Type[] typeArguments)
 		{
-			return (IProcessor)CreateProcessor(
-				typeof(RequestProcessor<,>),
-				requestType,
-				typeof(TResponse));
+			return BuildFactory(genericTypeDefinition.MakeGenericType(typeArguments));
 		}
 
-		private IProcessor CreateForPublish(Type requestType)
+		private static ProcessorFactory BuildFactory(Type processorType)
 		{
-			return (IProcessor)CreateProcessor(
-				typeof(EventProcessor<>),
-				requestType);
-		}
+			var ctor = processorType.GetConstructor(new [] { typeof(TypeResolver) });
 
-		private object CreateProcessor(Type genericTypeDefinition, params Type[] typeArguments)
-		{
-			Type genericType = genericTypeDefinition.MakeGenericType(typeArguments);
-			return Activator.CreateInstance(genericType, new object[] { _typeResolver }, null);
+			var p = Expression.Parameter(typeof(TypeResolver), "resolver");
+
+			return Expression
+				.Lambda<ProcessorFactory>(Expression.New(ctor, p), p)
+				.Compile();
 		}
 
 		#endregion
