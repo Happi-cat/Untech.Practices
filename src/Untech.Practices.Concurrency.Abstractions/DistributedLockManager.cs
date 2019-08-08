@@ -55,6 +55,7 @@ namespace Untech.Practices.Concurrency
 
 			try { return await RepeatAsync(resource, retry, expiry, cancellationToken); }
 			catch (TaskCanceledException) { return null; }
+			catch (OperationCanceledException) { return null; }
 		}
 
 		private async Task<IDisposable> RepeatAsync(string resource, TimeSpan retry, TimeSpan expiry,
