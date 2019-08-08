@@ -150,7 +150,7 @@ namespace Untech.AsyncJob
 			catch (Exception exception)
 			{
 				await _transport.FailRequestAsync(context.Request, exception);
-				return;
+				throw;
 			}
 
 			await _transport.CompleteRequestAsync(context.Request);
