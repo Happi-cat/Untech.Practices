@@ -52,11 +52,7 @@ namespace Untech.Practices.CQRS.Dispatching.Processors
 
 		private IRequestHandler<TIn, TOut> ResolveHandlerOrThrow()
 		{
-			IRequestHandler<TIn, TOut> handler = _resolver.ResolveOne<IRequestHandler<TIn, TOut>>();
-			if (handler != null)
-				return handler;
-
-			throw CreateHandlerNotFoundException();
+			return _resolver.ResolveOne<IRequestHandler<TIn, TOut>>() ?? throw CreateHandlerNotFoundException();
 		}
 	}
 }
