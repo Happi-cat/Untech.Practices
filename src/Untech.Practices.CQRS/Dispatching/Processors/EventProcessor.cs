@@ -9,9 +9,9 @@ namespace Untech.Practices.CQRS.Dispatching.Processors
 	internal class EventProcessor<TIn> : IProcessor
 		where TIn : IEvent
 	{
-		private readonly ITypeResolver _resolver;
+		private readonly TypeResolver _resolver;
 
-		public EventProcessor(ITypeResolver resolver)
+		public EventProcessor(TypeResolver resolver)
 		{
 			_resolver = resolver;
 		}

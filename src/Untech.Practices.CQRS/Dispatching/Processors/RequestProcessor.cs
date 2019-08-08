@@ -10,9 +10,9 @@ namespace Untech.Practices.CQRS.Dispatching.Processors
 	internal class RequestProcessor<TIn, TOut> : IProcessor
 		where TIn : IRequest<TOut>
 	{
-		private readonly ITypeResolver _resolver;
+		private readonly TypeResolver _resolver;
 
-		public RequestProcessor(ITypeResolver resolver)
+		public RequestProcessor(TypeResolver resolver)
 		{
 			_resolver = resolver;
 		}

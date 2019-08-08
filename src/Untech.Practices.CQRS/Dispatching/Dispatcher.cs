@@ -13,16 +13,16 @@ namespace Untech.Practices.CQRS.Dispatching
 	public sealed class Dispatcher : IDispatcher
 	{
 		private readonly ConcurrentDictionary<Type, IProcessor> _processors;
-		private readonly ITypeResolver _typeResolver;
+		private readonly TypeResolver _typeResolver;
 
 		/// <summary>
 		///     Initializes a new instance of the <see cref="Dispatcher" />.
 		/// </summary>
 		/// <param name="typeResolver">The resolver of CQRS handlers.</param>
 		/// <exception cref="ArgumentNullException"><paramref name="typeResolver" /> is null.</exception>
-		public Dispatcher(ITypeResolver typeResolver)
+		public Dispatcher(IServiceProvider typeResolver)
 		{
-			_typeResolver = typeResolver ?? throw new ArgumentNullException(nameof(typeResolver));
+			_typeResolver = new TypeResolver(typeResolver ?? throw new ArgumentNullException(nameof(typeResolver)));
 			_processors = new ConcurrentDictionary<Type, IProcessor>();
 		}
 
