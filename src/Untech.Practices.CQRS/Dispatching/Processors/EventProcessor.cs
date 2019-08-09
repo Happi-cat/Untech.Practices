@@ -6,21 +6,13 @@ using Untech.Practices.CQRS.Handlers;
 
 namespace Untech.Practices.CQRS.Dispatching.Processors
 {
-	internal class EventProcessor<TIn> : IProcessor
-		where TIn : IEvent
+	internal static class EventProcessor<TIn> where TIn : IEvent
 	{
-		private readonly TypeResolver _resolver;
-
-		public EventProcessor(TypeResolver resolver)
-		{
-			_resolver = resolver;
-		}
-
-		public Task InvokeAsync(object args, CancellationToken cancellationToken)
+		public static Task InvokeAsync(TypeResolver resolver, object args, CancellationToken cancellationToken)
 		{
 			TIn input = (TIn)args;
 
-			IEnumerable<Task> asyncHandlers = _resolver
+			IEnumerable<Task> asyncHandlers = resolver
 				.ResolveMany<IEventHandler<TIn>>()
 				.Select(RunAsync);
 

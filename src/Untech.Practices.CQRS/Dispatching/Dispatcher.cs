@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Untech.Practices.CQRS.Dispatching.Processors;
@@ -14,9 +15,9 @@ namespace Untech.Practices.CQRS.Dispatching
 	/// </summary>
 	public sealed class Dispatcher : IDispatcher
 	{
-		private delegate IProcessor ProcessorFactory(TypeResolver resolver);
+		private delegate Task Processor(TypeResolver resolver, object input, CancellationToken token);
 
-		private static readonly ConcurrentDictionary<Type, ProcessorFactory> s_processors;
+		private static readonly ConcurrentDictionary<Type, Processor> s_processors;
 
 		private readonly TypeResolver _typeResolver;
 
@@ -32,7 +33,7 @@ namespace Untech.Practices.CQRS.Dispatching
 
 		static Dispatcher()
 		{
-			s_processors = new ConcurrentDictionary<Type, ProcessorFactory>();
+			s_processors = new ConcurrentDictionary<Type, Processor>();
 		}
 
 		/// <inheritdoc />
@@ -40,7 +41,7 @@ namespace Untech.Practices.CQRS.Dispatching
 		{
 			query = query ?? throw new ArgumentNullException(nameof(query));
 
-			return (Task<TResponse>)InvokeAsync(query, BuildRequestProcessorFactory<TResponse>, cancellationToken);
+			return (Task<TResponse>)InvokeAsync(query, BuildRequestProcessor<TResponse>, cancellationToken);
 		}
 
 		/// <inheritdoc />
@@ -48,7 +49,7 @@ namespace Untech.Practices.CQRS.Dispatching
 		{
 			command = command ?? throw new ArgumentNullException(nameof(command));
 
-			return (Task<TResponse>)InvokeAsync(command, BuildRequestProcessorFactory<TResponse>, cancellationToken);
+			return (Task<TResponse>)InvokeAsync(command, BuildRequestProcessor<TResponse>, cancellationToken);
 		}
 
 		/// <inheritdoc />
@@ -56,41 +57,47 @@ namespace Untech.Practices.CQRS.Dispatching
 		{
 			@event = @event ?? throw new ArgumentNullException(nameof(@event));
 
-			return InvokeAsync(@event, BuildEventProcessorFactory, cancellationToken);
+			return InvokeAsync(@event, BuildEventProcessor, cancellationToken);
 		}
 
 		#region [Private Methods]
 
-		private Task InvokeAsync(object input, Func<Type, ProcessorFactory> createFactory,
+		private Task InvokeAsync(object input, Func<Type, Processor> createFactory,
 			CancellationToken cancellationToken)
 		{
 			return s_processors.GetOrAdd(input.GetType(), createFactory)
-				.Invoke(_typeResolver)
-				.InvokeAsync(input, cancellationToken);
+				.Invoke(_typeResolver, input, cancellationToken);
 		}
 
-		private static ProcessorFactory BuildRequestProcessorFactory<TResponse>(Type requestType) => BuildFactory(
+		private static Processor BuildRequestProcessor<TResponse>(Type requestType) => Build(
 			typeof(RequestProcessor<,>),
 			requestType,
 			typeof(TResponse));
 
-		private static ProcessorFactory BuildEventProcessorFactory(Type requestType) => BuildFactory(
+		private static Processor BuildEventProcessor(Type requestType) => Build(
 			typeof(EventProcessor<>),
 			requestType);
 
-		private static ProcessorFactory BuildFactory(Type genericTypeDefinition, params Type[] typeArguments)
+		private static Processor Build(Type genericTypeDefinition, params Type[] typeArguments)
 		{
 			return BuildFactory(genericTypeDefinition.MakeGenericType(typeArguments));
 		}
 
-		private static ProcessorFactory BuildFactory(Type processorType)
+		private static Processor BuildFactory(Type processorType)
 		{
-			var ctor = processorType.GetConstructor(new [] { typeof(TypeResolver) });
+			var methodInfo = processorType.GetMethod("InvokeAsync",
+				BindingFlags.Static | BindingFlags.Public,
+				null,
+				new[] { typeof(TypeResolver), typeof(object), typeof(CancellationToken) },
+				null
+			);
 
-			var p = Expression.Parameter(typeof(TypeResolver), "resolver");
+			var p0 = Expression.Parameter(typeof(TypeResolver), "resolver");
+			var p1 = Expression.Parameter(typeof(object), "input");
+			var p2 = Expression.Parameter(typeof(CancellationToken), "token");
 
 			return Expression
-				.Lambda<ProcessorFactory>(Expression.New(ctor, p), p)
+				.Lambda<Processor>(Expression.Call(methodInfo, p0, p1, p2), p0, p1, p2)
 				.Compile();
 		}
 

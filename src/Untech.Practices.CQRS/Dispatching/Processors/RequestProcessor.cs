@@ -7,52 +7,32 @@ using Untech.Practices.CQRS.Pipeline;
 
 namespace Untech.Practices.CQRS.Dispatching.Processors
 {
-	internal class RequestProcessor<TIn, TOut> : IProcessor
-		where TIn : IRequest<TOut>
+	internal static class RequestProcessor<TIn, TOut> where TIn : IRequest<TOut>
 	{
-		private readonly TypeResolver _resolver;
-
-		public RequestProcessor(TypeResolver resolver)
+		public static Task InvokeAsync(TypeResolver resolver, object args, CancellationToken cancellationToken)
 		{
-			_resolver = resolver;
+			return InvokeAsync(resolver, (TIn)args, cancellationToken);
 		}
 
-		public Task InvokeAsync(object args, CancellationToken cancellationToken)
+		private static async Task<TOut> InvokeAsync(TypeResolver resolver, TIn request, CancellationToken cancellationToken)
 		{
-			return InvokeAsync((TIn)args, cancellationToken);
-		}
+			var handler = resolver.ResolveOne<IRequestHandler<TIn, TOut>>()
+				?? throw CreateHandlerNotFoundException();
 
-		private async Task<TOut> InvokeAsync(TIn request, CancellationToken cancellationToken)
-		{
-			IRequestHandler<TIn, TOut> handler = ResolveHandlerOrThrow();
-
-			foreach (var step in ResolvePreProcessors()) await step.PreProcessAsync(handler, request);
+			foreach (var step in resolver.ResolveMany<IRequestPreProcessor<TIn, TOut>>())
+				await step.PreProcessAsync(handler, request);
 
 			TOut result = await handler.HandleAsync(request, cancellationToken);
 
-			foreach (var step in ResolvePostProcessors()) await step.PostProcessAsync(handler, request, result);
+			foreach (var step in resolver.ResolveMany<IRequestPostProcessor<TIn, TOut>>())
+				await step.PostProcessAsync(handler, request, result);
 
 			return result;
-		}
-
-		private IEnumerable<IRequestPostProcessor<TIn, TOut>> ResolvePostProcessors()
-		{
-			return _resolver.ResolveMany<IRequestPostProcessor<TIn, TOut>>();
-		}
-
-		private IEnumerable<IRequestPreProcessor<TIn, TOut>> ResolvePreProcessors()
-		{
-			return _resolver.ResolveMany<IRequestPreProcessor<TIn, TOut>>();
 		}
 
 		private static InvalidOperationException CreateHandlerNotFoundException()
 		{
 			return new InvalidOperationException($"Handler wasn't found for {typeof(TIn)} request.");
-		}
-
-		private IRequestHandler<TIn, TOut> ResolveHandlerOrThrow()
-		{
-			return _resolver.ResolveOne<IRequestHandler<TIn, TOut>>() ?? throw CreateHandlerNotFoundException();
 		}
 	}
 }
