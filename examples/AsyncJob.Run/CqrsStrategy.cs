@@ -11,7 +11,7 @@ using Untech.Practices.CQRS.Dispatching;
 
 namespace AsyncJob.Run
 {
-	internal class CqrsStrategy : ICqrsStrategy, ITypeResolver
+	internal class CqrsStrategy : ICqrsStrategy, IServiceProvider
 	{
 		private readonly ILogger _logger;
 
@@ -26,9 +26,10 @@ namespace AsyncJob.Run
 				.ToList();
 		}
 
-		public T ResolveOne<T>() where T : class
+		public object GetService(Type serviceType)
 		{
-			return new DemoHandlers(_logger) as T;
+			if (serviceType.IsAssignableFrom(typeof(DemoHandlers))) return new DemoHandlers(_logger);
+			throw new InvalidOperationException();
 		}
 
 		public IEnumerable<T> ResolveMany<T>() where T : class

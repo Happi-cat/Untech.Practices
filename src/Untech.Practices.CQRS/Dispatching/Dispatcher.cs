@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Untech.Practices.CQRS.Dispatching.Processors;
@@ -12,18 +15,25 @@ namespace Untech.Practices.CQRS.Dispatching
 	/// </summary>
 	public sealed class Dispatcher : IDispatcher
 	{
-		private readonly ConcurrentDictionary<Type, IProcessor> _processors;
-		private readonly ITypeResolver _typeResolver;
+		private delegate Task Processor(TypeResolver resolver, object input, CancellationToken token);
+
+		private static readonly ConcurrentDictionary<Type, Processor> s_processors;
+
+		private readonly TypeResolver _typeResolver;
 
 		/// <summary>
 		///     Initializes a new instance of the <see cref="Dispatcher" />.
 		/// </summary>
 		/// <param name="typeResolver">The resolver of CQRS handlers.</param>
 		/// <exception cref="ArgumentNullException"><paramref name="typeResolver" /> is null.</exception>
-		public Dispatcher(ITypeResolver typeResolver)
+		public Dispatcher(IServiceProvider typeResolver)
 		{
-			_typeResolver = typeResolver ?? throw new ArgumentNullException(nameof(typeResolver));
-			_processors = new ConcurrentDictionary<Type, IProcessor>();
+			_typeResolver = new TypeResolver(typeResolver ?? throw new ArgumentNullException(nameof(typeResolver)));
+		}
+
+		static Dispatcher()
+		{
+			s_processors = new ConcurrentDictionary<Type, Processor>();
 		}
 
 		/// <inheritdoc />
@@ -31,9 +41,7 @@ namespace Untech.Practices.CQRS.Dispatching
 		{
 			query = query ?? throw new ArgumentNullException(nameof(query));
 
-			return (Task<TResponse>)_processors
-				.GetOrAdd(query.GetType(), CreateForFetch<TResponse>)
-				.InvokeAsync(query, cancellationToken);
+			return (Task<TResponse>)InvokeAsync(query, BuildRequestProcessor<TResponse>, cancellationToken);
 		}
 
 		/// <inheritdoc />
@@ -41,9 +49,7 @@ namespace Untech.Practices.CQRS.Dispatching
 		{
 			command = command ?? throw new ArgumentNullException(nameof(command));
 
-			return (Task<TResponse>)_processors
-				.GetOrAdd(command.GetType(), CreateForProcess<TResponse>)
-				.InvokeAsync(command, cancellationToken);
+			return (Task<TResponse>)InvokeAsync(command, BuildRequestProcessor<TResponse>, cancellationToken);
 		}
 
 		/// <inheritdoc />
@@ -51,40 +57,48 @@ namespace Untech.Practices.CQRS.Dispatching
 		{
 			@event = @event ?? throw new ArgumentNullException(nameof(@event));
 
-			return _processors
-				.GetOrAdd(@event.GetType(), CreateForPublish)
-				.InvokeAsync(@event, cancellationToken);
+			return InvokeAsync(@event, BuildEventProcessor, cancellationToken);
 		}
 
 		#region [Private Methods]
 
-		private IProcessor CreateForFetch<TResponse>(Type requestType)
+		private Task InvokeAsync(object input, Func<Type, Processor> createFactory,
+			CancellationToken cancellationToken)
 		{
-			return (IProcessor)CreateProcessor(
-				typeof(RequestProcessor<,>),
-				requestType,
-				typeof(TResponse));
+			return s_processors.GetOrAdd(input.GetType(), createFactory)
+				.Invoke(_typeResolver, input, cancellationToken);
 		}
 
-		private IProcessor CreateForProcess<TResponse>(Type requestType)
+		private static Processor BuildRequestProcessor<TResponse>(Type requestType) => Build(
+			typeof(RequestProcessor<,>),
+			requestType,
+			typeof(TResponse));
+
+		private static Processor BuildEventProcessor(Type requestType) => Build(
+			typeof(EventProcessor<>),
+			requestType);
+
+		private static Processor Build(Type genericTypeDefinition, params Type[] typeArguments)
 		{
-			return (IProcessor)CreateProcessor(
-				typeof(RequestProcessor<,>),
-				requestType,
-				typeof(TResponse));
+			return BuildFactory(genericTypeDefinition.MakeGenericType(typeArguments));
 		}
 
-		private IProcessor CreateForPublish(Type requestType)
+		private static Processor BuildFactory(Type processorType)
 		{
-			return (IProcessor)CreateProcessor(
-				typeof(EventProcessor<>),
-				requestType);
-		}
+			var methodInfo = processorType.GetMethod("InvokeAsync",
+				BindingFlags.Static | BindingFlags.Public,
+				null,
+				new[] { typeof(TypeResolver), typeof(object), typeof(CancellationToken) },
+				null
+			);
 
-		private object CreateProcessor(Type genericTypeDefinition, params Type[] typeArguments)
-		{
-			Type genericType = genericTypeDefinition.MakeGenericType(typeArguments);
-			return Activator.CreateInstance(genericType, new object[] { _typeResolver }, null);
+			var p0 = Expression.Parameter(typeof(TypeResolver), "resolver");
+			var p1 = Expression.Parameter(typeof(object), "input");
+			var p2 = Expression.Parameter(typeof(CancellationToken), "token");
+
+			return Expression
+				.Lambda<Processor>(Expression.Call(methodInfo, p0, p1, p2), p0, p1, p2)
+				.Compile();
 		}
 
 		#endregion

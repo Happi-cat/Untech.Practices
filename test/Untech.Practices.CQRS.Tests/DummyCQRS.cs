@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
@@ -52,22 +53,14 @@ namespace Untech.Practices.CQRS
 			}
 		}
 
-		public class Resolver : ITypeResolver
+		public class Resolver : IServiceProvider
 		{
-			public T ResolveOne<T>() where T : class
+			public object GetService(Type serviceType)
 			{
-				var handler = new Handler();
-				return handler as T;
-			}
-
-			public IEnumerable<T> ResolveMany<T>() where T : class
-			{
-				return GetEnumerable().Where(n => n != null);
-
-				IEnumerable<T> GetEnumerable()
-				{
-					yield return ResolveOne<T>();
-				}
+				if (serviceType.IsAssignableFrom(typeof(Handler))) return new Handler();
+				if (serviceType.IsAssignableFrom(typeof(IEnumerable<Handler>))) return new[] { new Handler() };
+				if (serviceType.IsGenericType && serviceType.GetGenericTypeDefinition() == typeof(IEnumerable<>)) return null;
+				throw new InvalidOperationException();
 			}
 		}
 	}
