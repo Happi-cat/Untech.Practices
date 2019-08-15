@@ -69,11 +69,16 @@ namespace DependencyDotNet
 				: _nodesCache[assemblyName.FullName] = creator();
 		}
 
-		private DependencyGraphNode Build(AssemblyName assemblyName, Assembly assembly = null)
+		private DependencyGraphNode Build(AssemblyName assemblyName, Assembly assembly)
 		{
 			return ShouldBuildWithDependencies(assemblyName)
 				? BuildWithDependencies(assemblyName, assembly ?? Find(assemblyName))
 				: GetMemoized(assemblyName, () => new DependencyGraphNode(assemblyName) { Collapsed = true });
+		}
+
+		private DependencyGraphNode Build(AssemblyName assemblyName)
+		{
+			return Build(assemblyName, null);
 		}
 
 		private DependencyGraphNode BuildWithDependencies(AssemblyName assemblyName, Assembly assembly)
@@ -85,7 +90,7 @@ namespace DependencyDotNet
 					References = assembly
 						.GetReferencedAssemblies()
 						.Where(ShouldAddAsDependency)
-						.Select(referenceAssemblyName => Build(referenceAssemblyName))
+						.Select(Build)
 						.ToList()
 				});
 		}
