@@ -24,6 +24,9 @@ namespace DependencyDotNet
 		public string Version { get; set; }
 
 		[DataMember]
+		public bool NotFound { get; set; }
+
+		[DataMember]
 		public List<DependencyGraphNode> References { get; set; }
 
 		private XElement _xElement;
@@ -33,6 +36,7 @@ namespace DependencyDotNet
 			return _xElement ?? (_xElement = new XElement("assembly",
 								new XAttribute("name", Name),
 								new XAttribute("version", Version),
+								NotFound ? new XAttribute("found", false) : null,
 								References?.Select(n => n.ToXml())
 							));
 		}

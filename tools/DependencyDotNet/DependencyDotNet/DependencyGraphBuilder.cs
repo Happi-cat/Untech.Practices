@@ -8,7 +8,7 @@ namespace DependencyDotNet
 {
 	public class DependencyGraphBuilder
 	{
-		private static readonly IReadOnlyList<string> s_notExpandableAssemblies = new List<string>
+		private static readonly IReadOnlyList<string> s_excludeAssemblies = new List<string>
 		{
 			"mscorlib",
 			"netstandard",
@@ -37,9 +37,13 @@ namespace DependencyDotNet
 
 		private readonly IDictionary<string, DependencyGraphNode> _nodesCache = new Dictionary<string, DependencyGraphNode>();
 
-		public List<string> NotExpandableAssemblies { get; set; }
+		public List<string> CollapseAssemblies { get; set; }
 
-		public List<string> Directories { get; set; }
+		public List<string> ExpandAssemblies { get; set; }
+
+		public List<string> Folders { get; set; }
+
+		public List<string> FilterAssemblies { get; set; }
 
 		public DependencyGraphNode Build(Assembly assembly)
 		{
@@ -52,8 +56,8 @@ namespace DependencyDotNet
 				throw new ArgumentException(nameof(filePath));
 
 			var assembly = Assembly.LoadFrom(filePath);
-			Directories = Directories ?? new List<string>();
-			Directories.Add(assembly.Location);
+			Folders = Folders ?? new List<string>();
+			Folders.Add(Path.GetDirectoryName(assembly.Location));
 
 			return Build(assembly);
 		}
@@ -67,41 +71,52 @@ namespace DependencyDotNet
 
 		private DependencyGraphNode Build(AssemblyName assemblyName, Assembly assembly = null)
 		{
-			var doNotExpand = IsNotExpandable(assemblyName);
-
-			if (doNotExpand)
-				return GetMemoized(assemblyName, () => new DependencyGraphNode(assemblyName));
-
-			return BuildWithDependencies(assemblyName, assembly ?? Find(assemblyName));
+			return ShouldBuildWithDependencies(assemblyName)
+				? BuildWithDependencies(assemblyName, assembly ?? Find(assemblyName))
+				: GetMemoized(assemblyName, () => new DependencyGraphNode(assemblyName));
 		}
 
 		private DependencyGraphNode BuildWithDependencies(AssemblyName assemblyName, Assembly assembly)
 		{
-			if (assembly == null)
-				return GetMemoized(assemblyName, () => new DependencyGraphNode(assemblyName));
-
-			return GetMemoized(assemblyName, () => new DependencyGraphNode(assemblyName)
-			{
-				References = assembly
-					.GetReferencedAssemblies()
-					.Select(referenceAssemblyName => Build(referenceAssemblyName))
-					.ToList()
-			});
+			return assembly == null
+				? GetMemoized(assemblyName, () => new DependencyGraphNode(assemblyName) { NotFound = true })
+				: GetMemoized(assemblyName, () => new DependencyGraphNode(assemblyName)
+				{
+					References = assembly
+						.GetReferencedAssemblies()
+						.Where(ShouldAddAsDependency)
+						.Select(referenceAssemblyName => Build(referenceAssemblyName))
+						.ToList()
+				});
 		}
 
-		private bool IsNotExpandable(AssemblyName assemblyName)
+		private bool ShouldAddAsDependency(AssemblyName assemblyName)
+		{
+			return FilterAssemblies == null
+				|| FilterAssemblies.Count == 0
+				|| FilterAssemblies.Any(mask => Wildcard.IsMatch(assemblyName.Name, mask));
+		}
+
+		private bool ShouldBuildWithDependencies(AssemblyName assemblyName)
 		{
 			var name = assemblyName.Name;
-			if (s_notExpandableAssemblies.Any(nameOrMask => Wildcard.IsMatch(name, nameOrMask))) return true;
-			if (NotExpandableAssemblies != null && NotExpandableAssemblies.Any(nameOrMask => Wildcard.IsMatch(name, nameOrMask))) return true;
-			return false;
+
+			if (ExpandAssemblies?.Any(mask => Wildcard.IsMatch(name, mask)) == true)
+				return true;
+
+			if (s_excludeAssemblies.Any(nameOrMask => Wildcard.IsMatch(name, nameOrMask)))
+				return false;
+			if (CollapseAssemblies?.Any(nameOrMask => Wildcard.IsMatch(name, nameOrMask)) == true)
+				return false;
+
+			return true;
 		}
 
 		private Assembly Find(AssemblyName assemblyName)
 		{
-			if (Directories != null)
+			if (Folders != null)
 			{
-				var fileThatExists = Directories
+				var fileThatExists = Folders
 					.Select(dir => Path.Combine(dir, assemblyName.Name + ".dll"))
 					.FirstOrDefault(File.Exists);
 
@@ -109,14 +124,8 @@ namespace DependencyDotNet
 					return Assembly.LoadFrom(fileThatExists);
 			}
 
-			try
-			{
-				return Assembly.Load(assemblyName.FullName);
-			}
-			catch
-			{
-				return null;
-			}
+			try { return Assembly.Load(assemblyName.FullName); }
+			catch { return null; }
 		}
 	}
 }
