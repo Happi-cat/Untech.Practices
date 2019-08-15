@@ -24,6 +24,9 @@ namespace DependencyDotNet
 		public string Version { get; set; }
 
 		[DataMember]
+		public bool Collapsed { get; set; }
+
+		[DataMember]
 		public bool NotFound { get; set; }
 
 		[DataMember]
@@ -36,6 +39,7 @@ namespace DependencyDotNet
 			return _xElement ?? (_xElement = new XElement("assembly",
 								new XAttribute("name", Name),
 								new XAttribute("version", Version),
+								Collapsed ? new XAttribute("collapsed", true) : null,
 								NotFound ? new XAttribute("found", false) : null,
 								References?.Select(n => n.ToXml())
 							));

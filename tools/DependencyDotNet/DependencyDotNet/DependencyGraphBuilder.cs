@@ -73,7 +73,7 @@ namespace DependencyDotNet
 		{
 			return ShouldBuildWithDependencies(assemblyName)
 				? BuildWithDependencies(assemblyName, assembly ?? Find(assemblyName))
-				: GetMemoized(assemblyName, () => new DependencyGraphNode(assemblyName));
+				: GetMemoized(assemblyName, () => new DependencyGraphNode(assemblyName) { Collapsed = true });
 		}
 
 		private DependencyGraphNode BuildWithDependencies(AssemblyName assemblyName, Assembly assembly)
