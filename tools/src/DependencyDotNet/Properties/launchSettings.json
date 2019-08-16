@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "DependencyDotNet": {
+      "commandName": "Project",
+      "commandLineArgs": "-f E:\\src\\webinfinity\\ProductX\\App\\ProductX.API\\bin\\Antlr3.Runtime.dll "
+    }
+  }
+}

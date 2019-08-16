@@ -17,6 +17,7 @@ namespace DependencyDotNet
 			"System.Core",
 			"System.Collections*",
 			"System.ComponentModel*",
+			"System.Configuration*",
 			"System.Data*",
 			"System.Drawing*",
 			"System.Threading*",
@@ -71,9 +72,18 @@ namespace DependencyDotNet
 
 		private DependencyGraphNode Build(AssemblyName assemblyName, Assembly assembly)
 		{
-			return ShouldBuildWithDependencies(assemblyName)
-				? BuildWithDependencies(assemblyName, assembly ?? Find(assemblyName))
-				: GetMemoized(assemblyName, () => new DependencyGraphNode(assemblyName) { Collapsed = true });
+			assembly = assembly ?? TryFind(assemblyName);
+
+			var found = assembly != null;
+			var expanded = found && ShouldBuildWithDependencies(assemblyName);
+
+			return GetMemoized(assemblyName, () => new DependencyGraphNode(assemblyName)
+			{
+				Collapsed = !expanded,
+				NotFound = !found,
+				FoundVersion = assembly?.GetName().Version,
+				References = expanded ? BuildReferencies(assembly) : null
+			});
 		}
 
 		private DependencyGraphNode Build(AssemblyName assemblyName)
@@ -81,18 +91,13 @@ namespace DependencyDotNet
 			return Build(assemblyName, null);
 		}
 
-		private DependencyGraphNode BuildWithDependencies(AssemblyName assemblyName, Assembly assembly)
+		private List<DependencyGraphNode> BuildReferencies(Assembly assembly)
 		{
-			return assembly == null
-				? GetMemoized(assemblyName, () => new DependencyGraphNode(assemblyName) { NotFound = true })
-				: GetMemoized(assemblyName, () => new DependencyGraphNode(assemblyName)
-				{
-					References = assembly
-						.GetReferencedAssemblies()
-						.Where(ShouldAddAsDependency)
-						.Select(Build)
-						.ToList()
-				});
+			return assembly
+				.GetReferencedAssemblies()
+				.Where(ShouldAddAsDependency)
+				.Select(Build)
+				.ToList();
 		}
 
 		private bool ShouldAddAsDependency(AssemblyName assemblyName)
@@ -117,7 +122,7 @@ namespace DependencyDotNet
 			return true;
 		}
 
-		private Assembly Find(AssemblyName assemblyName)
+		private Assembly TryFind(AssemblyName assemblyName)
 		{
 			if (Folders != null)
 			{

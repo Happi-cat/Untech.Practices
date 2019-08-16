@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "DependencyDotNet": {
-      "commandName": "Project",
-      "commandLineArgs": "-f E:\\src\\webinfinity\\ProductX\\App\\ProductX.API\\bin\\boilerplate.dll --skip 'AWSSDK.*' -o E:\\temp\\dependency_graph.xml --folders E:\\src\\webinfinity\\ProductX\\App\\ProductX.API\\bin\\"
-    }
-  }
-}
