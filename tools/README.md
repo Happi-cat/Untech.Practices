@@ -4,7 +4,7 @@
 
 ```console
 dotnet pack
-dotnet tool install --global --add-source ./<tool_name>/nupkg <tool_name>
+dotnet tool install --global --add-source ./packages <tool_name>
 ```
 
 ## Uninstall
