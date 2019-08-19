@@ -79,8 +79,6 @@ namespace DependencyDotNet
 
 			return GetMemoized(assemblyName, () => new DependencyGraphNode(assemblyName)
 			{
-				Collapsed = !expanded,
-				NotFound = !found,
 				FoundVersion = assembly?.GetName().Version,
 				References = expanded ? BuildReferencies(assembly) : null
 			});

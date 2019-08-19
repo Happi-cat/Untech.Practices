@@ -8,6 +8,7 @@
     <ToolCommandName>dotnet-dependency</ToolCommandName>
     <PackageOutputPath>../../packages</PackageOutputPath>
 
+    <VersionPrefix>1.1.0</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
