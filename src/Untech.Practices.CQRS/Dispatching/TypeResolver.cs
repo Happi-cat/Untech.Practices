@@ -15,7 +15,8 @@ namespace Untech.Practices.CQRS.Dispatching
 
 		public IEnumerable<T> ResolveMany<T>() where T : class
 		{
-			try { return ResolveOne<IEnumerable<T>>() ?? Enumerable.Empty<T>(); }
+			try
+			{ return ResolveOne<IEnumerable<T>>() ?? Enumerable.Empty<T>(); }
 			catch { return Enumerable.Empty<T>(); }
 		}
 

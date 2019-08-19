@@ -62,7 +62,7 @@ namespace Untech.AsyncJob
 
 		public Task StopAsync()
 		{
-			return StopAsync(false,  null);
+			return StopAsync(false, null);
 		}
 
 		public Task StopAsync(TimeSpan delay)
@@ -76,8 +76,10 @@ namespace Untech.AsyncJob
 			_timer = null;
 			if (cancel)
 			{
-				if (delay > TimeSpan.Zero) _aborted.CancelAfter(delay.Value);
-				else _aborted.Cancel();
+				if (delay > TimeSpan.Zero)
+					_aborted.CancelAfter(delay.Value);
+				else
+					_aborted.Cancel();
 			}
 
 			return Task.WhenAll(_warps.Select(s => s.Task));
@@ -119,13 +121,16 @@ namespace Untech.AsyncJob
 
 			void UpdateSlidingCoefficient(int requestCount)
 			{
-				if (_options.RequestsPerWarp < 2) return;
+				if (_options.RequestsPerWarp < 2)
+					return;
 
 				var l = requestCount;
 				var max = _options.RequestsPerWarp;
 
-				if (l <= 0.3f * max) _timer.Increase();
-				else if (l >= 0.7f * max) _timer.Decrease();
+				if (l <= 0.3f * max)
+					_timer.Increase();
+				else if (l >= 0.7f * max)
+					_timer.Decrease();
 			}
 		}
 

@@ -32,7 +32,8 @@ namespace Untech.AsyncJob.Features.Throttling
 			}
 			else
 			{
-				foreach (var semaphore in semaphores) await semaphore.WaitAsync();
+				foreach (var semaphore in semaphores)
+					await semaphore.WaitAsync();
 
 				try
 				{
@@ -40,7 +41,8 @@ namespace Untech.AsyncJob.Features.Throttling
 				}
 				finally
 				{
-					foreach (var semaphore in semaphores.Reverse()) semaphore.Release();
+					foreach (var semaphore in semaphores.Reverse())
+						semaphore.Release();
 				}
 			}
 		}
@@ -51,7 +53,8 @@ namespace Untech.AsyncJob.Features.Throttling
 			foreach (var groupKey in groupKeys)
 			{
 				var semaphore = TryGetOrAddSemaphore(context, groupKey);
-				if (semaphore != null) yield return semaphore;
+				if (semaphore != null)
+					yield return semaphore;
 			}
 		}
 
@@ -76,15 +79,19 @@ namespace Untech.AsyncJob.Features.Throttling
 
 		private SemaphoreSlim TryGetOrAddSemaphore(Context context, string groupKey)
 		{
-			if (_semaphores.TryGetValue(groupKey, out var semaphore)) return semaphore;
+			if (_semaphores.TryGetValue(groupKey, out var semaphore))
+				return semaphore;
 
 			var maxCount = GetRunAtOnce(context, groupKey);
-			if (maxCount == null) return null;
-			if (maxCount < 1 || maxCount > 100) throw RunAtOnceInvalidError(maxCount);
+			if (maxCount == null)
+				return null;
+			if (maxCount < 1 || maxCount > 100)
+				throw RunAtOnceInvalidError(maxCount);
 
 			lock (_semaphoresWriteSyncRoot)
 			{
-				if (_semaphores.TryGetValue(groupKey, out semaphore)) return semaphore;
+				if (_semaphores.TryGetValue(groupKey, out semaphore))
+					return semaphore;
 
 				semaphore = new SemaphoreSlim(maxCount.Value, maxCount.Value);
 				_semaphores.Add(groupKey, semaphore);
@@ -100,9 +107,11 @@ namespace Untech.AsyncJob.Features.Throttling
 
 		private int? GetRunAtOnce(Context context, string groupKey)
 		{
-			if (groupKey == AllGroupKey) return _options.RunAtOnce;
+			if (groupKey == AllGroupKey)
+				return _options.RunAtOnce;
 
-			if (groupKey != context.RequestName) return GetRunAtOnceForGroupFromOptions(groupKey);
+			if (groupKey != context.RequestName)
+				return GetRunAtOnceForGroupFromOptions(groupKey);
 
 			var attr = context.RequestMetadata.GetAttribute<ThrottleAttribute>();
 			return attr?.RunAtOnce ?? GetRunAtOnceForGroupFromOptions(groupKey);

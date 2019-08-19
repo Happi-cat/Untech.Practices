@@ -31,11 +31,13 @@ namespace Untech.AsyncJob.Features.WatchDog
 			if (DefaultTimeout <= TimeSpan.Zero)
 				yield return new ValidationResult("DefaultTimeout cannot be less or equal to zero");
 
-			if (TimeoutPerRequests == null) yield break;
+			if (TimeoutPerRequests == null)
+				yield break;
 
 			foreach (var timeoutPerRequest in TimeoutPerRequests)
 			{
-				if (timeoutPerRequest.Value > TimeSpan.Zero) continue;
+				if (timeoutPerRequest.Value > TimeSpan.Zero)
+					continue;
 
 				yield return new ValidationResult(
 					$"Non-positive timeout was configured for {timeoutPerRequest.Key}"

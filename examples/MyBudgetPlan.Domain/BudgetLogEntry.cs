@@ -43,7 +43,8 @@ namespace MyBudgetPlan.Domain
 			get => _amount;
 			protected set
 			{
-				if (value.Amount < 0) throw new ArgumentException("Amount cannot be negative");
+				if (value.Amount < 0)
+					throw new ArgumentException("Amount cannot be negative");
 				_amount = value;
 			}
 		}

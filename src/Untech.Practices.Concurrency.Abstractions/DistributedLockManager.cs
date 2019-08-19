@@ -53,7 +53,8 @@ namespace Untech.Practices.Concurrency
 				cancellationToken
 			).Token;
 
-			try { return await RepeatAsync(resource, retry, expiry, cancellationToken); }
+			try
+			{ return await RepeatAsync(resource, retry, expiry, cancellationToken); }
 			catch (TaskCanceledException) { return null; }
 			catch (OperationCanceledException) { return null; }
 		}
@@ -65,7 +66,8 @@ namespace Untech.Practices.Concurrency
 			{
 				IDisposable acquiredLock = await _innerLock.TryAcquireAsync(resource, expiry, cancellationToken);
 
-				if (acquiredLock != null) return acquiredLock;
+				if (acquiredLock != null)
+					return acquiredLock;
 
 				await Task.Delay(retry, cancellationToken);
 			}

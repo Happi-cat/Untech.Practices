@@ -21,8 +21,10 @@ namespace Untech.AsyncJob.Features.Debounce
 		public static PipelineBuilder ThenDebounce(this PipelineBuilder builder,
 			ILastRunStore lastRunStore)
 		{
-			if (builder == null) throw new ArgumentNullException(nameof(builder));
-			if (lastRunStore == null) throw new ArgumentNullException(nameof(lastRunStore));
+			if (builder == null)
+				throw new ArgumentNullException(nameof(builder));
+			if (lastRunStore == null)
+				throw new ArgumentNullException(nameof(lastRunStore));
 
 			return builder.Then(ctx => new DebounceMiddleware(lastRunStore, ctx.GetLogger()));
 		}

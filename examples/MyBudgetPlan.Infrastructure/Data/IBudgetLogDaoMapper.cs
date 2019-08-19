@@ -5,5 +5,5 @@ namespace MyBudgetPlan.Infrastructure.Data
 {
 	public interface IBudgetLogDaoMapper<T> : IDaoMapper<T, BudgetLogEntryDao<T>>
 		where T : BudgetLogEntry
-	{}
+	{ }
 }

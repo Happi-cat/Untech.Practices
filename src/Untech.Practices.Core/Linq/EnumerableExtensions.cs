@@ -56,7 +56,8 @@ namespace Untech.Practices.Linq
 			source = source ?? throw new ArgumentNullException(nameof(source));
 			action = action ?? throw new ArgumentNullException(nameof(action));
 
-			foreach (T item in source) action(item);
+			foreach (T item in source)
+				action(item);
 		}
 
 		public static IEnumerable<T> Do<T>(this IEnumerable<T> source, Action<T> action)
@@ -78,7 +79,8 @@ namespace Untech.Practices.Linq
 
 		public static IEnumerable<IReadOnlyList<T>> ToChunks<T>(this IEnumerable<T> source, int chunkSize)
 		{
-			if (source == null) throw new ArgumentNullException(nameof(source));
+			if (source == null)
+				throw new ArgumentNullException(nameof(source));
 			if (chunkSize <= 0)
 				throw new ArgumentOutOfRangeException(nameof(chunkSize), chunkSize, "Cannot be less than 1");
 
@@ -108,8 +110,10 @@ namespace Untech.Practices.Linq
 
 		public static IEnumerable<T> WhereIf<T>(this IEnumerable<T> source, bool condition, Func<T, bool> predicate)
 		{
-			if (source == null) throw new ArgumentNullException(nameof(source));
-			if (predicate == null) throw new ArgumentNullException(nameof(predicate));
+			if (source == null)
+				throw new ArgumentNullException(nameof(source));
+			if (predicate == null)
+				throw new ArgumentNullException(nameof(predicate));
 
 			return condition
 				? source.Where(predicate)
@@ -192,11 +196,14 @@ namespace Untech.Practices.Linq
 				int indexY = IndexOf(y);
 
 				// compare by indexes
-				if (indexX > -1 && indexY > -1) return indexX.CompareTo(indexY);
+				if (indexX > -1 && indexY > -1)
+					return indexX.CompareTo(indexY);
 
 				// ordered elements will be less than elements not in orderedElementsCollection
-				if (indexX > -1) return -1; // means x < y
-				if (indexY > -1) return 1; // means x > y
+				if (indexX > -1)
+					return -1; // means x < y
+				if (indexY > -1)
+					return 1; // means x > y
 
 				// usual compare
 				return _alternateComparer.Compare(x, y);

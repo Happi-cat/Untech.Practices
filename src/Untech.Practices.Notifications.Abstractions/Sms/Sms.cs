@@ -25,7 +25,8 @@ namespace Untech.Practices.Notifications.Sms
 		/// <exception cref="ArgumentNullException"></exception>
 		public Sms(string toNumber, string templateKey, object payload = null)
 		{
-			if (string.IsNullOrEmpty(toNumber)) throw new ArgumentNullException(nameof(toNumber));
+			if (string.IsNullOrEmpty(toNumber))
+				throw new ArgumentNullException(nameof(toNumber));
 
 			ToNumber = toNumber;
 			TemplateKey = templateKey ?? throw new ArgumentNullException(nameof(templateKey));

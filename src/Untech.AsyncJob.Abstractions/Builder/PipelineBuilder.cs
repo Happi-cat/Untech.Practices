@@ -18,7 +18,8 @@ namespace Untech.AsyncJob.Builder
 		/// <returns></returns>
 		public PipelineBuilder Then(MiddlewareBuilder creator)
 		{
-			if (creator == null) throw new ArgumentNullException(nameof(creator));
+			if (creator == null)
+				throw new ArgumentNullException(nameof(creator));
 
 			_creators.Add(creator);
 			return this;

@@ -38,7 +38,8 @@ namespace Untech.Practices.UserContext
 		{
 			get
 			{
-				if (_options != null && _options.TryGetValue(optionKey, out object value)) return value;
+				if (_options != null && _options.TryGetValue(optionKey, out object value))
+					return value;
 
 				return null;
 			}

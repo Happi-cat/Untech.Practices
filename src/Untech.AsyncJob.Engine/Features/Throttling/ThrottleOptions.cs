@@ -39,11 +39,13 @@ namespace Untech.AsyncJob.Features.Throttling
 			if (DefaultRunAtOnceInGroup <= 0)
 				yield return new ValidationResult("DefaultRunAtOnceInGroup cannot be less or equal than zero.");
 
-			if (RunAtOncePerGroups == null) yield break;
+			if (RunAtOncePerGroups == null)
+				yield break;
 
 			foreach (var runAtOncePerGroup in RunAtOncePerGroups)
 			{
-				if (runAtOncePerGroup.Value > 0) continue;
+				if (runAtOncePerGroup.Value > 0)
+					continue;
 
 				yield return new ValidationResult(
 					$"Non-positive run at once was configured for {runAtOncePerGroup.Key}"

@@ -7,7 +7,7 @@ namespace Untech.Practices.Notifications
 	/// Defines methods for sending notifications into queue.
 	/// </summary>
 	public interface INotificationQueue<in TNotification>
-		where TNotification: INotification
+		where TNotification : INotification
 	{
 		/// <summary>
 		/// Adds notification for sending into queue.

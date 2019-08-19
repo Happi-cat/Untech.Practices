@@ -46,7 +46,8 @@ namespace Untech.Practices.DataStorage.Cache.Linq2Db
 			{
 				await Find(context, key).DeleteAsync(cancellationToken);
 
-				if (value == null) return;
+				if (value == null)
+					return;
 
 				CacheEntry entity = new CacheEntry(key, _formatter.Serialize(value));
 

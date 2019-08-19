@@ -19,8 +19,10 @@ namespace MyBudgetPlan.Domain.Reports.Monthly
 			MonthLog incomeLog,
 			MonthLog expenseLog)
 		{
-			if (incomeLog.Log != BudgetLogType.Incomes) throw new ArgumentException(nameof(incomeLog));
-			if (expenseLog.Log != BudgetLogType.Expenses) throw new ArgumentException(nameof(expenseLog));
+			if (incomeLog.Log != BudgetLogType.Incomes)
+				throw new ArgumentException(nameof(incomeLog));
+			if (expenseLog.Log != BudgetLogType.Expenses)
+				throw new ArgumentException(nameof(expenseLog));
 
 			When = when;
 

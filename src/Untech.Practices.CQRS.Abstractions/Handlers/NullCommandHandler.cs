@@ -20,7 +20,7 @@ namespace Untech.Practices.CQRS.Handlers
 
 		}
 
-			/// <inheritdoc />
+		/// <inheritdoc />
 		public Task<TOut> HandleAsync(TIn command, CancellationToken cancellationToken)
 		{
 			return Task.FromResult(default(TOut));

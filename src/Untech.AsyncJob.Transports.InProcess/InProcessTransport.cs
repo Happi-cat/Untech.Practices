@@ -66,7 +66,8 @@ namespace Untech.AsyncJob.Transports.InProcess
 
 		public async Task EnqueueAsync(IEnumerable<IEvent> events, CancellationToken cancellationToken = default, QueueOptions options = null)
 		{
-			foreach (var @event in events) await EnqueueAsync(@event, cancellationToken, options);
+			foreach (var @event in events)
+				await EnqueueAsync(@event, cancellationToken, options);
 		}
 
 		/// <summary>
@@ -129,11 +130,15 @@ namespace Untech.AsyncJob.Transports.InProcess
 			{
 				while (maxAttempts-- > 0)
 				{
-					if (!queue.TryDequeue(out var request)) break;
+					if (!queue.TryDequeue(out var request))
+						break;
 
-					if (request.IsExpired()) continue;
-					if (request.IsExecuteAfterReached()) yield return request;
-					else delayQueue.Enqueue(request);
+					if (request.IsExpired())
+						continue;
+					if (request.IsExecuteAfterReached())
+						yield return request;
+					else
+						delayQueue.Enqueue(request);
 				}
 			}
 		}

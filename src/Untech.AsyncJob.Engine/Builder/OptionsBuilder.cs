@@ -13,8 +13,10 @@ namespace Untech.AsyncJob.Builder
 
 		private static T ConfigureAndValidate<T>(T initialValue, Action<T> configureOptions)
 		{
-			if (initialValue == null) throw new ArgumentNullException(nameof(initialValue));
-			if (configureOptions == null) throw new ArgumentNullException(nameof(configureOptions));
+			if (initialValue == null)
+				throw new ArgumentNullException(nameof(initialValue));
+			if (configureOptions == null)
+				throw new ArgumentNullException(nameof(configureOptions));
 
 			var option = initialValue;
 			configureOptions(option);

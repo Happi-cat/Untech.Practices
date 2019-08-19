@@ -31,8 +31,10 @@ namespace Untech.AsyncJob.Features.Retrying
 				catch (OperationCanceledException) { throw; }
 				catch (Exception e)
 				{
-					if (attempt++ >= _retryPolicy.RetryCount) throw;
-					if (!_retryPolicy.RetryOnError(attempt, e)) throw;
+					if (attempt++ >= _retryPolicy.RetryCount)
+						throw;
+					if (!_retryPolicy.RetryOnError(attempt, e))
+						throw;
 
 					_logger.WillRetry(context, attempt, e);
 					await Task.Delay(_retryPolicy.GetSleepDuration(attempt, e));

@@ -108,7 +108,8 @@ namespace Shared.Infrastructure.Data
 
 		protected void EnsureIsMyOrThrow(TTable dao)
 		{
-			if (dao.UserKey == _userContext.UserKey) return;
+			if (dao.UserKey == _userContext.UserKey)
+				return;
 
 			throw new SecurityException("Trying to access wrong item");
 		}

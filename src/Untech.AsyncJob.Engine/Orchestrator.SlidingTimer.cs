@@ -20,8 +20,10 @@ namespace Untech.AsyncJob
 
 			public SlidingTimer(Action callback, TimeSpan step, int slidingRadius, ILogger logger)
 			{
-				if (step <= TimeSpan.Zero) throw new ArgumentOutOfRangeException(nameof(step));
-				if (slidingRadius < 0) throw new ArgumentOutOfRangeException(nameof(slidingRadius));
+				if (step <= TimeSpan.Zero)
+					throw new ArgumentOutOfRangeException(nameof(step));
+				if (slidingRadius < 0)
+					throw new ArgumentOutOfRangeException(nameof(slidingRadius));
 
 				_timerCallback = callback;
 				_slidingRadius = slidingRadius;
@@ -43,7 +45,8 @@ namespace Untech.AsyncJob
 				var c = _slidingCoefficient;
 
 				// 2r - adds some laziness
-				if (r == 0 || 2 * r <= c) return;
+				if (r == 0 || 2 * r <= c)
+					return;
 
 				Interlocked.Increment(ref _slidingCoefficient);
 				_logger.SlidingCoefficientIncreased(_slidingCoefficient);
@@ -55,7 +58,8 @@ namespace Untech.AsyncJob
 				var c = _slidingCoefficient;
 
 				// 2r - adds some laziness
-				if (r == 0 || c <= -2 * r) return;
+				if (r == 0 || c <= -2 * r)
+					return;
 
 				Interlocked.Decrement(ref _slidingCoefficient);
 				_logger.SlidingCoefficientDecreased(_slidingCoefficient);
@@ -80,7 +84,8 @@ namespace Untech.AsyncJob
 				var r = _slidingRadius;
 				var c = _slidingCoefficient;
 
-				if (r == 0) return 0;
+				if (r == 0)
+					return 0;
 
 				return Max(-r, Min(c, r)) + r;
 			}

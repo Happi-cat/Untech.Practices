@@ -50,7 +50,8 @@ namespace Untech.Practices.Notifications.Mail
 			using (var client = new SmtpClient())
 			{
 				await client.ConnectAsync(_options.Host, _options.Port, _options.UseSsl, cancellationToken);
-				foreach (MimeMessage message in messages) await client.SendAsync(message, cancellationToken);
+				foreach (MimeMessage message in messages)
+					await client.SendAsync(message, cancellationToken);
 				await client.DisconnectAsync(true, cancellationToken);
 			}
 		}

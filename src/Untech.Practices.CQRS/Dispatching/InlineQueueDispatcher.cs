@@ -21,7 +21,8 @@ namespace Untech.Practices.CQRS.Dispatching
 		public Task EnqueueAsync<TResponse>(ICommand<TResponse> command, CancellationToken cancellationToken = default,
 			QueueOptions options = null)
 		{
-			if (command == null) throw new ArgumentNullException(nameof(command));
+			if (command == null)
+				throw new ArgumentNullException(nameof(command));
 
 			return _parent.ProcessAsync(command, cancellationToken);
 		}
@@ -30,7 +31,8 @@ namespace Untech.Practices.CQRS.Dispatching
 		public Task EnqueueAsync(IEvent @event, CancellationToken cancellationToken,
 			QueueOptions options = null)
 		{
-			if (@event == null) throw new ArgumentNullException(nameof(@event));
+			if (@event == null)
+				throw new ArgumentNullException(nameof(@event));
 
 			return _parent.PublishAsync(@event, cancellationToken);
 		}
@@ -38,9 +40,11 @@ namespace Untech.Practices.CQRS.Dispatching
 		public async Task EnqueueAsync(IEnumerable<IEvent> events, CancellationToken cancellationToken,
 			QueueOptions options = null)
 		{
-			if (events == null) throw new ArgumentNullException(nameof(events));
+			if (events == null)
+				throw new ArgumentNullException(nameof(events));
 
-			foreach (var notification in events) await EnqueueAsync(notification, cancellationToken, options);
+			foreach (var notification in events)
+				await EnqueueAsync(notification, cancellationToken, options);
 		}
 	}
 }

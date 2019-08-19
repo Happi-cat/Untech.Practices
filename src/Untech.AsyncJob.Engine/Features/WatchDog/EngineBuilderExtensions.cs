@@ -18,7 +18,7 @@ namespace Untech.AsyncJob.Features.WatchDog
 		/// </exception>
 		public static PipelineBuilder ThenWatchDog(this PipelineBuilder builder)
 		{
-			return ThenWatchDog(builder, _ => {});
+			return ThenWatchDog(builder, _ => { });
 		}
 
 		/// <summary>
@@ -32,7 +32,8 @@ namespace Untech.AsyncJob.Features.WatchDog
 		/// </exception>
 		public static PipelineBuilder ThenWatchDog(this PipelineBuilder builder, Action<WatchDogOptions> configureOptions)
 		{
-			if (builder == null) throw new ArgumentNullException(nameof(builder));
+			if (builder == null)
+				throw new ArgumentNullException(nameof(builder));
 
 			var options = OptionsBuilder.ConfigureAndValidate(configureOptions);
 

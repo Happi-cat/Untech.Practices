@@ -10,21 +10,24 @@ namespace Untech.AsyncJob.Processing
 
 		public RequestProcessor(IEnumerable<IRequestProcessorMiddleware> steps)
 		{
-			if (steps == null) throw new ArgumentNullException(nameof(steps));
+			if (steps == null)
+				throw new ArgumentNullException(nameof(steps));
 
 			_next = BuildChain(new Queue<IRequestProcessorMiddleware>(steps));
 		}
 
 		public Task InvokeAsync(Context context)
 		{
-			if (context == null) throw new ArgumentNullException(nameof(context));
+			if (context == null)
+				throw new ArgumentNullException(nameof(context));
 
 			return _next(context);
 		}
 
 		private static RequestProcessorCallback BuildChain(Queue<IRequestProcessorMiddleware> steps)
 		{
-			if (steps.Count <= 0) return DoFinally;
+			if (steps.Count <= 0)
+				return DoFinally;
 
 			var currentMiddleware = steps.Dequeue();
 			var next = BuildChain(steps);

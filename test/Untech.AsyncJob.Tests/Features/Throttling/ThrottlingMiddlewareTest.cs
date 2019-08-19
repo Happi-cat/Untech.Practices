@@ -66,14 +66,16 @@ namespace Untech.AsyncJob.Features.Throttling
 
 			public static void Take()
 			{
-				if (TryTake()) return;
+				if (TryTake())
+					return;
 
 				throw new SynchronizationLockException("Lock was already acquired");
 			}
 
 			public static void Release()
 			{
-				if (TryRelease()) return;
+				if (TryRelease())
+					return;
 
 				throw new SynchronizationLockException("Lock was already released");
 			}

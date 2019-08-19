@@ -18,7 +18,7 @@ namespace Untech.AsyncJob.Metadata.Annotations
 		/// Initializes a new instance of the <see cref="WatchDogTimeoutAttribute"/> with the defined seconds.
 		/// </summary>
 		/// <param name="seconds">The amount of seconds.</param>
-		public WatchDogTimeoutAttribute(int seconds) : this(0 , 0, seconds)
+		public WatchDogTimeoutAttribute(int seconds) : this(0, 0, seconds)
 		{
 		}
 
@@ -27,7 +27,7 @@ namespace Untech.AsyncJob.Metadata.Annotations
 		/// </summary>
 		/// <param name="minutes">The amount of minutes.</param>
 		/// <param name="seconds">The amount of seconds.</param>
-		public WatchDogTimeoutAttribute(int minutes, int seconds) : this(0 ,minutes, seconds)
+		public WatchDogTimeoutAttribute(int minutes, int seconds) : this(0, minutes, seconds)
 		{
 		}
 

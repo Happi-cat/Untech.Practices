@@ -30,7 +30,8 @@ namespace Untech.Practices.TenantContext
 		{
 			get
 			{
-				if (_options != null && _options.TryGetValue(optionKey, out object value)) return value;
+				if (_options != null && _options.TryGetValue(optionKey, out object value))
+					return value;
 
 				return null;
 			}

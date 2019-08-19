@@ -50,7 +50,7 @@ namespace Untech.AsyncJob.Features.Debounce
 		{
 			var lastRunStore = new FakeLastRunStore(lastRun);
 			var middleware = new DebounceMiddleware(lastRunStore, NullLoggerFactory.Instance);
-			var meta = debounce ? new [] { new DebounceAttribute() } : null;
+			var meta = debounce ? new[] { new DebounceAttribute() } : null;
 			var request = new FakeRequest(created: created, meta: meta);
 
 			bool executed = false;

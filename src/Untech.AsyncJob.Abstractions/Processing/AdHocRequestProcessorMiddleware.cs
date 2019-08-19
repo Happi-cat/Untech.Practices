@@ -8,7 +8,7 @@ namespace Untech.AsyncJob.Processing
 	/// </summary>
 	public sealed class AdHocRequestProcessorMiddleware : IRequestProcessorMiddleware
 	{
-		private readonly Func<Context,RequestProcessorCallback, Task> _func;
+		private readonly Func<Context, RequestProcessorCallback, Task> _func;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AdHocRequestProcessorMiddleware"/>

@@ -29,7 +29,8 @@ namespace Untech.Practices.DataStorage.Cache
 			{
 				CacheValue<T> value = await cacheStorage.GetAsync<T>(key, cancellationToken);
 
-				if (value.HasValue) return value;
+				if (value.HasValue)
+					return value;
 			}
 
 			return default;

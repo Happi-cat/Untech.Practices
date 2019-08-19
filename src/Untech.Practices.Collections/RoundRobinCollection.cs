@@ -30,9 +30,11 @@ namespace Untech.Practices.Collections
 		/// <param name="source"></param>
 		public RoundRobinCollection(IEnumerable<T> source)
 		{
-			if (source == null) return;
+			if (source == null)
+				return;
 
-			foreach (T item in source) Push(item);
+			foreach (T item in source)
+				Push(item);
 		}
 
 		/// <inheritdoc />
@@ -79,7 +81,8 @@ namespace Untech.Practices.Collections
 		{
 			lock (_syncRoot)
 			{
-				if (_tail == null) return default;
+				if (_tail == null)
+					return default;
 
 				if (_tail.Next == _tail)
 				{

@@ -7,7 +7,7 @@ namespace Untech.Practices.Notifications
 	///     Represents dummy notification queue.
 	/// </summary>
 	public class NullNotificationQueue<TNotification> : INotificationQueue<TNotification>
-		where TNotification :INotification
+		where TNotification : INotification
 	{
 		/// <inheritdoc />
 		public Task EnqueueAsync(TNotification notification)

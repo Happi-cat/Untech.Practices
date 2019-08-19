@@ -19,7 +19,8 @@ namespace Untech.AsyncJob.Metadata
 		/// <exception cref="ArgumentNullException"><paramref name="metadata"/> is null.</exception>
 		public CompositeRequestMetadata(IEnumerable<IRequestMetadata> metadata)
 		{
-			if (metadata == null) throw new ArgumentNullException(nameof(metadata));
+			if (metadata == null)
+				throw new ArgumentNullException(nameof(metadata));
 
 			_metadata = metadata.ToList();
 		}

@@ -51,21 +51,25 @@ namespace Untech.Practices
 
 		public int CompareTo(object obj)
 		{
-			if (ReferenceEquals(obj, null)) throw new ArgumentNullException(nameof(obj));
-			if (obj is TSelf self) return CompareTo(self);
+			if (ReferenceEquals(obj, null))
+				throw new ArgumentNullException(nameof(obj));
+			if (obj is TSelf self)
+				return CompareTo(self);
 
 			throw new ArgumentException("Invalid type", nameof(obj));
 		}
 
 		public int CompareTo(TSelf other)
 		{
-			if (ReferenceEquals(other, null)) throw new ArgumentNullException(nameof(other));
+			if (ReferenceEquals(other, null))
+				throw new ArgumentNullException(nameof(other));
 			return Id.CompareTo(other.Id);
 		}
 
 		public bool Equals(TSelf other)
 		{
-			if (ReferenceEquals(other, null)) return false;
+			if (ReferenceEquals(other, null))
+				return false;
 			return ReferenceEquals(this, other) || Id.Equals(other.Id);
 		}
 
@@ -89,9 +93,12 @@ namespace Untech.Practices
 
 		public override bool Equals(object obj)
 		{
-			if (ReferenceEquals(this, obj)) return true;
-			if (ReferenceEquals(obj, null)) return false;
-			if (obj is TSelf self) return Equals(self);
+			if (ReferenceEquals(this, obj))
+				return true;
+			if (ReferenceEquals(obj, null))
+				return false;
+			if (obj is TSelf self)
+				return Equals(self);
 			return false;
 		}
 
@@ -155,27 +162,32 @@ namespace Untech.Practices
 
 		public int CompareTo(object obj)
 		{
-			if (ReferenceEquals(obj, null)) throw new ArgumentNullException(nameof(obj));
-			if (obj is TSelf self) return CompareTo(self);
+			if (ReferenceEquals(obj, null))
+				throw new ArgumentNullException(nameof(obj));
+			if (obj is TSelf self)
+				return CompareTo(self);
 
 			throw new ArgumentException("Invalid type", nameof(obj));
 		}
 
 		public int CompareTo(TSelf other)
 		{
-			if (ReferenceEquals(other, null)) throw new ArgumentNullException(nameof(other));
+			if (ReferenceEquals(other, null))
+				throw new ArgumentNullException(nameof(other));
 			return Comparer<TKey>.Default.Compare(Id, other.Id);
 		}
 
 		public bool Equals(TSelf other)
 		{
-			if (ReferenceEquals(other, null)) return false;
+			if (ReferenceEquals(other, null))
+				return false;
 			return ReferenceEquals(this, other) || EqualityComparer<TKey>.Default.Equals(Id, other.Id);
 		}
 
 		public static bool operator ==(Enumeration<TSelf, TKey> left, Enumeration<TSelf, TKey> right)
 		{
-			if (ReferenceEquals(left, null)) return ReferenceEquals(right, null);
+			if (ReferenceEquals(left, null))
+				return ReferenceEquals(right, null);
 			return left.Equals(right);
 		}
 
@@ -191,9 +203,12 @@ namespace Untech.Practices
 
 		public override bool Equals(object obj)
 		{
-			if (ReferenceEquals(obj, null)) return false;
-			if (ReferenceEquals(this, obj)) return true;
-			if (obj is TSelf self) return Equals(self);
+			if (ReferenceEquals(obj, null))
+				return false;
+			if (ReferenceEquals(this, obj))
+				return true;
+			if (obj is TSelf self)
+				return Equals(self);
 			return false;
 		}
 

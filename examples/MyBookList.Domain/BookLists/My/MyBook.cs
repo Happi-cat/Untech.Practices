@@ -15,14 +15,14 @@ namespace MyBookList.Domain.BookLists.My
 
 		}
 
-		public MyBook(string author, string title, int? ordering = null,  string notes = null)
-			: this (0, null, author, title, MyBookStatus.Pending,  ordering, notes)
+		public MyBook(string author, string title, int? ordering = null, string notes = null)
+			: this(0, null, author, title, MyBookStatus.Pending, ordering, notes)
 		{
 
 		}
 
-		public MyBook(Book book, int? ordering = null,  string notes = null)
-			: this (0, book.Key, book.Author, book.Title, MyBookStatus.Pending, ordering, notes)
+		public MyBook(Book book, int? ordering = null, string notes = null)
+			: this(0, book.Key, book.Author, book.Title, MyBookStatus.Pending, ordering, notes)
 		{
 
 		}

@@ -10,7 +10,8 @@ namespace Untech.Practices.DataStorage
 	{
 		public static void EnsureTableExists<T>(this DataConnection context)
 		{
-			if (IsTableExists<T>(context)) return;
+			if (IsTableExists<T>(context))
+				return;
 
 			context.CreateTable<T>();
 		}

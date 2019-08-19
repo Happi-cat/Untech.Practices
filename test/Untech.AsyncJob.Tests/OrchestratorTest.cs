@@ -62,7 +62,8 @@ namespace Untech.AsyncJob
 			{
 				var requests = new List<Request>();
 
-				while (count-- > 0 && _inbound.TryTake(out var request)) requests.Add(request);
+				while (count-- > 0 && _inbound.TryTake(out var request))
+					requests.Add(request);
 
 				return Task.FromResult(requests.ToArray());
 			}
@@ -70,7 +71,8 @@ namespace Untech.AsyncJob
 			public Task CompleteRequestAsync(Request request)
 			{
 				_outbound.Add(request);
-				if (_outbound.Count == _total) _completionSource.TrySetResult(_outbound.Count);
+				if (_outbound.Count == _total)
+					_completionSource.TrySetResult(_outbound.Count);
 				return Task.CompletedTask;
 			}
 

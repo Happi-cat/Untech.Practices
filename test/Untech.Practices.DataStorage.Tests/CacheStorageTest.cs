@@ -40,7 +40,7 @@ namespace Untech.Practices.DataStorage
 		}
 
 		[Fact]
-		public async Task  Delete_Deleted_IfWasSet()
+		public async Task Delete_Deleted_IfWasSet()
 		{
 			const string key = nameof(Delete_Deleted_IfWasSet);
 
@@ -51,7 +51,7 @@ namespace Untech.Practices.DataStorage
 		}
 
 		[Fact]
-		public async Task  Delete_NoErrors_IfNotSet()
+		public async Task Delete_NoErrors_IfNotSet()
 		{
 			const string key = nameof(Delete_NoErrors_IfNotSet);
 

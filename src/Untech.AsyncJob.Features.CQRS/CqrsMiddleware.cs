@@ -41,7 +41,8 @@ namespace Untech.AsyncJob.Features.CQRS
 
 		public Task InvokeAsync(Context context, RequestProcessorCallback next)
 		{
-			if (string.IsNullOrEmpty(context.RequestName)) throw new ArgumentException(nameof(context.RequestName));
+			if (string.IsNullOrEmpty(context.RequestName))
+				throw new ArgumentException(nameof(context.RequestName));
 
 			context.Aborted.ThrowIfCancellationRequested();
 
@@ -65,14 +66,17 @@ namespace Untech.AsyncJob.Features.CQRS
 				.Where(callback => callback != null)
 				.ToList();
 
-			if (callbacks.Count > 1) throw RequestTypeHasMultipleInterfacesError(requestType);
-			if (callbacks.Count == 0) throw RequestTypeHasNoInterfacesError(requestType);
+			if (callbacks.Count > 1)
+				throw RequestTypeHasMultipleInterfacesError(requestType);
+			if (callbacks.Count == 0)
+				throw RequestTypeHasNoInterfacesError(requestType);
 
 			return callbacks[0];
 
 			ExecutorCallback TryBuildCallback(Type implementedInterfaceType)
 			{
-				if (!implementedInterfaceType.IsGenericType) return null;
+				if (!implementedInterfaceType.IsGenericType)
+					return null;
 
 				var genericTypeDefinition = implementedInterfaceType.GetGenericTypeDefinition();
 
@@ -110,7 +114,7 @@ namespace Untech.AsyncJob.Features.CQRS
 		}
 
 		private static Task ExecuteCommandAsync<TRequest, TResult>(CqrsMiddleware middleware, Context context)
-			where TRequest: ICommand<TResult>
+			where TRequest : ICommand<TResult>
 		{
 			var dispatcher = middleware._strategy.GetDispatcher(context) ?? throw NoDispatcherError();
 			var command = context.Request.GetBody(typeof(TRequest)) ?? throw NoRequestError();
@@ -119,7 +123,7 @@ namespace Untech.AsyncJob.Features.CQRS
 		}
 
 		private static Task ExecuteEventAsync<TEvent>(CqrsMiddleware middleware, Context context)
-			where TEvent: IEvent
+			where TEvent : IEvent
 		{
 			var dispatcher = middleware._strategy.GetDispatcher(context) ?? throw NoDispatcherError();
 			var notification = context.Request.GetBody(typeof(TEvent)) ?? throw NoRequestError();

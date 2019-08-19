@@ -50,7 +50,8 @@ namespace Untech.Practices.Notifications.Mail
 		public Mail(IEnumerable<MailboxAddress> to, string templateKey, object payload = null)
 		{
 			List<MailboxAddress> toList = to?.ToList() ?? throw new ArgumentNullException(nameof(to));
-			if (toList.Count == 0) throw new ArgumentException("Cannot have zero elements", nameof(to));
+			if (toList.Count == 0)
+				throw new ArgumentException("Cannot have zero elements", nameof(to));
 
 			To = toList;
 			TemplateKey = templateKey ?? throw new ArgumentNullException(nameof(templateKey));

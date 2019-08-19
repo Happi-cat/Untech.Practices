@@ -19,13 +19,14 @@ namespace Untech.AsyncJob.Features.CQRS
 		private readonly IReadOnlyDictionary<string, IRequestMetadata> _requestsMetadata;
 
 		public BuiltInRequestMetadataProvider(Assembly assembly)
-			: this(new [] { assembly })
+			: this(new[] { assembly })
 		{
 		}
 
 		public BuiltInRequestMetadataProvider(IEnumerable<Assembly> assemblies)
 		{
-			if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
+			if (assemblies == null)
+				throw new ArgumentNullException(nameof(assemblies));
 
 			_requestsMetadata = CollectRequestsMetadata(assemblies);
 		}
@@ -33,7 +34,8 @@ namespace Untech.AsyncJob.Features.CQRS
 		/// <inheritdoc />
 		public IRequestMetadata GetMetadata(string requestName)
 		{
-			if (string.IsNullOrEmpty(requestName)) throw new ArgumentNullException(nameof(requestName));
+			if (string.IsNullOrEmpty(requestName))
+				throw new ArgumentNullException(nameof(requestName));
 
 			return _requestsMetadata.TryGetValue(requestName, out var requestMetadata)
 				? requestMetadata
@@ -90,14 +92,16 @@ namespace Untech.AsyncJob.Features.CQRS
 
 			public IRequestMetadata GetMetadata()
 			{
-				if (_metadata != null) return _metadata;
+				if (_metadata != null)
+					return _metadata;
 
 				return _metadata = CreateMetadata();
 			}
 
 			private IRequestMetadata CreateMetadata()
 			{
-				if (_supportableRequests.Count == 0) return NullRequestMetadata.Instance;
+				if (_supportableRequests.Count == 0)
+					return NullRequestMetadata.Instance;
 
 				var accessorType = typeof(TypeMetadata<>).MakeGenericType(_suspectedType.AsType());
 				return (IRequestMetadata)Activator.CreateInstance(accessorType);

@@ -18,7 +18,7 @@ namespace Untech.AsyncJob.Fakes
 			Identifier = Guid.NewGuid().ToString();
 			Name = body?.GetType().FullName ?? nameof(FakeRequest);
 			Created = DateTimeOffset.Now;
-			Attributes=  new Dictionary<string, string>();
+			Attributes = new Dictionary<string, string>();
 		}
 
 		public override string Identifier { get; }

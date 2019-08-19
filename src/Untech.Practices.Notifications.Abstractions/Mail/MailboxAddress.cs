@@ -25,7 +25,8 @@ namespace Untech.Practices.Notifications.Mail
 		/// </exception>
 		public MailboxAddress(string email)
 		{
-			if (string.IsNullOrWhiteSpace(email)) throw new ArgumentNullException(nameof(email));
+			if (string.IsNullOrWhiteSpace(email))
+				throw new ArgumentNullException(nameof(email));
 
 			Email = email;
 		}
@@ -44,8 +45,10 @@ namespace Untech.Practices.Notifications.Mail
 
 		public bool Equals(MailboxAddress other)
 		{
-			if (ReferenceEquals(null, other)) return false;
-			if (ReferenceEquals(this, other)) return true;
+			if (ReferenceEquals(null, other))
+				return false;
+			if (ReferenceEquals(this, other))
+				return true;
 			return string.Equals(Email, other.Email, StringComparison.OrdinalIgnoreCase);
 		}
 
@@ -69,9 +72,12 @@ namespace Untech.Practices.Notifications.Mail
 
 		public override bool Equals(object obj)
 		{
-			if (ReferenceEquals(null, obj)) return false;
-			if (ReferenceEquals(this, obj)) return true;
-			if (obj.GetType() != GetType()) return false;
+			if (ReferenceEquals(null, obj))
+				return false;
+			if (ReferenceEquals(this, obj))
+				return true;
+			if (obj.GetType() != GetType())
+				return false;
 			return Equals((MailboxAddress)obj);
 		}
 

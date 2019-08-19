@@ -11,8 +11,10 @@ namespace AsyncJob.Run.Commands
 		{
 			switch (Type)
 			{
-				case nameof(TimeoutException): return new TimeoutException();
-				default: return null;
+				case nameof(TimeoutException):
+					return new TimeoutException();
+				default:
+					return null;
 			}
 		}
 	}

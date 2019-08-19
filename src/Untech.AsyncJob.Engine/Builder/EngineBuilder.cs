@@ -25,7 +25,7 @@ namespace Untech.AsyncJob.Builder
 		private IRequestMetadataProvider _provider;
 
 		public EngineBuilder()
-			:this(_ => {})
+			: this(_ => { })
 		{
 
 		}
@@ -79,13 +79,15 @@ namespace Untech.AsyncJob.Builder
 		/// <inheritdoc />
 		public ILoggerFactory GetLogger()
 		{
-			if (_logger != null) return _logger;
+			if (_logger != null)
+				return _logger;
 			return _logger = _loggerCreator?.Invoke() ?? NullLoggerFactory.Instance;
 		}
 
 		private ITransport GetTransport()
 		{
-			if (_transport != null) return _transport;
+			if (_transport != null)
+				return _transport;
 			return _transport = _transportCreator?.Invoke(this) ?? throw NotConfigured();
 
 			Exception NotConfigured()
@@ -96,7 +98,8 @@ namespace Untech.AsyncJob.Builder
 
 		private IRequestMetadataProvider GetMetadata()
 		{
-			if (_provider != null) return _provider;
+			if (_provider != null)
+				return _provider;
 			return _provider = _providerCreator?.Invoke(this) ?? NullRequestMetadataProvider.Instance;
 		}
 

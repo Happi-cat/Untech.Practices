@@ -27,7 +27,7 @@ namespace AsyncJob.Run
 
 			var requestScope = new
 			{
-				TraceId= context.TraceIdentifier,
+				TraceId = context.TraceIdentifier,
 				Name = context.RequestName.Substring(context.RequestName.LastIndexOf('.') + 1),
 				Body = GetBodyAsJson(context.Request)
 			};

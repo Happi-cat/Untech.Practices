@@ -57,9 +57,12 @@ namespace Untech.Practices.CQRS
 		{
 			public object GetService(Type serviceType)
 			{
-				if (serviceType.IsAssignableFrom(typeof(Handler))) return new Handler();
-				if (serviceType.IsAssignableFrom(typeof(IEnumerable<Handler>))) return new[] { new Handler() };
-				if (serviceType.IsGenericType && serviceType.GetGenericTypeDefinition() == typeof(IEnumerable<>)) return null;
+				if (serviceType.IsAssignableFrom(typeof(Handler)))
+					return new Handler();
+				if (serviceType.IsAssignableFrom(typeof(IEnumerable<Handler>)))
+					return new[] { new Handler() };
+				if (serviceType.IsGenericType && serviceType.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+					return null;
 				throw new InvalidOperationException();
 			}
 		}

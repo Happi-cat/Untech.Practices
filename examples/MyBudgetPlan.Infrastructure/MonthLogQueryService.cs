@@ -31,7 +31,7 @@ namespace MyBudgetPlan.Infrastructure
 		}
 
 		private Task<IEnumerable<T>> FetchBudgetLogAsync<T>(MonthLogQuery request, CancellationToken cancellationToken)
-			where T: BudgetLogEntry
+			where T : BudgetLogEntry
 		{
 			return _queryDispatcher.FetchAsync(new BudgetLogQuery<T>(request.Log, request.When), cancellationToken);
 		}

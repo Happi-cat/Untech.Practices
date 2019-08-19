@@ -6,12 +6,12 @@ namespace Untech.Practices.Notifications
 {
 	public class NullRealtimeNotifier<T> : IRealtimeNotifier<T> where T : INotification
 	{
-		public  Task SendAsync(T notification, CancellationToken cancellationToken = default)
+		public Task SendAsync(T notification, CancellationToken cancellationToken = default)
 		{
 			return Task.CompletedTask;
 		}
 
-		public  Task SendAsync(IEnumerable<T> notifications, CancellationToken cancellationToken = default)
+		public Task SendAsync(IEnumerable<T> notifications, CancellationToken cancellationToken = default)
 		{
 			return Task.CompletedTask;
 		}

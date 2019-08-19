@@ -24,7 +24,8 @@ namespace Untech.AsyncJob
 			{
 				lock (_sync)
 				{
-					if (!CanRun()) throw new InvalidOperationException("Warp is busy");
+					if (!CanRun())
+						throw new InvalidOperationException("Warp is busy");
 
 					_task = Task.Run(function);
 				}

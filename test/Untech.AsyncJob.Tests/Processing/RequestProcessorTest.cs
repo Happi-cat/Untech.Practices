@@ -28,7 +28,7 @@ namespace Untech.AsyncJob.Processing
 		[Fact]
 		public async Task InvokeAsync_Returns_WhenFinalMiddlewareEnds()
 		{
-			var processor = new RequestProcessor(new[]{ NullRequestProcessorMiddleware.Instance });
+			var processor = new RequestProcessor(new[] { NullRequestProcessorMiddleware.Instance });
 			var context = new Context(new FakeRequest());
 
 			await processor.InvokeAsync(context);

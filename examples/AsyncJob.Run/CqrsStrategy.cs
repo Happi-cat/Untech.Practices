@@ -28,7 +28,8 @@ namespace AsyncJob.Run
 
 		public object GetService(Type serviceType)
 		{
-			if (serviceType.IsAssignableFrom(typeof(DemoHandlers))) return new DemoHandlers(_logger);
+			if (serviceType.IsAssignableFrom(typeof(DemoHandlers)))
+				return new DemoHandlers(_logger);
 			throw new InvalidOperationException();
 		}
 

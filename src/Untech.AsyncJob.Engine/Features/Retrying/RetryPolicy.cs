@@ -27,9 +27,12 @@ namespace Untech.AsyncJob.Features.Retrying
 
 		public RetryPolicy(int retryCount, TimeSpan sleepDuration, IEnumerable<Type> exceptions)
 		{
-			if (retryCount < 0) throw new ArgumentOutOfRangeException(nameof(retryCount));
-			if (sleepDuration < TimeSpan.Zero) throw new ArgumentOutOfRangeException(nameof(sleepDuration));
-			if (exceptions == null) throw new ArgumentNullException(nameof(exceptions));
+			if (retryCount < 0)
+				throw new ArgumentOutOfRangeException(nameof(retryCount));
+			if (sleepDuration < TimeSpan.Zero)
+				throw new ArgumentOutOfRangeException(nameof(sleepDuration));
+			if (exceptions == null)
+				throw new ArgumentNullException(nameof(exceptions));
 
 			_retryCount = retryCount;
 			_sleepDuration = sleepDuration;

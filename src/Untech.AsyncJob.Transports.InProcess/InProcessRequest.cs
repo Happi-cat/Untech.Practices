@@ -8,7 +8,7 @@ using Untech.Practices.CQRS.Dispatching;
 
 namespace Untech.AsyncJob.Transports.InProcess
 {
-	internal class InProcessRequest:  Request
+	internal class InProcessRequest : Request
 	{
 		private readonly object _payload;
 		private string _serializedPayload;
@@ -19,7 +19,8 @@ namespace Untech.AsyncJob.Transports.InProcess
 
 		public InProcessRequest(object payload, QueueOptions options)
 		{
-			if (payload == null) throw new ArgumentNullException(nameof(payload));
+			if (payload == null)
+				throw new ArgumentNullException(nameof(payload));
 
 			Identifier = Guid.NewGuid().ToString("B");
 			Name = payload.GetType().FullName;
@@ -55,14 +56,16 @@ namespace Untech.AsyncJob.Transports.InProcess
 
 		public override object GetBody(Type requestType)
 		{
-			if (requestType.IsInstanceOfType(_payload)) return _payload;
+			if (requestType.IsInstanceOfType(_payload))
+				return _payload;
 
 			throw new ArgumentException($"Payload type is {_payload.GetType()} when request is {requestType}");
 		}
 
 		public override Stream GetRawBody()
 		{
-			if (_serializedPayload == null) _serializedPayload = JsonSerializer.ToString(_payload);
+			if (_serializedPayload == null)
+				_serializedPayload = JsonSerializer.ToString(_payload);
 
 			return new MemoryStream(Encoding.UTF8.GetBytes(_serializedPayload));
 		}

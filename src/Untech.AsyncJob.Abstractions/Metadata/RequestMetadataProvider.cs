@@ -32,17 +32,21 @@ namespace Untech.AsyncJob.Metadata
 			IEnumerable<IRequestMetadata> GetItems()
 			{
 				if (_metadata.TryGetValue(requestName, out var metadata))
-					foreach (var meta in metadata) yield return meta;
+					foreach (var meta in metadata)
+						yield return meta;
 
 				if (_metadata.TryGetValue(DefaultMetadataKey, out var defaultMetadata))
-					foreach (var meta in defaultMetadata) yield return meta;
+					foreach (var meta in defaultMetadata)
+						yield return meta;
 			}
 		}
 
 		public RequestMetadataProvider Add(string requestName, IRequestMetadata metadata)
 		{
-			if (requestName == null) throw new ArgumentNullException(nameof(requestName));
-			if (metadata == null) throw new ArgumentNullException(nameof(metadata));
+			if (requestName == null)
+				throw new ArgumentNullException(nameof(requestName));
+			if (metadata == null)
+				throw new ArgumentNullException(nameof(metadata));
 
 			if (!_metadata.ContainsKey(requestName))
 				_metadata.Add(requestName, new List<IRequestMetadata>());

@@ -40,7 +40,8 @@ namespace Untech.AsyncJob.Features.WatchDog
 		{
 			var attr = context.RequestMetadata.GetAttribute<WatchDogTimeoutAttribute>();
 
-			if (attr != null) return attr.Timeout;
+			if (attr != null)
+				return attr.Timeout;
 			if (_options.TimeoutPerRequests != null
 				&& _options.TimeoutPerRequests.TryGetValue(context.RequestName, out var timeout))
 				return timeout;

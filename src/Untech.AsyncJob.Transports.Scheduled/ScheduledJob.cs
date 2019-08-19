@@ -38,7 +38,8 @@ namespace Untech.AsyncJob.Transports.Scheduled
 
 		public bool CanRunNow()
 		{
-			if (!IsAlive()) return false;
+			if (!IsAlive())
+				return false;
 
 			return NextRun == null || NextRun <= DateTime.UtcNow;
 		}
@@ -48,7 +49,8 @@ namespace Untech.AsyncJob.Transports.Scheduled
 			var now = DateTime.UtcNow;
 			var currentRun = NextRun ?? now;
 
-			if (!IsAlive()) return currentRun;
+			if (!IsAlive())
+				return currentRun;
 
 			return CrontabSchedule
 				.Parse(Definition.Cron)
@@ -57,7 +59,8 @@ namespace Untech.AsyncJob.Transports.Scheduled
 
 		private bool IsAlive()
 		{
-			if (Disabled) return false;
+			if (Disabled)
+				return false;
 
 			var now = DateTime.UtcNow;
 

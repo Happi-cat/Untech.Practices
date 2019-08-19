@@ -24,8 +24,10 @@ namespace Untech.Practices.TenantContext
 			ITenantContext tenantContext)
 			where TElem : IHaveTenantKey
 		{
-			if (source == null) throw new ArgumentNullException(nameof(source));
-			if (tenantContext == null) throw new ArgumentNullException(nameof(tenantContext));
+			if (source == null)
+				throw new ArgumentNullException(nameof(source));
+			if (tenantContext == null)
+				throw new ArgumentNullException(nameof(tenantContext));
 
 			string tenantKeyToMatch = tenantContext.TenantKey;
 
@@ -47,8 +49,10 @@ namespace Untech.Practices.TenantContext
 			ITenantContext tenantContext)
 			where TElem : IHaveTenantKey
 		{
-			if (source == null) throw new ArgumentNullException(nameof(source));
-			if (tenantContext == null) throw new ArgumentNullException(nameof(tenantContext));
+			if (source == null)
+				throw new ArgumentNullException(nameof(source));
+			if (tenantContext == null)
+				throw new ArgumentNullException(nameof(tenantContext));
 
 			string tenantKeyToMatch = tenantContext.TenantKey;
 

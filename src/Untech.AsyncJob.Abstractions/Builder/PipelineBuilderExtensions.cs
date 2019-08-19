@@ -15,8 +15,10 @@ namespace Untech.AsyncJob.Builder
 		public static PipelineBuilder Then(this PipelineBuilder builder,
 			IRequestProcessorMiddleware middleware)
 		{
-			if (builder == null) throw new ArgumentNullException(nameof(builder));
-			if (middleware == null) throw new ArgumentNullException(nameof(middleware));
+			if (builder == null)
+				throw new ArgumentNullException(nameof(builder));
+			if (middleware == null)
+				throw new ArgumentNullException(nameof(middleware));
 
 			return builder.Then(ctx => middleware);
 		}
@@ -30,8 +32,10 @@ namespace Untech.AsyncJob.Builder
 		public static PipelineBuilder Then(this PipelineBuilder builder,
 			Func<Context, RequestProcessorCallback, Task> middleware)
 		{
-			if (builder == null) throw new ArgumentNullException(nameof(builder));
-			if (middleware == null) throw new ArgumentNullException(nameof(middleware));
+			if (builder == null)
+				throw new ArgumentNullException(nameof(builder));
+			if (middleware == null)
+				throw new ArgumentNullException(nameof(middleware));
 
 			return builder.Then(ctx => new AdHocRequestProcessorMiddleware(middleware));
 		}
@@ -45,8 +49,10 @@ namespace Untech.AsyncJob.Builder
 		public static PipelineBuilder Then(this PipelineBuilder builder,
 			Func<IBuilderContext, Func<Context, RequestProcessorCallback, Task>> creator)
 		{
-			if (builder == null) throw new ArgumentNullException(nameof(builder));
-			if (creator == null) throw new ArgumentNullException(nameof(creator));
+			if (builder == null)
+				throw new ArgumentNullException(nameof(builder));
+			if (creator == null)
+				throw new ArgumentNullException(nameof(creator));
 
 			return builder.Then(ctx => new AdHocRequestProcessorMiddleware(creator(ctx)));
 		}

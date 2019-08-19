@@ -39,7 +39,8 @@ namespace MyBudgetPlan.Domain.Forecasts
 
 		public void UpdateAmount(Money amount)
 		{
-			if (amount.Amount < 0) throw new ArgumentException("Amount cannot be negative", nameof(amount));
+			if (amount.Amount < 0)
+				throw new ArgumentException("Amount cannot be negative", nameof(amount));
 
 			Amount = amount;
 			Raise(new MonthLogChanged(Log, When));
@@ -51,7 +52,8 @@ namespace MyBudgetPlan.Domain.Forecasts
 			CategoryKey = categoryKey;
 
 			bool shouldRaise = Key != 0 && oldValue != categoryKey;
-			if (shouldRaise) Raise(new MonthLogChanged(Log, When));
+			if (shouldRaise)
+				Raise(new MonthLogChanged(Log, When));
 		}
 
 		public void UpdateDescription(string description)
