@@ -11,10 +11,10 @@ namespace DependencyDotNet
 		[Option("folders", Required = false, HelpText = "Folders to use for assembly search.")]
 		public IEnumerable<string> Directories { get; set; }
 
-		[Option("collapse", Required = false)]
+		[Option("collapse", Required = false, HelpText = "Do not load dependencies for these libraries.")]
 		public IEnumerable<string> CollapseAssemblies { get; set; }
 
-		[Option("expand", Required = false)]
+		[Option("expand", Required = false, HelpText = "Forces to load dependencies for these libraries.")]
 		public IEnumerable<string> ExpandAssemblies { get; set; }
 
 		[Option("filter", Required = false)]
