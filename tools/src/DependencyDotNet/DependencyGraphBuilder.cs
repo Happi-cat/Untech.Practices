@@ -134,7 +134,8 @@ namespace DependencyDotNet
 					return Assembly.LoadFrom(fileThatExists);
 			}
 
-			try { return Assembly.Load(assemblyName.FullName); }
+			try
+			{ return Assembly.Load(assemblyName.FullName); }
 			catch { return null; }
 		}
 	}

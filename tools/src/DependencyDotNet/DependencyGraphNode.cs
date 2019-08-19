@@ -44,7 +44,7 @@ namespace DependencyDotNet
 				Save(writer);
 			}
 		}
-		
+
 		public void Save(TextWriter writer)
 		{
 			using (var xmlWriter = new XmlTextWriter(writer)
