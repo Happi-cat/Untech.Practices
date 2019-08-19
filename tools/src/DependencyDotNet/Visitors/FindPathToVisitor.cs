@@ -5,11 +5,11 @@ namespace DependencyDotNet.Visitors
 {
 	public class FindPathToVisitor : DependencyGraphVisitor
 	{
-		private readonly IEnumerable<string> _filters;
+		private readonly IList<string> _filters;
 
 		public FindPathToVisitor(IEnumerable<string> filters)
 		{
-			_filters = filters;
+			_filters = filters?.ToList();
 		}
 
 		public override DependencyGraphNode Visit(DependencyGraphNode node)
@@ -28,7 +28,7 @@ namespace DependencyDotNet.Visitors
 				};
 			}
 
-			if (_filters.Any(maskOrName => Wildcard.IsMatch(node.Name, maskOrName)))
+			if (Wildcard.IsMatchAnyMask(node.Name, _filters))
 			{
 				return new DependencyGraphNode(node.Name, node.Version)
 				{

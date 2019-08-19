@@ -14,27 +14,31 @@ namespace DependencyDotNet
 	{
 		static void Main(string[] args)
 		{
-			CommandLine.Parser.Default.ParseArguments<Options>(args)
-				.WithParsed(opts =>
+			Parser.Default
+				.ParseArguments<Options>(args)
+				.WithParsed(Handle);
+		}
+
+		private static void Handle(Options opts)
+		{
+			var node = new DependencyGraphBuilder
 				{
-					var node = new DependencyGraphBuilder
-						{
-							Folders = opts.Directories.ToList(),
-							CollapseAssemblies = opts.CollapseAssemblies.ToList(),
-							FilterAssemblies = opts.FilterAssemblies.ToList()
-						}
-						.Build(opts.File);
+					Folders = opts.Directories.ToList(),
+					CollapseAssemblies = opts.CollapseAssemblies.ToList(),
+					ExpandAssemblies = opts.ExpandAssemblies.ToList(),
+					FilterAssemblies = opts.FilterAssemblies.ToList()
+				}
+				.Build(opts.File);
 
-					if (opts.FindPathTo != null && opts.FindPathTo.Any())
-					{
-						node = new FindPathToVisitor(opts.FindPathTo).Visit(node);
-					}
+			if (opts.FindPathTo != null && opts.FindPathTo.Any())
+			{
+				node = new FindPathToVisitor(opts.FindPathTo).Visit(node);
+			}
 
-					if (opts.OutputeFile != null)
-						Save(opts.OutputeFile, node);
-					else
-						Save(Console.Out, node);
-				});
+			if (opts.OutputeFile != null)
+				Save(opts.OutputeFile, node);
+			else
+				Save(Console.Out, node);
 		}
 
 		private static void Save(string fileName, DependencyGraphNode node)

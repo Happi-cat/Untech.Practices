@@ -13,8 +13,6 @@ namespace DependencyDotNet.Visitors
 			_writer = xmlTextWriter;
 		}
 
-
-
 		public override DependencyGraphNode Visit(DependencyGraphNode node)
 		{
 			if (node == null)

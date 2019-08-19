@@ -102,22 +102,18 @@ namespace DependencyDotNet
 		{
 			return FilterAssemblies == null
 				|| FilterAssemblies.Count == 0
-				|| FilterAssemblies.Any(mask => Wildcard.IsMatch(assemblyName.Name, mask));
+				|| Wildcard.IsMatchAnyMask(assemblyName.Name, FilterAssemblies);
 		}
 
 		private bool ShouldBuildWithDependencies(AssemblyName assemblyName)
 		{
 			var name = assemblyName.Name;
 
-			if (ExpandAssemblies?.Any(mask => Wildcard.IsMatch(name, mask)) == true)
+			if (Wildcard.IsMatchAnyMask(name, ExpandAssemblies))
 				return true;
 
-			if (s_excludeAssemblies.Any(nameOrMask => Wildcard.IsMatch(name, nameOrMask)))
-				return false;
-			if (CollapseAssemblies?.Any(nameOrMask => Wildcard.IsMatch(name, nameOrMask)) == true)
-				return false;
-
-			return true;
+			return !Wildcard.IsMatchAnyMask(name, s_excludeAssemblies)
+				&& !Wildcard.IsMatchAnyMask(name, CollapseAssemblies);
 		}
 
 		private Assembly TryFind(AssemblyName assemblyName)
