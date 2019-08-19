@@ -122,15 +122,12 @@ namespace DependencyDotNet
 
 		private Assembly TryFind(AssemblyName assemblyName)
 		{
-			if (Folders != null)
-			{
-				var fileThatExists = Folders
-					.Select(dir => Path.Combine(dir, assemblyName.Name + ".dll"))
-					.FirstOrDefault(File.Exists);
+			var fileThatExists = Folders
+				?.Select(dir => Path.Combine(dir, assemblyName.Name + ".dll"))
+				.FirstOrDefault(File.Exists);
 
-				if (fileThatExists != null)
-					return Assembly.LoadFrom(fileThatExists);
-			}
+			if (fileThatExists != null)
+				return Assembly.LoadFrom(fileThatExists);
 
 			try
 			{ return Assembly.Load(assemblyName.FullName); }
