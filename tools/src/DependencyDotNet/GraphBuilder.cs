@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace DependencyDotNet
 {
-	public class DependencyGraphBuilder
+	public class GraphBuilder
 	{
 		private static readonly IReadOnlyList<string> s_excludeAssemblies = new List<string>
 		{
@@ -36,7 +36,7 @@ namespace DependencyDotNet
 			"System.ValueTuple",
 		};
 
-		private readonly IDictionary<string, DependencyGraphNode> _nodesCache = new Dictionary<string, DependencyGraphNode>();
+		private readonly IDictionary<string, GraphNode> _nodesCache = new Dictionary<string, GraphNode>();
 
 		public List<string> CollapseAssemblies { get; set; }
 
@@ -44,14 +44,12 @@ namespace DependencyDotNet
 
 		public List<string> Folders { get; set; }
 
-		public List<string> FilterAssemblies { get; set; }
-
-		public DependencyGraphNode Build(Assembly assembly)
+		public GraphNode Build(Assembly assembly)
 		{
 			return Build(assembly.GetName(), assembly);
 		}
 
-		public DependencyGraphNode Build(string filePath)
+		public GraphNode Build(string filePath)
 		{
 			if (!File.Exists(filePath))
 				throw new ArgumentException(nameof(filePath));
@@ -63,46 +61,38 @@ namespace DependencyDotNet
 			return Build(assembly);
 		}
 
-		private DependencyGraphNode GetMemoized(AssemblyName assemblyName, Func<DependencyGraphNode> creator)
+		private GraphNode GetMemoized(AssemblyName assemblyName, Func<GraphNode> creator)
 		{
 			return _nodesCache.TryGetValue(assemblyName.FullName, out var value)
 				? value
 				: _nodesCache[assemblyName.FullName] = creator();
 		}
 
-		private DependencyGraphNode Build(AssemblyName assemblyName, Assembly assembly)
+		private GraphNode Build(AssemblyName assemblyName, Assembly assembly)
 		{
 			assembly = assembly ?? TryFind(assemblyName);
 
 			var found = assembly != null;
 			var expanded = found && ShouldBuildWithDependencies(assemblyName);
 
-			return GetMemoized(assemblyName, () => new DependencyGraphNode(assemblyName)
-			{
-				FoundVersion = assembly?.GetName().Version,
-				References = expanded ? BuildReferencies(assembly) : null
-			});
+
+			return GetMemoized(assemblyName, () => new GraphNode(assemblyName,
+				assembly,
+				expanded ? BuildReferencies(assembly) : null
+			));
 		}
 
-		private DependencyGraphNode Build(AssemblyName assemblyName)
+		private GraphNode Build(AssemblyName assemblyName)
 		{
 			return Build(assemblyName, null);
 		}
 
-		private List<DependencyGraphNode> BuildReferencies(Assembly assembly)
+		private List<GraphNode> BuildReferencies(Assembly assembly)
 		{
 			return assembly
 				.GetReferencedAssemblies()
-				.Where(ShouldAddAsDependency)
 				.Select(Build)
 				.ToList();
-		}
-
-		private bool ShouldAddAsDependency(AssemblyName assemblyName)
-		{
-			return FilterAssemblies == null
-				|| FilterAssemblies.Count == 0
-				|| Wildcard.IsMatchAnyMask(assemblyName.Name, FilterAssemblies);
 		}
 
 		private bool ShouldBuildWithDependencies(AssemblyName assemblyName)

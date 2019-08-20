@@ -23,7 +23,6 @@ namespace DependencyDotNet
 		[Option("find-path-to", Required = false)]
 		public IEnumerable<string> FindPathTo { get; set; }
 
-
 		[Option('o', "output", Required = false)]
 		public string OutputeFile { get; set; }
 	}

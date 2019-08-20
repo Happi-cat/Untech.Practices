@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace DependencyDotNet.Visitors
 {
-	public class FindPathToVisitor : DependencyGraphVisitor
+	public class FindPathToVisitor : GraphVisitor
 	{
 		private readonly IList<string> _filters;
 
@@ -12,7 +12,7 @@ namespace DependencyDotNet.Visitors
 			_filters = filters?.ToList();
 		}
 
-		public override DependencyGraphNode Visit(DependencyGraphNode node)
+		public override GraphNode Visit(GraphNode node)
 		{
 			if (node == null)
 				return null;
@@ -20,24 +20,11 @@ namespace DependencyDotNet.Visitors
 			var refs = Visit(node.References);
 
 			if (refs != null && refs.Any())
-			{
-				return new DependencyGraphNode(node.Name, node.Version)
-				{
-					FoundVersion = node.FoundVersion,
-					References = refs
-				};
-			}
+				return new GraphNode(node.Name, node.Version, node.FoundVersion, refs);
 
-			if (Wildcard.IsMatchAnyMask(node.Name, _filters))
-			{
-				return new DependencyGraphNode(node.Name, node.Version)
-				{
-					FoundVersion = node.FoundVersion,
-					References = refs
-				};
-			}
-
-			return null;
+			return Wildcard.IsMatchAnyMask(node.Name, _filters)
+				? new GraphNode(node.Name, node.Version, node.FoundVersion, refs)
+				: null;
 		}
 	}
 }

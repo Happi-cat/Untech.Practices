@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -21,39 +22,41 @@ namespace DependencyDotNet
 
 		private static void Handle(Options opts)
 		{
-			var node = new DependencyGraphBuilder
+			var node = new GraphBuilder
 				{
 					Folders = opts.Directories.ToList(),
 					CollapseAssemblies = opts.CollapseAssemblies.ToList(),
 					ExpandAssemblies = opts.ExpandAssemblies.ToList(),
-					FilterAssemblies = opts.FilterAssemblies.ToList()
 				}
 				.Build(opts.File);
 
-			if (opts.FindPathTo != null && opts.FindPathTo.Any())
-			{
-				node = new FindPathToVisitor(opts.FindPathTo).Visit(node);
-			}
+			node = GetVisitors(opts)
+				.Aggregate(node, (current, visitor) => visitor.Visit(current));
 
+			Save(opts, node);
+		}
+
+		private static IEnumerable<GraphVisitor> GetVisitors(Options opts)
+		{
+			if (opts.FindPathTo != null && opts.FindPathTo.Any())
+				yield return new FindPathToVisitor(opts.FindPathTo);
+
+			if (opts.FilterAssemblies != null && opts.FilterAssemblies.Any())
+				yield return new FilterVisitor(opts.FilterAssemblies);
+		}
+
+		private static void Save(Options opts, GraphNode node)
+		{
 			if (opts.OutputeFile != null)
-				Save(opts.OutputeFile, node);
+			{
+				using (var stream = File.Open(opts.OutputeFile, FileMode.Create))
+					Save(new StreamWriter(stream, Encoding.UTF8), node);
+			}
 			else
 				Save(Console.Out, node);
 		}
 
-		private static void Save(string fileName, DependencyGraphNode node)
-		{
-			using (var stream = File.Open(fileName, FileMode.Create))
-			using (var xmlWriter = new XmlTextWriter(stream, Encoding.UTF8)
-			{
-				IndentChar = ' ', Indentation = 2, Formatting = Formatting.Indented
-			})
-			{
-				new SaveVisitor(xmlWriter).Visit(node);
-			}
-		}
-
-		private static void Save(TextWriter writer, DependencyGraphNode node)
+		private static void Save(TextWriter writer, GraphNode node)
 		{
 			using (var xmlWriter = new XmlTextWriter(writer)
 			{

@@ -4,7 +4,7 @@ using System.Xml;
 
 namespace DependencyDotNet.Visitors
 {
-	public class SaveVisitor : DependencyGraphVisitor
+	public class SaveVisitor : GraphVisitor
 	{
 		private readonly XmlTextWriter _writer;
 
@@ -13,7 +13,7 @@ namespace DependencyDotNet.Visitors
 			_writer = xmlTextWriter;
 		}
 
-		public override DependencyGraphNode Visit(DependencyGraphNode node)
+		public override GraphNode Visit(GraphNode node)
 		{
 			if (node == null)
 				return null;
@@ -33,7 +33,7 @@ namespace DependencyDotNet.Visitors
 		}
 
 
-		private void WriteIssues(DependencyGraphNode node)
+		private void WriteIssues(GraphNode node)
 		{
 			if (node.FoundVersion == null)
 				WriteIssue("not-found", "");
