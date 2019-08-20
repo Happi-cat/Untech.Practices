@@ -60,7 +60,9 @@ namespace DependencyDotNet
 		{
 			using (var xmlWriter = new XmlTextWriter(writer)
 			{
-				IndentChar = ' ', Indentation = 2, Formatting = Formatting.Indented
+				IndentChar = ' ',
+				Indentation = 2,
+				Formatting = Formatting.Indented
 			})
 			{
 				new SaveVisitor(xmlWriter).Visit(node);
