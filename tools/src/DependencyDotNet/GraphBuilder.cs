@@ -8,7 +8,7 @@ namespace DependencyDotNet
 {
 	public class GraphBuilder
 	{
-		private static readonly IReadOnlyList<string> s_excludeAssemblies = new List<string>
+		private static readonly IReadOnlyList<string> s_collapseAssemblies = new List<string>
 		{
 			"mscorlib",
 			"netstandard",
@@ -102,7 +102,7 @@ namespace DependencyDotNet
 			if (Wildcard.IsMatchAnyMask(name, ExpandAssemblies))
 				return true;
 
-			return !Wildcard.IsMatchAnyMask(name, s_excludeAssemblies)
+			return !Wildcard.IsMatchAnyMask(name, s_collapseAssemblies)
 				&& !Wildcard.IsMatchAnyMask(name, CollapseAssemblies);
 		}
 
