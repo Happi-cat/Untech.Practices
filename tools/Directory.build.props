@@ -1,0 +1,7 @@
+<Project>
+  <Import Project="..\Directory.build.props" />
+
+  <PropertyGroup>
+    <PackageOutputPath>$([MSBuild]::NormalizeDirectory('$(RepoRoot)', 'tools', 'packages'))</PackageOutputPath>
+  </PropertyGroup>
+</Project>

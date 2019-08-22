@@ -41,10 +41,14 @@ function Replace-InSubFolderNames($dir) {
 	}
 }
 
-@( 'src', 'test', 'examples' ) | %{ join-path $where $_ } | %{
+@( 'src', 'test', 'examples', 'tools' ) | %{ join-path $where $_ } | %{
+	Write-host "Processing $_..." -ForegroundColor Green
 	Replace-InSubFolderNames $_
 	Replace-InCodeFiles $_
 }
 
-gci $where -include *.sln | %{ Replace-InFile $_ }
+Write-host "Processing solution files..." -ForegroundColor Green
+gci $where -include *.sln -recurse | %{
+	Replace-InFile $_ 
+}
 cd $where

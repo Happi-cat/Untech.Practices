@@ -1,0 +1,11 @@
+<Project>
+  <!-- Base repo layout properties -->
+  <PropertyGroup>
+    <RepoRoot>$(MSBuildThisFileDirectory)</RepoRoot>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackagesDir>$([MSBuild]::NormalizeDirectory('$(RepoRoot)', 'packages'))</PackagesDir>
+    <SourceDir>$([MSBuild]::NormalizeDirectory('$(RepoRoot)', 'src'))</SourceDir>
+  </PropertyGroup>
+</Project>
