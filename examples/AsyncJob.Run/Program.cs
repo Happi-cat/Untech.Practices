@@ -66,7 +66,7 @@ namespace AsyncJob.Run
 				.Final(builder => new CqrsStrategy(builder.GetLogger("Handlers")));
 		}
 
-		private static IEnumerable<IRequestMetadataProvider> MetadataProviders(IBuilderContext context)
+		private static IEnumerable<IRequestMetadataProvider> MetadataProviders(IServiceProvider services)
 		{
 			yield return new BuiltInRequestMetadataProvider(typeof(Program).Assembly);
 			yield return new RequestMetadataProvider
@@ -89,7 +89,7 @@ namespace AsyncJob.Run
 			return new LoggerFactory().AddSerilog(logger);
 		}
 
-		private static IEnumerable<ITransport> Transports(IBuilderContext context)
+		private static IEnumerable<ITransport> Transports(IServiceProvider services)
 		{
 			// bare
 			yield return new DemoTransport(new[] { new CompositeCommand() });
@@ -151,8 +151,6 @@ namespace AsyncJob.Run
 				logger.LogInformation("Elapsed: {0}", sw.Elapsed);
 			}
 		}
-
-
 	}
 
 	internal static class InProcess

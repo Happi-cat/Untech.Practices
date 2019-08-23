@@ -47,7 +47,7 @@ namespace Untech.AsyncJob.Builder
 		/// <param name="creator">The function that creates <see cref="IRequestProcessorMiddleware"/>.</param>
 		/// <returns></returns>
 		public static PipelineBuilder Then(this PipelineBuilder builder,
-			Func<IBuilderContext, Func<Context, RequestProcessorCallback, Task>> creator)
+			Func<IServiceProvider, Func<Context, RequestProcessorCallback, Task>> creator)
 		{
 			if (builder == null)
 				throw new ArgumentNullException(nameof(builder));

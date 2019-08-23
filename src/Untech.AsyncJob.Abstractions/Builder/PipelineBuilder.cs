@@ -1,13 +1,13 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Untech.AsyncJob.Processing;
 
 namespace Untech.AsyncJob.Builder
 {
-	using MiddlewareBuilder = Func<IBuilderContext, IRequestProcessorMiddleware>;
+	using MiddlewareBuilder = Func<IServiceProvider, IRequestProcessorMiddleware>;
 
-	public class PipelineBuilder
+	public class PipelineBuilder : IEnumerable<MiddlewareBuilder>
 	{
 		private readonly List<MiddlewareBuilder> _creators = new List<MiddlewareBuilder>();
 
@@ -25,9 +25,14 @@ namespace Untech.AsyncJob.Builder
 			return this;
 		}
 
-		public IEnumerable<IRequestProcessorMiddleware> BuildAll(IBuilderContext context)
+		public IEnumerator<MiddlewareBuilder> GetEnumerator()
 		{
-			return _creators.Select(n => n.Invoke(context));
+			return _creators.GetEnumerator();
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
 		}
 	}
 }

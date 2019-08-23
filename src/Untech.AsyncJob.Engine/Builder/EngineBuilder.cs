@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.Design;
+using System.Linq;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Untech.AsyncJob.Metadata;
@@ -10,19 +13,13 @@ namespace Untech.AsyncJob.Builder
 	/// <summary>
 	/// Used for <see cref="IOrchestrator"/> and <see cref="IRequestProcessor"/> configuration.
 	/// </summary>
-	public class EngineBuilder : IBuilderContext, IEngineBuilder
+	public class EngineBuilder : IEngineBuilder
 	{
+		private static readonly IServiceContainer s_container;
+		private readonly IServiceContainer _container = new ServiceContainer(s_container);
+
 		private readonly Action<OrchestratorOptions> _configureOptions;
 		private readonly PipelineBuilder _pipelineBuilder;
-
-		private Func<ILoggerFactory> _loggerCreator;
-		private ILoggerFactory _logger;
-
-		private Func<IBuilderContext, ITransport> _transportCreator;
-		private ITransport _transport;
-
-		private Func<IBuilderContext, IRequestMetadataProvider> _providerCreator;
-		private IRequestMetadataProvider _provider;
 
 		public EngineBuilder()
 			: this(_ => { })
@@ -36,6 +33,13 @@ namespace Untech.AsyncJob.Builder
 			_configureOptions = configureOptions;
 		}
 
+		static EngineBuilder()
+		{
+			s_container = new ServiceContainer();
+			s_container.AddService(typeof(ILoggerFactory), NullLoggerFactory.Instance);
+			s_container.AddService(typeof(IRequestMetadataProvider), NullRequestMetadataProvider.Instance);
+		}
+
 		/// <summary>
 		/// Sets <see cref="ILoggerFactory"/> that will be used for logging.
 		/// </summary>
@@ -43,7 +47,7 @@ namespace Untech.AsyncJob.Builder
 		/// <returns></returns>
 		public IEngineBuilder LogTo(Func<ILoggerFactory> loggerCreator)
 		{
-			_loggerCreator = loggerCreator;
+			AddService(loggerCreator);
 			return this;
 		}
 
@@ -52,9 +56,9 @@ namespace Untech.AsyncJob.Builder
 		/// </summary>
 		/// <param name="transportCreator">The transport to use.</param>
 		/// <returns></returns>
-		public IEngineBuilder ReceiveRequestsFrom(Func<IBuilderContext, ITransport> transportCreator)
+		public IEngineBuilder ReceiveRequestsFrom(Func<IServiceProvider, ITransport> transportCreator)
 		{
-			_transportCreator = transportCreator;
+			AddService(transportCreator);
 			return this;
 		}
 
@@ -63,44 +67,20 @@ namespace Untech.AsyncJob.Builder
 		/// </summary>
 		/// <param name="providerCreator">The provider to use.</param>
 		/// <returns></returns>
-		public IEngineBuilder ReadMetadataFrom(Func<IBuilderContext, IRequestMetadataProvider> providerCreator)
+		public IEngineBuilder ReadMetadataFrom(Func<IServiceProvider, IRequestMetadataProvider> providerCreator)
 		{
-			_providerCreator = providerCreator;
+			AddService(providerCreator);
 			return this;
 		}
 
 		public IEngineBuilder Do(Action<PipelineBuilder> configureProcessor)
 		{
-			configureProcessor(_pipelineBuilder);
+			var pipeline = new PipelineBuilder();
+			configureProcessor(pipeline);
+
+			AddServices(provider => pipeline.Select(b => b(provider)).ToList());
 
 			return this;
-		}
-
-		/// <inheritdoc />
-		public ILoggerFactory GetLogger()
-		{
-			if (_logger != null)
-				return _logger;
-			return _logger = _loggerCreator?.Invoke() ?? NullLoggerFactory.Instance;
-		}
-
-		private ITransport GetTransport()
-		{
-			if (_transport != null)
-				return _transport;
-			return _transport = _transportCreator?.Invoke(this) ?? throw NotConfigured();
-
-			Exception NotConfigured()
-			{
-				return new InvalidOperationException("Transport wasn't configured");
-			}
-		}
-
-		private IRequestMetadataProvider GetMetadata()
-		{
-			if (_provider != null)
-				return _provider;
-			return _provider = _providerCreator?.Invoke(this) ?? NullRequestMetadataProvider.Instance;
 		}
 
 		/// <summary>
@@ -109,7 +89,9 @@ namespace Untech.AsyncJob.Builder
 		/// <returns></returns>
 		public IRequestProcessor BuildProcessor()
 		{
-			return new RequestProcessor(_pipelineBuilder.BuildAll(this));
+			return new RequestProcessor(
+				_container.GetService<IEnumerable<IRequestProcessorMiddleware>>()
+			);
 		}
 
 		/// <summary>
@@ -121,11 +103,26 @@ namespace Untech.AsyncJob.Builder
 		{
 			return new Orchestrator(
 				OptionsBuilder.ConfigureAndValidate(_configureOptions),
-				GetTransport(),
-				GetMetadata(),
+				_container.GetService<ITransport>(),
+				_container.GetService<IRequestMetadataProvider>(),
 				BuildProcessor(),
-				GetLogger().CreateLogger<Orchestrator>()
+				_container.GetLogger().CreateLogger<Orchestrator>()
 			);
+		}
+
+		private void AddService<T>(Func<T> creator)
+		{
+			_container.AddService(typeof(T), (provider, type) => creator());
+		}
+
+		private void AddService<T>(Func<IServiceProvider, T> creator)
+		{
+			_container.AddService(typeof(T), (provider, type) => creator(provider));
+		}
+
+		private void AddServices<T>(Func<IServiceProvider, IEnumerable<T>> creator)
+		{
+			AddService(creator);
 		}
 	}
 }

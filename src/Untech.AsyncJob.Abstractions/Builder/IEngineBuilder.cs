@@ -20,14 +20,14 @@ namespace Untech.AsyncJob.Builder
 		/// </summary>
 		/// <param name="transportCreator">The transport to use.</param>
 		/// <returns></returns>
-		IEngineBuilder ReceiveRequestsFrom(Func<IBuilderContext, ITransport> transportCreator);
+		IEngineBuilder ReceiveRequestsFrom(Func<IServiceProvider, ITransport> transportCreator);
 
 		/// <summary>
 		/// Sets <see cref="IRequestMetadataProvider"/> that can be used for getting <see cref="IRequestMetadata"/>.
 		/// </summary>
 		/// <param name="providerCreator">The provider to use.</param>
 		/// <returns></returns>
-		IEngineBuilder ReadMetadataFrom(Func<IBuilderContext, IRequestMetadataProvider> providerCreator);
+		IEngineBuilder ReadMetadataFrom(Func<IServiceProvider, IRequestMetadataProvider> providerCreator);
 
 		IEngineBuilder Do(Action<PipelineBuilder> configureProcessor);
 
