@@ -15,11 +15,10 @@ namespace Untech.AsyncJob.Builder
 	/// </summary>
 	public class EngineBuilder : IEngineBuilder
 	{
-		private static readonly IServiceContainer s_container;
-		private readonly IServiceContainer _container = new ServiceContainer(s_container);
+		private static readonly IServiceProvider s_defaultServices;
+		private readonly IServiceContainer _container;
 
 		private readonly Action<OrchestratorOptions> _configureOptions;
-		private readonly PipelineBuilder _pipelineBuilder;
 
 		public EngineBuilder()
 			: this(_ => { })
@@ -29,15 +28,22 @@ namespace Untech.AsyncJob.Builder
 
 		public EngineBuilder(Action<OrchestratorOptions> configureOptions)
 		{
-			_pipelineBuilder = new PipelineBuilder();
+			_container = new ServiceContainer(s_defaultServices);
+			_configureOptions = configureOptions;
+		}
+
+		public EngineBuilder(IServiceProvider provider, Action<OrchestratorOptions> configureOptions)
+		{
+			_container = new ServiceContainer(new CompositeServiceProvider(new [] { provider, s_defaultServices }));
 			_configureOptions = configureOptions;
 		}
 
 		static EngineBuilder()
 		{
-			s_container = new ServiceContainer();
-			s_container.AddService(typeof(ILoggerFactory), NullLoggerFactory.Instance);
-			s_container.AddService(typeof(IRequestMetadataProvider), NullRequestMetadataProvider.Instance);
+			var container = new ServiceContainer();
+			container.AddService(typeof(ILoggerFactory), NullLoggerFactory.Instance);
+			container.AddService(typeof(IRequestMetadataProvider), NullRequestMetadataProvider.Instance);
+			s_defaultServices = container;
 		}
 
 		/// <summary>
@@ -123,6 +129,23 @@ namespace Untech.AsyncJob.Builder
 		private void AddServices<T>(Func<IServiceProvider, IEnumerable<T>> creator)
 		{
 			AddService(creator);
+		}
+
+		private class CompositeServiceProvider : IServiceProvider
+		{
+			private readonly IEnumerable<IServiceProvider> _providers;
+
+			public CompositeServiceProvider(IEnumerable<IServiceProvider> providers)
+			{
+				_providers = providers.ToList();
+			}
+
+			public object GetService(Type serviceType)
+			{
+				return _providers
+					.Select(p => p.GetService(serviceType))
+					.FirstOrDefault(s => s != null);
+			}
 		}
 	}
 }
