@@ -3,11 +3,11 @@ using Microsoft.Extensions.Logging;
 
 namespace Untech.AsyncJob.Features.WatchDog
 {
-	internal static class WatchDogMiddlewareLoggerExtensions
+	internal static class LoggerExtensions
 	{
 		private static readonly Action<ILogger, string, string, TimeSpan, Exception> s_timeoutConfigured;
 
-		static WatchDogMiddlewareLoggerExtensions()
+		static LoggerExtensions()
 		{
 			s_timeoutConfigured = LoggerMessage.Define<string, string, TimeSpan>(LogLevel.Information,
 				new EventId(1, "TimeoutConfigured"),
