@@ -35,7 +35,8 @@ namespace Adr
 			};
 			var sections = ReadSections().ToDictionary(n => n.Item1, n => n.Item2);
 			var meta = sections.GetValueOrDefault("")
-				.Split('\n')
+				.Split('\n', StringSplitOptions.RemoveEmptyEntries)
+				.Where(l => !string.IsNullOrEmpty(l))
 				.Select(l => l.Split(": "))
 				.ToDictionary(n => n[0], n => n.ElementAtOrDefault(1));
 
@@ -63,18 +64,26 @@ namespace Adr
 				else
 				{
 					var section = sections.GetValueOrDefault(currentSection);
-					sections[currentSection] = section + line;
+					sections[currentSection] = section +  Environment.NewLine + line;
 				}
 			}
 
-			return sections.Select(p => (p.Key, p.Value.Trim('\n')));
+			return sections.Select(p => (p.Key, p.Value.TrimNewLines()));
 		}
 
 		private IEnumerable<string> ReadLines()
 		{
-			string currentLine = null;
+			string currentLine;
 
 			while ((currentLine = _reader.ReadLine()) != null) yield return currentLine;
+		}
+	}
+
+	public static class StringExtensions
+	{
+		public static string TrimNewLines(this string str)
+		{
+			return str != null ? str.Trim('\n', '\r') : null;
 		}
 	}
 }

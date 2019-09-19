@@ -37,7 +37,7 @@ namespace Adr
 				.ToLower();
 		}
 
-		public AdrFile GetEntry(int number)
+		public AdrFile GetRecord(int number)
 		{
 			return Directory.GetFiles(_directory, "*.md", SearchOption.TopDirectoryOnly)
 				.Where(f => ParseAdrNo(f) == number)
@@ -45,7 +45,7 @@ namespace Adr
 				.FirstOrDefault();
 		}
 
-		public IEnumerable<AdrFile> GetEntries()
+		public IEnumerable<AdrFile> GetRecords()
 		{
 			return Directory.GetFiles(_directory, "*.md", SearchOption.TopDirectoryOnly)
 				.Where(f => ParseAdrNo(f) > 0)

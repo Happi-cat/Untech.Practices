@@ -7,18 +7,28 @@ namespace Adr
 	public class AdrEntryWriterTest
 	{
 		[Fact]
-		public void Write_OK()
+		public void WriteInitial_OK()
 		{
-			// given
 			var entry = AdrEntry.CreateInitial();
 			entry.When = new DateTime(2019, 9, 19);
 
+			var actual = new StringWriter();
+			new AdrEntryWriter(actual).Write(entry);
+
+			Assert.Equal(Examples.InitialRecordMarkdown, actual.ToString());
+		}
+
+		[Fact]
+		public void WriteNewLinesAndOmittedSections_OK()
+		{
+			var entry = Examples.CreateNewLinesAndOmittedSections();
+
 			// act
-			var result = new StringWriter();
-			new AdrEntryWriter(result).Write(entry);
+			var actual = new StringWriter();
+			new AdrEntryWriter(actual).Write(entry);
 
 			// assert
-			Assert.Equal(MarkdownExamples.InitialRecord, result.ToString());
+			Assert.Equal(Examples.NewLinesAndOmittedSectionsMarkdown, actual.ToString());
 		}
 	}
 }

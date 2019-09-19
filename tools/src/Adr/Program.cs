@@ -34,7 +34,7 @@ namespace Adr
 
 			if (opts.SupersedesAdr != null)
 			{
-				var referenced = directory.GetEntry(opts.SupersedesAdr.Value);
+				var referenced = directory.GetRecord(opts.SupersedesAdr.Value);
 				if (referenced != null)
 				{
 					current.Entry.AppendStatus($"Supersedes {referenced.AsLink()}");
@@ -51,7 +51,7 @@ namespace Adr
 
 			if (opts.AmendsAdr != null)
 			{
-				var referenced = directory.GetEntry(opts.AmendsAdr.Value);
+				var referenced = directory.GetRecord(opts.AmendsAdr.Value);
 				if (referenced != null)
 				{
 					current.Entry.AppendStatus($"Amends {referenced.AsLink()}");
@@ -71,12 +71,13 @@ namespace Adr
 
 		private static int List(ListOptions opts)
 		{
-			foreach (var entry in new AdrDirectory(opts.Directory).GetEntries())
+			foreach (var file in new AdrDirectory(opts.Directory).GetRecords())
 			{
-				Console.WriteLine(entry.Entry.Title);
-				Console.WriteLine("  Date: {0}", entry.Entry.When);
-				Console.WriteLine("  Status: {0}", entry.Entry.Status);
-				Console.WriteLine();
+				Console.WriteLine("{0,4} {1,-40} {2,8:yy-MM-dd} {3,-10}",
+					file.Entry.Number,
+					file.Entry.Title,
+					file.Entry.When,
+					file.Entry.GetShortStatus());
 			}
 
 			return 0;

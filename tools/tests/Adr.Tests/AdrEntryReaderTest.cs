@@ -7,23 +7,35 @@ namespace Adr
 	public class AdrEntryReaderTest
 	{
 		[Fact]
-		public void Read_OK()
+		public void ReadInitial_OK()
 		{
-			// given
 			var expected = AdrEntry.CreateInitial();
 			expected.When = new DateTime(2019, 9, 19);
 
-			// act
-			var entry = new AdrEntryReader(new StringReader(MarkdownExamples.InitialRecord)).Read();
+			var entry = new AdrEntryReader(new StringReader(Examples.InitialRecordMarkdown)).Read();
 
-			// assert
-			Assert.Equal(expected.Title, entry.Title);
-			Assert.Equal(expected.Number, entry.Number);
-			Assert.Equal(expected.Status, entry.Status);
-			Assert.Equal(expected.Context, entry.Context);
-			Assert.Equal(expected.Decision, entry.Decision);
-			Assert.Equal(expected.Consequences, entry.Consequences);
-			Assert.Equal(expected.When, entry.When);
+			AssertEntries(expected, entry);
+		}
+
+		[Fact]
+		public void ReadNewLinesAndOmittedSections_OK()
+		{
+			var expected = Examples.CreateNewLinesAndOmittedSections();
+
+			var actual = new AdrEntryReader(new StringReader(Examples.NewLinesAndOmittedSectionsMarkdown)).Read();
+
+			AssertEntries(expected, actual);
+		}
+
+		private static void AssertEntries(AdrEntry expected, AdrEntry actual)
+		{
+			Assert.Equal(expected.Title, actual.Title);
+			Assert.Equal(expected.Number, actual.Number);
+			Assert.Equal(expected.Status, actual.Status);
+			Assert.Equal(expected.Context, actual.Context);
+			Assert.Equal(expected.Decision, actual.Decision);
+			Assert.Equal(expected.Consequences, actual.Consequences);
+			Assert.Equal(expected.When, actual.When);
 		}
 	}
 }

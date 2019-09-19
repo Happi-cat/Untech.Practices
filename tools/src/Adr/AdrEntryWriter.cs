@@ -48,8 +48,10 @@ namespace Adr
 
 		private void WriteSection(string header, string paragraph)
 		{
+			if (string.IsNullOrEmpty(paragraph)) return;
+
 			WriteHeading(2, header);
-			WriteParagraph(paragraph.Trim('\n'));
+			WriteParagraph(paragraph.TrimNewLines());
 		}
 
 		private void WriteParagraph(string paragraph)

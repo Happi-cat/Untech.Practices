@@ -49,6 +49,15 @@ namespace Adr
 			};
 		}
 
+		public string GetShortStatus()
+		{
+			if (string.IsNullOrEmpty(Status)) return Status;
+			var newLineIndex = Status.IndexOf('\n');
+			return newLineIndex > -1
+				? Status.Substring(0, newLineIndex)
+				: Status;
+		}
+
 		public AdrEntry AppendStatus(string status)
 		{
 			if (string.IsNullOrEmpty(Status)) Status = status;
