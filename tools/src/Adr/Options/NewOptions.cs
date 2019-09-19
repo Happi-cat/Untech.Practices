@@ -8,8 +8,11 @@ namespace Adr.Options
 		[Option('t', Required = true)]
 		public string Title { get; set; }
 
-		[Option('s', "supersedes", HelpText = "Use it to create a new ADR that supersedes a previous one")]
-		public int? SupersedesAdrNo { get; set; }
+		[Option('s', "supersedes")]
+		public int? SupersedesAdr { get; set; }
+
+		[Option('a', "amends")]
+		public int? AmendsAdr { get; set; }
 
 		[Option(Default = "docs/adr/")]
 		public string Directory { get; set; }
