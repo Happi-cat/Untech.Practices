@@ -10,7 +10,7 @@ using Untech.Practices.UserContext;
 namespace Shared.Infrastructure.Data
 {
 	public class UserScopedGenericDataStorage<T, TTable, TMapper> : IDataStorage<T>
-		where T : IAggregateRoot
+		where T : IHasKey
 		where TTable : class, IUserScopedDao
 		where TMapper : struct, IDaoMapper<T, TTable>
 	{
@@ -29,7 +29,7 @@ namespace Shared.Infrastructure.Data
 			{
 				var dao = await GetMyItems(dataContext)
 						.FirstOrDefaultAsync(n => n.Key == key, cancellationToken)
-					?? throw new AggregateRootNotFoundException(key);
+					?? throw new ItemNotFoundException(key);
 
 				return FromDao(dao);
 			}
@@ -108,7 +108,8 @@ namespace Shared.Infrastructure.Data
 
 		protected void EnsureIsMyOrThrow(TTable dao)
 		{
-			if (dao.UserKey == _userContext.UserKey) return;
+			if (dao.UserKey == _userContext.UserKey)
+				return;
 
 			throw new SecurityException("Trying to access wrong item");
 		}

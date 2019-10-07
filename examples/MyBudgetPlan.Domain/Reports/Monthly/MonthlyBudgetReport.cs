@@ -19,8 +19,10 @@ namespace MyBudgetPlan.Domain.Reports.Monthly
 			MonthLog incomeLog,
 			MonthLog expenseLog)
 		{
-			if (incomeLog.Log != BudgetLogType.Incomes) throw new ArgumentException(nameof(incomeLog));
-			if (expenseLog.Log != BudgetLogType.Expenses) throw new ArgumentException(nameof(expenseLog));
+			if (incomeLog.Log != BudgetLogType.Incomes)
+				throw new ArgumentException(nameof(incomeLog));
+			if (expenseLog.Log != BudgetLogType.Expenses)
+				throw new ArgumentException(nameof(expenseLog));
 
 			When = when;
 
@@ -46,7 +48,7 @@ namespace MyBudgetPlan.Domain.Reports.Monthly
 		[DataMember]
 		public IEnumerable<ExpenseCategoryReport> Expenses { get; private set; }
 
-		private IEnumerable<ExpenseCategoryReport> GetExpensesReport(IMoneyCalculator calculator,
+		private static IEnumerable<ExpenseCategoryReport> GetExpensesReport(IMoneyCalculator calculator,
 			IEnumerable<Category> categories,
 			MonthLog expenseLog)
 		{

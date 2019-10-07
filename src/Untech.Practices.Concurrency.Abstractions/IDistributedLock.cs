@@ -10,14 +10,6 @@ namespace Untech.Practices.Concurrency
 	public interface IDistributedLock
 	{
 		/// <summary>
-		///     Tries to acquire distributed lock for the specified <paramref name="resource" />.
-		/// </summary>
-		/// <param name="resource">Resource name to lock.</param>
-		/// <param name="expiryTime">Expiration time for preventing of infinite locks.</param>
-		/// <returns>Disposable lock if was acquired; otherwise null.</returns>
-		IDisposable TryAcquire(string resource, TimeSpan expiryTime);
-
-		/// <summary>
 		///     Tries to acquire distributed lock asynchronously for the specified <paramref name="resource" />.
 		/// </summary>
 		/// <param name="resource">Resource name to lock.</param>

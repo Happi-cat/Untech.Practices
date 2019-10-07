@@ -32,7 +32,8 @@ namespace MyBudgetPlan.Domain
 
 		public static implicit operator YearMonth(LocalDate date)
 		{
-			return new YearMonth(date.Year, date.Month);
+			(int year, int month, _) = date;
+			return new YearMonth(year, month);
 		}
 
 		protected override IEnumerable<object> GetEquatableProperties()

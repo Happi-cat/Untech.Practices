@@ -18,7 +18,8 @@ namespace Untech.Practices.Collections
 		public static IEnumerable<T> Descendants<T>(this T node)
 			where T : IHierarchical<T>
 		{
-			if (node == null) throw new ArgumentNullException(nameof(node));
+			if (node == null)
+				throw new ArgumentNullException(nameof(node));
 
 			return node
 				.GetElements()
@@ -34,7 +35,8 @@ namespace Untech.Practices.Collections
 		public static IEnumerable<T> DescendantsAndSelf<T>(this T node)
 			where T : IHierarchical<T>
 		{
-			if (node == null) throw new ArgumentNullException(nameof(node));
+			if (node == null)
+				throw new ArgumentNullException(nameof(node));
 
 			return GetEnumerable();
 
@@ -42,7 +44,8 @@ namespace Untech.Practices.Collections
 			{
 				yield return node;
 
-				foreach (T descendant in node.Descendants()) yield return descendant;
+				foreach (T descendant in node.Descendants())
+					yield return descendant;
 			}
 		}
 	}

@@ -5,7 +5,7 @@ using Untech.Practices.DataStorage;
 namespace MyBudgetPlan.Domain.Categories
 {
 	[DataContract]
-	public class Category : IAggregateRoot<string>
+	public class Category : IHasKey<string>
 	{
 		private const string Delimiter = ":";
 

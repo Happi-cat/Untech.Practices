@@ -30,9 +30,9 @@ namespace MyBookList.Infrastructure.Data
 					query = query.Where(b => request.OnlyStatuses.Contains(b.Status));
 				}
 
-				var daos = await query.ToListAsync(cancellationToken);
+				var books = await query.ToListAsync(cancellationToken);
 
-				return daos.Select(FromDao);
+				return books.Select(FromDao);
 			}
 		}
 	}

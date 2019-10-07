@@ -1,7 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using MyBudgetPlan.Domain;
 using MyBudgetPlan.Domain.Transactions;
 using Untech.Practices;
+using Untech.Practices.CQRS;
 using Untech.Practices.CQRS.Dispatching;
 using Untech.Practices.CQRS.Handlers;
 using Untech.Practices.DataStorage;
@@ -10,16 +12,16 @@ namespace MyBudgetPlan.Infrastructure
 {
 	public class TransactionService : ICommandHandler<CreateTransaction, Transaction>,
 		ICommandHandler<UpdateTransaction, Transaction>,
-		ICommandHandler<DeleteTransaction, Nothing>
+		ICommandHandler<DeleteTransaction, None>
 	{
 		private readonly IDataStorage<Transaction> _dataStorage;
-		private readonly INotificationDispatcher _notificationDispatcher;
+		private readonly IEventDispatcher _eventDispatcher;
 
 		public TransactionService(IDataStorage<Transaction> dataStorage,
-			INotificationDispatcher notificationDispatcher)
+			IEventDispatcher eventDispatcher)
 		{
 			_dataStorage = dataStorage;
-			_notificationDispatcher = notificationDispatcher;
+			_eventDispatcher = eventDispatcher;
 		}
 
 		public async Task<Transaction> HandleAsync(CreateTransaction request, CancellationToken cancellationToken)
@@ -44,18 +46,18 @@ namespace MyBudgetPlan.Infrastructure
 			return item;
 		}
 
-		public async Task<Nothing> HandleAsync(DeleteTransaction request, CancellationToken cancellationToken)
+		public async Task<None> HandleAsync(DeleteTransaction request, CancellationToken cancellationToken)
 		{
 			var item = await _dataStorage.GetAsync(request.Key, cancellationToken);
 
 			await _dataStorage.DeleteAsync(item, cancellationToken);
 
-			return Nothing.AtAll;
+			return None.Value;
 		}
 
-		private Task PublishNotifications(Transaction item)
+		private Task PublishNotifications(BudgetLogEntry item)
 		{
-			return _notificationDispatcher.PublishAsync(item, CancellationToken.None);
+			return _eventDispatcher.PublishAsync(item, CancellationToken.None);
 		}
 	}
 }

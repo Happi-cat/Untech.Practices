@@ -18,13 +18,13 @@ namespace Untech.Practices.DataStorage.Cache
 		/// <inheritdoc />
 		public Task SetAsync(string key, object value, CancellationToken cancellationToken = default)
 		{
-			return Task.FromResult(0);
+			return Task.CompletedTask;
 		}
 
 		/// <inheritdoc />
 		public Task DropAsync(string key, CancellationToken cancellationToken = default)
 		{
-			return Task.FromResult(0);
+			return Task.CompletedTask;
 		}
 	}
 }

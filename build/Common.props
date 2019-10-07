@@ -1,0 +1,23 @@
+<Project>
+    <PropertyGroup>
+        <Company>Sergey Svirsky</Company>
+        <Copyright>Copyright \u00A9 Sergey Svirsky 2019</Copyright>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <VersionPrefix>1.5.0</VersionPrefix>
+        <VersionBuild>$([System.DateTime]::UtcNow.ToString(`yyMMddHHmmss`))</VersionBuild>
+        <VersionBuild Condition=" $(APPVEYOR_BUILD_NUMBER) != '' " >$(APPVEYOR_BUILD_NUMBER)</VersionBuild>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <AssemblyVersion>$(VersionPrefix)</AssemblyVersion>
+        <FileVersion>$(VersionPrefix).$(VersionBuild)</FileVersion>
+    </PropertyGroup>
+
+    <Target Name="PrintVersions" AfterTargets="AfterBuild">
+        <Message
+            Importance="high"
+            Text="Version: $(Version); File Ver.: $(FileVersion); Info Ver.: $(InformationalVersion); Package Ver.: $(PackageVersion)" />
+    </Target>
+</Project>

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "DependencyDotNet": {
+      "commandName": "Project",
+      "commandLineArgs": "-f DependencyDotNet.dll "
+    }
+  }
+}

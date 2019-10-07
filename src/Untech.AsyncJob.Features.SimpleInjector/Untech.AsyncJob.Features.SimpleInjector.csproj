@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Untech.AsyncJob.Abstractions\Untech.AsyncJob.Abstractions.csproj" />
+    <ProjectReference Include="..\Untech.AsyncJob.Engine\Untech.AsyncJob.Engine.csproj" />
+    <ProjectReference Include="..\Untech.AsyncJob.Features.CQRS\Untech.AsyncJob.Features.CQRS.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SimpleInjector" Version="4.6.0" />
+  </ItemGroup>
+
+</Project>

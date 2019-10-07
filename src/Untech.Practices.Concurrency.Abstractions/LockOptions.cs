@@ -10,7 +10,7 @@ namespace Untech.Practices.Concurrency
 		/// <summary>
 		///     Initializes a new instance of the <see cref="LockOptions" /> with specified <paramref name="expiryTime" />.
 		/// </summary>
-		/// <param name="expiryTime">Expiration time for preventing invinite locks.</param>
+		/// <param name="expiryTime">Expiration time for preventing infinite locks.</param>
 		public LockOptions(TimeSpan expiryTime)
 		{
 			ExpiryTime = expiryTime;

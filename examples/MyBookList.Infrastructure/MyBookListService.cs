@@ -7,6 +7,7 @@ using MyBookList.Domain.BookLists.Shared;
 using MyBookList.Domain.Library;
 using MyBookList.Infrastructure.Data;
 using Untech.Practices;
+using Untech.Practices.CQRS;
 using Untech.Practices.CQRS.Dispatching;
 using Untech.Practices.CQRS.Handlers;
 using Untech.Practices.DataStorage;
@@ -18,9 +19,9 @@ namespace MyBookList.Infrastructure
 		ICommandHandler<AppendExistingBookToMyBookList, MyBook>,
 		ICommandHandler<AppendNewBookToMyBookList, MyBook>,
 		ICommandHandler<AppendSharedBookListToMyBookList, IEnumerable<MyBook>>,
-		ICommandHandler<UpdateMyBookReview, Nothing>,
-		ICommandHandler<UpdateMyBookStatus, Nothing>,
-		ICommandHandler<UpdateMyBookOrdering, Nothing>
+		ICommandHandler<UpdateMyBookReview, None>,
+		ICommandHandler<UpdateMyBookStatus, None>,
+		ICommandHandler<UpdateMyBookOrdering, None>
 	{
 		private readonly IDataStorage<MyBook> _myBookDataStorage;
 		private readonly IQueryDispatcher _queryDispatcher;
@@ -77,34 +78,34 @@ namespace MyBookList.Infrastructure
 			return addedMyBooks;
 		}
 
-		public async Task<Nothing> HandleAsync(UpdateMyBookReview request, CancellationToken cancellationToken)
+		public async Task<None> HandleAsync(UpdateMyBookReview request, CancellationToken cancellationToken)
 		{
 			var myBook = await _myBookDataStorage.GetAsync(request.Key, cancellationToken);
 
 			myBook.UpdateReview(request.Review);
 			await _myBookDataStorage.UpdateAsync(myBook, cancellationToken);
 
-			return Nothing.AtAll;
+			return None.Value;
 		}
 
-		public async Task<Nothing> HandleAsync(UpdateMyBookStatus request, CancellationToken cancellationToken)
+		public async Task<None> HandleAsync(UpdateMyBookStatus request, CancellationToken cancellationToken)
 		{
 			var myBook = await _myBookDataStorage.GetAsync(request.Key, cancellationToken);
 
 			myBook.UpdateStatus(request.Status);
 			await _myBookDataStorage.UpdateAsync(myBook, cancellationToken);
 
-			return Nothing.AtAll;
+			return None.Value;
 		}
 
-		public async Task<Nothing> HandleAsync(UpdateMyBookOrdering request, CancellationToken cancellationToken)
+		public async Task<None> HandleAsync(UpdateMyBookOrdering request, CancellationToken cancellationToken)
 		{
 			var myBook = await _myBookDataStorage.GetAsync(request.Key, cancellationToken);
 
 			myBook.UpdateOrdering(request.Ordering);
 			await _myBookDataStorage.UpdateAsync(myBook, cancellationToken);
 
-			return Nothing.AtAll;
+			return None.Value;
 		}
 	}
 }

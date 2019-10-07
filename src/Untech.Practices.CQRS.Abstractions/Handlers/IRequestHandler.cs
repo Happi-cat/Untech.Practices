@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Untech.Practices.CQRS.Handlers
 {
-	public interface IRequestHandler<in TIn, TOut>
+	public interface IRequestHandler<TIn, TOut>
 		where TIn : IRequest<TOut>
 	{
 		/// <summary>

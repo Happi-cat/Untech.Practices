@@ -18,7 +18,7 @@ namespace MyBudgetPlan.Infrastructure
 {
 	public class ReportsQueryService : IQueryHandler<MonthlyBudgetReportQuery, MonthlyBudgetReport>,
 		IQueryHandler<AnnualBudgetReportQuery, AnnualBudgetReport>,
-		INotificationHandler<MonthLogChanged>
+		IEventHandler<MonthLogChanged>
 	{
 		private readonly IUserContext _userContext;
 		private readonly IMoneyCalculator _moneyCalculator;

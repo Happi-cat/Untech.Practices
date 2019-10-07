@@ -6,7 +6,7 @@ using Untech.Practices.DataStorage;
 namespace MyBookList.Domain.Library
 {
 	[DataContract]
-	public class Book : IAggregateRoot
+	public class Book : IHasKey
 	{
 		private Book()
 		{

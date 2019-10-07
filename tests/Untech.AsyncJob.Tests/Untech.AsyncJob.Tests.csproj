@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <RootNamespace>Untech.AsyncJob</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Untech.AsyncJob.Engine\Untech.AsyncJob.Engine.csproj" />
+    <ProjectReference Include="..\..\src\Untech.AsyncJob.Features.CQRS\Untech.AsyncJob.Features.CQRS.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Moq" Version="4.11.0-rc1" />
+  </ItemGroup>
+
+</Project>

@@ -6,7 +6,7 @@ using Untech.Practices;
 namespace MyBudgetPlan.Infrastructure.Data
 {
 	public class BudgetLogEntryDao<T> : IUserScopedDao
-		where T: BudgetLogEntry
+		where T : BudgetLogEntry
 	{
 		private BudgetLogEntryDao()
 		{

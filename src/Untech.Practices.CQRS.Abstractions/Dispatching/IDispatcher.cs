@@ -8,11 +8,11 @@ namespace Untech.Practices.CQRS.Dispatching
 	/// </summary>
 	/// <remarks>
 	///     <para>
-	///         Supports <see cref="IQuery{TResult}" />, <see cref="ICommand{TResponse}" />, <see cref="INotification" />
+	///         Supports <see cref="IQuery{TResult}" />, <see cref="ICommand{TResponse}" />, <see cref="IEvent" />
 	///         CQRS requests.
 	///     </para>
 	/// </remarks>
-	public interface IDispatcher : IQueryDispatcher, INotificationDispatcher
+	public interface IDispatcher : IQueryDispatcher, IEventDispatcher
 	{
 		/// <summary>
 		///     Processes asynchronously the incoming <paramref name="command" /> and returns execution result.

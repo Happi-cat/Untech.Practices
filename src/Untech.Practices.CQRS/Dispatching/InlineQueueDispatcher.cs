@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,18 +21,30 @@ namespace Untech.Practices.CQRS.Dispatching
 		public Task EnqueueAsync<TResponse>(ICommand<TResponse> command, CancellationToken cancellationToken = default,
 			QueueOptions options = null)
 		{
-			if (command == null) throw new ArgumentNullException(nameof(command));
+			if (command == null)
+				throw new ArgumentNullException(nameof(command));
 
 			return _parent.ProcessAsync(command, cancellationToken);
 		}
 
 		/// <inheritdoc />
-		public Task EnqueueAsync(INotification notification, CancellationToken cancellationToken,
+		public Task EnqueueAsync(IEvent @event, CancellationToken cancellationToken,
 			QueueOptions options = null)
 		{
-			if (notification == null) throw new ArgumentNullException(nameof(notification));
+			if (@event == null)
+				throw new ArgumentNullException(nameof(@event));
 
-			return _parent.PublishAsync(notification, cancellationToken);
+			return _parent.PublishAsync(@event, cancellationToken);
+		}
+
+		public async Task EnqueueAsync(IEnumerable<IEvent> events, CancellationToken cancellationToken,
+			QueueOptions options = null)
+		{
+			if (events == null)
+				throw new ArgumentNullException(nameof(events));
+
+			foreach (var notification in events)
+				await EnqueueAsync(notification, cancellationToken, options);
 		}
 	}
 }

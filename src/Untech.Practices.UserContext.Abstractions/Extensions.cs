@@ -25,8 +25,10 @@ namespace Untech.Practices.UserContext
 			where TElem : IHaveUserKey<TUserKey>
 			where TUserKey : IEquatable<TUserKey>
 		{
-			if (source == null) throw new ArgumentNullException(nameof(source));
-			if (userContext == null) throw new ArgumentNullException(nameof(userContext));
+			if (source == null)
+				throw new ArgumentNullException(nameof(source));
+			if (userContext == null)
+				throw new ArgumentNullException(nameof(userContext));
 
 			var userKeyToMatch = userContext.UserKey;
 
@@ -49,8 +51,10 @@ namespace Untech.Practices.UserContext
 			where TElem : IHaveUserKey<TUserKey>
 			where TUserKey : IEquatable<TUserKey>
 		{
-			if (source == null) throw new ArgumentNullException(nameof(source));
-			if (userContext == null) throw new ArgumentNullException(nameof(userContext));
+			if (source == null)
+				throw new ArgumentNullException(nameof(source));
+			if (userContext == null)
+				throw new ArgumentNullException(nameof(userContext));
 
 			var userKeyToMatch = userContext.UserKey;
 

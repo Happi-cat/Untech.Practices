@@ -7,7 +7,7 @@ namespace MyBudgetPlan.Infrastructure.Data
 {
 	public class BudgetLogMappingSchema : MappingSchema
 	{
-		private  const string SchemaName = "BudgetPlan";
+		private const string SchemaName = "BudgetPlan";
 
 		public BudgetLogMappingSchema()
 		{

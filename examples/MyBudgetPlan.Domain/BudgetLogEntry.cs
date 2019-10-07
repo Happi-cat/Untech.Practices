@@ -9,9 +9,9 @@ using Untech.Practices.DataStorage;
 namespace MyBudgetPlan.Domain
 {
 	[DataContract]
-	public abstract class BudgetLogEntry : IAggregateRoot
+	public abstract class BudgetLogEntry : IHasKey
 	{
-		private readonly List<INotification> _notifications = new List<INotification>();
+		private readonly List<IEvent> _notifications = new List<IEvent>();
 
 		private Money _amount;
 
@@ -26,7 +26,7 @@ namespace MyBudgetPlan.Domain
 		}
 
 		[IgnoreDataMember]
-		public IReadOnlyList<INotification> NotificationsToRaise => _notifications;
+		public IReadOnlyList<IEvent> NotificationsToRaise => _notifications;
 
 		[DataMember]
 		public int Key { get; private set; }
@@ -43,7 +43,8 @@ namespace MyBudgetPlan.Domain
 			get => _amount;
 			protected set
 			{
-				if (value.Amount < 0) throw new ArgumentException("Amount cannot be negative");
+				if (value.Amount < 0)
+					throw new ArgumentException("Amount cannot be negative");
 				_amount = value;
 			}
 		}
@@ -51,9 +52,9 @@ namespace MyBudgetPlan.Domain
 		[DataMember]
 		public string Description { get; protected set; }
 
-		protected void Raise(INotification notification)
+		protected void Raise(IEvent @event)
 		{
-			_notifications.Add(notification);
+			_notifications.Add(@event);
 		}
 	}
 }

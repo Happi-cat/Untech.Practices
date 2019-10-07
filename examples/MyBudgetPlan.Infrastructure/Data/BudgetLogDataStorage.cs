@@ -29,12 +29,12 @@ namespace MyBudgetPlan.Infrastructure.Data
 
 			using (var dataContext = GetContext())
 			{
-				var daos = await GetMyItems(dataContext)
+				var items = await GetMyItems(dataContext)
 					.Where(n => n.Log == request.Log)
 					.Where(n => from <= n.When && n.When < to)
 					.ToListAsync(cancellationToken);
 
-				return daos.Select(FromDao);
+				return items.Select(FromDao);
 			}
 		}
 	}

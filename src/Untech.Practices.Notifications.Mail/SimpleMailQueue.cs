@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
-using MailKit;
 using MailKit.Net.Smtp;
 using MimeKit;
 using RazorEngine;
@@ -11,7 +10,7 @@ using RazorEngine.Templating;
 
 namespace Untech.Practices.Notifications.Mail
 {
-	public class SimpleMailQueue : IMailQueue
+	public class SimpleMailQueue : INotificationQueue<Mail>, IRealtimeNotifier<Mail>
 	{
 		private readonly ITemplateManager _templateManager;
 		private readonly SimpleMailQueueOptions _options;
@@ -22,25 +21,48 @@ namespace Untech.Practices.Notifications.Mail
 			_options = options ?? throw new ArgumentNullException(nameof(options));
 		}
 
-		public async Task EnqueueAsync(Mail mail)
+		public Task EnqueueAsync(Mail notification)
 		{
-			var message = CreateMimeMessage(mail);
+			return Task.Run(() => SendAsync(notification));
+		}
+
+		public Task EnqueueAsync(IEnumerable<Mail> notifications)
+		{
+			return Task.Run(() => SendAsync(notifications));
+		}
+
+		public async Task SendAsync(Mail notification, CancellationToken cancellationToken = default)
+		{
+			var message = CreateMimeMessage(notification);
 
 			using (var client = new SmtpClient())
 			{
-				await  client.ConnectAsync(_options.Host, _options.Port, _options.UseSsl);
-				await client.SendAsync(message);
-				await client.DisconnectAsync(true);
+				await client.ConnectAsync(_options.Host, _options.Port, _options.UseSsl, cancellationToken);
+				await client.SendAsync(message, cancellationToken);
+				await client.DisconnectAsync(true, cancellationToken);
+			}
+		}
+
+		public async Task SendAsync(IEnumerable<Mail> notifications, CancellationToken cancellationToken = default)
+		{
+			var messages = notifications.Select(CreateMimeMessage).ToList();
+
+			using (var client = new SmtpClient())
+			{
+				await client.ConnectAsync(_options.Host, _options.Port, _options.UseSsl, cancellationToken);
+				foreach (MimeMessage message in messages)
+					await client.SendAsync(message, cancellationToken);
+				await client.DisconnectAsync(true, cancellationToken);
 			}
 		}
 
 		private MimeMessage CreateMimeMessage(Mail mail)
 		{
-			var modelType = mail.TemplateArguments.GetType();
+			var modelType = mail.Payload.GetType();
 
-			var subject = CompileTemplate(mail.TemplateKey + ".subject", modelType, mail.TemplateArguments);
-			var htmlBody = CompileTemplate(mail.TemplateKey + ".body.html", modelType, mail.TemplateArguments);
-			var txtBody = CompileTemplate(mail.TemplateKey + ".body.txt", modelType, mail.TemplateArguments);
+			var subject = CompileTemplate(mail.TemplateKey + ".subject", modelType, mail.Payload);
+			var htmlBody = CompileTemplate(mail.TemplateKey + ".body.html", modelType, mail.Payload);
+			var txtBody = CompileTemplate(mail.TemplateKey + ".body.txt", modelType, mail.Payload);
 
 			var message = new MimeMessage();
 
@@ -58,9 +80,9 @@ namespace Untech.Practices.Notifications.Mail
 			return message;
 		}
 
-		private string CompileTemplate(string templateKey, Type modelType, IMailTemplateArguments args)
+		private string CompileTemplate(string templateKey, Type modelType, object args)
 		{
-			var templateSource = _templateManager.Resolve(new NameOnlyTemplateKey(args.TemplateKey, ResolveType.Global, null));
+			var templateSource = _templateManager.Resolve(new NameOnlyTemplateKey(templateKey, ResolveType.Global, null));
 
 			return Engine.Razor.RunCompile(templateSource, templateKey, modelType, args);
 		}

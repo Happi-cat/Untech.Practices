@@ -12,8 +12,10 @@ namespace Untech.Practices
 	{
 		public bool Equals(TSelf other)
 		{
-			if (ReferenceEquals(this, other)) return true;
-			if (ReferenceEquals(other, null)) return false;
+			if (ReferenceEquals(this, other))
+				return true;
+			if (ReferenceEquals(other, null))
+				return false;
 
 			using (IEnumerator<object> thisValues = GetEquatableProperties().GetEnumerator())
 			using (IEnumerator<object> otherValues = other.GetEquatableProperties().GetEnumerator())
@@ -54,9 +56,12 @@ namespace Untech.Practices
 
 		public override bool Equals(object obj)
 		{
-			if (ReferenceEquals(this, obj)) return true;
-			if (ReferenceEquals(obj, null)) return false;
-			if (obj is TSelf self) return Equals(self);
+			if (ReferenceEquals(this, obj))
+				return true;
+			if (ReferenceEquals(obj, null))
+				return false;
+			if (obj is TSelf self)
+				return Equals(self);
 			return false;
 		}
 

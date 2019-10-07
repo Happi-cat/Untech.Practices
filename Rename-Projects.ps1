@@ -1,34 +1,54 @@
 param(
 	[string]$what,
-	[string]$with
+	[string]$with,
+	[string]$where = (pwd)
 )
 
 function Replace-InFile($file) {
-	$content = (gc $file); 
-	$content | %{ $_ -replace $what, $with } | out-file $file -Encoding UTF8
+	$content = (gc $file);
+	$hasMatches = $content | ?{ $_.Contains($what) }
+	if ($hasMatches) {
+		write-host "Replacing in file $_" -ForegroundColor Green
+		$content | %{ $_ -replace $what, $with } | out-file $file -Encoding UTF8
+	}
 }
 
-gci *.csproj,*.sln,*.cs -Recurse | ?{ 
-    (gc $_) | ?{ $_.Contains($what) } 
-} | %{
-    write-host "Replacing in file $_" -ForegroundColor Green
-    Replace-InFile -file $_  -what $what -with $with
+function Replace-InFileName($file) {
+	$file = gi $file;
+	if ($file.Name.Contains($what)) {
+		cd $file.Directory
+		$newFile = ($file.Name -replace $what, $with)
+		write-host "Renaming $($file.Name) into $newFile"  -ForegroundColor Green
+		mv $file.Name $newFile
+	}
 }
 
-gci src -Directory | ?{
-    $_.Name.Contains($what)
-} | %{
-    cd "$($_.FullName)\.."
-    $newDir = ($_.Name -replace $what, $with)
-    write-host "Moving dir $($_.Name) to $newDir"  -ForegroundColor Green
-    mv $_.Name $newDir
+function Replace-InCodeFiles($dir) {
+	gci $dir -include *.csproj,*.cs -exclude 'TemporaryGenerated*' -Recurse | ?{
+		-not $_.FullName.Contains('/bin/') -and -not $_.FullName.Contains('/obj/')
+	} | %{
+		Replace-InFile -file $_
+		Replace-InFileName -file $_
+	}
 }
 
-gci *.csproj,*.sln,*.cs -Recurse | ?{
-    $_.Name.Contains($what)
-} | %{ 
-    cd $_.Directory
-    $newFile = ($_.Name -replace $what, $with)
-    write-host "Renaming $($_.Name) into $newFile"  -ForegroundColor Green
-    mv $_.Name $newFile
+function Replace-InSubFolderNames($dir) {
+	gci $dir -Directory | ?{ $_.Name.Contains($what) } | %{
+		cd "$($_.FullName)\.."
+		$newDir = ($_.Name -replace $what, $with)
+		write-host "Moving dir $($_.Name) to $newDir"  -ForegroundColor Green
+		mv $_.Name $newDir
+	}
 }
+
+@( 'src', 'test', 'examples', 'tools' ) | %{ join-path $where $_ } | %{
+	Write-host "Processing $_..." -ForegroundColor Green
+	Replace-InSubFolderNames $_
+	Replace-InCodeFiles $_
+}
+
+Write-host "Processing solution files..." -ForegroundColor Green
+gci $where -include *.sln -recurse | %{
+	Replace-InFile $_ 
+}
+cd $where

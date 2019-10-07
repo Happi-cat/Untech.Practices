@@ -17,13 +17,6 @@ build:
   publish_nuget_symbols: true
   include_nuget_references: true
   verbosity: minimal
-dotnet_csproj:
-  patch: true
-  file: '**\*.csproj'
-  version: '{version}'
-  file_version: '{version}'
-  assembly_version: 1.0.0
-  informational_version: '1.0-rc{build}'
 cache:
   - packages -> **\packages.config
   - node_modules

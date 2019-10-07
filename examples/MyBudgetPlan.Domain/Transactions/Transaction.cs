@@ -43,7 +43,8 @@ namespace MyBudgetPlan.Domain.Transactions
 			bool shouldRaise = Key == 0 || !Amount.Equals(amount);
 			Amount = amount;
 
-			if (shouldRaise) Raise(new MonthLogChanged(Log, When));
+			if (shouldRaise)
+				Raise(new MonthLogChanged(Log, When));
 		}
 
 		public void UpdateDescription(string description)
@@ -57,7 +58,8 @@ namespace MyBudgetPlan.Domain.Transactions
 			CategoryKey = categoryKey;
 
 			bool shouldRaise = Key != 0 && oldValue != categoryKey;
-			if (shouldRaise) Raise(new MonthLogChanged(Log, When));
+			if (shouldRaise)
+				Raise(new MonthLogChanged(Log, When));
 		}
 	}
 }

@@ -5,7 +5,7 @@ using Untech.Practices.CQRS;
 namespace MyBudgetPlan.Infrastructure.Data
 {
 	public class BudgetLogQuery<T> : IQuery<IEnumerable<T>>
-		where T: BudgetLogEntry
+		where T : BudgetLogEntry
 	{
 		public BudgetLogQuery(BudgetLogType log, YearMonth when)
 		{
