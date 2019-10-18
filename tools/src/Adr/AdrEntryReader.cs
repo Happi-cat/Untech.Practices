@@ -78,12 +78,4 @@ namespace Adr
 			while ((currentLine = _reader.ReadLine()) != null) yield return currentLine;
 		}
 	}
-
-	public static class StringExtensions
-	{
-		public static string TrimNewLines(this string str)
-		{
-			return str != null ? str.Trim('\n', '\r') : null;
-		}
-	}
 }
