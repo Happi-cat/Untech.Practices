@@ -4,9 +4,9 @@ using System.Runtime.Serialization;
 namespace Untech.Practices.Localization
 {
 	[DataContract]
-	public struct LocalizableString : ILocalizableString, IEquatable<LocalizableString>
+	public struct LocalizedString : ILocalizableString, IEquatable<LocalizedString>
 	{
-		public LocalizableString(string reference, string source)
+		public LocalizedString(string reference, string source)
 		{
 			Reference = reference;
 			Source = source;
@@ -20,12 +20,12 @@ namespace Untech.Practices.Localization
 
 		public string Localize(ILocalizationContext context)
 		{
-			return context.GetSource(Source).GetString(Reference);
+			return Reference;
 		}
 
 		public string Localize(ILocalizationContext context, params object[] args)
 		{
-			return string.Format(Localize(context), args);
+			return string.Format(Reference, args);
 		}
 
 		public override bool Equals(object obj)
@@ -34,19 +34,19 @@ namespace Untech.Practices.Localization
 			return obj is LocalizableString other && Equals(other);
 		}
 
-		public bool Equals(LocalizableString other)
+		public bool Equals(LocalizedString other)
 		{
-			return Reference == other.Reference && Source == other.Source;
+			return Reference == other.Reference;
 		}
 
 		public override int GetHashCode()
 		{
-			return Tuple.Create(Reference, Source).GetHashCode();
+			return Tuple.Create(Reference).GetHashCode();
 		}
 
 		public override string ToString()
 		{
-			return $"[l18n:{Source}:{Reference}]";
+			return Reference;
 		}
 	}
 }
