@@ -6,26 +6,22 @@ namespace Untech.Practices.Localization
 	[DataContract]
 	public struct LocalizedString : ILocalizableString, IEquatable<LocalizedString>
 	{
-		public LocalizedString(string reference, string source)
+		public LocalizedString(string translation)
 		{
-			Reference = reference;
-			Source = source;
+			Translation = translation;
 		}
 
 		[DataMember]
-		public string Reference { get; }
-
-		[DataMember]
-		public string Source { get; }
+		public string Translation { get; }
 
 		public string Localize(ILocalizationContext context)
 		{
-			return Reference;
+			return Translation;
 		}
 
 		public string Localize(ILocalizationContext context, params object[] args)
 		{
-			return string.Format(Reference, args);
+			return string.Format(Translation, args);
 		}
 
 		public override bool Equals(object obj)
@@ -36,17 +32,17 @@ namespace Untech.Practices.Localization
 
 		public bool Equals(LocalizedString other)
 		{
-			return Reference == other.Reference;
+			return string.Equals(Translation, other.Translation, StringComparison.Ordinal);
 		}
 
 		public override int GetHashCode()
 		{
-			return Tuple.Create(Reference).GetHashCode();
+			return Tuple.Create(Translation).GetHashCode();
 		}
 
 		public override string ToString()
 		{
-			return Reference;
+			return Translation;
 		}
 	}
 }

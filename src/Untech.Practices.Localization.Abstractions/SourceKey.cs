@@ -1,17 +1,21 @@
 using System;
 using System.Globalization;
+using JetBrains.Annotations;
 
 namespace Untech.Practices.Localization
 {
 	public struct SourceKey : IEquatable<SourceKey>
 	{
-		public SourceKey(string source, CultureInfo culture)
+		public SourceKey([CanBeNull]string source, [CanBeNull]CultureInfo culture)
 		{
 			Source = (source ?? "").ToLower();
 			Culture = culture ?? CultureInfo.InvariantCulture;
 		}
 
+		[NotNull]
 		public string Source { get; }
+
+		[NotNull]
 		public CultureInfo Culture { get; }
 
 		public override bool Equals(object obj)
@@ -22,7 +26,8 @@ namespace Untech.Practices.Localization
 
 		public bool Equals(SourceKey other)
 		{
-			return Source == other.Source && Equals(Culture, other.Culture);
+			return string.Equals(Source, other.Source, StringComparison.Ordinal)
+				&& Equals(Culture, other.Culture);
 		}
 
 		public override int GetHashCode()
