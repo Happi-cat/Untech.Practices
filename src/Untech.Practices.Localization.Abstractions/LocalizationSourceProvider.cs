@@ -5,8 +5,6 @@ using System.Linq;
 
 namespace Untech.Practices.Localization
 {
-	using SourceKey = Tuple<string, CultureInfo>;
-
 	public class LocalizationSourceProvider : ILocalizationSourceProvider
 	{
 		private readonly IReadOnlyDictionary<SourceKey, ILocalizationSource> _sources;

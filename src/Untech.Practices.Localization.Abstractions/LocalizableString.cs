@@ -36,12 +36,13 @@ namespace Untech.Practices.Localization
 
 		public bool Equals(LocalizableString other)
 		{
-			return Reference == other.Reference && Source == other.Source;
+			return string.Equals(Reference, other.Reference, StringComparison.Ordinal)
+				&& string.Equals(Source , other.Source, StringComparison.OrdinalIgnoreCase);
 		}
 
 		public override int GetHashCode()
 		{
-			return Tuple.Create(Reference, Source).GetHashCode();
+			return Tuple.Create(Reference, Source.ToLower()).GetHashCode();
 		}
 
 		public override string ToString()

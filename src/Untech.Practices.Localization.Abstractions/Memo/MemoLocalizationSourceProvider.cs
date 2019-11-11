@@ -4,8 +4,6 @@ using System.Globalization;
 
 namespace Untech.Practices.Localization.Memo
 {
-	using SourceKey = Tuple<string, CultureInfo>;
-
 	public class MemoLocalizationSourceProvider : ILocalizationSourceProvider
 	{
 		private readonly ILocalizationSourceProvider _sourceProvider;
