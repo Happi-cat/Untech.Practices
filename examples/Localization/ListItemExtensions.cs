@@ -7,13 +7,13 @@ namespace Localization
 {
 	public static class ListItemExtensions
 	{
-		public static ReadOnlyCollection<LocalizedListItem> Localize(this IEnumerable<ListItem> items,
+		public static ReadOnlyCollection<LocalizedListItem> Localize(this IEnumerable<LocalizableListItem> items,
 			ILocalizationContext context)
 		{
 			return items.Select(i => Localize(i, context)).ToList().AsReadOnly();
 		}
 
-		public static LocalizedListItem Localize(this ListItem item, ILocalizationContext context)
+		public static LocalizedListItem Localize(this LocalizableListItem item, ILocalizationContext context)
 		{
 			return new LocalizedListItem
 			{

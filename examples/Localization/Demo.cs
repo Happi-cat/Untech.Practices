@@ -8,14 +8,14 @@ namespace Localization
 	{
 		public static void Main()
 		{
-			var sourceProvider = Localizations.Load();
-			var model = ListItem.Create();
+			var localizationSource = Localizations.Load();
+			var model = LocalizableListItem.Create();
 
 			var languages = new[] { "en", "en-gb", "ru", "ru-ru" };
 
 			var localizedModels = languages
 				.Select(l => new CultureInfo(l))
-				.Select(c => new LocalizationContext(c, sourceProvider))
+				.Select(c => new LocalizationContext(c, localizationSource))
 				.Select(ctx => model.Localize(ctx))
 				.ToList();
 		}

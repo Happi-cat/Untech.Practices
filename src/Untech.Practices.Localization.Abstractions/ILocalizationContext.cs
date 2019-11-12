@@ -1,7 +1,9 @@
-﻿namespace Untech.Practices.Localization
+﻿using Untech.Practices.Localization.Sources;
+
+namespace Untech.Practices.Localization
 {
 	public interface ILocalizationContext
 	{
-		ILocalizationSource GetSource(string source);
+		ILocalizationPartition GetPartition(string key);
 	}
 }

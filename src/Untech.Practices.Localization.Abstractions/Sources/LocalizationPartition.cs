@@ -2,26 +2,26 @@
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace Untech.Practices.Localization
+namespace Untech.Practices.Localization.Sources
 {
-	public class LocalizationSource : ILocalizationSource
+	public class LocalizationPartition : ILocalizationPartition
 	{
 		private readonly IReadOnlyDictionary<string, string> _translations;
 
-		public LocalizationSource(string source, CultureInfo culture,
+		public LocalizationPartition(string key, CultureInfo culture,
 			IReadOnlyDictionary<string, string> translations)
 		{
-			Source = source;
+			Key = key;
 			Culture = culture;
 			_translations = translations ?? throw new ArgumentNullException(nameof(translations));
 		}
 
-		public string Source { get; }
+		public string Key { get; }
 		public CultureInfo Culture { get; }
 
-		public string GetString(string reference)
+		public string GetString(string key)
 		{
-			return _translations.TryGetValue(reference, out var translation) ? translation : null;
+			return _translations.TryGetValue(key, out var translation) ? translation : null;
 		}
 	}
 }
