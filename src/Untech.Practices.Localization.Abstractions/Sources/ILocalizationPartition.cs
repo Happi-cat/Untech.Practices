@@ -4,10 +4,10 @@ namespace Untech.Practices.Localization.Sources
 {
 	public interface ILocalizationPartition
 	{
-		string Key { get; }
+		string Name { get; }
 
 		CultureInfo Culture { get; }
 
-		string GetString(string key);
+		string GetString(string name);
 	}
 }

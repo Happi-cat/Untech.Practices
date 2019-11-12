@@ -7,26 +7,26 @@ namespace Untech.Practices.Localization.Sources.Memo
 	public class MemoLocalizationSource : ILocalizationSource
 	{
 		private readonly ILocalizationSource _source;
-		private readonly IDictionary<PartitionKey, ILocalizationPartition> _sources;
+		private readonly IDictionary<PartitionKey, ILocalizationPartition> _partitions;
 
 		public MemoLocalizationSource(ILocalizationSource source)
 		{
 			_source = source ?? throw new ArgumentNullException(nameof(source));
-			_sources = new Dictionary<PartitionKey, ILocalizationPartition>();
+			_partitions = new Dictionary<PartitionKey, ILocalizationPartition>();
 		}
 
-		public ILocalizationPartition GetPartition(string key, CultureInfo culture)
+		public ILocalizationPartition GetPartition(string name, CultureInfo culture)
 		{
-			return _sources.TryGetValue(new PartitionKey(key, culture), out ILocalizationPartition localizationSource)
-				? localizationSource
-				: InitPartition(key, culture);
+			return _partitions.TryGetValue(new PartitionKey(name, culture), out ILocalizationPartition partition)
+				? partition
+				: LoadAndRegisterPartition(name, culture);
 		}
 
-		private ILocalizationPartition InitPartition(string key, CultureInfo culture)
+		private ILocalizationPartition LoadAndRegisterPartition(string name, CultureInfo culture)
 		{
-			var localizationSource = _source.GetPartition(key, culture);
+			var localizationSource = _source.GetPartition(name, culture);
 
-			_sources.Add(new PartitionKey(key, culture), localizationSource);
+			_partitions.Add(new PartitionKey(name, culture), localizationSource);
 
 			return localizationSource;
 		}

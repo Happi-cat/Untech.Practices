@@ -6,21 +6,21 @@ namespace Untech.Practices.Localization
 	[DataContract]
 	public struct LocalizableString : ILocalizableString, IEquatable<LocalizableString>
 	{
-		public LocalizableString(string key, string partitionKey)
+		public LocalizableString(string name, string partition)
 		{
-			Key = key;
-			PartitionKey = partitionKey;
+			Name = name;
+			Partition = partition;
 		}
 
 		[DataMember]
-		public string Key { get; }
+		public string Name { get; }
 
 		[DataMember]
-		public string PartitionKey { get; }
+		public string Partition { get; }
 
 		public string Localize(ILocalizationContext context)
 		{
-			return context.GetPartition(PartitionKey).GetString(Key);
+			return context.GetPartition(Partition).GetString(Name);
 		}
 
 		public string Localize(ILocalizationContext context, params object[] args)
@@ -36,18 +36,18 @@ namespace Untech.Practices.Localization
 
 		public bool Equals(LocalizableString other)
 		{
-			return string.Equals(Key, other.Key, StringComparison.Ordinal)
-				&& string.Equals(PartitionKey , other.PartitionKey, StringComparison.OrdinalIgnoreCase);
+			return string.Equals(Name, other.Name, StringComparison.Ordinal)
+				&& string.Equals(Partition , other.Partition, StringComparison.OrdinalIgnoreCase);
 		}
 
 		public override int GetHashCode()
 		{
-			return Tuple.Create(Key, PartitionKey.ToLower()).GetHashCode();
+			return Tuple.Create(Name, Partition.ToLower()).GetHashCode();
 		}
 
 		public override string ToString()
 		{
-			return $"[l18n:{PartitionKey}:{Key}]";
+			return $"[l18n:{Partition}:{Name}]";
 		}
 	}
 }

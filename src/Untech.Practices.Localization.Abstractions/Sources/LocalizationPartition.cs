@@ -8,20 +8,20 @@ namespace Untech.Practices.Localization.Sources
 	{
 		private readonly IReadOnlyDictionary<string, string> _translations;
 
-		public LocalizationPartition(string key, CultureInfo culture,
+		public LocalizationPartition(string name, CultureInfo culture,
 			IReadOnlyDictionary<string, string> translations)
 		{
-			Key = key;
+			Name = name;
 			Culture = culture;
 			_translations = translations ?? throw new ArgumentNullException(nameof(translations));
 		}
 
-		public string Key { get; }
+		public string Name { get; }
 		public CultureInfo Culture { get; }
 
-		public string GetString(string key)
+		public string GetString(string name)
 		{
-			return _translations.TryGetValue(key, out var translation) ? translation : null;
+			return _translations.TryGetValue(name, out var translation) ? translation : null;
 		}
 	}
 }

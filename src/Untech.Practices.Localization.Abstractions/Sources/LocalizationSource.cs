@@ -6,20 +6,20 @@ namespace Untech.Practices.Localization.Sources
 {
 	public class LocalizationSource : ILocalizationSource
 	{
-		private readonly IReadOnlyDictionary<PartitionKey, ILocalizationPartition> _sources;
+		private readonly IReadOnlyDictionary<PartitionKey, ILocalizationPartition> _partitions;
 
-		public LocalizationSource(IEnumerable<ILocalizationPartition> sources)
+		public LocalizationSource(IEnumerable<ILocalizationPartition> partitions)
 		{
-			_sources = sources.ToDictionary(
-				n => new PartitionKey(n.Key, n.Culture),
+			_partitions = partitions.ToDictionary(
+				n => new PartitionKey(n.Name, n.Culture),
 				n => n
 			);
 		}
 
-		public ILocalizationPartition GetPartition(string key, CultureInfo culture)
+		public ILocalizationPartition GetPartition(string name, CultureInfo culture)
 		{
-			return _sources.TryGetValue(new PartitionKey(key, culture), out var localizationSource)
-				? localizationSource
+			return _partitions.TryGetValue(new PartitionKey(name, culture), out var partition)
+				? partition
 				: null;
 		}
 	}

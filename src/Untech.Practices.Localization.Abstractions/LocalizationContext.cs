@@ -14,14 +14,14 @@ namespace Untech.Practices.Localization
 			_source = source;
 		}
 
-		public ILocalizationPartition GetPartition(string key)
+		public ILocalizationPartition GetPartition(string name)
 		{
 			var currentCulture = _culture ?? CultureInfo.InvariantCulture;
 			do
 			{
-				var localizationSource = _source.GetPartition(key, currentCulture);
-				if (localizationSource != null || currentCulture.Equals(currentCulture.Parent))
-					return localizationSource;
+				var partition = _source.GetPartition(name, currentCulture);
+				if (partition != null || currentCulture.Equals(currentCulture.Parent))
+					return partition;
 				currentCulture = currentCulture.Parent;
 			} while (true);
 		}

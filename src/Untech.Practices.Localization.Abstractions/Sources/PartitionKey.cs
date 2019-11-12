@@ -6,14 +6,14 @@ namespace Untech.Practices.Localization.Sources
 {
 	public struct PartitionKey : IEquatable<PartitionKey>
 	{
-		public PartitionKey([CanBeNull]string key, [CanBeNull]CultureInfo culture)
+		public PartitionKey([CanBeNull]string name, [CanBeNull]CultureInfo culture)
 		{
-			Key = (key ?? "").ToLower();
+			Name = (name ?? "").ToLower();
 			Culture = culture ?? CultureInfo.InvariantCulture;
 		}
 
 		[NotNull]
-		public string Key { get; }
+		public string Name { get; }
 
 		[NotNull]
 		public CultureInfo Culture { get; }
@@ -26,18 +26,18 @@ namespace Untech.Practices.Localization.Sources
 
 		public bool Equals(PartitionKey other)
 		{
-			return string.Equals(Key, other.Key, StringComparison.Ordinal)
+			return string.Equals(Name, other.Name, StringComparison.Ordinal)
 				&& Equals(Culture, other.Culture);
 		}
 
 		public override int GetHashCode()
 		{
-			return Tuple.Create(Key, Culture).GetHashCode();
+			return Tuple.Create(Name, Culture).GetHashCode();
 		}
 
 		public override string ToString()
 		{
-			return $"({Key}, {Culture.Name})";
+			return $"({Name}, {Culture.Name})";
 		}
 	}
 }

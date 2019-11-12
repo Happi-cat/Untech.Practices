@@ -4,6 +4,6 @@ namespace Untech.Practices.Localization
 {
 	public interface ILocalizationContext
 	{
-		ILocalizationPartition GetPartition(string key);
+		ILocalizationPartition GetPartition(string name);
 	}
 }
