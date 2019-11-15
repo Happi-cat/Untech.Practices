@@ -47,7 +47,7 @@ namespace Untech.Practices.Localization
 
 		public override string ToString()
 		{
-			return $"[l18n:{Partition}:{Name}]";
+			return $"[l10n:{Partition}:{Name}]";
 		}
 	}
 }
