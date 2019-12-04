@@ -20,12 +20,12 @@ namespace Untech.Practices.Localization
 
 		public string Localize(ILocalizationContext context)
 		{
-			return context.GetPartition(Partition).GetString(Name);
+			return context.Localize(Partition, Name);
 		}
 
 		public string Localize(ILocalizationContext context, params object[] args)
 		{
-			return string.Format(Localize(context), args);
+			return context.Localize(Partition, Name, args);
 		}
 
 		public override bool Equals(object obj)
