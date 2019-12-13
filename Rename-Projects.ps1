@@ -1,7 +1,8 @@
 param(
 	[string]$what,
 	[string]$with,
-	[string]$where = (pwd)
+	[string]$where = (pwd),
+	[string[]]$filter = @( 'src', 'tests', 'examples', 'tools' )
 )
 
 function Replace-InFile($file) {
@@ -24,7 +25,7 @@ function Replace-InFileName($file) {
 }
 
 function Replace-InCodeFiles($dir) {
-	gci $dir -include *.csproj,*.cs -exclude 'TemporaryGenerated*' -Recurse | ?{
+	gci $dir -include *.csproj,*.cs,*.props,*.targets -exclude 'TemporaryGenerated*' -Recurse | ?{
 		-not $_.FullName.Contains('/bin/') -and -not $_.FullName.Contains('/obj/')
 	} | %{
 		Replace-InFile -file $_
@@ -41,7 +42,7 @@ function Replace-InSubFolderNames($dir) {
 	}
 }
 
-@( 'src', 'test', 'examples', 'tools' ) | %{ join-path $where $_ } | %{
+$filter | %{ join-path $where $_ } | %{
 	Write-host "Processing $_..." -ForegroundColor Green
 	Replace-InSubFolderNames $_
 	Replace-InCodeFiles $_
