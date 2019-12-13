@@ -1,7 +1,7 @@
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace Untech.Practices.DataStorage.Cache
+namespace Untech.Practices.Persistence.Cache
 {
 	/// <summary>
 	///     Represents dummy cache storage.

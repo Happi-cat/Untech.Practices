@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Untech.Practices.DataStorage
+namespace Untech.Practices.Persistence
 {
 	/// <summary>
 	///     Represents errors that occur when <see cref="IHasKey{TKey}" /> cannot be found.

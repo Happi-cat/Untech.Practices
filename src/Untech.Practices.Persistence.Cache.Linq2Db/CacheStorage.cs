@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using LinqToDB;
 
-namespace Untech.Practices.DataStorage.Cache.Linq2Db
+namespace Untech.Practices.Persistence.Cache.Linq2Db
 {
 	public class CacheStorage : ICacheStorage
 	{

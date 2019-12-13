@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using Untech.Practices.DataStorage;
+using Untech.Practices.Persistence;
 
 namespace MyParcels.Domain
 {

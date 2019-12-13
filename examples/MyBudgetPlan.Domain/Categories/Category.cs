@@ -1,6 +1,6 @@
-using System;
+﻿using System;
 using System.Runtime.Serialization;
-using Untech.Practices.DataStorage;
+using Untech.Practices.Persistence;
 
 namespace MyBudgetPlan.Domain.Categories
 {

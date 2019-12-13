@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Untech.Practices.DataStorage.Cache
+namespace Untech.Practices.Persistence.Cache
 {
 	/// <summary>
 	/// Represents known errors that occur during work with cache.

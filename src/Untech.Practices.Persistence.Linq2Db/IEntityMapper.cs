@@ -1,4 +1,4 @@
-namespace Untech.Practices.DataStorage.Linq2Db
+﻿namespace Untech.Practices.Persistence.Linq2Db
 {
 	public interface IEntityMapper<TEntity, TData, TKey>
 		where TEntity : IHasKey<TKey>

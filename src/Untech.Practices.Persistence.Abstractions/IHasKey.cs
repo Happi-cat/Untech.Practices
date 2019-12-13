@@ -1,4 +1,4 @@
-namespace Untech.Practices.DataStorage
+﻿namespace Untech.Practices.Persistence
 {
 	/// <summary>
 	///     Used as a marker for entities that can define and used own <see cref="IDataStorage{T,TKey}" />.

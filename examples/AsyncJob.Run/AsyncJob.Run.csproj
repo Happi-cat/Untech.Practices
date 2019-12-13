@@ -23,7 +23,7 @@
     <ProjectReference Include="..\..\src\Untech.AsyncJob.Transports.Scheduled\Untech.AsyncJob.Transports.Scheduled.csproj" />
     <ProjectReference Include="..\..\src\Untech.Practices.CQRS.Abstractions\Untech.Practices.CQRS.Abstractions.csproj" />
     <ProjectReference Include="..\..\src\Untech.Practices.CQRS\Untech.Practices.CQRS.csproj" />
-    <ProjectReference Include="..\..\src\Untech.Practices.DataStorage.Cache.Abstractions\Untech.Practices.DataStorage.Cache.Abstractions.csproj" />
+    <ProjectReference Include="..\..\src\Untech.Practices.Persistence.Cache.Abstractions\Untech.Practices.Persistence.Cache.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

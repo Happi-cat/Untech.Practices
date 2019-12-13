@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,7 +11,7 @@ using NodaTime;
 using Untech.Practices.CQRS;
 using Untech.Practices.CQRS.Dispatching;
 using Untech.Practices.CQRS.Handlers;
-using Untech.Practices.DataStorage.Cache;
+using Untech.Practices.Persistence.Cache;
 using Untech.Practices.UserContext;
 
 namespace MyBudgetPlan.Infrastructure

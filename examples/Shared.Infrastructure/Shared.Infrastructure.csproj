@@ -9,7 +9,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\Untech.Practices.DataStorage.Abstractions\Untech.Practices.DataStorage.Abstractions.csproj" />
+      <ProjectReference Include="..\..\src\Untech.Practices.Persistence.Abstractions\Untech.Practices.Persistence.Abstractions.csproj" />
       <ProjectReference Include="..\..\src\Untech.Practices.UserContext.Abstractions\Untech.Practices.UserContext.Abstractions.csproj" />
     </ItemGroup>
 

@@ -1,5 +1,5 @@
-using System.Runtime.Serialization;
-using Untech.Practices.DataStorage;
+﻿using System.Runtime.Serialization;
+using Untech.Practices.Persistence;
 
 namespace MyParcels.Domain
 {

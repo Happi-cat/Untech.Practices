@@ -6,7 +6,7 @@ using Untech.Practices;
 using Untech.Practices.CQRS;
 using Untech.Practices.CQRS.Dispatching;
 using Untech.Practices.CQRS.Handlers;
-using Untech.Practices.DataStorage;
+using Untech.Practices.Persistence;
 
 namespace MyBudgetPlan.Infrastructure
 {

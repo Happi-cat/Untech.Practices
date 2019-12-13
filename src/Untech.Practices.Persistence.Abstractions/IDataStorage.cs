@@ -1,7 +1,7 @@
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace Untech.Practices.DataStorage
+namespace Untech.Practices.Persistence
 {
 	/// <summary>
 	///     Defines async CRUD methods for entities that inherit <see cref="IHasKey{TKey}" />.

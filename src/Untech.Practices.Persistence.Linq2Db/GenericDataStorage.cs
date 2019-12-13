@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -6,7 +6,7 @@ using JetBrains.Annotations;
 using LinqToDB;
 using LinqToDB.Mapping;
 
-namespace Untech.Practices.DataStorage.Linq2Db
+namespace Untech.Practices.Persistence.Linq2Db
 {
 	[PublicAPI]
 	public class GenericDataStorage<T> : GenericDataStorage<T, int>, IDataStorage<T>
