@@ -21,9 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.Monads", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.CQRS.Abstractions", "src\Untech.Practices.CQRS.Abstractions\Untech.Practices.CQRS.Abstractions.csproj", "{32B9F698-6A79-44B6-BA6B-CC1EE821A1A8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.DataStorage.Abstractions", "src\Untech.Practices.DataStorage.Abstractions\Untech.Practices.DataStorage.Abstractions.csproj", "{F17CBCEA-5F17-4CBE-B6D3-D64CE84F5E91}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.Persistence.Abstractions", "src\Untech.Practices.Persistence.Abstractions\Untech.Practices.Persistence.Abstractions.csproj", "{F17CBCEA-5F17-4CBE-B6D3-D64CE84F5E91}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.DataStorage.Cache.Abstractions", "src\Untech.Practices.DataStorage.Cache.Abstractions\Untech.Practices.DataStorage.Cache.Abstractions.csproj", "{C8E625B7-3F98-4897-B7A2-99D79F9F3A12}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.Persistence.Cache.Abstractions", "src\Untech.Practices.Persistence.Cache.Abstractions\Untech.Practices.Persistence.Cache.Abstractions.csproj", "{C8E625B7-3F98-4897-B7A2-99D79F9F3A12}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.ObjectMapping.Abstractions", "src\Untech.Practices.ObjectMapping.Abstractions\Untech.Practices.ObjectMapping.Abstractions.csproj", "{EFC54E73-51C6-49F2-AAED-6B2AD4621113}"
 EndProject
@@ -77,11 +77,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.AsyncJob.Transports.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.AsyncJob.Features.CQRS", "src\Untech.AsyncJob.Features.CQRS\Untech.AsyncJob.Features.CQRS.csproj", "{F12AB52C-60F3-416A-BA03-E3628FBDB69F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.DataStorage.Linq2Db", "src\Untech.Practices.DataStorage.Linq2Db\Untech.Practices.DataStorage.Linq2Db.csproj", "{D1FE84C1-85F0-4CBB-B7C4-B3CBD2B49822}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.Persistence.Linq2Db", "src\Untech.Practices.Persistence.Linq2Db\Untech.Practices.Persistence.Linq2Db.csproj", "{D1FE84C1-85F0-4CBB-B7C4-B3CBD2B49822}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.DataStorage.Cache.Linq2Db", "src\Untech.Practices.DataStorage.Cache.Linq2Db\Untech.Practices.DataStorage.Cache.Linq2Db.csproj", "{B434456D-7A68-4197-955A-64C26836F270}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.Persistence.Cache.Linq2Db", "src\Untech.Practices.Persistence.Cache.Linq2Db\Untech.Practices.Persistence.Cache.Linq2Db.csproj", "{B434456D-7A68-4197-955A-64C26836F270}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.DataStorage.Tests", "tests\Untech.Practices.DataStorage.Tests\Untech.Practices.DataStorage.Tests.csproj", "{14462AA0-6140-45DB-B2D4-70EEE35CB661}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.Persistence.Tests", "tests\Untech.Practices.Persistence.Tests\Untech.Practices.Persistence.Tests.csproj", "{14462AA0-6140-45DB-B2D4-70EEE35CB661}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.AsyncJob.Transports.InProcess", "src\Untech.AsyncJob.Transports.InProcess\Untech.AsyncJob.Transports.InProcess.csproj", "{C34401F8-517B-4661-AEFA-7A6DDF22ACE4}"
 EndProject

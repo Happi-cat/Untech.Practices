@@ -1,8 +1,8 @@
-using System;
+﻿using System;
 using System.Text.Json.Serialization;
 using LinqToDB.Mapping;
 
-namespace Untech.Practices.DataStorage.Cache.Linq2Db
+namespace Untech.Practices.Persistence.Cache.Linq2Db
 {
 	[Table("Entries", Schema = "cache")]
 	public class CacheEntry

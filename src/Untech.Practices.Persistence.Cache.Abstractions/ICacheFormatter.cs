@@ -1,4 +1,4 @@
-namespace Untech.Practices.DataStorage.Cache
+﻿namespace Untech.Practices.Persistence.Cache
 {
 	public interface ICacheFormatter
 	{

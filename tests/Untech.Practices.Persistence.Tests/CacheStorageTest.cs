@@ -1,13 +1,13 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Threading.Tasks;
 using LinqToDB.Data;
 using LinqToDB.DataProvider.SQLite;
-using Untech.Practices.DataStorage.Cache;
-using Untech.Practices.DataStorage.Cache.Linq2Db;
+using Untech.Practices.Persistence.Cache;
+using Untech.Practices.Persistence.Cache.Linq2Db;
 using Xunit;
 
-namespace Untech.Practices.DataStorage
+namespace Untech.Practices.Persistence
 {
 	public class CacheStorageTest : IDisposable
 	{

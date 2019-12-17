@@ -1,37 +1,35 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Threading.Tasks;
 using LinqToDB.Data;
 using LinqToDB.DataProvider.SQLite;
 using LinqToDB.Mapping;
-using Untech.Practices.DataStorage.Linq2Db;
+using Untech.Practices.Persistence.Linq2Db;
 using Xunit;
 
-namespace Untech.Practices.DataStorage
+namespace Untech.Practices.Persistence
 {
-	public class GenericDataStorageTest : IDisposable
+	public class GenericDataStorageWithIdentityTest : IDisposable
 	{
 		private readonly string _dbFileName;
-		private readonly IDataStorage<Entity, Guid> _dataStorage;
+		private readonly IDataStorage<Entity, int> _dataStorage;
 
-		public GenericDataStorageTest()
+		public GenericDataStorageWithIdentityTest()
 		{
-			_dbFileName = $"{nameof(GenericDataStorageTest)}.temp.db";
-			_dataStorage = new GenericDataStorage<Entity, Guid>(CreateContext);
+			_dbFileName = $"{nameof(GenericDataStorageWithIdentityTest)}.temp.db";
+			_dataStorage = new GenericDataStorage<Entity, int>(CreateContext);
 		}
 
 		[Fact]
-		public async Task CreateAsync_ReturnsObjectWithSameId()
+		public async Task CreateAsync_ReturnsObjectWithIncrementedIdentity()
 		{
-			var initialized = new Entity();
+			var created = await _dataStorage.CreateAsync(new Entity());
 
-			var created = await _dataStorage.CreateAsync(initialized);
-
-			Assert.Equal(initialized.Key, created.Key);
+			Assert.NotEqual(0, created.Key);
 		}
 
 		[Fact]
-		public async Task UpdateAsync_ReturnsUpdatedObject()
+		public async Task UpdateAsync_ReturnsUpdateAsyncObject()
 		{
 			var created = await _dataStorage.CreateAsync(new Entity());
 
@@ -65,14 +63,14 @@ namespace Untech.Practices.DataStorage
 		[Fact]
 		public async Task GetAsync_Throws_WhenNotFound()
 		{
-			await Assert.ThrowsAsync<ItemNotFoundException>(() => _dataStorage.GetAsync(Guid.NewGuid()));
+			await Assert.ThrowsAsync<ItemNotFoundException>(() => _dataStorage.GetAsync(-1));
 		}
 
 		[Table("entities")]
-		private class Entity : IHasKey<Guid>
+		private class Entity : IHasKey
 		{
-			[Column, PrimaryKey]
-			public Guid Key { get; set; } = Guid.NewGuid();
+			[Column, PrimaryKey, Identity]
+			public int Key { get; set; }
 
 			[Column, Nullable]
 			public string Value { get; set; }

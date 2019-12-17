@@ -1,10 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Runtime.Serialization;
 using Untech.Practices;
 using Untech.Practices.CQRS;
-using Untech.Practices.DataStorage;
+using Untech.Practices.Persistence;
 
 namespace MyBudgetPlan.Domain
 {

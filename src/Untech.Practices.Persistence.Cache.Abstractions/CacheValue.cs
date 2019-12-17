@@ -1,4 +1,4 @@
-namespace Untech.Practices.DataStorage.Cache
+﻿namespace Untech.Practices.Persistence.Cache
 {
 	/// <summary>
 	///     Wraps cached object. Used for better non-nullable structs handling.

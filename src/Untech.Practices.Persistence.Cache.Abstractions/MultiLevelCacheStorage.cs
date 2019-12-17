@@ -1,9 +1,9 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Untech.Practices.DataStorage.Cache
+namespace Untech.Practices.Persistence.Cache
 {
 	/// <summary>
 	///     Provides ability to use multi-level <see cref="ICacheStorage" />.

@@ -1,5 +1,0 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <RootNamespace>Untech.Practices.DataStorage.Cache</RootNamespace>
-  </PropertyGroup>
-</Project>

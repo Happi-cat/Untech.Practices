@@ -1,10 +1,10 @@
-using System;
+﻿using System;
 using System.Data;
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.Mapping;
 
-namespace Untech.Practices.DataStorage
+namespace Untech.Practices.Persistence
 {
 	public static class DataConnectionExtensions
 	{
