@@ -1,3 +1,5 @@
+using System;
+using JetBrains.Annotations;
 using Microsoft.Extensions.ObjectPool;
 
 namespace Untech.Practices.ObjectPool
@@ -7,10 +9,16 @@ namespace Untech.Practices.ObjectPool
 		private readonly IPooledObjectPolicy<T> _policy;
 		private readonly IPooledObjectDisposePolicy<T> _disposePolicy;
 
-		public NullObjectPool(IPooledObjectPolicy<T> policy, IPooledObjectDisposePolicy<T> disposePolicy)
+		public NullObjectPool([NotNull] IPooledObjectPolicy<T> policy)
+			: this(policy, new DefaultPooledObjectDisposePolicy<T>())
 		{
-			_policy = policy;
-			_disposePolicy = disposePolicy;
+		}
+
+		public NullObjectPool([NotNull] IPooledObjectPolicy<T> policy,
+			[NotNull] IPooledObjectDisposePolicy<T> disposePolicy)
+		{
+			_policy = policy ?? throw new ArgumentNullException(nameof(policy));
+			_disposePolicy = disposePolicy ?? throw new ArgumentNullException(nameof(disposePolicy));
 		}
 
 		public override T Get()

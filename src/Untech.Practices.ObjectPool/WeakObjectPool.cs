@@ -1,20 +1,32 @@
 using System;
+using JetBrains.Annotations;
 using Microsoft.Extensions.ObjectPool;
 
 namespace Untech.Practices.ObjectPool
 {
-	public class WeakObjectPool<T> : ObjectPool<T> where T : class
+	public class WeakObjectPool<T> : ObjectPool<T>, IDisposable where T : class
 	{
 		private readonly ObjectPool<WeakReference<T>> _objects;
 
-		public WeakObjectPool(IPooledObjectPolicy<T> policy, int maximumRetained)
+		public WeakObjectPool([NotNull] IPooledObjectPolicy<T> policy, int maximumRetained)
+			: this(policy, new DefaultPooledObjectDisposePolicy<T>(), maximumRetained)
 		{
-			var wrappedPolicy = new Policy(policy);
+		}
+
+		public WeakObjectPool([NotNull] IPooledObjectPolicy<T> policy,
+			[NotNull] IPooledObjectDisposePolicy<T> disposePolicy,
+			int maximumRetained)
+		{
+			if (policy == null) throw new ArgumentNullException(nameof(policy));
+			if (disposePolicy == null) throw new ArgumentNullException(nameof(disposePolicy));
+
+			var wrappedPolicy = new PolicyAdapter(policy);
+			var wrappedDisposePolicy = new DisposePolicyAdapter(disposePolicy);
 
 			_objects = new TieredObjectPool<WeakReference<T>>(
 				wrappedPolicy,
 				maximumRetained,
-				new NullObjectPool<WeakReference<T>>(wrappedPolicy, wrappedPolicy)
+				new NullObjectPool<WeakReference<T>>(wrappedPolicy, wrappedDisposePolicy)
 			);
 		}
 
@@ -33,11 +45,16 @@ namespace Untech.Practices.ObjectPool
 			_objects.Return(new WeakReference<T>(item));
 		}
 
-		private class Policy : PooledObjectPolicy<WeakReference<T>>, IPooledObjectDisposePolicy<WeakReference<T>>
+		public void Dispose()
+		{
+			Utils.TryDispose(_objects);
+		}
+
+		private class PolicyAdapter : PooledObjectPolicy<WeakReference<T>>
 		{
 			private readonly IPooledObjectPolicy<T> _policy;
 
-			public Policy(IPooledObjectPolicy<T> policy)
+			public PolicyAdapter(IPooledObjectPolicy<T> policy)
 			{
 				_policy = policy;
 			}
@@ -51,12 +68,22 @@ namespace Untech.Practices.ObjectPool
 			{
 				return !obj.TryGetTarget(out var value) || _policy.Return(value);
 			}
+		}
+
+		private class DisposePolicyAdapter : IPooledObjectDisposePolicy<WeakReference<T>>
+		{
+			private readonly IPooledObjectDisposePolicy<T> _policy;
+
+			public DisposePolicyAdapter(IPooledObjectDisposePolicy<T> policy)
+			{
+				_policy = policy;
+			}
 
 			public void Dispose(WeakReference<T> obj)
 			{
-				if (obj.TryGetTarget(out var value) && value is IDisposable disposable)
+				if (obj.TryGetTarget(out var value))
 				{
-					disposable.Dispose();
+					_policy.Dispose(value);
 				}
 			}
 		}

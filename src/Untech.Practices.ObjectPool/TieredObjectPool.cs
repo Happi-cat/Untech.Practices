@@ -1,27 +1,46 @@
 using System;
 using System.Diagnostics;
 using System.Threading;
+using JetBrains.Annotations;
 using Microsoft.Extensions.ObjectPool;
 
 namespace Untech.Practices.ObjectPool
 {
-	public class TieredObjectPool<T> : ObjectPool<T> where T : class
+	public class TieredObjectPool<T> : ObjectPool<T>, IDisposable
+		where T : class
 	{
 		private readonly ObjectPool<T> _next;
 
 		private readonly IPooledObjectPolicy<T> _policy;
+		private readonly IPooledObjectDisposePolicy<T> _disposePolicy;
+
 		private readonly ObjectWrapper[] _items;
 		private T _firstItem;
 
-		public TieredObjectPool(IPooledObjectPolicy<T> policy, int maximumRetained, ObjectPool<T> next)
+		private bool _isDisposed;
+
+		public TieredObjectPool([NotNull] IPooledObjectPolicy<T> policy,
+			int maximumRetained,
+			[NotNull] ObjectPool<T> next)
+			: this(policy, new DefaultPooledObjectDisposePolicy<T>(), maximumRetained, next)
 		{
-			_policy = policy;
+		}
+
+		public TieredObjectPool([NotNull] IPooledObjectPolicy<T> policy,
+			[NotNull] IPooledObjectDisposePolicy<T> disposePolicy,
+			int maximumRetained,
+			[NotNull] ObjectPool<T> next)
+		{
+			_policy = policy ?? throw new ArgumentNullException(nameof(policy));
+			_disposePolicy = disposePolicy ?? throw new ArgumentNullException(nameof(disposePolicy));
 			_items = new ObjectWrapper[maximumRetained - 1];
 			_next = next ?? throw new ArgumentNullException(nameof(next));
 		}
 
 		public override T Get()
 		{
+			if (_isDisposed) throw new ObjectDisposedException(GetType().Name);
+
 			var item = _firstItem;
 			if (item != null && Interlocked.CompareExchange(ref _firstItem, null, item) == item)
 			{
@@ -43,7 +62,11 @@ namespace Untech.Practices.ObjectPool
 
 		public override void Return(T obj)
 		{
-			if (_policy != null && !_policy.Return(obj)) return;
+			if (_isDisposed || !_policy.Return(obj))
+			{
+				_disposePolicy.Dispose(obj);
+				return;
+			}
 
 			if (_firstItem == null && Interlocked.CompareExchange(ref _firstItem, obj, null) == null)
 			{
@@ -60,6 +83,20 @@ namespace Untech.Practices.ObjectPool
 			}
 
 			_next.Return(obj);
+		}
+
+		public void Dispose()
+		{
+			_isDisposed = true;
+
+			var items = _items;
+			for (var i = 0; i < items.Length; i++)
+			{
+				_disposePolicy.Dispose(items[i].Element);
+				items[i].Element = null;
+			}
+
+			Utils.TryDispose(_next);
 		}
 
 		[DebuggerDisplay("{Element}")]
