@@ -11,7 +11,7 @@ namespace Untech.Practices.ObjectPool
 		public void GetAndReturn_SameInstance_WhenDefaultPolicy()
 		{
 			// Arrange
-			var pool = Create(new DefaultPooledObjectPolicy<object>());
+			var pool = CreateDefault(new DefaultPooledObjectPolicy<object>());
 
 			var obj1 = pool.Get();
 			pool.Return(obj1);
@@ -27,7 +27,7 @@ namespace Untech.Practices.ObjectPool
 		public void GetAndReturn_SameInstance_WhenListPolicy()
 		{
 			// Arrange
-			var pool = Create(new ListPolicy());
+			var pool = CreateDefault(new ListPolicy());
 
 			var list1 = pool.Get();
 			pool.Return(list1);
@@ -43,7 +43,7 @@ namespace Untech.Practices.ObjectPool
 		public void Get_ObjectCreatedByPolicy()
 		{
 			// Arrange
-			var pool = Create(new ListPolicy());
+			var pool = CreateDefault(new ListPolicy());
 
 			// Act
 			var list = pool.Get();
@@ -56,7 +56,7 @@ namespace Untech.Practices.ObjectPool
 		public void Return_ObjectRejectedByPolicy()
 		{
 			// Arrange
-			var pool = Create(new ListPolicy());
+			var pool = CreateDefault(new ListPolicy());
 			var list1 = pool.Get();
 			list1.Capacity = 20;
 
@@ -72,7 +72,7 @@ namespace Untech.Practices.ObjectPool
 		public void Dispose_ObjectDisposed_WithOneElement()
 		{
 			// Arrange
-			var pool = Create(new DefaultPooledObjectPolicy<DisposableObject>());
+			var pool = CreateDefault(new DefaultPooledObjectPolicy<DisposableObject>());
 			var obj = pool.Get();
 			pool.Return(obj);
 
@@ -87,7 +87,7 @@ namespace Untech.Practices.ObjectPool
 		public void Dispose_ObjectsDisposed_WithTwoElements()
 		{
 			// Arrange
-			var pool = Create(new DefaultPooledObjectPolicy<DisposableObject>());
+			var pool = CreateDefault(new DefaultPooledObjectPolicy<DisposableObject>());
 			var obj1 = pool.Get();
 			var obj2 = pool.Get();
 			pool.Return(obj1);
@@ -102,10 +102,10 @@ namespace Untech.Practices.ObjectPool
 		}
 
 		[Fact]
-		public void Get_ThrowsObjectDisposed_WhenDisposed()
+		public void Get_ThrowsObjectDisposed_WhenPoolDisposed()
 		{
 			// Arrange
-			var pool = Create(new DefaultPooledObjectPolicy<DisposableObject>());
+			var pool = CreateDefault(new DefaultPooledObjectPolicy<DisposableObject>());
 			var obj1 = pool.Get();
 			var obj2 = pool.Get();
 			pool.Return(obj1);
@@ -122,7 +122,7 @@ namespace Untech.Practices.ObjectPool
 		public void Return_DisposesObject_WhenPoolDisposed()
 		{
 			// Arrange
-			var pool = Create(new DefaultPooledObjectPolicy<DisposableObject>());
+			var pool = CreateDefault(new DefaultPooledObjectPolicy<DisposableObject>());
 			var obj = pool.Get();
 
 			// Act
@@ -133,10 +133,28 @@ namespace Untech.Practices.ObjectPool
 			Assert.True(obj.IsDisposed);
 		}
 
-		private static TieredObjectPool<T> Create<T>(IPooledObjectPolicy<T> policy)
+		[Fact]
+		public void Return_DisposesObject_WhenPoolIsFull()
+		{
+			// Arrange
+			var pool = CreateDefault(new DefaultPooledObjectPolicy<DisposableObject>());
+			var obj1 = pool.Get();
+			var obj2 = pool.Get();
+			var obj3 = pool.Get();
+			pool.Return(obj1);
+			pool.Return(obj2);
+
+			// Act
+			pool.Return(obj3);
+
+			// Assert
+			Assert.True(obj3.IsDisposed);
+		}
+
+		private static TieredObjectPool<T> CreateDefault<T>(IPooledObjectPolicy<T> policy)
 			where T : class
 		{
-			return new TieredObjectPool<T>(policy, 10, new NullObjectPool<T>(policy));
+			return new TieredObjectPool<T>(policy, 2, new NullObjectPool<T>(policy));
 		}
 
 		private class ListPolicy : IPooledObjectPolicy<List<int>>
