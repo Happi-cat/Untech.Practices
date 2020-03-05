@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Untech.Practices.ObjectPool</RootNamespace>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Untech.Practices.ObjectPool\Untech.Practices.ObjectPool.csproj" />
+  </ItemGroup>
+
+</Project>
