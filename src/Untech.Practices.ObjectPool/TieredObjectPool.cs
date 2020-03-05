@@ -89,6 +89,9 @@ namespace Untech.Practices.ObjectPool
 		{
 			_isDisposed = true;
 
+			_disposePolicy.Dispose(_firstItem);
+			_firstItem = null;
+
 			var items = _items;
 			for (var i = 0; i < items.Length; i++)
 			{
