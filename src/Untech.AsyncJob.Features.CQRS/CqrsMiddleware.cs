@@ -117,7 +117,7 @@ namespace Untech.AsyncJob.Features.CQRS
 			where TRequest : ICommand<TResult>
 		{
 			var dispatcher = middleware._strategy.GetDispatcher(context) ?? throw NoDispatcherError();
-			var command = context.Request.GetBody(typeof(TRequest)) ?? throw NoRequestError();
+			var command = GetRequestOrThrow(middleware, context, typeof(TRequest));
 
 			return dispatcher.ProcessAsync((TRequest)command, context.Aborted);
 		}
@@ -126,9 +126,15 @@ namespace Untech.AsyncJob.Features.CQRS
 			where TEvent : IEvent
 		{
 			var dispatcher = middleware._strategy.GetDispatcher(context) ?? throw NoDispatcherError();
-			var notification = context.Request.GetBody(typeof(TEvent)) ?? throw NoRequestError();
+			var notification = GetRequestOrThrow(middleware, context, typeof(TEvent));
 
 			return dispatcher.PublishAsync((TEvent)notification, context.Aborted);
+		}
+
+		private static object GetRequestOrThrow(CqrsMiddleware middleware, Context context, Type type)
+		{
+			var formatter = middleware._strategy.GetRequestFormatter(context) ?? throw NoRequestFormatterError();
+			return formatter.Deserialize(context.Request.Content, type) ?? throw NoRequestError();
 		}
 
 		private static Exception RequestTypeNotFoundError(string requestName)
@@ -149,6 +155,11 @@ namespace Untech.AsyncJob.Features.CQRS
 		private static Exception NoDispatcherError()
 		{
 			return new InvalidOperationException("Dispatcher is missing.");
+		}
+
+		private static Exception NoRequestFormatterError()
+		{
+			return new InvalidOperationException("Request formatter is missing.");
 		}
 
 		private static Exception NoRequestError()

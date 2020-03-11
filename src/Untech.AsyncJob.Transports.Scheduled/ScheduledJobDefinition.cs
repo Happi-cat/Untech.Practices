@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Text.Json;
+using Untech.AsyncJob.Formatting.Json;
 using Untech.AsyncJob.Metadata.Annotations;
 
 namespace Untech.AsyncJob.Transports.Scheduled
@@ -42,21 +39,14 @@ namespace Untech.AsyncJob.Transports.Scheduled
 		public string Cron { get; set; }
 
 		[DataMember]
-		public string Body { get; set; }
+		public string Content { get; set; }
+		[DataMember]
+		public string ContentType { get; set; }
 
 		public virtual void SetBody(object value)
 		{
-			Body = JsonSerializer.Serialize(value);
-		}
-
-		public virtual object GetBody(Type requestType)
-		{
-			return JsonSerializer.Deserialize(Body, requestType);
-		}
-
-		public virtual Stream GetRawBody()
-		{
-			return new MemoryStream(Encoding.UTF8.GetBytes(Body));
+			Content = JsonRequestContentFormatter.Default.Serialize(value);
+			ContentType = JsonRequestContentFormatter.Default.Type;
 		}
 	}
 }

@@ -56,9 +56,7 @@ namespace AsyncJob.Run
 
 		private static string GetBodyAsJson(Request request)
 		{
-			using (var stream = request.GetRawBody())
-			using (var reader = new StreamReader(stream))
-				return reader.ReadToEnd();
+			return request.Content;
 		}
 	}
 }

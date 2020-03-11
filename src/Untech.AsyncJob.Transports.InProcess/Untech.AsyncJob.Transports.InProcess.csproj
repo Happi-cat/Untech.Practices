@@ -6,11 +6,8 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Untech.AsyncJob.Abstractions\Untech.AsyncJob.Abstractions.csproj" />
+        <ProjectReference Include="..\Untech.AsyncJob.Formatting.Json\Untech.AsyncJob.Formatting.Json.csproj" />
         <ProjectReference Include="..\Untech.Practices.CQRS.Abstractions\Untech.Practices.CQRS.Abstractions.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Include="System.Text.Json" Version="4.7.1" />
     </ItemGroup>
 
 </Project>

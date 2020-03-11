@@ -3,6 +3,7 @@ using SimpleInjector;
 using SimpleInjector.Lifestyles;
 using Untech.AsyncJob.Builder;
 using Untech.AsyncJob.Features.CQRS;
+using Untech.AsyncJob.Formatting;
 using Untech.Practices.CQRS.Dispatching;
 
 namespace Untech.AsyncJob.Features.SimpleInjector
@@ -52,7 +53,17 @@ namespace Untech.AsyncJob.Features.SimpleInjector
 
 			public IDispatcher GetDispatcher(Context context)
 			{
-				return ((Scope)context.Items[typeof(Scope)]).GetInstance<IDispatcher>();
+				return GetContentItem<Scope>(context).GetInstance<IDispatcher>();
+			}
+
+			public IRequestContentFormatter GetRequestFormatter(Context context)
+			{
+				return GetContentItem<IRequestContentFormatter>(context);
+			}
+
+			private T GetContentItem<T>(Context context)
+			{
+				return (T)context.Items[typeof(T)];
 			}
 		}
 	}

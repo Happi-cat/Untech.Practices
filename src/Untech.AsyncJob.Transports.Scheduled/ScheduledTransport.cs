@@ -20,8 +20,8 @@ namespace Untech.AsyncJob.Transports.Scheduled
 				.Where(j => j.CanRunNow())
 				.OrderBy(j => j.NextRun)
 				.Take(count)
-				.Select(j => new ScheduledJobRequest(j))
-				.ToArray<Request>();
+				.Select(Create)
+				.ToArray();
 
 			return jobsToRun;
 		}
@@ -38,12 +38,16 @@ namespace Untech.AsyncJob.Transports.Scheduled
 
 		private async Task Complete(Request request, Exception exception = null)
 		{
-			if (!(request is ScheduledJobRequest jobRequest))
-				return;
+			if (request.Items.TryGetValue(typeof(ScheduledJob), out var obj) && obj is ScheduledJob job)
+			{
+				await _scheduledJobStore.SaveNextRun(job, job.GetNewNextRun());
+				await _scheduledJobStore.TrackResult(job, exception);
+			}
+		}
 
-			var job = jobRequest.Job;
-			await _scheduledJobStore.SaveNextRun(job, job.GetNewNextRun());
-			await _scheduledJobStore.TrackResult(job, exception);
+		private static Request Create(ScheduledJob job)
+		{
+			return new ScheduledJobRequest(job);
 		}
 	}
 }

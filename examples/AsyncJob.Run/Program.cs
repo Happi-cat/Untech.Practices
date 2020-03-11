@@ -130,7 +130,8 @@ namespace AsyncJob.Run
 				{
 					Cron = "*/5 * * * *",
 					Name = typeof(HelloCommand).FullName,
-					Body = "{\"Message\":\"How are you (every 5 min)\"}"
+					Content = "{\"Message\":\"How are you (every 5 min)\"}",
+					ContentType = "json"
 				}
 			}));
 			// in process
