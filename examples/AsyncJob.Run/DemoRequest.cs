@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
-using System.Text.Json.Serialization;
+using System.Text.Json;
 using Untech.AsyncJob;
 using Untech.AsyncJob.Metadata.Annotations;
 
@@ -38,7 +38,7 @@ namespace AsyncJob.Run
 
 		public override Stream GetRawBody()
 		{
-			var body = JsonSerializer.ToString(_body);
+			var body = JsonSerializer.Serialize(_body);
 			return new MemoryStream(Encoding.UTF8.GetBytes(body));
 		}
 

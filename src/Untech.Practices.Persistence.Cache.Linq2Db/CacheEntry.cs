@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text.Json.Serialization;
 using LinqToDB.Mapping;
 
 namespace Untech.Practices.Persistence.Cache.Linq2Db

@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Text.Json;
 
 namespace Untech.Practices.Persistence.Cache.Linq2Db
 {
@@ -13,12 +13,12 @@ namespace Untech.Practices.Persistence.Cache.Linq2Db
 
 		public string Serialize(object value)
 		{
-			return JsonSerializer.ToString(value, _options);
+			return JsonSerializer.Serialize(value, _options);
 		}
 
 		public T Deserialize<T>(string value)
 		{
-			return JsonSerializer.Parse<T>(value, _options);
+			return JsonSerializer.Deserialize<T>(value, _options);
 		}
 	}
 }

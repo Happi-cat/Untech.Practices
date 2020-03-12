@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.Json.Serialization;
+using System.Text.Json;
 using Untech.Practices.CQRS.Dispatching;
 
 namespace Untech.AsyncJob.Transports.InProcess
@@ -65,7 +65,7 @@ namespace Untech.AsyncJob.Transports.InProcess
 		public override Stream GetRawBody()
 		{
 			if (_serializedPayload == null)
-				_serializedPayload = JsonSerializer.ToString(_payload);
+				_serializedPayload = JsonSerializer.Serialize(_payload);
 
 			return new MemoryStream(Encoding.UTF8.GetBytes(_serializedPayload));
 		}

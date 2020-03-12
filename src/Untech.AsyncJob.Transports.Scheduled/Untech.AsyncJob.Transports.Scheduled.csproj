@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="NCrontab" Version="3.3.1" />
-    <PackageReference Include="System.Text.Json" Version="4.6.0-preview6.19259.10" />
+    <PackageReference Include="System.Text.Json" Version="4.7.1" />
   </ItemGroup>
 
 </Project>

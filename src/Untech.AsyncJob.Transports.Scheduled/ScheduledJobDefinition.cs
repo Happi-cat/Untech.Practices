@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.Json.Serialization;
+using System.Text.Json;
 using Untech.AsyncJob.Metadata.Annotations;
 
 namespace Untech.AsyncJob.Transports.Scheduled
@@ -46,12 +46,12 @@ namespace Untech.AsyncJob.Transports.Scheduled
 
 		public virtual void SetBody(object value)
 		{
-			Body = JsonSerializer.ToString(value);
+			Body = JsonSerializer.Serialize(value);
 		}
 
 		public virtual object GetBody(Type requestType)
 		{
-			return JsonSerializer.Parse(Body, requestType);
+			return JsonSerializer.Deserialize(Body, requestType);
 		}
 
 		public virtual Stream GetRawBody()
