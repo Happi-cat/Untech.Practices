@@ -2,7 +2,6 @@ using System.Linq;
 using System.Runtime.Serialization;
 using MyBudgetPlan.Domain.Categories;
 using MyBudgetPlan.Domain.MonthLogs;
-using Untech.Practices;
 
 namespace MyBudgetPlan.Domain.Reports.Monthly
 {

@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.Extensions.Logging;
 using Untech.AsyncJob.Builder;
 
 namespace Untech.AsyncJob.Features.Debounce

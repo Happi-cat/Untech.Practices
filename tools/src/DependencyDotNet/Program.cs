@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using CommandLine;
-using CommandLine.Text;
 using DependencyDotNet.Visitors;
 
 namespace DependencyDotNet

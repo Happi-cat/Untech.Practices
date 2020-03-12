@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using AsyncJob.Run.Commands;
 using Microsoft.Extensions.Logging;
 using Untech.AsyncJob;
 using Untech.AsyncJob.Features.CQRS;
-using Untech.AsyncJob.Processing;
 using Untech.Practices.CQRS.Dispatching;
 
 namespace AsyncJob.Run

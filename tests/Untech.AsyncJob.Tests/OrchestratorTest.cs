@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Untech.AsyncJob.Builder;
 using Untech.AsyncJob.Fakes;
 using Untech.AsyncJob.Features.CQRS;
-using Untech.AsyncJob.Processing;
 using Untech.AsyncJob.Transports;
 using Untech.Practices.CQRS;
 using Untech.Practices.CQRS.Dispatching;

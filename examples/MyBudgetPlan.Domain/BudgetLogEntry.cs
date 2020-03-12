@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Runtime.Serialization;
 using Untech.Practices;
 using Untech.Practices.CQRS;

@@ -6,7 +6,6 @@ using MyBookList.Domain.BookLists.My;
 using MyBookList.Domain.BookLists.Shared;
 using MyBookList.Domain.Library;
 using MyBookList.Infrastructure.Data;
-using Untech.Practices;
 using Untech.Practices.CQRS;
 using Untech.Practices.CQRS.Dispatching;
 using Untech.Practices.CQRS.Handlers;

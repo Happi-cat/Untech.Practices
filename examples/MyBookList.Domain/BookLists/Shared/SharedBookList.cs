@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics.Tracing;
 using System.Linq;
 using System.Runtime.Serialization;
 using MyBookList.Domain.Library;

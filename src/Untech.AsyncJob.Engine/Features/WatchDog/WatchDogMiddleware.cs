@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Untech.AsyncJob.Metadata;
 using Untech.AsyncJob.Metadata.Annotations;
 using Untech.AsyncJob.Processing;
 
