@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Untech.AsyncJob.Builder;
 using Untech.AsyncJob.Fakes;
 using Untech.AsyncJob.Features.CQRS;
+using Untech.AsyncJob.Formatting;
+using Untech.AsyncJob.Formatting.Json;
 using Untech.Practices.CQRS;
 using Untech.Practices.CQRS.Dispatching;
 using Xunit;
@@ -95,6 +97,11 @@ namespace Untech.AsyncJob.Processing
 			public IDispatcher GetDispatcher(Context context)
 			{
 				return this;
+			}
+
+			public IRequestContentFormatter GetRequestFormatter(Context context)
+			{
+				return new JsonRequestContentFormatter();
 			}
 
 			public Task<TResult> FetchAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken)

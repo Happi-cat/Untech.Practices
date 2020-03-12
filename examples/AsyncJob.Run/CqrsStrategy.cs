@@ -5,6 +5,8 @@ using AsyncJob.Run.Commands;
 using Microsoft.Extensions.Logging;
 using Untech.AsyncJob;
 using Untech.AsyncJob.Features.CQRS;
+using Untech.AsyncJob.Formatting;
+using Untech.AsyncJob.Formatting.Json;
 using Untech.Practices.CQRS.Dispatching;
 
 namespace AsyncJob.Run
@@ -40,6 +42,11 @@ namespace AsyncJob.Run
 		public IDispatcher GetDispatcher(Context context)
 		{
 			return new Dispatcher(this);
+		}
+
+		public IRequestContentFormatter GetRequestFormatter(Context context)
+		{
+			return new JsonRequestContentFormatter();
 		}
 	}
 }
