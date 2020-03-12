@@ -31,11 +31,6 @@ namespace AsyncJob.Run
 			throw new InvalidOperationException();
 		}
 
-		public IEnumerable<T> ResolveMany<T>() where T : class
-		{
-			return Enumerable.Empty<T>();
-		}
-
 		public Type FindRequestType(string requestName)
 		{
 			return _types.FirstOrDefault(t => t.FullName == requestName)

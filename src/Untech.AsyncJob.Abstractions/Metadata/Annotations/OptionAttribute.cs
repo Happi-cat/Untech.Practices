@@ -36,7 +36,6 @@ namespace Untech.AsyncJob.Metadata.Annotations
 		/// <summary>
 		/// Gets the specified option value.
 		/// </summary>
-
 		[DataMember]
 		public object Value { get; private set; }
 	}
