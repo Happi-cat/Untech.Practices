@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using JetBrains.Annotations;
 using Untech.AsyncJob.Metadata;
 
 namespace Untech.AsyncJob
@@ -25,16 +26,12 @@ namespace Untech.AsyncJob
 		/// </summary>
 		/// <param name="request">The request to handle.</param>
 		/// <param name="metadataProvider">The request metadata provider.</param>
-		public Context(Request request, IRequestMetadataProvider metadataProvider)
+		public Context([NotNull] Request request, [NotNull] IRequestMetadataProvider metadataProvider)
 		{
 			if (request == null) throw new ArgumentNullException(nameof(request));
 			if (metadataProvider == null) throw new ArgumentNullException(nameof(metadataProvider));
 
-			_traceIdentifier = Guid.NewGuid().ToString();
-			_items = new Dictionary<object, object>();
-
 			Request = request;
-			RequestName = request.Name ?? "<unknown>";
 			RequestMetadata = new CompositeRequestMetadata(new[]
 			{
 				new RequestMetadata(request.GetAttachedMetadata()),
@@ -45,17 +42,20 @@ namespace Untech.AsyncJob
 		/// <summary>
 		/// Gets the current <see cref="Request"/> that should be processed.
 		/// </summary>
-		public Request Request { get; private set; }
+		[NotNull]
+		public Request Request { get; }
 
 		/// <summary>
 		/// Gets the name of the current <see cref="Request"/>.
 		/// </summary>
-		public string RequestName { get; private set; }
+		[NotNull]
+		public string RequestName => Request.Name;
 
 		/// <summary>
 		/// Gets the metadata that is associated with the current <see cref="Request"/>.
 		/// </summary>
-		public IRequestMetadata RequestMetadata { get; private set; }
+		[NotNull]
+		public IRequestMetadata RequestMetadata { get; }
 
 		/// <summary>
 		/// Gets or sets <see cref="CancellationToken"/> that can be used for request cancellation.
@@ -67,7 +67,7 @@ namespace Untech.AsyncJob
 		/// </summary>
 		public virtual string TraceIdentifier
 		{
-			get => _traceIdentifier;
+			get => _traceIdentifier ?? Request.Identifier;
 			set => _traceIdentifier = value;
 		}
 
@@ -76,8 +76,8 @@ namespace Untech.AsyncJob
 		/// </summary>
 		public virtual IDictionary<object, object> Items
 		{
-			get => _items;
-			set => _items = value ?? throw new ArgumentNullException(nameof(value));
+			get => _items = _items ?? new Dictionary<object, object>();
+			set => _items = value;
 		}
 	}
 }
