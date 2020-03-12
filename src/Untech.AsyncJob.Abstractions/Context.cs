@@ -34,8 +34,7 @@ namespace Untech.AsyncJob
 			Request = request;
 			RequestMetadata = new CompositeRequestMetadata(new[]
 			{
-				new RequestMetadata(request.GetAttachedMetadata()),
-				metadataProvider.GetMetadata(request.Name)
+				new RequestMetadata(request.GetAttachedMetadata()), metadataProvider.GetMetadata(request.Name)
 			});
 		}
 

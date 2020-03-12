@@ -11,12 +11,14 @@ using Untech.AsyncJob.Features.CQRS;
 using Untech.AsyncJob.Features.Retrying;
 using Untech.AsyncJob.Features.Throttling;
 using Untech.AsyncJob.Features.WatchDog;
+using Untech.AsyncJob.Formatting.Json;
 using Untech.AsyncJob.Metadata;
 using Untech.AsyncJob.Metadata.Annotations;
 using Untech.AsyncJob.Processing;
 using Untech.AsyncJob.Transports;
 using Untech.AsyncJob.Transports.InProcess;
 using Untech.AsyncJob.Transports.Scheduled;
+using Untech.Practices.CQRS.Dispatching;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace AsyncJob.Run
@@ -63,7 +65,11 @@ namespace AsyncJob.Run
 				{
 					options.DefaultTimeout = TimeSpan.FromSeconds(10);
 				})
-				.Final(builder => new CqrsStrategy(builder.GetLogger("Handlers")));
+				.Final(builder => new CqrsStrategy(new BuiltInRequestTypeFinder(typeof(Program).Assembly))
+				{
+					Dispatcher = new Dispatcher(new DemoServiceProvider(builder.GetLogger("Handlers"))),
+					Formatter = JsonRequestContentFormatter.Default
+				});
 		}
 
 		private static IEnumerable<IRequestMetadataProvider> MetadataProviders(IServiceProvider services)

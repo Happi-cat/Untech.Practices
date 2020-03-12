@@ -53,7 +53,8 @@ namespace Untech.AsyncJob.Features.CQRS
 
 		private ExecutorCallback BuildExecutor(string requestName)
 		{
-			var requestType = _strategy.FindRequestType(requestName) ?? throw RequestTypeNotFoundError(requestName);
+			var requestType = _strategy.GetRequestTypeFinder().FindRequestType(requestName)
+				?? throw RequestTypeNotFoundError(requestName);
 
 			return BuildExecutor(requestType);
 		}
@@ -75,25 +76,25 @@ namespace Untech.AsyncJob.Features.CQRS
 
 			ExecutorCallback TryBuildCallback(Type implementedInterfaceType)
 			{
-				if (!implementedInterfaceType.IsGenericType)
-					return null;
-
-				var genericTypeDefinition = implementedInterfaceType.GetGenericTypeDefinition();
-
-				if (genericTypeDefinition == typeof(ICommand<>))
-				{
-					var resultType = implementedInterfaceType.GetGenericArguments()[0];
-
-					var method = s_executeCommandMethodInfo.MakeGenericMethod(requestType, resultType);
-
-					return BuildCallback(method);
-				}
-
-				if (genericTypeDefinition == typeof(IEvent))
+				if (implementedInterfaceType == typeof(IEvent))
 				{
 					var method = s_executeNotificationMethodInfo.MakeGenericMethod(requestType);
 
 					return BuildCallback(method);
+				}
+
+				if (implementedInterfaceType.IsGenericType)
+				{
+					var genericTypeDefinition = implementedInterfaceType.GetGenericTypeDefinition();
+
+					if (genericTypeDefinition == typeof(ICommand<>))
+					{
+						var resultType = implementedInterfaceType.GetGenericArguments()[0];
+
+						var method = s_executeCommandMethodInfo.MakeGenericMethod(requestType, resultType);
+
+						return BuildCallback(method);
+					}
 				}
 
 				return null;

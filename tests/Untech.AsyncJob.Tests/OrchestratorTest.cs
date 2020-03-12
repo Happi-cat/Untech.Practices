@@ -9,6 +9,7 @@ using Untech.AsyncJob.Fakes;
 using Untech.AsyncJob.Features.CQRS;
 using Untech.AsyncJob.Formatting;
 using Untech.AsyncJob.Formatting.Json;
+using Untech.AsyncJob.Processing;
 using Untech.AsyncJob.Transports;
 using Untech.Practices.CQRS;
 using Untech.Practices.CQRS.Dispatching;
@@ -22,7 +23,11 @@ namespace Untech.AsyncJob
 		public async Task DoAsync_ConsumesRequests_WhenRequestsAvailable()
 		{
 			var transport = new FakeTransport(100);
-			var cqrs = new FakeCqrs();
+			var dispatcher = new FakeDispatcher();
+			var cqrs = new CqrsStrategy(new RequestTypeFinder(new[] { typeof(FakeCommand) }))
+			{
+				Dispatcher = dispatcher, Formatter = new JsonRequestContentFormatter()
+			};
 			var orchestrator = new EngineBuilder(options =>
 				{
 					options.Warps = 5;
@@ -38,7 +43,7 @@ namespace Untech.AsyncJob
 			var completed = await transport.Complete();
 			await orchestrator.StopAsync(TimeSpan.Zero);
 
-			Assert.Equal(100, cqrs.CallCounter);
+			Assert.Equal(100, dispatcher.CallCounter);
 			Assert.Equal(100, completed);
 		}
 
@@ -86,26 +91,11 @@ namespace Untech.AsyncJob
 			}
 		}
 
-		private class FakeCqrs : ICqrsStrategy, IDispatcher
+		private class FakeDispatcher : IDispatcher
 		{
 			private int _callCounter = 0;
 
 			public int CallCounter => _callCounter;
-
-			public Type FindRequestType(string requestName)
-			{
-				return typeof(FakeCommand);
-			}
-
-			public IDispatcher GetDispatcher(Context context)
-			{
-				return this;
-			}
-
-			public IRequestContentFormatter GetRequestFormatter(Context context)
-			{
-				return new JsonRequestContentFormatter();
-			}
 
 			public Task<TResult> FetchAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken)
 			{

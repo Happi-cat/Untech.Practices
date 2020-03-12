@@ -72,8 +72,17 @@ namespace Untech.AsyncJob.Processing
 
 		private static IRequestProcessor BuildProcessorForCqrsMiddlewareTest()
 		{
+			var types = new[]
+			{
+				typeof(FakeCommand), typeof(FakeCommandWithoutInterface), typeof(FakeCommandWithMultipleInterfaces)
+			};
+
 			return new EngineBuilder()
-				.Do(s => s.Final(new FakeCqrsStrategy()))
+				.Do(s => s.Final(new CqrsStrategy(new RequestTypeFinder(types))
+				{
+					Dispatcher = new FakeDispatcher(),
+					Formatter = JsonRequestContentFormatter.Default
+				}))
 				.BuildProcessor();
 		}
 
@@ -82,28 +91,8 @@ namespace Untech.AsyncJob.Processing
 			return new Context(new FakeRequest(body: command));
 		}
 
-		private class FakeCqrsStrategy : ICqrsStrategy, IDispatcher
+		private class FakeDispatcher : IDispatcher
 		{
-			private readonly IReadOnlyList<Type> _types = new List<Type>
-			{
-				typeof(FakeCommand), typeof(FakeCommandWithoutInterface), typeof(FakeCommandWithMultipleInterfaces)
-			};
-
-			public Type FindRequestType(string requestName)
-			{
-				return _types.FirstOrDefault(t => t.FullName == requestName);
-			}
-
-			public IDispatcher GetDispatcher(Context context)
-			{
-				return this;
-			}
-
-			public IRequestContentFormatter GetRequestFormatter(Context context)
-			{
-				return new JsonRequestContentFormatter();
-			}
-
 			public Task<TResult> FetchAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken)
 			{
 				return Task.FromResult(default(TResult));
@@ -120,15 +109,15 @@ namespace Untech.AsyncJob.Processing
 			}
 		}
 
-		private class FakeCommand : ICommand
+		public class FakeCommand : ICommand
 		{
 		}
 
-		private class FakeCommandWithoutInterface
+		public class FakeCommandWithoutInterface
 		{
 		}
 
-		private class FakeCommandWithMultipleInterfaces : ICommand<int>, ICommand<string>
+		public class FakeCommandWithMultipleInterfaces : ICommand<int>, ICommand<string>
 		{
 		}
 	}
