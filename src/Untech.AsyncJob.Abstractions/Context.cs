@@ -27,18 +27,14 @@ namespace Untech.AsyncJob
 		/// <param name="metadataProvider">The request metadata provider.</param>
 		public Context(Request request, IRequestMetadataProvider metadataProvider)
 		{
-			if (request == null)
-				throw new ArgumentNullException(nameof(request));
-			if (request.Name == null)
-				throw new ArgumentNullException(nameof(request.Name));
-			if (metadataProvider == null)
-				throw new ArgumentNullException(nameof(metadataProvider));
+			if (request == null) throw new ArgumentNullException(nameof(request));
+			if (metadataProvider == null) throw new ArgumentNullException(nameof(metadataProvider));
 
 			_traceIdentifier = Guid.NewGuid().ToString();
 			_items = new Dictionary<object, object>();
 
 			Request = request;
-			RequestName = request.Name;
+			RequestName = request.Name ?? "<unknown>";
 			RequestMetadata = new CompositeRequestMetadata(new[]
 			{
 				new RequestMetadata(request.GetAttachedMetadata()),

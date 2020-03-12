@@ -19,8 +19,7 @@ namespace Untech.AsyncJob.Metadata
 		/// <exception cref="ArgumentNullException"><paramref name="providers"/> is null.</exception>
 		public CompositeRequestMetadataProvider(IEnumerable<IRequestMetadataProvider> providers)
 		{
-			if (providers == null)
-				throw new ArgumentNullException(nameof(providers));
+			if (providers == null) throw new ArgumentNullException(nameof(providers));
 
 			_providers = providers.ToList();
 		}
@@ -28,8 +27,7 @@ namespace Untech.AsyncJob.Metadata
 		/// <inheritdoc />
 		public IRequestMetadata GetMetadata(string requestName)
 		{
-			if (string.IsNullOrEmpty(requestName))
-				throw new ArgumentNullException(nameof(requestName));
+			if (string.IsNullOrEmpty(requestName)) throw new ArgumentNullException(nameof(requestName));
 
 			var accessors = _providers.Select(n => n.GetMetadata(requestName));
 

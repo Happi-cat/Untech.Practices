@@ -29,10 +29,8 @@ namespace Untech.AsyncJob.Builder
 		public static IEngineBuilder ReceiveRequestsFromMultiple(this IEngineBuilder builder,
 			Func<IServiceProvider, IEnumerable<ITransport>> transportsCreator)
 		{
-			if (builder == null)
-				throw new ArgumentNullException(nameof(builder));
-			if (transportsCreator == null)
-				throw new ArgumentNullException(nameof(transportsCreator));
+			if (builder == null) throw new ArgumentNullException(nameof(builder));
+			if (transportsCreator == null) throw new ArgumentNullException(nameof(transportsCreator));
 
 			return builder.ReceiveRequestsFrom(ctx => new CompositeTransport(transportsCreator(ctx)));
 		}
@@ -60,10 +58,8 @@ namespace Untech.AsyncJob.Builder
 		public static IEngineBuilder ReadMetadataFromMultiple(this IEngineBuilder builder,
 			Func<IServiceProvider, IEnumerable<IRequestMetadataProvider>> providersCreator)
 		{
-			if (builder == null)
-				throw new ArgumentNullException(nameof(builder));
-			if (providersCreator == null)
-				throw new ArgumentNullException(nameof(providersCreator));
+			if (builder == null) throw new ArgumentNullException(nameof(builder));
+			if (providersCreator == null) throw new ArgumentNullException(nameof(providersCreator));
 
 			return builder.ReadMetadataFrom(ctx => new CompositeRequestMetadataProvider(providersCreator(ctx)));
 		}

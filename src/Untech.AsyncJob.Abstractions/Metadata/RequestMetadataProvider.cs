@@ -43,10 +43,8 @@ namespace Untech.AsyncJob.Metadata
 
 		public RequestMetadataProvider Add(string requestName, IRequestMetadata metadata)
 		{
-			if (requestName == null)
-				throw new ArgumentNullException(nameof(requestName));
-			if (metadata == null)
-				throw new ArgumentNullException(nameof(metadata));
+			if (requestName == null) throw new ArgumentNullException(nameof(requestName));
+			if (metadata == null) throw new ArgumentNullException(nameof(metadata));
 
 			if (!_metadata.ContainsKey(requestName))
 				_metadata.Add(requestName, new List<IRequestMetadata>());

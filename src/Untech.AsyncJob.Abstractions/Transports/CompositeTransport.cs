@@ -22,8 +22,7 @@ namespace Untech.AsyncJob.Transports
 		/// <exception cref="ArgumentNullException"><paramref name="transports"/> is null.</exception>
 		public CompositeTransport(IEnumerable<ITransport> transports)
 		{
-			if (transports == null)
-				throw new ArgumentNullException(nameof(transports));
+			if (transports == null) throw new ArgumentNullException(nameof(transports));
 
 			_transports = transports.ToList();
 		}

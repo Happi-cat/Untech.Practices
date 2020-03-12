@@ -40,7 +40,6 @@ namespace Untech.AsyncJob.Builder
 		/// <summary>
 		/// Returns constructed instance of the <see cref="IOrchestrator"/>.
 		/// </summary>
-		/// <param name="configureOptions">The action for orchestrator options configuration.</param>
 		/// <returns></returns>
 		IOrchestrator BuildOrchestrator();
 	}
