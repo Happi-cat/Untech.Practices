@@ -11,8 +11,7 @@ namespace Untech.AsyncJob.Features.CQRS
 {
 	/// <summary>
 	/// Implements <see cref="IRequestMetadataProvider"/> and can be used for getting builtin attributes.
-	/// This attributes can be defined on <see cref="IRequestMetadataSource{TRequest}"/>
-	/// and <see cref="ICommandHandler{TIn,TOut}"/>.
+	/// This attributes can be defined on <see cref="ICommandHandler{TIn,TOut}"/>.
 	/// </summary>
 	public class BuiltInRequestMetadataProvider : IRequestMetadataProvider
 	{
