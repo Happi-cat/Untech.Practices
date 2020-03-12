@@ -49,7 +49,7 @@ namespace AsyncJob.Run
 				}
 				catch (Exception e)
 				{
-					_logger.Log(LogLevel.Error, e, "crashed: {0}", e.Message);
+					_logger.Log(LogLevel.Error, "crashed: {0}", e.Message);
 				}
 			}
 		}

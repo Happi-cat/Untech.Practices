@@ -48,7 +48,7 @@ namespace AsyncJob.Run
 		private static Request Create(DemoCommandBase body)
 		{
 			var id = Interlocked.Increment(ref s_nextIdentifier).ToString();
-			return new DemoRequest(id, body) { AttachedMetadata = body.Meta?.AsReadOnly() };
+			return new DemoRequest(id, body) { AttachedMetadata = body.GetMetadata().ToList().AsReadOnly() };
 		}
 	}
 }

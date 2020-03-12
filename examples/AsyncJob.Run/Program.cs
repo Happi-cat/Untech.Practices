@@ -104,7 +104,7 @@ namespace AsyncJob.Run
 				new DelayCommand(TimeSpan.FromSeconds(2)), new DelayCommand(TimeSpan.FromMinutes(2)),
 				new DelayCommand(TimeSpan.FromSeconds(20))
 				{
-					Meta = new List<MetadataAttribute> { new WatchDogTimeoutAttribute(30) }
+					WatchDogTimeout = TimeSpan.FromSeconds(30)
 				}
 			});
 			// combined
