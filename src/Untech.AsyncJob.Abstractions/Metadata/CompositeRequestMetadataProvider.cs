@@ -25,11 +25,11 @@ namespace Untech.AsyncJob.Metadata
 		}
 
 		/// <inheritdoc />
-		public IRequestMetadata GetMetadata(string requestName)
+		public IRequestMetadata GetMetadata(Request request)
 		{
-			if (string.IsNullOrEmpty(requestName)) throw new ArgumentNullException(nameof(requestName));
+			if (request == null) throw new ArgumentNullException(nameof(request));
 
-			var accessors = _providers.Select(n => n.GetMetadata(requestName));
+			var accessors = _providers.Select(n => n.GetMetadata(request));
 
 			return new CompositeRequestMetadata(accessors);
 		}

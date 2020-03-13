@@ -34,7 +34,7 @@ namespace Untech.AsyncJob.Metadata
 		[Fact]
 		public void GetMetadata_ReturnsBlankMetadata_WhenRequestNotFound()
 		{
-			var metadata = _provider.GetMetadata("RequestNotFound");
+			var metadata = GetMetadata("RequestNotFound");
 
 			Assert.NotNull(metadata);
 			Assert.Equal(NullRequestMetadata.Instance, metadata);
@@ -43,7 +43,7 @@ namespace Untech.AsyncJob.Metadata
 		[Fact]
 		public void GetMetadata_ReturnsMetadata_WhenRequestFound()
 		{
-			var metadata = _provider.GetMetadata(_commandName);
+			var metadata = GetMetadata(_commandName);
 
 			Assert.NotNull(metadata);
 			Assert.NotEqual(NullRequestMetadata.Instance, metadata);
@@ -52,7 +52,7 @@ namespace Untech.AsyncJob.Metadata
 		[Fact]
 		public void GetAttribute_ReturnsNull_WhenAttributeNotFound()
 		{
-			var metadata = _provider.GetMetadata(_commandName);
+			var metadata = GetMetadata(_commandName);
 
 			Assert.Null(metadata.GetAttribute<FakeAttribute>());
 		}
@@ -60,11 +60,16 @@ namespace Untech.AsyncJob.Metadata
 		[Fact]
 		public void GetAttribute_ReturnsAttribute_WhenAttributeFoundOnHandler()
 		{
-			var metadata = _provider.GetMetadata(_commandName);
+			var metadata = GetMetadata(_commandName);
 
 			var attribute = metadata.GetAttribute<ThrottleGroupAttribute>();
 
 			Assert.NotNull(attribute);
+		}
+
+		private IRequestMetadata GetMetadata(string requestName)
+		{
+			return _provider.GetMetadata(new DefaultRequest(requestName));
 		}
 
 		private class FakeAttribute : MetadataAttribute { }

@@ -31,12 +31,11 @@ namespace Untech.AsyncJob.Features.CQRS
 		}
 
 		/// <inheritdoc />
-		public IRequestMetadata GetMetadata(string requestName)
+		public IRequestMetadata GetMetadata(Request request)
 		{
-			if (string.IsNullOrEmpty(requestName))
-				throw new ArgumentNullException(nameof(requestName));
+			if (request == null) throw new ArgumentNullException(nameof(request));
 
-			return _requestsMetadata.TryGetValue(requestName, out var requestMetadata)
+			return _requestsMetadata.TryGetValue(request.Name, out var requestMetadata)
 				? requestMetadata
 				: NullRequestMetadata.Instance;
 		}
