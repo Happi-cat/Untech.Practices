@@ -15,7 +15,7 @@ namespace Untech.AsyncJob
 		public ObjectRequest(
 			[NotNull] object content,
 			[NotNull] IRequestContentFormatter formatter,
-			[CanBeNull] IDictionary<string, string> attributes = null)
+			[CanBeNull] IReadOnlyDictionary<string, string> attributes = null)
 			: this(Guid.NewGuid().ToString(), DateTimeOffset.Now, content, formatter, attributes)
 		{
 
@@ -25,7 +25,7 @@ namespace Untech.AsyncJob
 			[NotNull] string name,
 			[NotNull] object content,
 			[NotNull] IRequestContentFormatter formatter,
-			[CanBeNull] IDictionary<string, string> attributes = null)
+			[CanBeNull] IReadOnlyDictionary<string, string> attributes = null)
 			: this(Guid.NewGuid().ToString(), name, DateTimeOffset.Now, content, formatter, attributes)
 		{
 
@@ -36,7 +36,7 @@ namespace Untech.AsyncJob
 			DateTimeOffset created,
 			[NotNull] object content,
 			[NotNull] IRequestContentFormatter formatter,
-			[CanBeNull] IDictionary<string, string> attributes = null)
+			[CanBeNull] IReadOnlyDictionary<string, string> attributes = null)
 		{
 			_content = content ?? throw new ArgumentNullException(nameof(content));
 			_formatter = formatter ?? throw new ArgumentNullException(nameof(formatter));
@@ -52,7 +52,7 @@ namespace Untech.AsyncJob
 			DateTimeOffset created,
 			[NotNull] object content,
 			[NotNull] IRequestContentFormatter formatter,
-			[CanBeNull] IDictionary<string, string> attributes = null)
+			[CanBeNull] IReadOnlyDictionary<string, string> attributes = null)
 		{
 			_name = name ?? throw new ArgumentNullException(name);
 			_content = content ?? throw new ArgumentNullException(nameof(content));
@@ -74,7 +74,7 @@ namespace Untech.AsyncJob
 		}
 
 		public override DateTimeOffset Created { get; }
-		public override IDictionary<string, string> Attributes { get; }
+		public override IReadOnlyDictionary<string, string> Attributes { get; }
 
 		public override string Content
 		{

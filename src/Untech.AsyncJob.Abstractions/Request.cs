@@ -38,7 +38,7 @@ namespace Untech.AsyncJob
 		/// Gets a key/value collection that contains request attributes and can be used for sharing attributes.
 		/// </summary>
 		[CanBeNull]
-		public abstract IDictionary<string, string> Attributes { get; }
+		public abstract IReadOnlyDictionary<string, string> Attributes { get; }
 
 		/// <summary>
 		/// Gets serialized content.

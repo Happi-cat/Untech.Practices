@@ -36,7 +36,7 @@ namespace Untech.AsyncJob.Transports.InProcess
 			return _executeAfter == null || Created + _executeAfter <= DateTimeOffset.Now;
 		}
 
-		private static IDictionary<string, string> GetAttributes([CanBeNull] QueueOptions options)
+		private static IReadOnlyDictionary<string, string> GetAttributes([CanBeNull] QueueOptions options)
 		{
 			return options?.Advanced?
 				.ToDictionary(n => n.Key, n => Convert.ToString(n.Value));

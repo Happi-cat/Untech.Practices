@@ -9,7 +9,7 @@ namespace Untech.AsyncJob
 			string name,
 			string content = null,
 			string contentType = null,
-			IDictionary<string, string> attributes = null)
+			IReadOnlyDictionary<string, string> attributes = null)
 			: this(Guid.NewGuid().ToString(), name, DateTimeOffset.Now, content, contentType, attributes)
 		{
 
@@ -21,7 +21,7 @@ namespace Untech.AsyncJob
 			DateTimeOffset created,
 			string content = null,
 			string contentType = null,
-			IDictionary<string, string> attributes = null)
+			IReadOnlyDictionary<string, string> attributes = null)
 		{
 			Identifier = identifier ?? throw new ArgumentNullException(nameof(identifier));
 			Name = name ?? throw new ArgumentNullException(nameof(name));
@@ -34,7 +34,7 @@ namespace Untech.AsyncJob
 		public override string Identifier { get; }
 		public override string Name { get; }
 		public override DateTimeOffset Created { get; }
-		public override IDictionary<string, string> Attributes { get; }
+		public override IReadOnlyDictionary<string, string> Attributes { get; }
 		public override string Content { get; }
 		public override string ContentType { get; }
 	}

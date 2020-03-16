@@ -10,8 +10,8 @@ namespace Untech.AsyncJob.Transports.Scheduled
 	{
 		public static ScheduledJobDefinition Create<T>(string cron,
 			T body = default,
-			IDictionary<string, string> attributes = null,
-			IEnumerable<MetadataAttribute> metadata = null)
+			Dictionary<string, string> attributes = null,
+			List<MetadataAttribute> metadata = null)
 		{
 			var definition = new ScheduledJobDefinition
 			{
@@ -30,10 +30,10 @@ namespace Untech.AsyncJob.Transports.Scheduled
 		public string Name { get; set; }
 
 		[DataMember]
-		public IDictionary<string, string> Attributes { get; set; }
+		public Dictionary<string, string> Attributes { get; set; }
 
 		[DataMember]
-		public IEnumerable<MetadataAttribute> Metadata { get; set; }
+		public List<MetadataAttribute> Metadata { get; set; }
 
 		[DataMember]
 		public string Cron { get; set; }

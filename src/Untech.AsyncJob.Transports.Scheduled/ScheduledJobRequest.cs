@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 using Untech.AsyncJob.Metadata.Annotations;
 
@@ -23,7 +24,7 @@ namespace Untech.AsyncJob.Transports.Scheduled
 		public override string Name => _definition.Name;
 		public override DateTimeOffset Created => _job.NextRun ?? _instantiated;
 
-		public override IDictionary<string, string> Attributes => _definition.Attributes;
+		public override IReadOnlyDictionary<string, string> Attributes => _definition.Attributes;
 		public override string Content => _definition.Content;
 		public override string ContentType => _definition.ContentType;
 

@@ -17,7 +17,6 @@ namespace Untech.AsyncJob
 		public Context(Request request)
 			: this(request, NullRequestMetadataProvider.Instance)
 		{
-
 		}
 
 		/// <summary>
