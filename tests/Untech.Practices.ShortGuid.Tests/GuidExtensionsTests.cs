@@ -6,6 +6,16 @@ namespace Untech.Practices.ShortGuid
 	public class GuidExtensionsTests
 	{
 		[Fact]
+		public void ToAndParse_EqualToInput()
+		{
+			var expected = Guid.NewGuid();
+
+			var actual = expected.ToShortGuid().ParseShortGuid();
+
+			Assert.Equal(expected, actual);
+		}
+
+		[Fact]
 		public void ToShortGuid()
 		{
 			var guid = Guid.NewGuid();
