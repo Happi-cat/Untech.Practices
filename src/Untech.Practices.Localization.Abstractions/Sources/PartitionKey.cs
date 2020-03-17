@@ -4,19 +4,22 @@ using JetBrains.Annotations;
 
 namespace Untech.Practices.Localization.Sources
 {
-	public struct PartitionKey : IEquatable<PartitionKey>
+	public readonly struct PartitionKey : IEquatable<PartitionKey>
 	{
+		private readonly string _name;
+		private readonly CultureInfo _culture;
+
 		public PartitionKey([CanBeNull]string name, [CanBeNull]CultureInfo culture)
 		{
-			Name = (name ?? "").ToLower();
-			Culture = culture ?? CultureInfo.InvariantCulture;
+			_name = (name ?? "").ToLower();
+			_culture = culture ?? CultureInfo.InvariantCulture;
 		}
 
 		[NotNull]
-		public string Name { get; }
+		public string Name => _name ?? "";
 
 		[NotNull]
-		public CultureInfo Culture { get; }
+		public CultureInfo Culture => _culture ?? CultureInfo.InvariantCulture;
 
 		public override bool Equals(object obj)
 		{
@@ -37,7 +40,7 @@ namespace Untech.Practices.Localization.Sources
 
 		public override string ToString()
 		{
-			return $"({Name}, {Culture.Name})";
+			return Tuple.Create(Name, Culture).ToString();
 		}
 	}
 }
