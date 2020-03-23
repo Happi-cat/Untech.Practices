@@ -2,12 +2,13 @@
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
 using Untech.AsyncJob.Builder;
+using Untech.AsyncJob.Processing;
 
 namespace Untech.AsyncJob.Features.SimpleInjector
 {
 	public static class BuilderExtensions
 	{
-		public static PipelineBuilder AddSimpleInjector(this PipelineBuilder collection, Container container)
+		public static IRegistrar<IRequestProcessorMiddleware> AddSimpleInjector(this IRegistrar<IRequestProcessorMiddleware> collection, Container container)
 		{
 			return collection.Add(async (ctx, next) =>
 			{

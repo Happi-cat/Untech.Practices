@@ -4,6 +4,8 @@ using System.ComponentModel.Design;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Untech.AsyncJob.Builder.Factories;
+using Untech.AsyncJob.Builder.Registrars;
 using Untech.AsyncJob.Metadata;
 using Untech.AsyncJob.Processing;
 using Untech.AsyncJob.Transports;
@@ -18,6 +20,11 @@ namespace Untech.AsyncJob.Builder
 		private static readonly IServiceProvider s_defaultServices;
 		private readonly IServiceContainer _container;
 
+		private readonly MultiRegistrar<ITransport> _transport;
+		private readonly MultiRegistrar<IRequestMetadataProvider> _requestMetadataProvider;
+		private readonly MultiRegistrar<IRequestProcessorMiddleware> _requestProcessorMiddleware;
+		private readonly SingleRegistrar<IRequestProcessor> _requestProcessor;
+
 		private readonly Action<OrchestratorOptions> _configureOptions;
 
 		public EngineBuilder()
@@ -27,15 +34,29 @@ namespace Untech.AsyncJob.Builder
 		}
 
 		public EngineBuilder(Action<OrchestratorOptions> configureOptions)
+			: this(new ServiceContainer(s_defaultServices), configureOptions)
 		{
-			_container = new ServiceContainer(s_defaultServices);
-			_configureOptions = configureOptions;
 		}
 
 		public EngineBuilder(IServiceProvider provider, Action<OrchestratorOptions> configureOptions)
+			: this(new ServiceContainer(new CompositeServiceProvider(new[] { provider, s_defaultServices })),
+				configureOptions)
 		{
-			_container = new ServiceContainer(new CompositeServiceProvider(new [] { provider, s_defaultServices }));
+		}
+
+		private EngineBuilder(IServiceContainer container, Action<OrchestratorOptions> configureOptions)
+		{
+			_container = container;
 			_configureOptions = configureOptions;
+
+			_transport = new MultiRegistrar<ITransport>();
+			_requestMetadataProvider = new MultiRegistrar<IRequestMetadataProvider>();
+			_requestProcessorMiddleware = new MultiRegistrar<IRequestProcessorMiddleware>();
+			_requestProcessor = new SingleRegistrar<IRequestProcessor>();
+
+			RegisterFactory(_container, new TransportFactory(_transport));
+			RegisterFactory(_container, new RequestMetadataProviderFactory(_requestMetadataProvider));
+			RegisterFactory(_container, new RequestProcessorFactory(_requestProcessorMiddleware, _requestProcessor));
 		}
 
 		static EngineBuilder()
@@ -49,55 +70,51 @@ namespace Untech.AsyncJob.Builder
 		/// <summary>
 		/// Sets <see cref="ILoggerFactory"/> that will be used for logging.
 		/// </summary>
-		/// <param name="loggerCreator">The logger factory.</param>
+		/// <param name="factory">The logger factory.</param>
 		/// <returns></returns>
-		public IEngineBuilder LogTo(Func<ILoggerFactory> loggerCreator)
+		public IEngineBuilder LogTo(Func<ILoggerFactory> factory)
 		{
-			AddService(loggerCreator);
+			_container.AddService(typeof(ILoggerFactory), (container, t) => factory());
 			return this;
 		}
 
 		/// <summary>
 		/// Sets <see cref="ITransport"/> that will be used as a request store.
 		/// </summary>
-		/// <param name="transportCreator">The transport to use.</param>
+		/// <param name="configure">The transport to use.</param>
 		/// <returns></returns>
-		public IEngineBuilder ReceiveRequestsFrom(Func<IServiceProvider, ITransport> transportCreator)
+		public IEngineBuilder ReceiveRequestsFrom(Action<IRegistrar<ITransport>> configure)
 		{
-			AddService(transportCreator);
+			configure(_transport);
 			return this;
 		}
 
 		/// <summary>
 		/// Sets <see cref="IRequestMetadataProvider"/> that can be used for getting <see cref="IRequestMetadata"/>.
 		/// </summary>
-		/// <param name="providerCreator">The provider to use.</param>
+		/// <param name="configure">The provider to use.</param>
 		/// <returns></returns>
-		public IEngineBuilder ReadMetadataFrom(Func<IServiceProvider, IRequestMetadataProvider> providerCreator)
+		public IEngineBuilder ReadMetadataFrom(Action<IRegistrar<IRequestMetadataProvider>> configure)
 		{
-			AddService(providerCreator);
+			configure(_requestMetadataProvider);
 			return this;
 		}
 
-		public IEngineBuilder Do(Action<PipelineBuilder> configureProcessor)
+		public IEngineBuilder Then(Action<IRegistrar<IRequestProcessorMiddleware>> configure)
 		{
-			var pipeline = new PipelineBuilder();
-			configureProcessor(pipeline);
-
-			AddServices(provider => pipeline.Select(b => b(provider)).ToList());
-
+			configure(_requestProcessorMiddleware);
 			return this;
 		}
 
-		/// <summary>
-		/// Returns constructed instance of the <see cref="IRequestProcessor"/>.
-		/// </summary>
-		/// <returns></returns>
+		public IEngineBuilder Finally(Action<IRegistrar<IRequestProcessor>> configure)
+		{
+			configure(_requestProcessor);
+			return this;
+		}
+
 		public IRequestProcessor BuildProcessor()
 		{
-			return new RequestProcessor(
-				_container.GetService<IEnumerable<IRequestProcessorMiddleware>>()
-			);
+			return _container.GetService<IRequestProcessor>();
 		}
 
 		/// <summary>
@@ -107,28 +124,20 @@ namespace Untech.AsyncJob.Builder
 		/// <returns></returns>
 		public IOrchestrator BuildOrchestrator()
 		{
+
 			return new Orchestrator(
 				OptionsBuilder.ConfigureAndValidate(_configureOptions),
 				_container.GetService<ITransport>(),
 				_container.GetService<IRequestMetadataProvider>(),
-				BuildProcessor(),
+				_container.GetService<IRequestProcessor>(),
 				_container.GetLogger().CreateLogger<Orchestrator>()
 			);
 		}
 
-		private void AddService<T>(Func<T> creator)
+		private static void RegisterFactory<T>(IServiceContainer container, IServiceFactory<T> factory)
+			where T : class
 		{
-			_container.AddService(typeof(T), (provider, type) => creator());
-		}
-
-		private void AddService<T>(Func<IServiceProvider, T> creator)
-		{
-			_container.AddService(typeof(T), (provider, type) => creator(provider));
-		}
-
-		private void AddServices<T>(Func<IServiceProvider, IEnumerable<T>> creator)
-		{
-			AddService(creator);
+			container.AddService(typeof(T), (provider, type) => factory.Create(provider));
 		}
 
 		private class CompositeServiceProvider : IServiceProvider

@@ -1,5 +1,6 @@
 ﻿using System;
 using Untech.AsyncJob.Builder;
+using Untech.AsyncJob.Processing;
 
 namespace Untech.AsyncJob.Features.Throttling
 {
@@ -16,7 +17,7 @@ namespace Untech.AsyncJob.Features.Throttling
 		/// <exception cref="ArgumentNullException">
 		/// 	<paramref name="builder"/> is null.
 		/// </exception>
-		public static PipelineBuilder AddThrottling(this PipelineBuilder builder)
+		public static IRegistrar<IRequestProcessorMiddleware> AddThrottling(this IRegistrar<IRequestProcessorMiddleware> builder)
 		{
 			return AddThrottling(builder, _ => { });
 		}
@@ -30,7 +31,7 @@ namespace Untech.AsyncJob.Features.Throttling
 		/// <exception cref="ArgumentNullException">
 		/// 	<paramref name="builder"/> or <paramref name="options"/> is null.
 		/// </exception>
-		public static PipelineBuilder AddThrottling(this PipelineBuilder builder, Action<ThrottleOptions> configureOptions)
+		public static IRegistrar<IRequestProcessorMiddleware> AddThrottling(this IRegistrar<IRequestProcessorMiddleware> builder, Action<ThrottleOptions> configureOptions)
 		{
 			if (builder == null) throw new ArgumentNullException(nameof(builder));
 			if (configureOptions == null) throw new ArgumentNullException(nameof(configureOptions));

@@ -9,22 +9,22 @@ using Untech.Practices.CQRS;
 
 namespace Untech.AsyncJob.Features.CQRS
 {
-	internal class CqrsMiddleware : IRequestProcessorMiddleware
+	public class CqrsProcessor : IRequestProcessor
 	{
 		private static readonly MethodInfo s_executeCommandMethodInfo;
 		private static readonly MethodInfo s_executeNotificationMethodInfo;
 
 		private static readonly ConcurrentDictionary<string, ExecutorCallback> s_executors;
 
-		private delegate Task ExecutorCallback(CqrsMiddleware middleware, Context context);
+		private delegate Task ExecutorCallback(CqrsProcessor processor, Context context);
 
 		private readonly ICqrsStrategy _strategy;
 
-		static CqrsMiddleware()
+		static CqrsProcessor()
 		{
 			s_executors = new ConcurrentDictionary<string, ExecutorCallback>();
 
-			var myType = typeof(CqrsMiddleware);
+			var myType = typeof(CqrsProcessor);
 			s_executeCommandMethodInfo = GetMethod(nameof(ExecuteCommandAsync));
 			s_executeNotificationMethodInfo = GetMethod(nameof(ExecuteEventAsync));
 
@@ -34,12 +34,12 @@ namespace Untech.AsyncJob.Features.CQRS
 			}
 		}
 
-		public CqrsMiddleware(ICqrsStrategy strategy)
+		public CqrsProcessor(ICqrsStrategy strategy)
 		{
 			_strategy = strategy ?? throw new ArgumentNullException(nameof(strategy));
 		}
 
-		public Task InvokeAsync(Context context, RequestProcessorCallback next)
+		public Task InvokeAsync(Context context)
 		{
 			if (string.IsNullOrEmpty(context.RequestName))
 				throw new ArgumentException(nameof(context.RequestName));
@@ -102,7 +102,7 @@ namespace Untech.AsyncJob.Features.CQRS
 
 			ExecutorCallback BuildCallback(MethodInfo methodInfo)
 			{
-				var p0 = Expression.Parameter(typeof(CqrsMiddleware), "middleware");
+				var p0 = Expression.Parameter(typeof(CqrsProcessor), "middleware");
 				var p1 = Expression.Parameter(typeof(Context), "context");
 
 				var lambda = Expression.Lambda<ExecutorCallback>(
@@ -114,27 +114,27 @@ namespace Untech.AsyncJob.Features.CQRS
 			}
 		}
 
-		private static Task ExecuteCommandAsync<TRequest, TResult>(CqrsMiddleware middleware, Context context)
+		private static Task ExecuteCommandAsync<TRequest, TResult>(CqrsProcessor processor, Context context)
 			where TRequest : ICommand<TResult>
 		{
-			var dispatcher = middleware._strategy.GetDispatcher(context) ?? throw NoDispatcherError();
-			var command = GetRequestOrThrow(middleware, context, typeof(TRequest));
+			var dispatcher = processor._strategy.GetDispatcher(context) ?? throw NoDispatcherError();
+			var command = GetRequestOrThrow(processor, context, typeof(TRequest));
 
 			return dispatcher.ProcessAsync((TRequest)command, context.Aborted);
 		}
 
-		private static Task ExecuteEventAsync<TEvent>(CqrsMiddleware middleware, Context context)
+		private static Task ExecuteEventAsync<TEvent>(CqrsProcessor processor, Context context)
 			where TEvent : IEvent
 		{
-			var dispatcher = middleware._strategy.GetDispatcher(context) ?? throw NoDispatcherError();
-			var notification = GetRequestOrThrow(middleware, context, typeof(TEvent));
+			var dispatcher = processor._strategy.GetDispatcher(context) ?? throw NoDispatcherError();
+			var notification = GetRequestOrThrow(processor, context, typeof(TEvent));
 
 			return dispatcher.PublishAsync((TEvent)notification, context.Aborted);
 		}
 
-		private static object GetRequestOrThrow(CqrsMiddleware middleware, Context context, Type type)
+		private static object GetRequestOrThrow(CqrsProcessor processor, Context context, Type type)
 		{
-			var formatter = middleware._strategy.GetRequestFormatter(context) ?? throw NoRequestFormatterError();
+			var formatter = processor._strategy.GetRequestFormatter(context) ?? throw NoRequestFormatterError();
 			return formatter.Deserialize(context.Request.Content, type) ?? throw NoRequestError();
 		}
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using Untech.AsyncJob.Builder;
+using Untech.AsyncJob.Processing;
 
 namespace Untech.AsyncJob.Features.WatchDog
 {
@@ -16,7 +17,7 @@ namespace Untech.AsyncJob.Features.WatchDog
 		/// <exception cref="ArgumentNullException">
 		/// 	<paramref name="builder"/> is null.
 		/// </exception>
-		public static PipelineBuilder AddWatchDog(this PipelineBuilder builder)
+		public static IRegistrar<IRequestProcessorMiddleware> AddWatchDog(this IRegistrar<IRequestProcessorMiddleware> builder)
 		{
 			return AddWatchDog(builder, _ => { });
 		}
@@ -30,10 +31,9 @@ namespace Untech.AsyncJob.Features.WatchDog
 		/// <exception cref="ArgumentNullException">
 		/// 	<paramref name="builder"/> or <paramref name="options"/> is null.
 		/// </exception>
-		public static PipelineBuilder AddWatchDog(this PipelineBuilder builder, Action<WatchDogOptions> configureOptions)
+		public static IRegistrar<IRequestProcessorMiddleware> AddWatchDog(this IRegistrar<IRequestProcessorMiddleware> builder, Action<WatchDogOptions> configureOptions)
 		{
-			if (builder == null)
-				throw new ArgumentNullException(nameof(builder));
+			if (builder == null) throw new ArgumentNullException(nameof(builder));
 
 			var options = OptionsBuilder.ConfigureAndValidate(configureOptions);
 
