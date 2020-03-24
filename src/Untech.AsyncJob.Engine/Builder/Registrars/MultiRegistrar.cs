@@ -38,8 +38,4 @@ namespace Untech.AsyncJob.Builder.Registrars
 			return GetEnumerator();
 		}
 	}
-
-
-
-
 }

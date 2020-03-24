@@ -34,15 +34,15 @@ namespace Untech.AsyncJob.Builder
 		}
 
 		public EngineBuilder(Action<OrchestratorOptions> configureOptions)
-			: this(new ServiceContainer(s_defaultServices), configureOptions)
+			: this(CreateContainer(), configureOptions)
 		{
 		}
 
 		public EngineBuilder(IServiceProvider provider, Action<OrchestratorOptions> configureOptions)
-			: this(new ServiceContainer(new CompositeServiceProvider(new[] { provider, s_defaultServices })),
-				configureOptions)
+			: this(CreateContainer(provider), configureOptions)
 		{
 		}
+
 
 		private EngineBuilder(IServiceContainer container, Action<OrchestratorOptions> configureOptions)
 		{
@@ -138,6 +138,13 @@ namespace Untech.AsyncJob.Builder
 			where T : class
 		{
 			container.AddService(typeof(T), (provider, type) => factory.Create(provider));
+		}
+
+		private static ServiceContainer CreateContainer(IServiceProvider provider = null)
+		{
+			return provider == null
+				? new ServiceContainer(s_defaultServices)
+				: new ServiceContainer(new CompositeServiceProvider(new[] { provider, s_defaultServices }));
 		}
 
 		private class CompositeServiceProvider : IServiceProvider

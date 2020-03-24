@@ -25,14 +25,28 @@ namespace Untech.AsyncJob.Builder
 		/// <summary>
 		/// Sets <see cref="IRequestMetadataProvider"/> that can be used for getting <see cref="IRequestMetadata"/>.
 		/// </summary>
-		/// <param name="configure">The provider to use.</param>
+		/// <param name="configure">Action that configures providers to use.</param>
 		/// <returns></returns>
 		IEngineBuilder ReadMetadataFrom(Action<IRegistrar<IRequestMetadataProvider>> configure);
 
+		/// <summary>
+		/// Sets <see cref="IRequestProcessorMiddleware"/> that can be used for preprocessing.
+		/// </summary>
+		/// <param name="configure">Action that configures middlewares.</param>
+		/// <returns></returns>
 		IEngineBuilder Then(Action<IRegistrar<IRequestProcessorMiddleware>> configure);
 
+		/// <summary>
+		/// Sets <see cref="IRequestProcessor"/> final request processor.
+		/// </summary>
+		/// <param name="configure">Action that configures processor.</param>
+		/// <returns></returns>
 		IEngineBuilder Finally(Action<IRegistrar<IRequestProcessor>> configure);
 
+		/// <summary>
+		/// Returns constructed instance of the <see cref="IRequestProcessor"/>.
+		/// </summary>
+		/// <returns></returns>
 		IRequestProcessor BuildProcessor();
 
 		/// <summary>

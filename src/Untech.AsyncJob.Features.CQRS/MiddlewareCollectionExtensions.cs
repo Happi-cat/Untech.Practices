@@ -5,7 +5,7 @@ using Untech.AsyncJob.Processing;
 
 namespace Untech.AsyncJob.Features.CQRS
 {
-	public static class MiddlewareCollectionExtensions
+	public static class EngineBuilderExtensions
 	{
 		public static IEngineBuilder Finally(this IEngineBuilder collection, ICqrsStrategy strategy)
 		{

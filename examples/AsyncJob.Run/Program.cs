@@ -41,7 +41,7 @@ namespace AsyncJob.Run
 				{
 					Dispatcher = new Dispatcher(new DemoServiceProvider(builder.GetLogger("Handlers"))),
 					Formatter = JsonRequestContentFormatter.Default
-							})
+				})
 				.BuildOrchestrator();
 
 			service.StartAsync();

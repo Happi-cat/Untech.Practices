@@ -9,7 +9,7 @@ using Untech.Practices.CQRS;
 
 namespace Untech.AsyncJob.Features.CQRS
 {
-	public class CqrsProcessor : IRequestProcessor
+	public sealed class CqrsProcessor : IRequestProcessor
 	{
 		private static readonly MethodInfo s_executeCommandMethodInfo;
 		private static readonly MethodInfo s_executeNotificationMethodInfo;
