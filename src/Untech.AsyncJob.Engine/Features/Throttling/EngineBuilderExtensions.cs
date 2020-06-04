@@ -32,10 +32,8 @@ namespace Untech.AsyncJob.Features.Throttling
 		/// </exception>
 		public static PipelineBuilder ThenThrottling(this PipelineBuilder builder, Action<ThrottleOptions> configureOptions)
 		{
-			if (builder == null)
-				throw new ArgumentNullException(nameof(builder));
-			if (configureOptions == null)
-				throw new ArgumentNullException(nameof(configureOptions));
+			if (builder == null) throw new ArgumentNullException(nameof(builder));
+			if (configureOptions == null) throw new ArgumentNullException(nameof(configureOptions));
 
 			var options = OptionsBuilder.ConfigureAndValidate(configureOptions);
 
