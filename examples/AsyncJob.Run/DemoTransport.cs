@@ -45,6 +45,11 @@ namespace AsyncJob.Run
 			return Task.CompletedTask;
 		}
 
+		public Task Flush()
+		{
+			return Task.CompletedTask;
+		}
+
 		private static Request Create(DemoCommandBase body)
 		{
 			var id = Interlocked.Increment(ref s_nextIdentifier).ToString();

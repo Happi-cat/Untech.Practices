@@ -69,7 +69,7 @@ namespace Untech.AsyncJob
 			return StopAsync(true, delay);
 		}
 
-		private Task StopAsync(bool cancel, TimeSpan? delay)
+		private async Task StopAsync(bool cancel, TimeSpan? delay)
 		{
 			_timer.Dispose();
 			_timer = null;
@@ -81,7 +81,8 @@ namespace Untech.AsyncJob
 					_aborted.Cancel();
 			}
 
-			return Task.WhenAll(_warps.Select(s => s.Task));
+			await Task.WhenAll(_warps.Select(s => s.Task));
+			await _transport.Flush();
 		}
 
 		private void OnTimer()

@@ -47,6 +47,11 @@ namespace Untech.AsyncJob.Transports.InProcess
 			return Task.CompletedTask;
 		}
 
+		public Task Flush()
+		{
+			return Task.CompletedTask;
+		}
+
 		public Task EnqueueAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default,
 			QueueOptions options = null)
 		{

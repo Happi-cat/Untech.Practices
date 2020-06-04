@@ -36,6 +36,11 @@ namespace Untech.AsyncJob.Transports.Scheduled
 			return Complete(request, exception);
 		}
 
+		public Task Flush()
+		{
+			return Task.CompletedTask;
+		}
+
 		private async Task Complete(Request request, Exception exception = null)
 		{
 			if (request.Items.TryGetValue(typeof(ScheduledJob), out var obj) && obj is ScheduledJob job)

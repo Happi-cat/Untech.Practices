@@ -57,6 +57,11 @@ namespace Untech.AsyncJob.Transports
 			await GetUnderlyingTransport(request).FailRequestAsync(request, exception);
 		}
 
+		public Task Flush()
+		{
+			return Task.WhenAll(_transports.Select(t => t.Flush()));
+		}
+
 		private ITransport GetUnderlyingTransport(Request request)
 		{
 			return (ITransport)request.Items[this];

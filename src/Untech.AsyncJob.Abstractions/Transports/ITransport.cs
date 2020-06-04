@@ -29,5 +29,10 @@ namespace Untech.AsyncJob.Transports
 		/// <param name="exception">The exception that was thrown during request processing.</param>
 		/// <returns>Task to await.</returns>
 		Task FailRequestAsync(Request request, Exception exception);
+
+		/// <summary>
+		/// Flushes inbound/outbound buffers. Used for correct stop process.
+		/// </summary>
+		Task Flush();
 	}
 }

@@ -85,6 +85,11 @@ namespace Untech.AsyncJob
 				return CompleteRequestAsync(request);
 			}
 
+			public Task Flush()
+			{
+				return Task.CompletedTask;
+			}
+
 			public Task<int> Complete()
 			{
 				return _completionSource.Task;
