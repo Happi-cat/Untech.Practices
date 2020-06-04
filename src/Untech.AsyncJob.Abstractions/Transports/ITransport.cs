@@ -30,6 +30,9 @@ namespace Untech.AsyncJob.Transports
 		/// <returns>Task to await.</returns>
 		Task FailRequestAsync(Request request, Exception exception);
 
+		/// <summary>
+		/// Flushes inbound/outbound buffers. Used for correct stop process.
+		/// </summary>
 		Task Flush();
 	}
 }
