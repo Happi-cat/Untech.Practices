@@ -4,7 +4,6 @@
   <PropertyGroup>
     <Company>Sergey Svirsky</Company>
     <Copyright>Copyright \u00A9 Sergey Svirsky 2019</Copyright>
-    <TargetFrameworks>netstandard1.3</TargetFrameworks>
     <!-- etc -->
     <LangVersion>7.3</LangVersion>
   </PropertyGroup>

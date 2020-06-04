@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <RootNamespace>Untech.Practices.ObjectMapping</RootNamespace>
+    <TargetFramework>netstandard1.3</TargetFramework>
   </PropertyGroup>
 </Project>
