@@ -7,12 +7,12 @@ namespace Untech.AsyncJob.Features.CQRS
 	{
 		public static void Final(this PipelineBuilder collection, ICqrsStrategy strategy)
 		{
-			collection.Then(ctx => new CqrsMiddleware(strategy));
+			collection.Add(ctx => new CqrsMiddleware(strategy));
 		}
 
 		public static void Final(this PipelineBuilder collection, Func<IServiceProvider, ICqrsStrategy> strategy)
 		{
-			collection.Then(ctx => new CqrsMiddleware(strategy(ctx)));
+			collection.Add(ctx => new CqrsMiddleware(strategy(ctx)));
 		}
 	}
 }

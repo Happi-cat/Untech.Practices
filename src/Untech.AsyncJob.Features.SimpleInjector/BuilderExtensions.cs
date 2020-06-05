@@ -7,9 +7,9 @@ namespace Untech.AsyncJob.Features.SimpleInjector
 {
 	public static class BuilderExtensions
 	{
-		public static PipelineBuilder ThenSimpleInjector(this PipelineBuilder collection, Container container)
+		public static PipelineBuilder AddSimpleInjector(this PipelineBuilder collection, Container container)
 		{
-			return collection.Then(async (ctx, next) =>
+			return collection.Add(async (ctx, next) =>
 			{
 				if (IsServiceProviderAttached(ctx))
 				{

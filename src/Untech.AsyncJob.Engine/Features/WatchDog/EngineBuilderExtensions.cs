@@ -16,9 +16,9 @@ namespace Untech.AsyncJob.Features.WatchDog
 		/// <exception cref="ArgumentNullException">
 		/// 	<paramref name="builder"/> is null.
 		/// </exception>
-		public static PipelineBuilder ThenWatchDog(this PipelineBuilder builder)
+		public static PipelineBuilder AddWatchDog(this PipelineBuilder builder)
 		{
-			return ThenWatchDog(builder, _ => { });
+			return AddWatchDog(builder, _ => { });
 		}
 
 		/// <summary>
@@ -30,14 +30,14 @@ namespace Untech.AsyncJob.Features.WatchDog
 		/// <exception cref="ArgumentNullException">
 		/// 	<paramref name="builder"/> or <paramref name="options"/> is null.
 		/// </exception>
-		public static PipelineBuilder ThenWatchDog(this PipelineBuilder builder, Action<WatchDogOptions> configureOptions)
+		public static PipelineBuilder AddWatchDog(this PipelineBuilder builder, Action<WatchDogOptions> configureOptions)
 		{
 			if (builder == null)
 				throw new ArgumentNullException(nameof(builder));
 
 			var options = OptionsBuilder.ConfigureAndValidate(configureOptions);
 
-			return builder.Then(ctx => new WatchDogMiddleware(options, ctx.GetLogger()));
+			return builder.Add(ctx => new WatchDogMiddleware(options, ctx.GetLogger()));
 		}
 	}
 }
