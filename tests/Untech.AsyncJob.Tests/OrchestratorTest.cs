@@ -35,8 +35,8 @@ namespace Untech.AsyncJob
 					options.RunRequestsInWarpAllAtOnce = true;
 					options.SlidingStep = TimeSpan.FromMilliseconds(10);
 				})
-				.ReceiveRequestsFromMultiple(transport)
-				.Do(s => s.Final(cqrs))
+				.ReceiveRequestsFrom(r => r.Add(transport))
+				.Finally(cqrs)
 				.BuildOrchestrator();
 
 			await orchestrator.StartAsync();

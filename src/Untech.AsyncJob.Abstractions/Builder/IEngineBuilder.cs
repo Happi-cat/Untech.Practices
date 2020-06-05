@@ -11,25 +11,37 @@ namespace Untech.AsyncJob.Builder
 		/// <summary>
 		/// Sets <see cref="Microsoft.Extensions.Logging.ILoggerFactory"/> that will be used for logging.
 		/// </summary>
-		/// <param name="loggerCreator">The logger factory.</param>
+		/// <param name="factory">The logger factory.</param>
 		/// <returns></returns>
-		IEngineBuilder LogTo(Func<ILoggerFactory> loggerCreator);
+		IEngineBuilder LogTo(Func<ILoggerFactory> factory);
 
 		/// <summary>
 		/// Sets <see cref="ITransport"/> that will be used as a request store.
 		/// </summary>
-		/// <param name="transportCreator">The transport to use.</param>
+		/// <param name="configure">The transport to use.</param>
 		/// <returns></returns>
-		IEngineBuilder ReceiveRequestsFrom(Func<IServiceProvider, ITransport> transportCreator);
+		IEngineBuilder ReceiveRequestsFrom(Action<IRegistrar<ITransport>> configure);
 
 		/// <summary>
 		/// Sets <see cref="IRequestMetadataProvider"/> that can be used for getting <see cref="IRequestMetadata"/>.
 		/// </summary>
-		/// <param name="providerCreator">The provider to use.</param>
+		/// <param name="configure">Action that configures providers to use.</param>
 		/// <returns></returns>
-		IEngineBuilder ReadMetadataFrom(Func<IServiceProvider, IRequestMetadataProvider> providerCreator);
+		IEngineBuilder ReadMetadataFrom(Action<IRegistrar<IRequestMetadataProvider>> configure);
 
-		IEngineBuilder Do(Action<PipelineBuilder> configureProcessor);
+		/// <summary>
+		/// Sets <see cref="IRequestProcessorMiddleware"/> that can be used for preprocessing.
+		/// </summary>
+		/// <param name="configure">Action that configures middlewares.</param>
+		/// <returns></returns>
+		IEngineBuilder Then(Action<IRegistrar<IRequestProcessorMiddleware>> configure);
+
+		/// <summary>
+		/// Sets <see cref="IRequestProcessor"/> final request processor.
+		/// </summary>
+		/// <param name="configure">Action that configures processor.</param>
+		/// <returns></returns>
+		IEngineBuilder Finally(Action<IRegistrar<IRequestProcessor>> configure);
 
 		/// <summary>
 		/// Returns constructed instance of the <see cref="IRequestProcessor"/>.

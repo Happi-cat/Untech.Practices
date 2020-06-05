@@ -1,18 +1,24 @@
 ﻿using System;
+using System.Collections;
 using Untech.AsyncJob.Builder;
+using Untech.AsyncJob.Processing;
 
 namespace Untech.AsyncJob.Features.CQRS
 {
-	public static class MiddlewareCollectionExtensions
+	public static class EngineBuilderExtensions
 	{
-		public static void Final(this PipelineBuilder collection, ICqrsStrategy strategy)
+		public static IEngineBuilder Finally(this IEngineBuilder collection, ICqrsStrategy strategy)
 		{
-			collection.Add(ctx => new CqrsMiddleware(strategy));
+			return collection.Finally(r => r
+				.Add(new CqrsProcessor(strategy))
+			);
 		}
 
-		public static void Final(this PipelineBuilder collection, Func<IServiceProvider, ICqrsStrategy> strategy)
+		public static IEngineBuilder Finally(this IEngineBuilder collection, Func<IServiceProvider, ICqrsStrategy> strategy)
 		{
-			collection.Add(ctx => new CqrsMiddleware(strategy(ctx)));
+			return collection.Finally(r => r
+				.Add(ctx => new CqrsProcessor(strategy(ctx)))
+			);
 		}
 	}
 }

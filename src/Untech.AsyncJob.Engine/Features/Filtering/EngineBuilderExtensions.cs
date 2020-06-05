@@ -1,11 +1,12 @@
 using System;
 using Untech.AsyncJob.Builder;
+using Untech.AsyncJob.Processing;
 
 namespace Untech.AsyncJob.Features.Filtering
 {
 	public static class EngineBuilderExtensions
 	{
-		public static PipelineBuilder AddFilter(this PipelineBuilder builder, Func<Request, bool> predicate)
+		public static IRegistrar<IRequestProcessorMiddleware> AddFilter(this IRegistrar<IRequestProcessorMiddleware> builder, Func<Request, bool> predicate)
 		{
 			if (predicate == null) throw new ArgumentNullException(nameof(predicate));
 

@@ -78,11 +78,11 @@ namespace Untech.AsyncJob.Processing
 			};
 
 			return new EngineBuilder()
-				.Do(s => s.Final(new CqrsStrategy(new RequestTypeFinder(types))
+				.Finally(new CqrsStrategy(new RequestTypeFinder(types))
 				{
 					Dispatcher = new FakeDispatcher(),
 					Formatter = JsonRequestContentFormatter.Default
-				}))
+				})
 				.BuildProcessor();
 		}
 
