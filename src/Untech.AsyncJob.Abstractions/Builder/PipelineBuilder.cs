@@ -16,7 +16,7 @@ namespace Untech.AsyncJob.Builder
 		/// </summary>
 		/// <param name="creator">The function that creates <see cref="IRequestProcessorMiddleware"/>.</param>
 		/// <returns></returns>
-		public PipelineBuilder Then(MiddlewareBuilder creator)
+		public PipelineBuilder Add(MiddlewareBuilder creator)
 		{
 			if (creator == null) throw new ArgumentNullException(nameof(creator));
 

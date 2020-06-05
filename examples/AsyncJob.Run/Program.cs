@@ -50,18 +50,18 @@ namespace AsyncJob.Run
 		private static void Steps(PipelineBuilder steps)
 		{
 			steps
-				.Then(builder => new DemoMiddleware(builder.GetLogger()))
-				.Then(builder =>
+				.Add(builder => new DemoMiddleware(builder.GetLogger()))
+				.Add(builder =>
 				{
 					var logger = builder.GetLogger("Metrics");
 					return (ctx, next) => MetricsMiddleware(ctx, next, logger);
 				})
-				.ThenRetry(new RetryPolicy(new[] { typeof(TimeoutException) }))
-				.ThenThrottling(options =>
+				.AddRetry(new RetryPolicy(new[] { typeof(TimeoutException) }))
+				.AddThrottling(options =>
 				{
 					options.DefaultRunAtOnceInGroup = 2;
 				})
-				.ThenWatchDog(options =>
+				.AddWatchDog(options =>
 				{
 					options.DefaultTimeout = TimeSpan.FromSeconds(10);
 				})

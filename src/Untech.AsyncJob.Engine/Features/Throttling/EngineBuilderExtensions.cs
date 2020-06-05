@@ -16,9 +16,9 @@ namespace Untech.AsyncJob.Features.Throttling
 		/// <exception cref="ArgumentNullException">
 		/// 	<paramref name="builder"/> is null.
 		/// </exception>
-		public static PipelineBuilder ThenThrottling(this PipelineBuilder builder)
+		public static PipelineBuilder AddThrottling(this PipelineBuilder builder)
 		{
-			return ThenThrottling(builder, _ => { });
+			return AddThrottling(builder, _ => { });
 		}
 
 		/// <summary>
@@ -30,14 +30,14 @@ namespace Untech.AsyncJob.Features.Throttling
 		/// <exception cref="ArgumentNullException">
 		/// 	<paramref name="builder"/> or <paramref name="options"/> is null.
 		/// </exception>
-		public static PipelineBuilder ThenThrottling(this PipelineBuilder builder, Action<ThrottleOptions> configureOptions)
+		public static PipelineBuilder AddThrottling(this PipelineBuilder builder, Action<ThrottleOptions> configureOptions)
 		{
 			if (builder == null) throw new ArgumentNullException(nameof(builder));
 			if (configureOptions == null) throw new ArgumentNullException(nameof(configureOptions));
 
 			var options = OptionsBuilder.ConfigureAndValidate(configureOptions);
 
-			return builder.Then(ctx => new ThrottleMiddleware(options));
+			return builder.Add(ctx => new ThrottleMiddleware(options));
 		}
 	}
 }

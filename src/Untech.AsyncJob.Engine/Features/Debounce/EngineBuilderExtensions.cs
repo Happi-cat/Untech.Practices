@@ -17,13 +17,13 @@ namespace Untech.AsyncJob.Features.Debounce
 		/// <exception cref="ArgumentNullException">
 		/// 	<paramref name="builder"/> or <paramref name="lastRunStore"/> is null.
 		/// </exception>
-		public static PipelineBuilder ThenDebounce(this PipelineBuilder builder,
+		public static PipelineBuilder AddDebounce(this PipelineBuilder builder,
 			ILastRunStore lastRunStore)
 		{
 			if (builder == null) throw new ArgumentNullException(nameof(builder));
 			if (lastRunStore == null) throw new ArgumentNullException(nameof(lastRunStore));
 
-			return builder.Then(ctx => new DebounceMiddleware(lastRunStore, ctx.GetLogger()));
+			return builder.Add(ctx => new DebounceMiddleware(lastRunStore, ctx.GetLogger()));
 		}
 	}
 }
