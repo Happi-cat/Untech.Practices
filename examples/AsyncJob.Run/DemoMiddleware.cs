@@ -49,16 +49,14 @@ namespace AsyncJob.Run
 				}
 				catch (Exception e)
 				{
-					_logger.Log(LogLevel.Error, e, "crashed: {0}", e.Message);
+					_logger.Log(LogLevel.Error, "crashed: {0}", e.Message);
 				}
 			}
 		}
 
 		private static string GetBodyAsJson(Request request)
 		{
-			using (var stream = request.GetRawBody())
-			using (var reader = new StreamReader(stream))
-				return reader.ReadToEnd();
+			return request.Content;
 		}
 	}
 }

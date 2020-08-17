@@ -1,6 +1,6 @@
 ﻿using System;
-using Microsoft.Extensions.Logging;
 using Untech.AsyncJob.Builder;
+using Untech.AsyncJob.Processing;
 
 namespace Untech.AsyncJob.Features.Debounce
 {
@@ -18,15 +18,13 @@ namespace Untech.AsyncJob.Features.Debounce
 		/// <exception cref="ArgumentNullException">
 		/// 	<paramref name="builder"/> or <paramref name="lastRunStore"/> is null.
 		/// </exception>
-		public static PipelineBuilder ThenDebounce(this PipelineBuilder builder,
+		public static IRegistrar<IRequestProcessorMiddleware> AddDebounce(this IRegistrar<IRequestProcessorMiddleware> builder,
 			ILastRunStore lastRunStore)
 		{
-			if (builder == null)
-				throw new ArgumentNullException(nameof(builder));
-			if (lastRunStore == null)
-				throw new ArgumentNullException(nameof(lastRunStore));
+			if (builder == null) throw new ArgumentNullException(nameof(builder));
+			if (lastRunStore == null) throw new ArgumentNullException(nameof(lastRunStore));
 
-			return builder.Then(ctx => new DebounceMiddleware(lastRunStore, ctx.GetLogger()));
+			return builder.Add(ctx => new DebounceMiddleware(lastRunStore, ctx.GetLogger()));
 		}
 	}
 }

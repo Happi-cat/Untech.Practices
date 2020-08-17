@@ -6,10 +6,10 @@
 	public interface IRequestMetadataProvider
 	{
 		/// <summary>
-		/// Gets <see cref="IRequestMetadata"/> for the specified <paramref name="requestName"/>.
+		/// Gets <see cref="IRequestMetadata"/> for the specified <paramref name="request"/>.
 		/// </summary>
-		/// <param name="requestName">The name of request.</param>
+		/// <param name="request">The request.</param>
 		/// <returns>Instance of the <see cref="IRequestMetadata"/>.</returns>
-		IRequestMetadata GetMetadata(string requestName);
+		IRequestMetadata GetMetadata(Request request);
 	}
 }

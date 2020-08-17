@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>netcoreapp2.2</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,7 +12,6 @@
     <PackageReference Include="Serilog" Version="2.8.0" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.2" />
     <PackageReference Include="Serilog.Sinks.ColoredConsole" Version="3.0.1" />
-    <PackageReference Include="System.Text.Json" Version="4.6.0-preview6.19303.8" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,7 +22,7 @@
     <ProjectReference Include="..\..\src\Untech.AsyncJob.Transports.Scheduled\Untech.AsyncJob.Transports.Scheduled.csproj" />
     <ProjectReference Include="..\..\src\Untech.Practices.CQRS.Abstractions\Untech.Practices.CQRS.Abstractions.csproj" />
     <ProjectReference Include="..\..\src\Untech.Practices.CQRS\Untech.Practices.CQRS.csproj" />
-    <ProjectReference Include="..\..\src\Untech.Practices.DataStorage.Cache.Abstractions\Untech.Practices.DataStorage.Cache.Abstractions.csproj" />
+    <ProjectReference Include="..\..\src\Untech.Practices.Persistence.Cache.Abstractions\Untech.Practices.Persistence.Cache.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

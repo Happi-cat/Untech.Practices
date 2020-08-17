@@ -8,6 +8,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Untech.AsyncJob.Engine\Untech.AsyncJob.Engine.csproj" />
     <ProjectReference Include="..\..\src\Untech.AsyncJob.Features.CQRS\Untech.AsyncJob.Features.CQRS.csproj" />
+    <ProjectReference Include="..\..\src\Untech.AsyncJob.Formatting.Json\Untech.AsyncJob.Formatting.Json.csproj" />
   </ItemGroup>
 
   <ItemGroup>

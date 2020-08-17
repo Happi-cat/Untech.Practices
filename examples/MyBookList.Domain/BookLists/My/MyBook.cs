@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using MyBookList.Domain.Library;
-using Untech.Practices.DataStorage;
+using Untech.Practices.Persistence;
 
 namespace MyBookList.Domain.BookLists.My
 {

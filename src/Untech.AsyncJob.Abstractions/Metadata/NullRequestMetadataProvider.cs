@@ -9,7 +9,7 @@
 		public static readonly IRequestMetadataProvider Instance = new NullRequestMetadataProvider();
 
 		/// <inheritdoc />
-		public IRequestMetadata GetMetadata(string requestName)
+		public IRequestMetadata GetMetadata(Request request)
 		{
 			return NullRequestMetadata.Instance;
 		}

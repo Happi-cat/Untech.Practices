@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Untech.Practices.TenantContext
+﻿namespace Untech.Practices.TenantContext
 {
 	/// <summary>
 	///     Marks tenant-related models.

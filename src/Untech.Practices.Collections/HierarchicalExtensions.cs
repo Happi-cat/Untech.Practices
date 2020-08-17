@@ -9,6 +9,14 @@ namespace Untech.Practices.Collections
 	/// </summary>
 	public static class HierarchicalExtensions
 	{
+		public static IEnumerable<T> Elements<T>(this IEnumerable<T> source)
+			where T : IHierarchical<T>
+		{
+			return source == null
+				? throw new ArgumentNullException(nameof(source))
+				: source.SelectMany(n => n.Elements());
+		}
+
 		/// <summary>
 		///     Returns all descendant elements.
 		/// </summary>
@@ -18,12 +26,17 @@ namespace Untech.Practices.Collections
 		public static IEnumerable<T> Descendants<T>(this T node)
 			where T : IHierarchical<T>
 		{
-			if (node == null)
-				throw new ArgumentNullException(nameof(node));
+			return node == null
+				? throw new ArgumentNullException(nameof(node))
+				: node.Elements().SelectMany(DescendantsAndSelf);
+		}
 
-			return node
-				.GetElements()
-				.SelectMany(DescendantsAndSelf);
+		public static IEnumerable<T> Descendants<T>(this IEnumerable<T> source)
+			where T : IHierarchical<T>
+		{
+			return source == null
+				? throw new ArgumentNullException(nameof(source))
+				: source.SelectMany(Descendants);
 		}
 
 		/// <summary>
@@ -35,10 +48,9 @@ namespace Untech.Practices.Collections
 		public static IEnumerable<T> DescendantsAndSelf<T>(this T node)
 			where T : IHierarchical<T>
 		{
-			if (node == null)
-				throw new ArgumentNullException(nameof(node));
-
-			return GetEnumerable();
+			return node == null
+				? throw new ArgumentNullException(nameof(node))
+				: GetEnumerable();
 
 			IEnumerable<T> GetEnumerable()
 			{
@@ -47,6 +59,14 @@ namespace Untech.Practices.Collections
 				foreach (T descendant in node.Descendants())
 					yield return descendant;
 			}
+		}
+
+		public static IEnumerable<T> DescendantsAndSelf<T>(this IEnumerable<T> source)
+			where T : IHierarchical<T>
+		{
+			return source == null
+				? throw new ArgumentNullException(nameof(source))
+				: source.SelectMany(DescendantsAndSelf);
 		}
 	}
 }

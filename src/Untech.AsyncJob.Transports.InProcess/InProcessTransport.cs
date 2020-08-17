@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -44,6 +43,11 @@ namespace Untech.AsyncJob.Transports.InProcess
 		}
 
 		public Task FailRequestAsync(Request request, Exception exception)
+		{
+			return Task.CompletedTask;
+		}
+
+		public Task Flush()
 		{
 			return Task.CompletedTask;
 		}

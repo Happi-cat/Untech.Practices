@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,8 +22,7 @@ namespace Untech.AsyncJob.Transports
 		/// <exception cref="ArgumentNullException"><paramref name="transports"/> is null.</exception>
 		public CompositeTransport(IEnumerable<ITransport> transports)
 		{
-			if (transports == null)
-				throw new ArgumentNullException(nameof(transports));
+			if (transports == null) throw new ArgumentNullException(nameof(transports));
 
 			_transports = transports.ToList();
 		}
@@ -57,6 +55,11 @@ namespace Untech.AsyncJob.Transports
 		public async Task FailRequestAsync(Request request, Exception exception)
 		{
 			await GetUnderlyingTransport(request).FailRequestAsync(request, exception);
+		}
+
+		public Task Flush()
+		{
+			return Task.WhenAll(_transports.Select(t => t.Flush()));
 		}
 
 		private ITransport GetUnderlyingTransport(Request request)

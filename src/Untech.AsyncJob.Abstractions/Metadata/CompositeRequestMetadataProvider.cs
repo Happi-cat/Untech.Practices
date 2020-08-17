@@ -19,19 +19,17 @@ namespace Untech.AsyncJob.Metadata
 		/// <exception cref="ArgumentNullException"><paramref name="providers"/> is null.</exception>
 		public CompositeRequestMetadataProvider(IEnumerable<IRequestMetadataProvider> providers)
 		{
-			if (providers == null)
-				throw new ArgumentNullException(nameof(providers));
+			if (providers == null) throw new ArgumentNullException(nameof(providers));
 
 			_providers = providers.ToList();
 		}
 
 		/// <inheritdoc />
-		public IRequestMetadata GetMetadata(string requestName)
+		public IRequestMetadata GetMetadata(Request request)
 		{
-			if (string.IsNullOrEmpty(requestName))
-				throw new ArgumentNullException(nameof(requestName));
+			if (request == null) throw new ArgumentNullException(nameof(request));
 
-			var accessors = _providers.Select(n => n.GetMetadata(requestName));
+			var accessors = _providers.Select(n => n.GetMetadata(request));
 
 			return new CompositeRequestMetadata(accessors);
 		}

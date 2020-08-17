@@ -1,44 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Linq;
+using JetBrains.Annotations;
 using Untech.AsyncJob.Metadata.Annotations;
 
 namespace Untech.AsyncJob.Transports.Scheduled
 {
 	internal class ScheduledJobRequest : Request
 	{
-		public ScheduledJobRequest(ScheduledJob job)
-		{
-			Job = job ?? throw new ArgumentNullException(nameof(job));
-			Definition = job.Definition ?? throw new ArgumentNullException(nameof(job.Definition));
-			Name = job.Definition.Name ?? throw new ArgumentNullException(nameof(job.Definition.Name));
+		private readonly DateTimeOffset _instantiated = DateTimeOffset.Now;
+		private readonly ScheduledJob _job;
+		private readonly ScheduledJobDefinition _definition;
 
-			Identifier = job.Id + ":" + job.Definition.Name + ":" + job.NextRun;
-			Created = job.NextRun ?? DateTime.UtcNow;
-			Attributes = Definition.Attributes ?? new Dictionary<string, string>();
+		public ScheduledJobRequest([NotNull] ScheduledJob job)
+		{
+			_job = job ?? throw new ArgumentNullException(nameof(job));
+			_definition = job.Definition ?? throw new ArgumentNullException(nameof(job.Definition));
+
+			Items[typeof(ScheduledJob)] = job;
 		}
 
-		public ScheduledJob Job { get; }
-		public ScheduledJobDefinition Definition { get; }
+		public override string Identifier => $"{_job.Id}:{Name}:{Created}";
+		public override string Name => _definition.Name;
+		public override DateTimeOffset Created => _job.NextRun ?? _instantiated;
 
-		public override string Identifier { get; }
-		public override string Name { get; }
-		public override DateTimeOffset Created { get; }
-		public override IDictionary<string, string> Attributes { get; }
-
-		public override object GetBody(Type requestType)
-		{
-			return Definition.GetBody(requestType);
-		}
-
-		public override Stream GetRawBody()
-		{
-			return Definition.GetRawBody();
-		}
+		public override IReadOnlyDictionary<string, string> Attributes => _definition.Attributes;
+		public override string Content => _definition.Content;
+		public override string ContentType => _definition.ContentType;
 
 		public override IEnumerable<MetadataAttribute> GetAttachedMetadata()
 		{
-			return Definition.Metadata ?? base.GetAttachedMetadata();
+			return _definition.Metadata ?? base.GetAttachedMetadata();
 		}
 	}
 }

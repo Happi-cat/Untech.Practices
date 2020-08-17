@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using JetBrains.Annotations;
 using Untech.AsyncJob.Metadata.Annotations;
@@ -39,7 +38,19 @@ namespace Untech.AsyncJob
 		/// Gets a key/value collection that contains request attributes and can be used for sharing attributes.
 		/// </summary>
 		[CanBeNull]
-		public abstract IDictionary<string, string> Attributes { get; }
+		public abstract IReadOnlyDictionary<string, string> Attributes { get; }
+
+		/// <summary>
+		/// Gets serialized content.
+		/// </summary>
+		[CanBeNull]
+		public abstract string Content { get; }
+
+		/// <summary>
+		/// Gets serializer type that was used for content serialization.
+		/// </summary>
+		[CanBeNull]
+		public abstract string ContentType { get; }
 
 		/// <summary>
 		/// Gets key/value collection that can be used to share data between different <see cref="ITransport"/> instances
@@ -47,19 +58,6 @@ namespace Untech.AsyncJob
 		/// </summary>
 		[NotNull]
 		public IDictionary<object, object> Items { get; }
-
-		/// <summary>
-		/// Gets a request payload that was deserialized and converted to <paramref name="requestType"/>.
-		/// </summary>
-		/// <param name="requestType">The request type to be used for deserialization.</param>
-		/// <returns>Deserialized request payload.</returns>
-		public abstract object GetBody(Type requestType);
-
-		/// <summary>
-		/// Gets a request payload as it is without deserialization.
-		/// </summary>
-		/// <returns>Request payload stream.</returns>
-		public abstract Stream GetRawBody();
 
 		/// <summary>
 		/// Gets metadata attributes that were attached directly to that request.

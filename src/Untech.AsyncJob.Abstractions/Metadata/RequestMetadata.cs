@@ -26,8 +26,7 @@ namespace Untech.AsyncJob.Metadata
 		/// <exception cref="ArgumentNullException"><paramref name="attributes"/> is null.</exception>
 		public RequestMetadata(IEnumerable<Attribute> attributes)
 		{
-			if (attributes == null)
-				throw new ArgumentNullException(nameof(attributes));
+			if (attributes == null) throw new ArgumentNullException(nameof(attributes));
 
 			_attributes = attributes.ToList();
 		}
@@ -46,8 +45,7 @@ namespace Untech.AsyncJob.Metadata
 
 		public RequestMetadata Add(Attribute attribute)
 		{
-			if (attribute == null)
-				throw new ArgumentNullException(nameof(attribute));
+			if (attribute == null) throw new ArgumentNullException(nameof(attribute));
 
 			_attributes.Add(attribute);
 

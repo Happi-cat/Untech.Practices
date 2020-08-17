@@ -2,11 +2,10 @@
 using System.Threading.Tasks;
 using MyBudgetPlan.Domain;
 using MyBudgetPlan.Domain.Transactions;
-using Untech.Practices;
 using Untech.Practices.CQRS;
 using Untech.Practices.CQRS.Dispatching;
 using Untech.Practices.CQRS.Handlers;
-using Untech.Practices.DataStorage;
+using Untech.Practices.Persistence;
 
 namespace MyBudgetPlan.Infrastructure
 {

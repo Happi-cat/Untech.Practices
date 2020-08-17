@@ -1,0 +1,6 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Untech.Practices.Persistence.Cache</RootNamespace>
+    <TargetFramework>netstandard1.3</TargetFramework>
+  </PropertyGroup>
+</Project>

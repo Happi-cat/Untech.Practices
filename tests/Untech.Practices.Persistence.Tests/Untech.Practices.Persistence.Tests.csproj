@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <IsPackable>false</IsPackable>
+        <RootNamespace>Untech.Practices.Persistence</RootNamespace>
+        <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="linq2db" Version="2.7.4" />
+        <PackageReference Include="Microsoft.Data.SQLite" Version="2.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\Untech.Practices.Persistence.Abstractions\Untech.Practices.Persistence.Abstractions.csproj" />
+      <ProjectReference Include="..\..\src\Untech.Practices.Persistence.Cache.Abstractions\Untech.Practices.Persistence.Cache.Abstractions.csproj" />
+      <ProjectReference Include="..\..\src\Untech.Practices.Persistence.Cache.Linq2Db\Untech.Practices.Persistence.Cache.Linq2Db.csproj" />
+      <ProjectReference Include="..\..\src\Untech.Practices.Persistence.Linq2Db\Untech.Practices.Persistence.Linq2Db.csproj" />
+    </ItemGroup>
+
+</Project>

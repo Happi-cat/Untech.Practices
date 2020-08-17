@@ -8,9 +8,10 @@ namespace Untech.AsyncJob.Metadata.Annotations
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class)]
 	[DataContract]
+	[Serializable]
 	public sealed class WatchDogTimeoutAttribute : MetadataAttribute
 	{
-		private WatchDogTimeoutAttribute()
+		public WatchDogTimeoutAttribute()
 		{
 		}
 
@@ -48,18 +49,18 @@ namespace Untech.AsyncJob.Metadata.Annotations
 		/// Gets the amount of hours.
 		/// </summary>
 		[DataMember]
-		public int Hours { get; private set; }
+		public int Hours { get; set; }
 		/// <summary>
 		/// Gets the amount of minutes.
 		/// </summary>
 		[DataMember]
-		public int Minutes { get; private set; }
+		public int Minutes { get; set; }
 
 		/// <summary>
 		/// Gets the amount of seconds.
 		/// </summary>
 		[DataMember]
-		public int Seconds { get; private set; }
+		public int Seconds { get; set; }
 
 		/// <summary>
 		/// Gets the defined timeout after which request should be cancelled.

@@ -25,13 +25,15 @@ namespace Untech.AsyncJob.Metadata
 				.ToDictionary(n => n.Key, n => n.ToList());
 		}
 
-		public IRequestMetadata GetMetadata(string requestName)
+		public IRequestMetadata GetMetadata(Request request)
 		{
+			if (request == null) throw new ArgumentNullException(nameof(request));
+
 			return new CompositeRequestMetadata(GetItems());
 
 			IEnumerable<IRequestMetadata> GetItems()
 			{
-				if (_metadata.TryGetValue(requestName, out var metadata))
+				if (_metadata.TryGetValue(request.Name, out var metadata))
 					foreach (var meta in metadata)
 						yield return meta;
 
@@ -43,10 +45,8 @@ namespace Untech.AsyncJob.Metadata
 
 		public RequestMetadataProvider Add(string requestName, IRequestMetadata metadata)
 		{
-			if (requestName == null)
-				throw new ArgumentNullException(nameof(requestName));
-			if (metadata == null)
-				throw new ArgumentNullException(nameof(metadata));
+			if (requestName == null) throw new ArgumentNullException(nameof(requestName));
+			if (metadata == null) throw new ArgumentNullException(nameof(metadata));
 
 			if (!_metadata.ContainsKey(requestName))
 				_metadata.Add(requestName, new List<IRequestMetadata>());

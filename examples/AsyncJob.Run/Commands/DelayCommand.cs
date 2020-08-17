@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Untech.Practices.CQRS;
 
 namespace AsyncJob.Run.Commands

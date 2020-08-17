@@ -2,18 +2,17 @@
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
 using Untech.AsyncJob.Builder;
-using Untech.AsyncJob.Features.CQRS;
-using Untech.Practices.CQRS.Dispatching;
+using Untech.AsyncJob.Processing;
 
 namespace Untech.AsyncJob.Features.SimpleInjector
 {
 	public static class BuilderExtensions
 	{
-		public static PipelineBuilder ThenSimpleInjector(this PipelineBuilder collection, Container container)
+		public static IRegistrar<IRequestProcessorMiddleware> AddSimpleInjector(this IRegistrar<IRequestProcessorMiddleware> collection, Container container)
 		{
-			return collection.Then(async (ctx, next) =>
+			return collection.Add(async (ctx, next) =>
 			{
-				if (ctx.Items.ContainsKey(typeof(Scope)))
+				if (IsServiceProviderAttached(ctx))
 				{
 					await next(ctx);
 				}
@@ -21,38 +20,35 @@ namespace Untech.AsyncJob.Features.SimpleInjector
 				{
 					using (var scope = AsyncScopedLifestyle.BeginScope(container))
 					{
-						ctx.Items[typeof(Scope)] = scope;
+						AttachServiceProvider(ctx, new ScopeAdapter(scope));
 						await next(ctx);
 					}
 				}
 			});
 		}
 
-		public static void FinalCqrsWithSimpleInjector(this PipelineBuilder collection,
-			Container container,
-			IRequestTypeFinder requestFinder)
+		private static bool IsServiceProviderAttached(Context context)
 		{
-			collection.ThenSimpleInjector(container);
-			collection.Final(new CqrsStrategy(requestFinder));
+			return context.Items.ContainsKey(typeof(IServiceProvider));
 		}
 
-		private class CqrsStrategy : ICqrsStrategy
+		private static void AttachServiceProvider(Context context, IServiceProvider serviceProvider)
 		{
-			private readonly IRequestTypeFinder _requestFinder;
+			context.Items[typeof(IServiceProvider)] = serviceProvider;
+		}
 
-			public CqrsStrategy(IRequestTypeFinder requestFinder)
+		private class ScopeAdapter : IServiceProvider
+		{
+			private readonly Scope _scope;
+
+			public ScopeAdapter(Scope scope)
 			{
-				_requestFinder = requestFinder;
+				_scope = scope;
 			}
 
-			public Type FindRequestType(string requestName)
+			public object GetService(Type serviceType)
 			{
-				return _requestFinder.FindRequestType(requestName);
-			}
-
-			public IDispatcher GetDispatcher(Context context)
-			{
-				return ((Scope)context.Items[typeof(Scope)]).GetInstance<IDispatcher>();
+				return _scope.GetInstance(serviceType);
 			}
 		}
 	}

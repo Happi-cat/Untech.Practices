@@ -1,25 +1,53 @@
-﻿namespace Untech.Practices.Localization
+﻿using System;
+using System.Runtime.Serialization;
+
+namespace Untech.Practices.Localization
 {
-	public struct LocalizableString : ILocalizableString
+	[DataContract]
+	public struct LocalizableString : ILocalizableString, IEquatable<LocalizableString>
 	{
-		public LocalizableString(string reference, string source)
+		public LocalizableString(string name, string partition)
 		{
-			Reference = reference;
-			Source = source;
+			Name = name;
+			Partition = partition;
 		}
 
-		public string Reference { get; }
-		public string Source { get; }
+		[DataMember]
+		public string Name { get; }
+
+		[DataMember]
+		public string Partition { get; }
 
 		public string Localize(ILocalizationContext context)
 		{
-			return context.GetSource(Source).GetString(Reference);
+			return context.Localize(Partition, Name);
 		}
 
 		public string Localize(ILocalizationContext context, params object[] args)
 		{
-			var localizedString = Localize(context);
-			return string.Format(localizedString, args);
+			return context.Localize(Partition, Name, args);
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (ReferenceEquals(obj, null)) return false;
+			return obj is LocalizableString other && Equals(other);
+		}
+
+		public bool Equals(LocalizableString other)
+		{
+			return string.Equals(Name, other.Name, StringComparison.Ordinal)
+				&& string.Equals(Partition , other.Partition, StringComparison.OrdinalIgnoreCase);
+		}
+
+		public override int GetHashCode()
+		{
+			return Tuple.Create(Name, Partition.ToLower()).GetHashCode();
+		}
+
+		public override string ToString()
+		{
+			return $"[l10n:{Partition}:{Name}]";
 		}
 	}
 }
