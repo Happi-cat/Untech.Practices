@@ -127,6 +127,18 @@ function Get-RandomParagraph {
 	return "  " + ($sentences -join ' ')
 }
 
+function Convert-FromBase64String {
+	param([string]$value)
+
+	return [System.Text.Encoding]::Default.GetString([Convert]::FromBase64String($value))
+}
+
+function Convert-ToBase64String {
+	param([string]$value)
+
+	return [Convert]::ToBase64String([System.Text.Encoding]::Default.GetBytes($value))
+}
+
 Export-ModuleMember -Function Set-Vs2017Env
 Export-ModuleMember -Function Set-Vs2019Env
 Export-ModuleMember -Function Sync-GitRepo
@@ -137,3 +149,6 @@ Export-ModuleMember -Function Remove-BuildFolders
 Export-ModuleMember -Function Get-RandomName
 Export-ModuleMember -Function Get-RandomSentence
 Export-ModuleMember -Function Get-RandomParagraph
+
+Export-ModuleMember -Function Convert-FromBase64String
+Export-ModuleMember -Function Convert-ToBase64String
