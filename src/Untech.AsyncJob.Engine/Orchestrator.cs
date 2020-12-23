@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Untech.AsyncJob.Metadata;
 using Untech.AsyncJob.Processing;
@@ -12,6 +13,15 @@ namespace Untech.AsyncJob
 {
 	internal partial class Orchestrator : IOrchestrator, IDisposable
 	{
+		private enum State
+		{
+			Inactive = 0,
+			Starting = 1,
+			Working = 2,
+			Stopping = 3,
+			Stopped = 4
+		};
+
 		private readonly OrchestratorOptions _options;
 		private readonly ITransport _transport;
 		private readonly IRequestProcessor _requestProcessor;
@@ -21,6 +31,7 @@ namespace Untech.AsyncJob
 
 		private readonly IReadOnlyCollection<Warp> _warps;
 
+		private State _state;
 		private CancellationTokenSource _aborted;
 		private SlidingTimer _timer;
 
@@ -41,22 +52,12 @@ namespace Untech.AsyncJob
 
 		public Task StartAsync()
 		{
+			_state = State.Starting;
 			_timer = new SlidingTimer(OnTimer, _options.SlidingStep, _options.SlidingRadius, _logger);
 			_aborted = new CancellationTokenSource();
 
+			_state = State.Working;
 			return Task.CompletedTask;
-		}
-
-		public IReadOnlyDictionary<string, object> GetState()
-		{
-			return new Dictionary<string, object>
-			{
-				["Started"] = _timer != null,
-				["Aborted"] = _aborted.IsCancellationRequested,
-				["Warps"] = _warps.Count.ToString(),
-				["WarpsFree"] = _warps.Count(w => w.CanRun()),
-				["SlidingPercentage"] = _timer?.GetSlidingPercentage()
-			};
 		}
 
 		public Task StopAsync()
@@ -69,8 +70,21 @@ namespace Untech.AsyncJob
 			return StopAsync(true, delay);
 		}
 
+		public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = new CancellationToken())
+		{
+			var data = new Dictionary<string, object>
+			{
+				["Warps"] = _warps.Count.ToString(),
+				["WarpsFree"] = _warps.Count(w => w.CanRun()),
+				["SlidingPercentage"] = _timer?.GetSlidingPercentage()
+			};
+
+			return Task.FromResult(HealthCheckResult.Healthy(_state.ToString(), data));
+		}
+
 		private async Task StopAsync(bool cancel, TimeSpan? delay)
 		{
+			_state = State.Stopping;
 			_timer.Dispose();
 			_timer = null;
 			if (cancel)
@@ -83,6 +97,7 @@ namespace Untech.AsyncJob
 
 			await Task.WhenAll(_warps.Select(s => s.Task));
 			await _transport.Flush();
+			_state = State.Stopped;
 		}
 
 		private void OnTimer()

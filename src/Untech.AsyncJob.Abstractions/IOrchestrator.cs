@@ -1,25 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Untech.AsyncJob
 {
 	/// <summary>
 	/// Represents interfaces that defines methods that can be used for service management.
 	/// </summary>
-	public interface IOrchestrator
+	public interface IOrchestrator : IHealthCheck
 	{
 		/// <summary>
 		/// Starts this service.
 		/// </summary>
 		/// <returns>Task to await</returns>
 		Task StartAsync();
-
-		/// <summary>
-		/// Gets a key/value collection that describes state of this service.
-		/// </summary>
-		/// <returns>The key/value collection that describes state of this service.</returns>
-		IReadOnlyDictionary<string, object> GetState();
 
 		/// <summary>
 		/// Stops this service and waits for completion of all requests without cancellation.
