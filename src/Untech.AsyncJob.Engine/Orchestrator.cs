@@ -50,7 +50,7 @@ namespace Untech.AsyncJob
 			_warps = Enumerable.Range(0, options.Warps).Select(n => new Warp()).ToList();
 		}
 
-		public Task StartAsync()
+		public Task StartAsync(CancellationToken cancellationToken)
 		{
 			_state = State.Starting;
 			_timer = new SlidingTimer(OnTimer, _options.SlidingStep, _options.SlidingRadius, _logger);
@@ -60,14 +60,34 @@ namespace Untech.AsyncJob
 			return Task.CompletedTask;
 		}
 
-		public Task StopAsync()
+		public async Task StopAsync(TimeSpan delay, CancellationToken cancellationToken)
 		{
-			return StopAsync(false, null);
-		}
+			_state = State.Stopping;
+			_timer.Dispose();
+			_timer = null;
 
-		public Task StopAsync(TimeSpan delay)
-		{
-			return StopAsync(true, delay);
+			try
+			{
+				try
+				{
+					await Task.Delay(delay, cancellationToken);
+				}
+				catch (OperationCanceledException)
+				{
+					// Prevent throwing if the Delay is cancelled
+				}
+
+				_aborted.Cancel();
+			}
+			finally
+			{
+				var executingTask = Task.WhenAll(_warps.Select(s => s.Task));
+
+				// Wait until the task completes or the stop token triggers
+				await Task.WhenAny(executingTask);
+				await _transport.Flush();
+				_state = State.Stopped;
+			}
 		}
 
 		public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = new CancellationToken())
@@ -80,24 +100,6 @@ namespace Untech.AsyncJob
 			};
 
 			return Task.FromResult(HealthCheckResult.Healthy(_state.ToString(), data));
-		}
-
-		private async Task StopAsync(bool cancel, TimeSpan? delay)
-		{
-			_state = State.Stopping;
-			_timer.Dispose();
-			_timer = null;
-			if (cancel)
-			{
-				if (delay > TimeSpan.Zero)
-					_aborted.CancelAfter(delay.Value);
-				else
-					_aborted.Cancel();
-			}
-
-			await Task.WhenAll(_warps.Select(s => s.Task));
-			await _transport.Flush();
-			_state = State.Stopped;
 		}
 
 		private void OnTimer()
@@ -178,6 +180,7 @@ namespace Untech.AsyncJob
 
 		public void Dispose()
 		{
+			_aborted?.Cancel();
 			_aborted?.Dispose();
 			_aborted = null;
 			_timer?.Dispose();
