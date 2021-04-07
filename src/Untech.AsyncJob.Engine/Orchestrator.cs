@@ -85,7 +85,7 @@ namespace Untech.AsyncJob
 
 				// Wait until the task completes or the stop token triggers
 				await Task.WhenAny(executingTask);
-				await _transport.Flush();
+				await _transport.FlushAsync();
 				_state = State.Stopped;
 			}
 		}

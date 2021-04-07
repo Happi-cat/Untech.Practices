@@ -33,6 +33,6 @@ namespace Untech.AsyncJob.Transports
 		/// <summary>
 		/// Flushes inbound/outbound buffers. Used for correct stop process.
 		/// </summary>
-		Task Flush();
+		Task FlushAsync();
 	}
 }

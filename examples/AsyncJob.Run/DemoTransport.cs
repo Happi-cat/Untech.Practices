@@ -45,7 +45,7 @@ namespace AsyncJob.Run
 			return Task.CompletedTask;
 		}
 
-		public Task Flush()
+		public Task FlushAsync()
 		{
 			return Task.CompletedTask;
 		}

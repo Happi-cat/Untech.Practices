@@ -47,7 +47,7 @@ namespace Untech.AsyncJob.Transports.InProcess
 			return Task.CompletedTask;
 		}
 
-		public Task Flush()
+		public Task FlushAsync()
 		{
 			return Task.CompletedTask;
 		}

@@ -36,7 +36,7 @@ namespace Untech.AsyncJob.Transports.Scheduled
 			return Complete(request, exception);
 		}
 
-		public Task Flush()
+		public Task FlushAsync()
 		{
 			return Task.CompletedTask;
 		}
