@@ -12,6 +12,7 @@ namespace Untech.AsyncJob
 			RequestsPerWarp = 5;
 			SlidingRadius = 6;
 			SlidingStep = TimeSpan.FromSeconds(10);
+			SlidingMode = SlidingMode.Default;
 		}
 
 		[Range(1, 50)]
@@ -22,6 +23,7 @@ namespace Untech.AsyncJob
 
 		public int SlidingRadius { get; set; }
 		public TimeSpan SlidingStep { get; set; }
+		public SlidingMode SlidingMode { get; set; }
 
 		public bool RunRequestsInWarpAllAtOnce { get; set; }
 

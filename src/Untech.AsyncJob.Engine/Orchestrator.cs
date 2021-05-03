@@ -140,13 +140,24 @@ namespace Untech.AsyncJob
 
 			void UpdateSlidingCoefficient(int requestCount)
 			{
-				if (_options.RequestsPerWarp < 2) return;
+				if (_options.SlidingMode == SlidingMode.Default)
+				{
+					if (_options.RequestsPerWarp < 2) return;
 
-				var l = requestCount;
-				var max = _options.RequestsPerWarp;
+					var max = _options.RequestsPerWarp;
 
-				if (l <= 0.3f * max) _timer?.Increase();
-				else if (l >= 0.7f * max) _timer?.Decrease();
+					if (requestCount <= 0.3f * max) _timer?.Increase();
+					else if (0.7f * max <= requestCount) _timer?.Decrease();
+				}
+				else if (_options.SlidingMode == SlidingMode.AnyAndNone)
+				{
+					if (requestCount == 0) _timer?.Increase();
+					else _timer?.Decrease();
+				}
+				else
+				{
+					throw new NotSupportedException($"Sliding Mode {_options.SlidingMode} is not supported");
+				}
 			}
 		}
 
