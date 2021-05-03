@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Untech.AsyncJob.Metadata;
@@ -33,6 +34,7 @@ namespace Untech.AsyncJob
 
 		private State _state;
 		private CancellationTokenSource _aborted;
+		[CanBeNull]
 		private SlidingTimer _timer;
 
 		public Orchestrator(OrchestratorOptions options,
@@ -63,7 +65,7 @@ namespace Untech.AsyncJob
 		public async Task StopAsync(TimeSpan delay, CancellationToken cancellationToken)
 		{
 			_state = State.Stopping;
-			_timer.Dispose();
+			_timer?.Dispose();
 			_timer = null;
 
 			try
@@ -77,7 +79,7 @@ namespace Untech.AsyncJob
 					// Prevent throwing if the Delay is cancelled
 				}
 
-				_aborted.Cancel();
+				_aborted?.Cancel();
 			}
 			finally
 			{
@@ -138,16 +140,13 @@ namespace Untech.AsyncJob
 
 			void UpdateSlidingCoefficient(int requestCount)
 			{
-				if (_options.RequestsPerWarp < 2)
-					return;
+				if (_options.RequestsPerWarp < 2) return;
 
 				var l = requestCount;
 				var max = _options.RequestsPerWarp;
 
-				if (l <= 0.3f * max)
-					_timer.Increase();
-				else if (l >= 0.7f * max)
-					_timer.Decrease();
+				if (l <= 0.3f * max) _timer?.Increase();
+				else if (l >= 0.7f * max) _timer?.Decrease();
 			}
 		}
 
