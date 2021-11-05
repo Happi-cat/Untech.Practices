@@ -35,6 +35,11 @@ namespace Untech.Practices.CQRS.Dispatching
 			s_processors = new ConcurrentDictionary<Type, Processor>();
 		}
 
+		public static void AheadOfTime<TRequest, TResponse>() where TRequest : IRequest<TResponse>
+		{
+			s_processors.GetOrAdd(typeof(TRequest), RequestProcessor<TRequest, TResponse>.InvokeAsync);
+		}
+
 		/// <inheritdoc />
 		public Task<TResponse> FetchAsync<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken)
 		{
